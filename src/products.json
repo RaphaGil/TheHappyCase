@@ -1,0 +1,17 @@
+{
+  "colors": [
+    { "color": "#f49f90", "image": "/assets/images/SmartCase/smartcasepink.png" },
+    { "color": "#cb0025", "image": "/assets/images/smartcase/smartcasered.png" },
+    { "color": "#9cb4b8", "image": "/assets/images/smartcase/smartcaseblue.png" },
+    { "color": "#627386", "image": "/assets/images/smartcase/smartcasedarkblue.png" },
+    { "color": "#b0582c", "image": "/assets/images/smartcase/smartcasebrown.png" },
+    { "color": "#59332e", "image": "/assets/images/smartcase/smartcasedarkbrown.png" },
+    { "color": "#413f44", "image": "/assets/images/smartcase/smartcaseblack.png" }
+  ],
+  "pins": [
+    { "name": "Be a Good Human", "src": "/assets/images/colourfulpins/beagoodhuman.png" },
+    { "name": "Green Pin", "src": "/assets/images/firstclass.png" },
+    { "name": "Blue Pin", "src": "/assets/images/item2-blue.jpg" }
+  ]
+}
+
