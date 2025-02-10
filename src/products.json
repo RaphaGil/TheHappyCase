@@ -8,10 +8,41 @@
     { "color": "#59332e", "image": "/assets/images/smartcase/smartcasedarkbrown.png" },
     { "color": "#413f44", "image": "/assets/images/smartcase/smartcaseblack.png" }
   ],
-  "pins": [
+  "pins": {
+    "colourful": [
     { "name": "Be a Good Human", "src": "/assets/images/colourfulpins/beagoodhuman.png" },
     { "name": "Green Pin", "src": "/assets/images/firstclass.png" },
     { "name": "Blue Pin", "src": "/assets/images/item2-blue.jpg" }
+  ],
+    "bronze": [
+    { "name": "Airplane", "src": "/assets/images/bronzepins/airplane.png" },
+    { "name": "Cardinal Points", "src": "/assets/images/bronzepins/cardinalpoints.png" },
+    { "name": "Globe", "src": "/assets/images/bronzepins/globe.png" },
+    { "name": "Passport", "src": "/assets/images/bronzepins/passport.png" },
+    { "name": "NYC Taxi", "src": "/assets/images/bronzepins/nyctaxi.png" },
+    { "name": "Liberty Statue", "src": "/assets/images/bronzepins/libertystatue.png" },
+    { "name": "Luggage", "src": "/assets/images/bronzepins/luggage.png" },
+    { "name": "London Bus", "src": "/assets/images/bronzepins/london.png" },
+    { "name": "Lucky Leaf", "src": "/assets/images/bronzepins/luckyleaf.png" },
+    { "name": "Little Heart", "src": "/assets/images/bronzepins/littleheart.png" },
+    { "name": "Binoculars", "src": "/assets/images/bronzepins/binoculars.png" },
+    { "name": "Eiffel Towel", "src": "/assets/images/bronzepins/eiffeltowel.png" },
+    { "name": "Camera", "src": "/assets/images/bronzepins/camera.png" },
+    { "name": "Kangaroo", "src": "/assets/images/bronzepins/kangaroo.png" },  
+    { "name": "Koala", "src": "/assets/images/bronzepins/koala.png" },
+    { "name": "BigBen", "src": "/assets/images/bronzepins/bigben.png" },
+    { "name": "Hamsa Hand", "src": "/assets/images/bronzepins/hamsahand.png" },
+    { "name": "Thailand", "src": "/assets/images/bronzepins/thailand.png" },
+    { "name": "Mummy", "src": "/assets/images/bronzepins/mummy.png" },
+    { "name": "Llama", "src": "/assets/images/bronzepins/llama.png" },
+    { "name": "India", "src": "/assets/images/bronzepins/india.png" },
+    { "name": "Pisa Tower", "src": "/assets/images/bronzepins/pisatower.png" },
+    { "name": "Pyramid", "src": "/assets/images/bronzepins/pyramid.png" },
+    { "name": "Arc The Triomphe", "src": "/assets/images/bronzepins/arcthetriomphe.png" },
+    { "name": "Maple Leaf", "src": "/assets/images/bronzepins/mapleleaf.png" }
+
+
   ]
+}
 }
 
