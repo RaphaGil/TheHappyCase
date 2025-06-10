@@ -27,14 +27,14 @@ const CreateYours = () => {
   ) => {
     return new Promise((resolve, reject) => {
       if (!canvas) return reject("Canvas not initialized");
-  
+
       const imgElement = new window.Image();
       imgElement.src = src;
-  
+
       imgElement.onload = () => {
         const scaleX = isCase ? scale : pinWidth / imgElement.width;
         const scaleY = isCase ? scale : pinHeight / imgElement.height;
-  
+
         const imgInstance = new FabricImage(imgElement, {
           left: canvas.getWidth() / 2 - (imgElement.width * scaleX) / 2,
           top: canvas.getHeight() / 2 - (imgElement.height * scaleY) / 2,
@@ -49,20 +49,18 @@ const CreateYours = () => {
           cornerSize: 0,
           transparentCorners: false,
           rotatingPointOffset: 30,
-          isCase: isCase, 
-
+          isCase: isCase,
         });
-  
+
         canvas.add(imgInstance);
         resolve(imgInstance);
       };
-  
+
       imgElement.onerror = () => {
         reject("Error loading image");
       };
     });
   };
-  
 
   // Initialize the canvas
   useEffect(() => {
@@ -104,41 +102,47 @@ const CreateYours = () => {
       canvas.renderAll();
   
       // Force the state update with a small delay
-      setTimeout(() => setSelectedPin(imgInstance), 10);
+      setTimeout(() => {
+        setSelectedPin(imgInstance);
+  
+        // Scroll to the canvas section smoothly
+        document.querySelector("canvas")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  
+      }, 10);
     } catch (error) {
       console.error("Failed to load pin:", error);
     }
   };
   
+
   const handleColorSelection = (color, image) => {
-    setSelectedColor(color);  
-  
-    loadImage(image, 0.5, true).then((newCaseImage) => {
-      // Remove previous case
-      canvas.getObjects().forEach((obj) => {
-        if (obj.isCase) {
-          canvas.remove(obj);
-        }
-      });
-  
-      // Add the new case image at the bottom
-      newCaseImage.isCase = true;
-      canvas.add(newCaseImage);
+    setSelectedColor(color);
 
-      // Re-add all previously selected pins
-      selectedPins.forEach((pin) => {
-        canvas.add(pin);
-        // canvas.bringToFront(pin);
+    loadImage(image, 0.5, true)
+      .then((newCaseImage) => {
+        // Remove previous case
+        canvas.getObjects().forEach((obj) => {
+          if (obj.isCase) {
+            canvas.remove(obj);
+          }
+        });
+
+        // Add the new case image at the bottom
+        newCaseImage.isCase = true;
+        canvas.add(newCaseImage);
+
+        // Re-add all previously selected pins
+        selectedPins.forEach((pin) => {
+          canvas.add(pin);
+          // canvas.bringToFront(pin);
+        });
+
+        canvas.renderAll();
+      })
+      .catch((error) => {
+        console.error("Failed to load case image:", error);
       });
-  
-      canvas.renderAll();
-    }).catch((error) => {
-      console.error("Failed to load case image:", error);
-    });
   };
-  
-  
-
 
   useEffect(() => {
     if (selectedCategory) {
@@ -169,16 +173,30 @@ const CreateYours = () => {
     if (!selectedPin || !canvas) return; // Ensure a pin is selected before deleting
     // Remove the selected pin from the canvas
     canvas.remove(selectedPin);
-  
+
     // Remove from the selected pins array immediately
     setSelectedPins((prevSelectedPins) =>
       prevSelectedPins.filter((pin) => pin !== selectedPin)
     );
-      setSelectedPin(null);
+    setSelectedPin(null);
   };
-  
+
+  const handleSaveImage = () => {
+    if (!canvas) return;
+
+    const dataURL = canvas.toDataURL({
+      format: "png",
+      quality: 1,
+    });
+
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = "custom_case.png";
+    link.click();
+  };
+
   return (
-    <div className="flex flex-row-reverse mt-10 p-6 justify-around">
+    <div className="flex flex-col-reverse h-full lg:flex-row-reverse mt-10 p-2 md:p-6 items-center lg:items-start lg:justify-around">
       <div className="mb-4 space-y-7 p-6">
         {/* Color selection */}
         <div>
@@ -217,29 +235,29 @@ const CreateYours = () => {
           </select>
 
           {selectedCategory && (
-  <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
-    <div className="grid grid-cols-2 gap-2">
-      {pins.map((pin) => (
-        <div
-          key={pin.name}
-          className="cursor-pointer flex flex-col items-center space-y-2"
-          onClick={() => handlePinSelection(pin)}
-        >
-          <img
-            src={pin.src}
-            alt={pin.name}
-            className={`w-28 h-28 rounded ${
-              selectedPins.some((p) => p.name === pin.name)
-                ? "border-2 border-gray-800 shadow-lg"
-                : "border border-gray-300"
-            }`}
-          />
-          <span className="text-sm">{pin.name}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+            <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
+              <div className="grid grid-cols-2 gap-2">
+                {pins.map((pin) => (
+                  <div
+                    key={pin.name}
+                    className="cursor-pointer flex flex-col items-center space-y-2"
+                    onClick={() => handlePinSelection(pin)}
+                  >
+                    <img
+                      src={pin.src}
+                      alt={pin.name}
+                      className={`w-28 h-28 rounded ${
+                        selectedPins.some((p) => p.name === pin.name)
+                          ? "border-2 border-gray-800 shadow-lg"
+                          : "border border-gray-300"
+                      }`}
+                    />
+                    <span className="text-sm">{pin.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
@@ -247,29 +265,33 @@ const CreateYours = () => {
         </div>
       </div>
 
-      <canvas ref={canvasRef} className="border relative" />
+      <div className="flex flex-col items-center">
+        {/* Canvas */}
+        <canvas ref={canvasRef} className="border" />
+        <button
+              onClick={handleSaveImage}
+              className="mt-2 px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-700"
+            >
+              Save Image
+            </button>
 
-      {/* Conditionally render Rotate and Delete buttons */}
-      {selectedPin && (
-        <>
-          <div className="absolute left-64 bottom-40">
+        {/* Buttons positioned below the canvas */}
+        {selectedPin && (
+          <div className="flex justify-center ">
             <button
               onClick={handleRotatePins}
               className="flex items-center justify-center w-10 h-10 text-gray-700 hover:text-blue-800"
             >
               <FontAwesomeIcon icon={faRotateRight} className="h-5 w-5" />
             </button>
-          </div>
-          <div className="absolute left-56 bottom-40">
+
             <button
               onClick={handleRotatePinsLeft}
               className="flex items-center justify-center w-10 h-10 text-gray-700 hover:text-blue-800"
             >
               <FontAwesomeIcon icon={faRotateLeft} className="h-5 w-5" />
             </button>
-          </div>
 
-          <div className="absolute left-72 bottom-40">
             <button
               onClick={handleDeletePin}
               className="flex items-center justify-center w-10 h-10 text-red-600 hover:text-red-800"
@@ -277,12 +299,10 @@ const CreateYours = () => {
               <FontAwesomeIcon icon={faX} className="h-5 w-5" />
             </button>
           </div>
-          
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
 export default CreateYours;
-

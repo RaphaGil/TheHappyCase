@@ -105,8 +105,8 @@ function PostOfficeBtn() {
 
       {/* Address Input Form */}
       <div className="mb-4">
-        <label className="block">Street Address:</label>
-        <input
+        <label className="block mb-4">Street Address:</label>
+        {/* <input
           type="text"
           name="street1"
           value={addressTo.street1}
@@ -120,7 +120,7 @@ function PostOfficeBtn() {
           value={addressTo.city}
           onChange={handleInputChange}
           className="border p-2 w-full mb-2"
-        />
+        /> */}
         <label className="block">PostCode:</label>
         <input
           type="text"

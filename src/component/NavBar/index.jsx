@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -15,8 +16,9 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="flex bg-gray-100 justify-between pr-2 pl-2 h-16">
-      <img src='/assets/images/logo.png' className='h-18 w-18 md:h-20 md:w-22 p-2' alt="Logo" />
+    <nav className="flex bg-gray-100 justify-between items-center pr-2 pl-2 h-30">
+     <img src="/TheHappyCase/images/logo.png" className="h-15 w-20 p-2" alt="Logo" />
+
       
       {/* Hamburger menu icon */}
       <button
@@ -58,12 +60,12 @@ const NavBar = () => {
 
       {/* Navbar links */}
       <ul
-        className={`flex space-x-4 lg:flex ${isOpen ? 'flex-col absolute left-0 right-0 top-0 pt-16 h-full text-white text-right space-y-4 bg-blue-900' : 'justify-center items-center hidden lg:flex text-gray-800'}`}
+        className={`flex space-x-4 lg:flex ${isOpen ? 'flex-col absolute left-0 right-0 top-0 pt-16 h-full text-black text-right font-thin space-y-4 bg-white' : 'justify-center items-center hidden lg:flex text-gray-500 font-thin'}`}
       >
         {isOpen && (
           <button
             onClick={toggleMenu}
-            className="absolute top-5 right-4 text-white focus:outline-none "
+            className="absolute top-5 right-4 text-gray-400 focus:outline-none font-thin "
           >
             <svg
               className="w-6 h-6"
@@ -81,12 +83,12 @@ const NavBar = () => {
             </svg>
           </button>
         )}
-        <li><Link to="/" className="p-6 hover:text-gray-300" onClick={closeMenu}>Home</Link></li>
-        <li><Link to="/PassportCover" className="p-6 hover:text-gray-300" onClick={closeMenu}>Passport Cover</Link></li>
-        <li><Link to="/Pins" className="p-6 hhover:text-gray-300" onClick={closeMenu}>Pins</Link></li>
-        <li><Link to="/DesignIdeas" className="p-6 hover:text-gray-300" onClick={closeMenu}>Design Ideas</Link></li>
-        <li><Link to="/CreateYours" className="p-6 hover:text-gray-300" onClick={closeMenu}>Create Yours</Link></li>
-        <li><Link to="#contactus" className="p-6 hover:text-gray-300" onClick={closeMenu}>Contact</Link></li>
+        <li><Link to="/" className="p-6 hover:text-blue-800" onClick={closeMenu}>HOME</Link></li>
+        {/* <li><Link to="/PassportCover" className="p-6 hover:text-blue-800" onClick={closeMenu}>PASSPORT COVER</Link></li>
+        <li><Link to="/Pins" className="p-6 hover:text-blue-800" onClick={closeMenu}>PINS</Link></li> */}
+        <li><Link to="/DesignIdeas" className="p-6 hover:text-blue-800" onClick={closeMenu}>DESING IDEAS</Link></li>
+        <li><Link to="/CreateYours" className="p-6 hover:text-blue-800" onClick={closeMenu}>CREATE YOURS</Link></li>
+        <li><Link to="#contactus" className="p-6 hover:text-blue-800" onClick={closeMenu}>CONTACT</Link></li>
       </ul>
     </nav>
   );

@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import NavBar from './component/NavBar'; // Ensure NavBar is imported
-import Hero from './component/Hero'; // Ensure Hero is imported
-import Description from './component/Description';
+import NavBar from './component/NavBar';
+import Hero from './component/Hero';
+import WhatWeDo from './component/WhatWeDo';
 import Items from './component/Items';
+import Review from './component/Reviews';
 import Contact from './component/Contact';
-
+import Footer from './component/Footer';
 
 import SmartCase from './pages/SmartCase';
 import FirstClassCase from './pages/FirstClassCase';
@@ -14,30 +15,26 @@ import Pins from './pages/Pins';
 import DesignIdeas from './pages/DesignIdeas';
 import PassportCover from './pages/PassportCover';
 
-
 function App() {
   return (
-    <Router>
+    <Router basename="/TheHappyCase">
       <div className="App">
-        {/* NavBar is included globally */}
         <header className="App-header bg-blue-800">
           <NavBar />
         </header>
-        
+
         <main>
-          {/* The Routes component will render specific pages */}
           <Routes>
-            {/* Homepage route, where Hero, Description, and Items are displayed */}
             <Route path="/" element={
               <>
                 <Hero />
-                <Description />
+                <WhatWeDo />
                 <Items />
+                <Review />
                 <Contact />
+                <Footer />
               </>
             } />
-            
-            {/* Specific page routes */}
             <Route path="/SmartCase" element={<SmartCase />} />
             <Route path="/FirstClassCase" element={<FirstClassCase />} />
             <Route path="/PremiumCase" element={<PremiumCase />} />
