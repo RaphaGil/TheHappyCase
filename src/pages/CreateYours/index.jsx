@@ -1,305 +1,288 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Canvas } from "fabric";
-import { Image as FabricImage } from "fabric";
-import PostOfficeBtn from "../../component/PostOfficeBtn";
-import Products from "../../products.json"; // Import the JSON file
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRotateLeft, faRotateRight } from "@fortawesome/free-solid-svg-icons";
-import { faX } from "@fortawesome/free-solid-svg-icons";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
+
+import Canvas from "../../component/Canvas/index.jsx";
+import ColorSelector from "../../component/ColorSelector/index.jsx";
+
+import PinSelector from "../../component/PinSelector";
+import AddToCartBtn from '../../component/AddToCartBtn'
+import Products from "../../products.json";
+import { useCart } from "../../context/CartContext";
 
 const CreateYours = () => {
-  const canvasRef = useRef(null);
-  const [canvas, setCanvas] = useState(null);
-  const [selectedPin, setSelectedPin] = useState(null); // Track selected pin
-  const [selectedCategory, setSelectedCategory] = useState(""); // Selected category for pins
-  const [pins, setPins] = useState([]); // Track current pins
-  const [selectedColor, setSelectedColor] = useState(""); // Track selected color
-  // Array to hold the selected pins
+  const location = useLocation();
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [pins, setPins] = useState([]);
+  const [selectedCaseType, setSelectedCaseType] = useState("economy");
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedCaseImage, setSelectedCaseImage] = useState("");
   const [selectedPins, setSelectedPins] = useState([]);
+  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
+  const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
+  const [saveImageFunction, setSaveImageFunction] = useState(null);
+  const caseDropdownRef = useRef(null);
+  const { addToCart } = useCart();
 
-  // Function to load images (pins and cases)
-  const loadImage = (
-    src,
-    scale = 0.1,
-    isCase = true,
-    pinWidth = 10,
-    pinHeight = 10
-  ) => {
-    return new Promise((resolve, reject) => {
-      if (!canvas) return reject("Canvas not initialized");
-
-      const imgElement = new window.Image();
-      imgElement.src = src;
-
-      imgElement.onload = () => {
-        const scaleX = isCase ? scale : pinWidth / imgElement.width;
-        const scaleY = isCase ? scale : pinHeight / imgElement.height;
-
-        const imgInstance = new FabricImage(imgElement, {
-          left: canvas.getWidth() / 2 - (imgElement.width * scaleX) / 2,
-          top: canvas.getHeight() / 2 - (imgElement.height * scaleY) / 2,
-          scaleX,
-          scaleY,
-          selectable: !isCase,
-          hasControls: isCase,
-          lockScalingX: true,
-          lockScalingY: true,
-          borderColor: isCase ? "transparent" : "gray",
-          borderDashArray: isCase ? [] : [3, 5],
-          cornerSize: 0,
-          transparentCorners: false,
-          rotatingPointOffset: 30,
-          isCase: isCase,
-        });
-
-        canvas.add(imgInstance);
-        resolve(imgInstance);
-      };
-
-      imgElement.onerror = () => {
-        reject("Error loading image");
-      };
-    });
-  };
-
-  // Initialize the canvas
-  useEffect(() => {
-    const fabricCanvas = new Canvas(canvasRef.current);
-    fabricCanvas.setWidth(490);
-    fabricCanvas.setHeight(500);
-    setCanvas(fabricCanvas);
-
-    return () => {
-      fabricCanvas.dispose();
-    };
-  }, []);
-
-  // Load default image after canvas initialization
-  useEffect(() => {
-    if (canvas) {
-      console.log("Canvas is ready. Loading default image...");
-      loadImage("/assets/images/SmartCase/smartcasepink.png", 0.5, true);
-      setSelectedColor("#f49f90"); // Set default color
-    }
-  }, [canvas]);
-
-  // Handle pin selection
-  const handlePinSelection = async (pin) => {
-    try {
-      const imgInstance = await loadImage(pin.src, 0.5, false, 120, 120);
-  
-      // Store the selected pin in state
-      setSelectedPins((prevPins) => [...prevPins, imgInstance]);
-  
-      // Ensure the new pin gets selected
-      imgInstance.on("selected", () => {
-        setSelectedPin(imgInstance);
-        canvas.setActiveObject(imgInstance);
-      });
-  
-      canvas.add(imgInstance);
-      canvas.setActiveObject(imgInstance);
-      canvas.renderAll();
-  
-      // Force the state update with a small delay
-      setTimeout(() => {
-        setSelectedPin(imgInstance);
-  
-        // Scroll to the canvas section smoothly
-        document.querySelector("canvas")?.scrollIntoView({ behavior: "smooth", block: "center" });
-  
-      }, 10);
-    } catch (error) {
-      console.error("Failed to load pin:", error);
+  // Handle case type selection
+  const handleCaseTypeSelection = (caseType) => {
+    setSelectedCaseType(caseType);
+    const selectedCase = Products.cases.find(c => c.type === caseType);
+    if (selectedCase && selectedCase.colors.length > 0) {
+      const firstColor = selectedCase.colors[0];
+      setSelectedColor(firstColor.color);
+      setSelectedCaseImage(firstColor.image);
     }
   };
-  
 
+  // Handle color selection
   const handleColorSelection = (color, image) => {
     setSelectedColor(color);
-
-    loadImage(image, 0.5, true)
-      .then((newCaseImage) => {
-        // Remove previous case
-        canvas.getObjects().forEach((obj) => {
-          if (obj.isCase) {
-            canvas.remove(obj);
-          }
-        });
-
-        // Add the new case image at the bottom
-        newCaseImage.isCase = true;
-        canvas.add(newCaseImage);
-
-        // Re-add all previously selected pins
-        selectedPins.forEach((pin) => {
-          canvas.add(pin);
-          // canvas.bringToFront(pin);
-        });
-
-        canvas.renderAll();
-      })
-      .catch((error) => {
-        console.error("Failed to load case image:", error);
-      });
+    setSelectedCaseImage(image);
   };
 
+  // Handle pin selection from PinSelector
+  const handlePinSelection = useCallback((pin) => {
+    // This will be handled by the Canvas component
+    if (window.addPinToCanvas) {
+      window.addPinToCanvas(pin);
+    }
+  }, []);
+
+  // Handle navigation from other pages
+  useEffect(() => {
+    if (location.state?.selectedPin) {
+      const selectedPin = location.state.selectedPin;
+      setTimeout(() => {
+        if (window.addPinToCanvas) {
+          window.addPinToCanvas(selectedPin);
+        }
+      }, 1000);
+      
+      // Clear the navigation state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
+  // When category changes, update pins from Products
   useEffect(() => {
     if (selectedCategory) {
-      setPins(Products.pins[selectedCategory] || []); // Ensure pins are loaded for selected category
-    } else {
-      setPins([]); // Reset pins when no category is selected
+      if (selectedCategory === 'flags') {
+        const flagPins = Products.pins.flags || [];
+        setPins(flagPins);
+      } else {
+        setPins(Products.pins[selectedCategory] || []);
+      }
     }
   }, [selectedCategory]);
 
-  // Rotate selected pin
-  const handleRotatePins = () => {
-    const activeObject = canvas.getActiveObject();
-    if (activeObject) {
-      activeObject.rotate((activeObject.angle || 0) + 20); // Rotate pin by 40 degrees
-      canvas.renderAll();
+  // Initialize default case and color
+  useEffect(() => {
+    if (Products.cases.length > 0) {
+      const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
+      if (defaultCase.colors.length > 0) {
+        const defaultColor = defaultCase.colors[0];
+        setSelectedColor(defaultColor.color);
+        setSelectedCaseImage(defaultColor.image);
+      }
     }
+  }, [selectedCaseType]);
+
+  // Calculate total price
+  const selectedCase = Products.cases.find(c => c.type === selectedCaseType);
+  const caseBasePrice = selectedCase?.basePrice || 0;
+  const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
+  const totalPrice = (caseBasePrice + pinsPrice).toFixed(2);
+
+  // Handle add to cart
+  const handleAddToCart = () => {
+    const product = {
+      id: `custom-${Date.now()}`,
+      name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
+      caseType: selectedCaseType,
+      caseName: selectedCase?.name || 'Custom Case',
+      color: selectedColor,
+      pins: selectedPins.map(({ pin }) => pin),
+      price: parseFloat(totalPrice),
+      image: selectedCaseImage,
+      customDesign: true
+    };
+    
+    addToCart(product);
   };
-  const handleRotatePinsLeft = () => {
-    const activeObject = canvas.getActiveObject();
-    if (activeObject) {
-      activeObject.rotate((activeObject.angle || 0) - 20); // Rotate pin by 40 degrees
-      canvas.renderAll();
+
+  // Handle pin selection callback from Canvas
+  const handlePinSelect = useCallback((imgInstance) => {
+    if (imgInstance && imgInstance.pinData) {
+      console.log('handlePinSelect called for:', imgInstance.pinData.name); // Debug log
+      setSelectedPins(prev => {
+        console.log('Current selectedPins count:', prev.length); // Debug log
+        
+        // Check if this pin is already in the array to prevent duplicates
+        const isAlreadyAdded = prev.some(item => 
+          item.imgInstance === imgInstance || 
+          (item.pin && imgInstance.pinData && item.pin.src === imgInstance.pinData.src && item.pin.name === imgInstance.pinData.name)
+        );
+        
+        if (isAlreadyAdded) {
+          console.log('Pin already added, skipping duplicate'); // Debug log
+          return prev; // Don't add duplicate
+        }
+        
+        console.log('Adding new pin to selectedPins'); // Debug log
+        return [...prev, { imgInstance, pin: imgInstance.pinData }];
+      });
     }
-  };
+  }, []);
 
-  // Delete selected pin
-  const handleDeletePin = () => {
-    if (!selectedPin || !canvas) return; // Ensure a pin is selected before deleting
-    // Remove the selected pin from the canvas
-    canvas.remove(selectedPin);
+  // Handle pin removal callback from Canvas
+  const handlePinRemove = useCallback((removedPin) => {
+    setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
+  }, []);
 
-    // Remove from the selected pins array immediately
-    setSelectedPins((prevSelectedPins) =>
-      prevSelectedPins.filter((pin) => pin !== selectedPin)
-    );
-    setSelectedPin(null);
-  };
+  // Handle save image function from Canvas
+  const handleSaveImageFunction = useCallback((saveFunction) => {
+    setSaveImageFunction(() => saveFunction);
+  }, []);
 
-  const handleSaveImage = () => {
-    if (!canvas) return;
-
-    const dataURL = canvas.toDataURL({
-      format: "png",
-      quality: 1,
-    });
-
-    const link = document.createElement("a");
-    link.href = dataURL;
-    link.download = "custom_case.png";
-    link.click();
-  };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (caseDropdownRef.current && !caseDropdownRef.current.contains(e.target)) {
+        setIsCaseDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
 
   return (
-    <div className="flex flex-col-reverse h-full lg:flex-row-reverse mt-10 p-2 md:p-6 items-center lg:items-start lg:justify-around">
-      <div className="mb-4 space-y-7 p-6">
-        {/* Color selection */}
-        <div>
-          <p className="text-lg font-bold">Colour</p>
-          <div className="flex space-x-4">
-            {Products.colors.map(({ color, image }) => (
-              <div
-                key={color}
-                className="cursor-pointer hover:shadow-2xl hover:shadow-black"
-                onClick={() => handleColorSelection(color, image)}
-              >
-                <div
-                  className={`w-8 h-8 rounded-full ${
-                    selectedColor === color
-                      ? "rounded-full border-2 border-gray-800 p-2 shadow-2xl"
-                      : "border-gray-300"
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
-              </div>
-            ))}
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-sky-100 pt-4">
+      <div className="w-full p-4">
+        
+        {/* MAIN SECTION - Canvas and Right Side */}
+        <div className="flex flex-col xl:flex-row gap-6">
+          
+          {/* MIDDLE - Design Canvas */}
+          <div className="w-full xl:w-1/2">
+            <Canvas
+              selectedCaseType={selectedCaseType}
+              selectedColor={selectedColor}
+              selectedPins={selectedPins}
+              onPinSelect={handlePinSelect}
+              onPinRemove={handlePinRemove}
+              onSaveImage={handleSaveImageFunction}
+              products={Products}
+            />
           </div>
-        </div>
 
-        {/* Pin selection */}
-        <div>
-          <p className="text-lg font-bold">Pins</p>
-          <select
-            className="border rounded p-2 w-full mb-4"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="">Select a Category</option>
-            <option value="bronze">Bronze Pins</option>
-            <option value="colorful">Colorful Pins</option>
-          </select>
+          {/* Right Side - Charms Selection */}
+          <div className="w-full xl:w-1/2 space-y-6">
+            {/* Passport Case Selection */}
+            <div className="happy-card p-6">
+              <h3 className="font-bold text-xl lazy-dog-title mb-4" style={{fontFamily: "'Fredoka One', cursive"}}>
+                1) Choose Your Passport Case
+              </h3>
+              
+              <div className="relative">
+                <select
+                  value={selectedCaseType}
+                  onChange={(e) => handleCaseTypeSelection(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-full bg-white text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 student-text"
+                  style={{fontFamily: "'Inter', sans-serif", fontWeight: 300}}
+                >
+                  <option value="economy">Economy - £8.00</option>
+                  <option value="business">Business - £12.00</option>
+                  <option value="firstclass">First Class - £12.00</option>
+                </select>
+              </div>
+              
+              {selectedColor && (
+                <div className="mt-10">
+                  <ColorSelector
+                    colors={selectedCase?.colors || []}
+                    selectedColor={selectedColor}
+                    onSelect={handleColorSelection}
+                  />
+                </div>
+              )}
+            </div>
 
-          {selectedCategory && (
-            <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
-              <div className="grid grid-cols-2 gap-2">
-                {pins.map((pin) => (
-                  <div
-                    key={pin.name}
-                    className="cursor-pointer flex flex-col items-center space-y-2"
-                    onClick={() => handlePinSelection(pin)}
-                  >
-                    <img
-                      src={pin.src}
-                      alt={pin.name}
-                      className={`w-28 h-28 rounded ${
-                        selectedPins.some((p) => p.name === pin.name)
-                          ? "border-2 border-gray-800 shadow-lg"
-                          : "border border-gray-300"
-                      }`}
-                    />
-                    <span className="text-sm">{pin.name}</span>
+            {/* Charms Selection */}
+            <div className="happy-card p-6">
+              <h3 className="font-bold text-xl lazy-dog-title mb-4" style={{fontFamily: "'Fredoka One', cursive"}}>
+                3) Choose Your Charms
+              </h3>
+              <PinSelector
+                pins={pins}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                selectedPins={selectedPins}
+                onSelect={handlePinSelection}
+              />
+            </div>
+            
+            {/* Price Summary */}
+            <div className="happy-card p-6">
+              <div className="flex items-center mb-4">
+                <h3 className="student-text text-lg" style={{fontFamily: "'Inter', sans-serif", fontWeight: 400}} >
+                   Total: £{totalPrice}
+                </h3>
+                <button
+                  onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
+                  className="ml-4 text-sm text-black px-4 py-2 rounded-full border border-gray-400 transition-all duration-300 transform hover:scale-105 student-text" 
+                  style={{fontFamily: "'Inter', sans-serif", fontWeight: 400}}
+                >
+                  {showPriceBreakdown ? 'Hide Details' : 'Details'}
+                </button>
+              </div>
+              
+              {/* Price Breakdown Dropdown */}
+              {showPriceBreakdown && (
+                <div className="space-y-2 text-sm text-gray-600">
+                  <div className="flex justify-between">
+                    <span>Case:</span>
+                    <span>£{caseBasePrice.toFixed(2)}</span>
                   </div>
-                ))}
+                  {selectedPins.map(({ pin }, index) => (
+                    <div key={index} className="flex justify-between">
+                      <span>{pin.name}:</span>
+                      <span>£{pin.price.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <div className="mt-6 flex gap-3">
+                <div className="flex-1">
+                  <AddToCartBtn 
+                    product={{
+                      id: `custom-${Date.now()}`,
+                      name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
+                      price: parseFloat(totalPrice),
+                      image: selectedCaseImage,
+                      customDesign: true
+                    }}
+                    onAdd={handleAddToCart}
+                  />
+                </div>
+                
+                {/* Save Your Design Button */}
+                {saveImageFunction && (
+                  <button
+                    onClick={saveImageFunction}
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full font-bold hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-green-500/25 student-text text-sm flex items-center justify-center gap-2" 
+                    style={{fontFamily: "'Inter', sans-serif", fontWeight: 400}} 
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Save Your Design
+                  </button>
+                )}
               </div>
             </div>
-          )}
-        </div>
-
-        <div>
-          <PostOfficeBtn />
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center">
-        {/* Canvas */}
-        <canvas ref={canvasRef} className="border" />
-        <button
-              onClick={handleSaveImage}
-              className="mt-2 px-4 py-2 bg-blue-800 text-white rounded hover:bg-blue-700"
-            >
-              Save Image
-            </button>
-
-        {/* Buttons positioned below the canvas */}
-        {selectedPin && (
-          <div className="flex justify-center ">
-            <button
-              onClick={handleRotatePins}
-              className="flex items-center justify-center w-10 h-10 text-gray-700 hover:text-blue-800"
-            >
-              <FontAwesomeIcon icon={faRotateRight} className="h-5 w-5" />
-            </button>
-
-            <button
-              onClick={handleRotatePinsLeft}
-              className="flex items-center justify-center w-10 h-10 text-gray-700 hover:text-blue-800"
-            >
-              <FontAwesomeIcon icon={faRotateLeft} className="h-5 w-5" />
-            </button>
-
-            <button
-              onClick={handleDeletePin}
-              className="flex items-center justify-center w-10 h-10 text-red-600 hover:text-red-800"
-            >
-              <FontAwesomeIcon icon={faX} className="h-5 w-5" />
-            </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

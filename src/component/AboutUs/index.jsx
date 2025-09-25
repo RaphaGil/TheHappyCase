@@ -3,7 +3,7 @@ import React from 'react'
 const Index = () => {
   return (
     <div>
-      <h1>Hello!</h1>
+      <h1 className="lazy-dog-title" style={{fontFamily: "'Fredoka One', cursive"}}>Hello!</h1>
     </div>
   )
 }
