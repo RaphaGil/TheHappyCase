@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/TheHappyCase/static/css/main.6c346eb3.css",
-    "main.js": "/TheHappyCase/static/js/main.b03eddf2.js",
+    "main.css": "/TheHappyCase/static/css/main.6d4f8b63.css",
+    "main.js": "/TheHappyCase/static/js/main.b6f1d41c.js",
     "static/js/488.caa66493.chunk.js": "/TheHappyCase/static/js/488.caa66493.chunk.js",
     "static/media/hero.mp4": "/TheHappyCase/static/media/hero.f189a70395ab1bc62cf5.mp4",
     "static/media/slick.svg": "/TheHappyCase/static/media/slick.2630a3e3eab21c607e21.svg",
@@ -9,12 +9,12 @@
     "static/media/slick.ttf": "/TheHappyCase/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "/TheHappyCase/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/TheHappyCase/index.html",
-    "main.6c346eb3.css.map": "/TheHappyCase/static/css/main.6c346eb3.css.map",
-    "main.b03eddf2.js.map": "/TheHappyCase/static/js/main.b03eddf2.js.map",
+    "main.6d4f8b63.css.map": "/TheHappyCase/static/css/main.6d4f8b63.css.map",
+    "main.b6f1d41c.js.map": "/TheHappyCase/static/js/main.b6f1d41c.js.map",
     "488.caa66493.chunk.js.map": "/TheHappyCase/static/js/488.caa66493.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6c346eb3.css",
-    "static/js/main.b03eddf2.js"
+    "static/css/main.6d4f8b63.css",
+    "static/js/main.b6f1d41c.js"
   ]
 }
