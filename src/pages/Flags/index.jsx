@@ -5,9 +5,15 @@ import Products from '../../products.json';
 const Flags = () => {
   const navigate = useNavigate();
   const [selectedFlag, setSelectedFlag] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Get flags from the dedicated flags section in products.json
   const flagPins = Products.pins.flags || [];
+
+  // Filter flags by search term
+  const filteredFlags = flagPins.filter((flag) =>
+    flag.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleFlagClick = (flag) => {
     setSelectedFlag(flag);
@@ -16,7 +22,7 @@ const Flags = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-sky-100 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-orange-100 to-orange-200 py-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
@@ -29,35 +35,55 @@ const Flags = () => {
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex justify-center mb-8">
-          <div className="happy-card p-2">
+        {/* Search */}
+        <div className="happy-card p-6 mb-8">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="relative flex-1 max-w-md">
+              <input
+                type="text"
+                placeholder="Search flags..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
+              />
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+            </div>
             <div className="flex space-x-2">
-              <button className="px-6 py-2 rounded-full text-sm bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <button className="px-6 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
                 All Flags
               </button>
-              <button className="px-6 py-2 rounded-full text-sm bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <button className="px-6 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
                 European
               </button>
-              <button className="px-6 py-2 rounded-full text-sm bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <button className="px-6 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
                 Americas
               </button>
-              <button className="px-6 py-2 rounded-full text-sm bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <button className="px-6 py-2 rounded-2xl text-sm bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
                 Special
               </button>
             </div>
           </div>
         </div>
 
+        {/* Filter Buttons */}
+        <div className="flex  mb-8">
+          <div className="happy-card p-2">
+            
+            <div className="text-gray-600">
+              Showing {filteredFlags.length} of {flagPins.length} flags
+            </div>
+          </div>
+        </div>
+
         {/* Flags Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-12">
-          {flagPins.map((flag, index) => (
+          {filteredFlags.map((flag, index) => (
             <div
               key={index}
               className="happy-card p-4 cursor-pointer group hover:scale-105 transition-all duration-300"
               onClick={() => handleFlagClick(flag)}
             >
-              <div className="aspect-square mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="aspect-square mb-4 bg-white rounded-xl flex items-center justify-center overflow-hidden">
                 <img
                   src={flag.src}
                   alt={flag.name}
@@ -93,13 +119,13 @@ const Flags = () => {
           <div className="flex justify-center space-x-4">
             <button
               onClick={() => navigate('/CreateYours')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+              className="px-8 py-3 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
             >
               Start Creating
             </button>
             <button
               onClick={() => navigate('/ColorfulCharms')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+              className="px-8 py-3 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
             >
               View All Colorful Charms
             </button>
@@ -134,13 +160,13 @@ const Flags = () => {
                 <div className="flex space-x-4">
                   <button
                     onClick={() => handleFlagClick(selectedFlag)}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                   >
                     Add to Design
                   </button>
                   <button
                     onClick={() => setSelectedFlag(null)}
-                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                   >
                     Close
                   </button>

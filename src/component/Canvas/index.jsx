@@ -174,7 +174,7 @@ const Canvas = ({
         setSelectedPin(obj);
         setShowControls(true);
         updateControls(obj);
-        onPinSelect && onPinSelect(obj);
+        // Do not notify parent here; handled when adding the pin
       }
     });
 
@@ -184,7 +184,7 @@ const Canvas = ({
         setSelectedPin(obj);
         setShowControls(true);
         updateControls(obj);
-        onPinSelect && onPinSelect(obj);
+        // Don't call onPinSelect here to avoid duplicate additions
       }
     });
 
@@ -285,9 +285,8 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(imgInstance);
       fabricCanvas.current.renderAll();
       
-      // Notify parent about pin addition (only once)
+      // Notify parent about pin addition exactly once per click
       if (onPinSelect) {
-        console.log('Calling onPinSelect for:', pin.name); // Debug log
         onPinSelect(imgInstance);
       }
     } catch (error) {
@@ -298,11 +297,14 @@ const Canvas = ({
   // Expose pin selection method globally
   useEffect(() => {
     window.addPinToCanvas = handlePinSelection;
+    // Expose getter so parent can fetch current composed design image
+    window.getDesignImageDataURL = getDesignImageDataURL;
     if (onSaveImage) {
       onSaveImage(handleSaveImage);
     }
     return () => {
       delete window.addPinToCanvas;
+      delete window.getDesignImageDataURL;
     };
   }, [onSaveImage]);
 
@@ -348,6 +350,17 @@ const Canvas = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  // Get current composed design image as data URL
+  const getDesignImageDataURL = () => {
+    if (!fabricCanvas.current) return null;
+    return fabricCanvas.current.toDataURL({
+      format: 'png',
+      quality: 1,
+      multiplier: 2,
+      backgroundColor: 'white'
+    });
   };
 
   return (

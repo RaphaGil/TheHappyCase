@@ -105,8 +105,27 @@ const CreateYours = () => {
   const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
   const totalPrice = (caseBasePrice + pinsPrice).toFixed(2);
 
+  // Group pins for price breakdown display
+  const groupedPins = selectedPins.reduce((acc, { pin }) => {
+    if (!pin) return acc;
+    const key = `${pin.src}|${pin.name}|${pin.price}`;
+    if (!acc[key]) {
+      acc[key] = { ...pin, count: 0 };
+    }
+    acc[key].count += 1;
+    return acc;
+  }, {});
+  const groupedPinsList = Object.values(groupedPins);
+
   // Handle add to cart
   const handleAddToCart = () => {
+    // Capture composed design image from canvas if available
+    let designImage = null;
+    try {
+      if (window.getDesignImageDataURL) {
+        designImage = window.getDesignImageDataURL();
+      }
+    } catch {}
     const product = {
       id: `custom-${Date.now()}`,
       name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
@@ -122,6 +141,7 @@ const CreateYours = () => {
       price: parseFloat(totalPrice), // Keep for compatibility
       image: selectedCaseImage,
       caseImage: selectedCaseImage, // Add this for cart display
+      designImage,
       customDesign: true
     };
     
@@ -134,19 +154,9 @@ const CreateYours = () => {
       console.log('handlePinSelect called for:', imgInstance.pinData.name); // Debug log
       setSelectedPins(prev => {
         console.log('Current selectedPins count:', prev.length); // Debug log
-        
-        // Check if this pin is already in the array to prevent duplicates
-        const isAlreadyAdded = prev.some(item => 
-          item.imgInstance === imgInstance || 
-          (item.pin && imgInstance.pinData && item.pin.src === imgInstance.pinData.src && item.pin.name === imgInstance.pinData.name)
-        );
-        
-        if (isAlreadyAdded) {
-          console.log('Pin already added, skipping duplicate'); // Debug log
-          return prev; // Don't add duplicate
-        }
-        
-        console.log('Adding new pin to selectedPins'); // Debug log
+
+        // Always allow adding multiple instances of the same charm
+        console.log('Adding pin instance to selectedPins'); // Debug log
         return [...prev, { imgInstance, pin: imgInstance.pinData }];
       });
     }
@@ -358,10 +368,10 @@ const CreateYours = () => {
                     <span>Case:</span>
                     <span>£{caseBasePrice.toFixed(2)}</span>
                   </div>
-                  {selectedPins.map(({ pin }, index) => (
+                  {groupedPinsList.map((pin, index) => (
                     <div key={index} className="flex justify-between">
-                      <span>{pin.name}:</span>
-                      <span>£{pin.price.toFixed(2)}</span>
+                      <span>{pin.name}{pin.count > 1 ? ` (x${pin.count})` : ''}:</span>
+                      <span>£{(pin.price * pin.count).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>

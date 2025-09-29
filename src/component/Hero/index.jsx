@@ -154,7 +154,7 @@ function Hero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <button 
                 onClick={handleStartDesigning}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full font-bold hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-blue-500/25 animate-bounce-subtle"
+                className="px-8 py-4 bg-green-400 hover:bg-green-500 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
                 Start Designing
               </button>

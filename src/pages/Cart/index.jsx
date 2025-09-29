@@ -25,7 +25,7 @@ const CartPage = () => {
         <div className="mb-8">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center text-blue-800 hover:text-blue-600 mb-4"
+            className="flex items-center bg-green-400 hover:bg-green-500 text-white px-4 py-2 rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg mb-4"
           >
             <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
             Continue Shopping
@@ -180,8 +180,7 @@ const CartPage = () => {
                         })()}
                         <button
                           onClick={() => removeFromCart(index)}
-                          className="flex items-center bg-gradient-to-r from-red-400 to-pink-500 text-white px-4 py-2 rounded-full hover:scale-105 transition-transform text-sm font-medium student-text-bold"
-                          style={{fontFamily: "'Inter', sans-serif", fontWeight: 400}}
+                          className="flex items-center bg-pink-400 hover:bg-pink-500 text-white px-4 py-2 rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
                         >
                           <FontAwesomeIcon icon={faTrash} className="mr-2" />
                           Remove
@@ -217,28 +216,10 @@ const CartPage = () => {
                   
                   <button
                     onClick={handleCheckout}
-                    className="w-full text-lg py-4 relative overflow-hidden group rounded-2xl student-text-bold transform transition-all duration-300 hover:scale-105 active:scale-95"
-                    style={{
-                      background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 35%, #60a5fa 70%, #2563eb 100%)',
-                      border: '3px solid #1e40af',
-                      color: 'white',
-                      fontFamily: "'Fredoka One', cursive",
-                      fontWeight: 400,
-                      textShadow: '0 2px 4px rgba(0,0,0,0.25)'
-                    }}
+                    className="w-full text-lg py-4 bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-600 text-white rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg flex items-center justify-center space-x-2"
                   >
-                    <span className="relative z-10 flex items-center justify-center space-x-2">
-                      <span>Checkout</span>
-                      <span className="text-2xl animate-bounce">🎉</span>
-                    </span>
-                    <div 
-                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)',
-                        transform: 'translateX(-100%)',
-                        animation: 'shine 1.5s ease-in-out'
-                      }}
-                    />
+                    <span>Checkout</span>
+                    <span className="text-2xl animate-bounce">🎉</span>
                   </button>
                   
                   <p className="text-xs text-gray-500 mt-3 text-center">

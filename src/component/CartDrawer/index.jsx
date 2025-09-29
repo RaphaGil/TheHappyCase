@@ -7,20 +7,20 @@ const CartDrawer = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={`fixed inset-0 z-50 ${isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-50  ${isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black transition-opacity ${isDrawerOpen ? 'opacity-40' : 'opacity-0'}`}
+        className={`absolute inset-0 bg-black  transition-opacity ${isDrawerOpen ? 'opacity-40' : 'opacity-0'}`}
         onClick={closeCartDrawer}
       />
 
       {/* Drawer */}
       <div
-        className={`absolute right-0 top-0 h-full w-full sm:w-2/3 lg:w-1/2 bg-white shadow-2xl transform transition-transform duration-300 ${
+        className={`absolute right-0 top-0 h-full  w-full sm:w-2/3 lg:w-1/3 bg-white shadow-2xl transform transition-transform duration-300  ${
           isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b ">
           <h3 className="text-xl font-bold" style={{fontFamily: "'Fredoka One', cursive"}}>Your Happy Basket</h3>
           <button onClick={closeCartDrawer} className="text-gray-500 hover:text-gray-700">✕</button>
         </div>
@@ -32,9 +32,11 @@ const CartDrawer = () => {
 
           {cart.map((item, index) => (
             <div key={item.id} className="border rounded-xl p-3 flex items-start gap-3">
-              {/* Case preview */}
+              {/* Case preview (prefer composed design image) */}
               <div className="w-20 h-24 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
-                {item.caseImage ? (
+                {item.designImage ? (
+                  <img src={item.designImage} alt="Custom Design" className="w-14 h-20 object-contain" />
+                ) : item.caseImage ? (
                   <img src={item.caseImage} alt="Custom Case" className="w-14 h-20 object-contain" />
                 ) : (
                   <div className="w-10 h-16 rounded" style={{ background: item.color }} />
@@ -43,7 +45,7 @@ const CartDrawer = () => {
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <div>
-                    <div className="font-semibold">Custom Passport Case</div>
+                    <div className="font-semibold">{item.caseName}</div>
                     <div className="text-xs text-gray-500">Color: {item.color}</div>
                   </div>
                   <button onClick={() => removeFromCart(index)} className="text-sm text-red-500 hover:underline">Remove</button>
@@ -115,14 +117,14 @@ const CartDrawer = () => {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t">
+        <div className="pl-4 pr-4 border-t">
           <div className="flex items-center justify-between mb-3">
             <div className="text-lg font-semibold">Total</div>
             <div className="text-2xl font-bold" style={{fontFamily: "'Fredoka One', cursive"}}>£{getTotalPrice().toFixed(2)}</div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 ">
             <button
-              className="flex-1 bg-white border border-gray-300 rounded-full py-3 text-gray-700 hover:bg-gray-100 transition-colors"
+              className="flex-1 py-3 bg-pink-400 hover:bg-pink-500 text-white rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
               onClick={() => {
                 closeCartDrawer();
                 navigate('/cart');
@@ -132,13 +134,13 @@ const CartDrawer = () => {
               View Shopping Bag
             </button>
             <button
-              className="flex-1 bg-gray-900 text-white rounded-full py-3 hover:bg-black transition-colors"
+              className="flex-1 py-3 bg-green-400 hover:bg-green-500 text-white rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg"
               onClick={() => closeCartDrawer()}
             >
               Continue Shopping
             </button>
             <button
-              className="happy-button flex-1 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl font-bold transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={cart.length === 0}
               onClick={() => {
                 closeCartDrawer();

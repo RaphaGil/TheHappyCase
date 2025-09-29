@@ -65,7 +65,7 @@ const BronzeCharms = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-blue-50 to-sky-100 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200 py-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
@@ -101,10 +101,10 @@ const BronzeCharms = () => {
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                  className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg ${
                     selectedCategory === category
-                      ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-lg'
-                      : 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:from-blue-600 hover:to-cyan-500 shadow-lg'
+                      ? 'bg-gradient-to-r from-green-400 to-green-500 text-white'
+                      : 'bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white'
                   }`}
                 >
                   {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
@@ -129,7 +129,7 @@ const BronzeCharms = () => {
               className="happy-card p-4 cursor-pointer group hover:scale-105 transition-all duration-300"
               onClick={() => handleCharmClick(charm)}
             >
-              <div className="aspect-square mb-4 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="aspect-square mb-4 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-md">
                 <img
                   src={charm.src}
                   alt={charm.name}
@@ -165,7 +165,7 @@ const BronzeCharms = () => {
                 setSearchTerm('');
                 setSelectedCategory('all');
               }}
-              className="happy-button-secondary px-6 py-3"
+              className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
             >
               Clear Filters
             </button>
@@ -183,19 +183,19 @@ const BronzeCharms = () => {
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <button
               onClick={() => navigate('/CreateYours')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+              className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
             >
               Start Creating
             </button>
             <button
               onClick={() => navigate('/ColorfulCharms')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+              className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
             >
               View Colorful Charms
             </button>
             <button
               onClick={() => navigate('/Flags')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg"
+              className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
             >
               View Flags
             </button>
@@ -207,7 +207,7 @@ const BronzeCharms = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="happy-card p-8 max-w-md w-full">
               <div className="text-center">
-                <div className="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl flex items-center justify-center overflow-hidden">
+                <div className="w-32 h-32 mx-auto mb-4 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-md">
                   <img
                     src={selectedCharm.src}
                     alt={selectedCharm.name}
@@ -234,13 +234,13 @@ const BronzeCharms = () => {
                 <div className="flex space-x-4">
                   <button
                     onClick={handleAddToDesign}
-                    className="happy-button-secondary flex-1"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                   >
                     Add to Design
                   </button>
                   <button
                     onClick={() => setSelectedCharm(null)}
-                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
                   >
                     Close
                   </button>
