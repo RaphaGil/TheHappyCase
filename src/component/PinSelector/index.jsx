@@ -60,11 +60,31 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
       {/* <h3 className="happy-text-gradient lazy-dog-title text-xl mb-4 flex items-center" style={{fontFamily: "'Fredoka One', cursive"}}>
       Choose Your Charms
       </h3> */}
+      
+      {/* Visual indicator when dropdown is open */}
+      {isDropdownOpen && (
+        <div className="mb-4 p-4 bg-gradient-to-r from-orange-50 to-pink-50 border-2 border-orange-200 rounded-2xl animate-pulse">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 bg-orange-400 rounded-full animate-bounce"></div>
+            <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce delay-100"></div>
+            <div className="w-3 h-3 bg-green-400 rounded-full animate-bounce delay-200"></div>
+            <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce delay-300"></div>
+            <span className="text-sm font-semibold text-gray-700 ml-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+              Choose your favorite charms below! ✨
+            </span>
+          </div>
+        </div>
+      )}
+      
       <div className="relative" ref={dropdownRef}>
         <button
           type="button"
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-full bg-white text-gray-800 shadow-sm flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-purple-500 student-text"
-          style={{fontFamily: "'Inter', sans-serif", fontWeight: 300}}
+          className={`w-full px-3 sm:px-4 py-3 border-2 rounded-full bg-white text-gray-800 shadow-sm flex items-center justify-between focus:outline-none focus:ring-2 transition-all duration-300 text-sm sm:text-base ${
+            isDropdownOpen 
+              ? 'border-orange-400 ring-orange-200 bg-orange-50' 
+              : 'border-gray-200 hover:border-orange-300 focus:ring-orange-200'
+          }`}
+          style={{fontFamily: "'Poppins', sans-serif", fontWeight: 400}}
           onClick={() => setIsDropdownOpen((o) => !o)}
           aria-haspopup="listbox"
           aria-expanded={isDropdownOpen}
@@ -81,7 +101,7 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
         </button>
         {isDropdownOpen && (
           <ul
-            className="absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border border-gray-200 bg-white shadow-xl focus:outline-none"
+            className="absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl border-2 border-orange-200 bg-white shadow-xl focus:outline-none"
             role="listbox"
           >
             {[
@@ -94,8 +114,12 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
                 key={opt.value || 'all'}
                 role="option"
                 aria-selected={selectedCategory === opt.value}
-                className={`px-4 py-2 cursor-pointer student-text ${selectedCategory === opt.value ? 'bg-purple-50 text-purple-700' : 'text-gray-700 hover:bg-gray-50'}`}
-                style={{fontFamily: "'Inter', sans-serif", fontWeight: 300}}
+                className={`px-4 py-2 cursor-pointer transition-colors duration-200 ${
+                  selectedCategory === opt.value 
+                    ? 'bg-orange-50 text-orange-700 font-semibold' 
+                    : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
+                }`}
+                style={{fontFamily: "'Poppins', sans-serif", fontWeight: 400}}
                 onClick={() => {
                   setSelectedCategory(opt.value);
                   setIsDropdownOpen(false);
@@ -109,10 +133,10 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
       </div>
 
       {selectedCategory && (
-        <div className="mt-4">
-          <p className="text-sm text-gray-600 mb-3 student-text" style={{fontFamily: "'Inter', sans-serif", fontWeight: 300}}>
+        <div className="mt-4 pb-4">
+          {/* <p className="text-sm text-gray-600 mb-3 student-text" style={{fontFamily: "'Poppins', sans-serif", fontWeight: 400}}>
             💡 Click on any charm below to add it to your design
-          </p>
+          </p> */}
           {selectedCategory === 'colorful' && (
             <div className="mb-3 flex flex-wrap gap-2">
               {['all', 'travel', 'inspiration', 'flags'].map((cat) => (
@@ -128,31 +152,31 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
               ))}
             </div>
           )}
-          <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-gray-200 rounded-lg">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="max-h-80 sm:max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-orange-400 scrollbar-track-gray-200 rounded-lg p-2">
+            <div className="grid grid-cols-4  lg:grid-cols-3  xl:grid-cols-4 gap-2 sm:gap-2">
               {filteredPins.map((pin) => (
                 <div
                   key={pin.name}
-                  className="cursor-pointer flex flex-col items-center space-y-2 p-2 rounded-lg hover:bg-purple-50 transition-colors group"
+                  className="cursor-pointer flex flex-col items-center space-y-1 sm:space-y-2 p-2 sm:p-3 rounded-lg hover:bg-orange-50 transition-colors group touch-manipulation"
                   onClick={() => onSelect(pin)}
                 >
                   <div className="relative">
                     <img
                       src={pin.src}
                       alt={pin.name}
-                      className={`w-24 h-24 rounded-xl object-contain ${
+                      className={`w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-contain ${
                         selectedPins.some((p) => p.pin === pin)
-                          ? "border-3 border-purple-500 shadow-lg ring-2 ring-purple-200"
-                          : "border border-gray-300 group-hover:border-purple-300"
+                          ? "border-3 border-orange-500 shadow-lg ring-2 ring-orange-200"
+                          : "border border-gray-300 group-hover:border-orange-300"
                       } transition-all duration-200`}
                     />
                     {selectedPins.some((p) => p.pin === pin) && (
-                      <div className="absolute -top-1 -right-1 bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                      <div className="absolute -top-1 -right-1 bg-orange-500 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs font-bold">
                         ✓
                       </div>
                     )}
                   </div>
-                  <span className="text-xs text-center text-gray-700 group-hover:text-purple-600 transition-colors line-clamp-2 student-text" style={{fontFamily: "'Inter', sans-serif", fontWeight: 300}}>
+                  <span className="text-xs text-center text-gray-700 group-hover:text-orange-600 transition-colors line-clamp-2" style={{fontFamily: "'Poppins', sans-serif", fontWeight: 400}}>
                     {pin.name}
                   </span>
                 </div>

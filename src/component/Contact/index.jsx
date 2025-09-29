@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faQuoteLeft, faChevronLeft, faChevronRight, faGlobe, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faChevronLeft, faChevronRight, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
 const Reviews = () => {
   const reviews = [
@@ -94,12 +94,13 @@ const Reviews = () => {
   const visibleReviews = reviews.slice(currentSlide, currentSlide + reviewsPerSlide);
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-20 px-4 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-purple-400 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-400 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-blue-400 rounded-full blur-3xl"></div>
+    <div className="bg-gradient-to-br from-gray-50 to-white py-20 px-4 relative overflow-hidden">
+      {/* Background decoration with What We Do colors */}
+      <div className="absolute top-0 left-0 w-full h-full">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-orange-200 rounded-full opacity-20 animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-blue-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-20 w-28 h-28 bg-green-200 rounded-full opacity-20 animate-pulse delay-2000"></div>
+        <div className="absolute bottom-40 right-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 animate-pulse delay-500"></div>
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -110,11 +111,14 @@ const Reviews = () => {
             {/* <span className="text-sm font-semibold text-gray-700">Trusted by 10,000+ Travelers</span> */}
           {/* </div> */}
           
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6" style={{fontFamily: "'Fredoka One', cursive"}}>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 tracking-tight" style={{fontFamily: "'Fredoka One', cursive"}}>
             What Our Customers Say
           </h2>
           
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8" style={{fontFamily: "'Inter', sans-serif"}}>
+          {/* Color accent line matching What We Do */}
+          <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-pink-400 mx-auto rounded-full mb-6"></div>
+          
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-8" style={{fontFamily: "'Poppins', sans-serif"}}>
             Don't just take our word for it - hear from our happy customers around the world who love their custom passport cases!
           </p>
 
@@ -133,16 +137,16 @@ const Reviews = () => {
           {/* Navigation arrows */}
           <button 
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-20 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-20 bg-orange-400 hover:bg-orange-500 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
           >
-            <FontAwesomeIcon icon={faChevronLeft} className="text-gray-600" />
+            <FontAwesomeIcon icon={faChevronLeft} className="text-white" />
           </button>
           
           <button 
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-20 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-20 bg-blue-400 hover:bg-blue-500 rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
           >
-            <FontAwesomeIcon icon={faChevronRight} className="text-gray-600" />
+            <FontAwesomeIcon icon={faChevronRight} className="text-white" />
           </button>
 
           {/* Reviews Grid */}
@@ -180,7 +184,12 @@ const Reviews = () => {
 
                 {/* Customer Info */}
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold ${
+                    index === 0 ? 'bg-orange-400' :
+                    index === 1 ? 'bg-blue-400' :
+                    index === 2 ? 'bg-green-400' :
+                    'bg-pink-400'
+                  }`}>
                     {review.avatar}
                   </div>
                   <div>
@@ -199,50 +208,28 @@ const Reviews = () => {
             ))}
           </div>
 
-          {/* Carousel indicators */}
+          {/* Carousel indicators with What We Do colors */}
           <div className="flex justify-center gap-2 mt-8">
-            {Array.from({ length: Math.ceil(reviews.length / reviewsPerSlide) }, (_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index * reviewsPerSlide)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  Math.floor(currentSlide / reviewsPerSlide) === index 
-                    ? 'bg-purple-500 w-8' 
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-              />
-            ))}
+            {Array.from({ length: Math.ceil(reviews.length / reviewsPerSlide) }, (_, index) => {
+              const colors = ['bg-orange-400', 'bg-blue-400', 'bg-green-400', 'bg-pink-400'];
+              const activeColor = colors[index % colors.length];
+              return (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index * reviewsPerSlide)}
+                  className={`h-3 rounded-full transition-all duration-300 ${
+                    Math.floor(currentSlide / reviewsPerSlide) === index 
+                      ? `${activeColor} w-8` 
+                      : 'bg-gray-300 hover:bg-gray-400 w-3'
+                  }`}
+                />
+              );
+            })}
           </div>
         </div>
 
        
-
-        {/* Call to Action
-        <div className="text-center">
-          <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl p-12 text-white relative overflow-hidden"> */}
-            {/* Background pattern */}
-           
-            
-            {/* <div className="relative z-10">
-              <h3 className="text-3xl md:text-4xl font-bold mb-6" style={{fontFamily: "'Fredoka One', cursive"}}>
-                Ready to Join Our Happy Customers?
-              </h3>
-              <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto leading-relaxed" style={{fontFamily: "'Inter', sans-serif"}}>
-                Create your own custom passport case today and share your travel stories with style! 
-                Join thousands of satisfied customers worldwide.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="bg-white text-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg">
-                  Start Designing
-                </button>
-                <button className="border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-purple-600 transition-all duration-300 hover:scale-105">
-                  View Gallery
-                </button>
-              </div> */}
-            {/* </div> */}
-          {/* </div> */}
-        {/* </div> */}
+       
       </div>
     </div>
   );

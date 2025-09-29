@@ -22,44 +22,48 @@ const Canvas = ({
       const imgElement = new Image();
       imgElement.crossOrigin = 'anonymous';
       imgElement.src = src;
-
+  
       imgElement.onload = () => {
+        const canvasWidth = fabricCanvas.current.getWidth();
+        const canvasHeight = fabricCanvas.current.getHeight();
+  
         let scaleX, scaleY;
-        
+        let left = canvasWidth / 2;
+        let top = canvasHeight / 2;
+  
         if (isCase) {
-          // For case images, calculate scale to fit canvas properly and be centered
-          const canvasWidth = fabricCanvas.current.getWidth();
-          const canvasHeight = fabricCanvas.current.getHeight();
-          const maxWidth = canvasWidth * 0.85; // Use 85% of canvas width to ensure it fits
-          const maxHeight = canvasHeight * 0.85; // Use 85% of canvas height to ensure it fits
-          
-          scaleX = Math.min(maxWidth / imgElement.width, maxHeight / imgElement.height);
-          scaleY = scaleX; // Maintain aspect ratio
+          // Fixed scaling for the case image
+          const scale = Math.min(
+            canvasWidth * 1 / imgElement.width,
+            canvasHeight * 1 / imgElement.height
+          );
+  
+          scaleX = scale;
+          scaleY = scale;
         } else {
-          // For pins, use the provided dimensions
+          // Fixed size for pins
           scaleX = pinWidth / imgElement.width;
           scaleY = pinHeight / imgElement.height;
         }
-
+  
         const imgInstance = new fabric.Image(imgElement, {
-          left: isCase ? fabricCanvas.current.getWidth() / 2 : fabricCanvas.current.getWidth() / 2 - (imgElement.width * scaleX) / 2,
-          top: isCase ? fabricCanvas.current.getHeight() / 2 - 160 : fabricCanvas.current.getHeight() / 2 - (imgElement.height * scaleY) / 2,
-          originX: isCase ? 'center' : 'left',
-          originY: isCase ? 'center' : 'top',
-          
+          left,
+          top,
+          originX: 'center',
+          originY: 'center',
           scaleX,
           scaleY,
           selectable: !isCase,
           hasControls: isCase,
-          lockScalingX: isCase, // Allow case to be resized
-          lockScalingY: isCase, // Allow case to be resized
+          lockScalingX: isCase,
+          lockScalingY: isCase,
           borderColor: isCase ? "transparent" : "gray",
           cornerColor: isCase ? "transparent" : "blue",
           cornerSize: isCase ? 0 : 8,
           transparentCorners: false,
-          isCase: isCase
+          isCase
         });
-
+  
         if (isCase) {
           imgInstance.set('evented', false);
           fabricCanvas.current.add(imgInstance);
@@ -67,14 +71,16 @@ const Canvas = ({
         } else {
           fabricCanvas.current.add(imgInstance);
         }
-
+  
         fabricCanvas.current.renderAll();
         resolve(imgInstance);
       };
-
+  
       imgElement.onerror = reject;
     });
   };
+  
+  
 
   // Update controls position
   const updateControls = useCallback((obj) => {
@@ -95,32 +101,36 @@ const Canvas = ({
     setControlsPosition({ x: clampedX + 16, y: clampedY + 16 }); // Add padding offset
   }, []);
 
+
+  const resizeCanvasToFitScreen = () => {
+    const canvas = fabricCanvas.current;
+    if (!canvas) return;
+  
+    const isMobile = window.innerWidth < 768;
+  
+    const canvasWidth = isMobile ? 300 : 400;
+    const canvasHeight = isMobile ? 400 : 600;
+  
+    canvas.setWidth(canvasWidth);
+    canvas.setHeight(canvasHeight);
+    canvas.renderAll();
+  };
   // Initialize canvas
   useEffect(() => {
     if (!canvasRef.current) return;
-
+  
+    const isMobile = window.innerWidth < 768;
+    const canvasWidth = isMobile ? 400 : 500;
+    const canvasHeight = isMobile ? 400 : 500;
+  
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
-      width: 1500,
-      height: 1000,
+      width: canvasWidth,
+      height: canvasHeight,
       backgroundColor: 'transparent'
     });
-
-    // Responsive canvas sizing
-    const updateCanvasSize = () => {
-      const container = canvasRef.current?.parentElement;
-      if (container) {
-        const containerWidth = container.clientWidth - 1; // Account for padding (p-4 = 16px)
-        const canvasWidth = Math.min(containerWidth, 800); // Much bigger canvas to fit large image
-        const canvasHeight = 1000; // Much taller canvas for more charm positioning space
-        fabricCanvas.current.setWidth(canvasWidth);
-        fabricCanvas.current.setHeight(canvasHeight);
-      } else {
-        fabricCanvas.current.setWidth(800);
-        fabricCanvas.current.setHeight(100);
-      }
-    };
     
-    updateCanvasSize();
+
+
 
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
@@ -185,19 +195,40 @@ const Canvas = ({
     });
 
     // Window resize handler
-    const handleResize = () => {
-      updateCanvasSize();
-    };
-    window.addEventListener('resize', handleResize);
+     const handleResize = () => {
+    resizeCanvasToFitScreen();
+  };
+    
+  window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (fabricCanvas.current) {
-        fabricCanvas.current.dispose();
+  return () => {
+    window.removeEventListener('resize', handleResize);
+    fabricCanvas.current?.dispose();
+  };
+}, []);
+
+  const reloadCaseImage = () => {
+    if (!fabricCanvas.current || !selectedCaseType || !selectedColor) return;
+  
+    // Remove old case objects
+    const objects = fabricCanvas.current.getObjects();
+    objects.forEach(obj => {
+      if (obj.isCase) {
+        fabricCanvas.current.remove(obj);
       }
-    };
-  }, [updateControls, onPinSelect]);
-
+    });
+  
+    // Get case image
+    const selectedCase = products.cases.find(c => c.type === selectedCaseType);
+    const selectedColorData = selectedCase?.colors.find(c => c.color === selectedColor);
+  
+    if (selectedColorData?.image) {
+      loadImage(selectedColorData.image, true).then(() => {
+        fabricCanvas.current.renderAll();
+      });
+    }
+  };
+  
   // Load case image when case type or color changes
   useEffect(() => {
     if (!fabricCanvas.current || !selectedCaseType || !selectedColor) return;
@@ -236,7 +267,11 @@ const Canvas = ({
     console.log('Adding pin to canvas:', pin.name); // Debug log
 
     try {
-      const imgInstance = await loadImage(pin.src, false, 130, 130);
+      // Adjust pin size based on screen size
+      const isMobile = window.innerWidth < 768;
+      const pinSize = isMobile ? 80 : 100;
+      
+      const imgInstance = await loadImage(pin.src, false, pinSize, pinSize);
       
       // Center the pin on the canvas
       imgInstance.set({
@@ -317,11 +352,15 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-4 mb-2 relative w-full flex items-center justify-center">
+      <div className="happy-card p-2 sm:p-4 mb-2 relative w-full flex items-center justify-center">
         <canvas 
           ref={canvasRef} 
-          className=""
-          style={{ background: 'transparent' }}
+          className="max-w-full"
+          style={{ 
+            background: 'transparent',
+            maxWidth: '100%',
+            height: 'auto'
+          }}
         />
         
         {/* Controls */}
@@ -336,13 +375,13 @@ const Canvas = ({
           >
             <button
               onClick={handleRotate}
-              className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 flex items-center justify-center text-lg font-bold shadow-md hover:shadow-lg"
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 flex items-center justify-center text-sm sm:text-lg font-bold shadow-md hover:shadow-lg"
             >
               ↻
             </button>
             <button
               onClick={handleDelete}
-              className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center text-lg font-bold shadow-md hover:shadow-lg"
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center text-sm sm:text-lg font-bold shadow-md hover:shadow-lg"
             >
               ×
             </button>
