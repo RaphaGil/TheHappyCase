@@ -328,52 +328,54 @@ const NavBar = () => {
 
       {/* Navbar */}
       <nav className="flex bg-white border-b border-gray-100 justify-between items-center px-4 py-4 relative">
-        {/* Left side - Hamburger menu (mobile only) */}
-        <button
-          onClick={toggleMenu}
-          className="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none transition-colors"
-          aria-label="Toggle menu"
-        >
-          {!isOpen ? (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          )}
-        </button>
-        
-        {/* Center - Logo */}
-        <Link to="/" className="hover:opacity-90 transition-opacity duration-300 absolute left-1/2 transform -translate-x-1/2 lg:relative lg:left-0 lg:transform-none" aria-label="HappyCase home">
-          <div
-            className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
-            style={{ fontFamily: "'Fredoka One', cursive" }}
+        {/* Left side - Hamburger menu and Logo (mobile) */}
+        <div className="flex items-center gap-3 lg:flex-none">
+          <button
+            onClick={toggleMenu}
+            className="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none transition-colors"
+            aria-label="Toggle menu"
           >
-            <span className="text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
-              THE
-            </span>
-            <span className="text-xl md:text-3xl font-bold leading-none text-blue-900 uppercase">
-              HAPPY
-            </span>
-            <span className="text-end text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
-              CASE
-            </span>
-          </div>
-        </Link>
+            {!isOpen ? (
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            ) : (
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            )}
+          </button>
+          
+          {/* Logo - Next to burger on mobile, centered on desktop */}
+          <Link to="/" className="hover:opacity-90 transition-opacity duration-300 lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2" aria-label="HappyCase home">
+            <div
+              className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
+              style={{ fontFamily: "'Fredoka One', cursive" }}
+            >
+              <span className="text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
+                THE
+              </span>
+              <span className="text-xl md:text-3xl font-bold leading-none text-blue-900 uppercase">
+                HAPPY
+              </span>
+              <span className="text-end text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
+                CASE
+              </span>
+            </div>
+          </Link>
+        </div>
         
         {/* Right side - Mobile Icons (Cart) */}
         <div className="md:hidden flex items-center gap-3">

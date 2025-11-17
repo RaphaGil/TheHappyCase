@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import Canvas from "../../component/Canvas/index.jsx";
 import ColorSelector from "../../component/ColorSelector/index.jsx";
@@ -23,11 +23,43 @@ import AddTextModal from "./components/AddTextModal";
 
 const CreateYours = () => {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [pins, setPins] = useState([]);
   const [mobileSubCategory, setMobileSubCategory] = useState('all');
-  // Initialize default case and color
+  
+  // Initialize default case and color from URL params or defaults
   const getDefaultCaseAndColor = () => {
+    const caseParam = searchParams.get('case');
+    const colorParam = searchParams.get('color');
+    
+    // If URL params exist, use them
+    if (caseParam) {
+      const caseFromParam = Products.cases.find(c => c.type === caseParam);
+      if (caseFromParam) {
+        // If color param exists and is valid for this case, use it
+        if (colorParam) {
+          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
+          if (colorData) {
+            return {
+              caseType: caseFromParam.type,
+              color: colorData.color,
+              image: colorData.image
+            };
+          }
+        }
+        // Otherwise use first color of the case
+        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
+          return {
+            caseType: caseFromParam.type,
+            color: caseFromParam.colors[0].color,
+            image: caseFromParam.colors[0].image
+          };
+        }
+      }
+    }
+    
+    // Fallback to default
     if (Products.cases.length > 0) {
       const defaultCase = Products.cases.find(c => c.type === "economy") || Products.cases[0];
       if (defaultCase && defaultCase.colors.length > 0) {
@@ -65,6 +97,36 @@ const CreateYours = () => {
   const [showAddTextModal, setShowAddTextModal] = useState(false);
   const caseDropdownRef = useRef(null);
   const { addToCart } = useCart();
+
+  // Update case and color when URL params change
+  useEffect(() => {
+    const caseParam = searchParams.get('case');
+    const colorParam = searchParams.get('color');
+    
+    if (caseParam) {
+      const caseFromParam = Products.cases.find(c => c.type === caseParam);
+      if (caseFromParam) {
+        setSelectedCaseType(caseFromParam.type);
+        
+        // If color param exists and is valid for this case, use it
+        if (colorParam) {
+          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
+          if (colorData) {
+            setSelectedColor(colorData.color);
+            setSelectedCaseImage(colorData.image);
+            return;
+          }
+        }
+        
+        // Otherwise use first color of the case
+        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
+          const firstColor = caseFromParam.colors[0];
+          setSelectedColor(firstColor.color);
+          setSelectedCaseImage(firstColor.image);
+        }
+      }
+    }
+  }, [searchParams]);
 
   // Handle case type selection
   const handleCaseTypeSelection = (caseType) => {
@@ -322,51 +384,54 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-8 md:py-12 relative overflow-hidden bg-white">
-      <div className="lg:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10  pb-16 sm:pb-24">
+    <section className="min-h-screen py-2 md:py-12 relative overflow-hidden bg-white">
+      <div className="lg:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-2 sm:pb-24 h-screen md:h-auto flex flex-col">
         {/* Header Section */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl md:text-3xl font-light text-gray-900 mb-2" 
+        <div className="text-center mb-2 md:mb-6">
+          <h1 className="text-xl md:text-3xl font-light text-gray-900 mb-1 md:mb-2" 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
           </h1>
-          <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
+          <div className="w-16 h-px bg-gray-300 mx-auto mb-2 md:mb-4"></div>
           <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case with our interactive creator
           </p>
-          <p className="block md:hidden text-xs text-gray-500 max-w-2xl mx-auto font-light mt-12">Select the options:</p>
         </div>
         
-        {/* Mobile Step Buttons - Only show on mobile */}
-        {isMobile && (
-          <MobileStepButtons
-            mobileCurrentStep={mobileCurrentStep}
-            setMobileCurrentStep={setMobileCurrentStep}
-            selectedCaseType={selectedCaseType}
-            selectedColor={selectedColor}
-            onOpenAddText={() => setShowAddTextModal(true)}
-          />
-        )}
-        
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className="flex  flex-col lg:flex-row gap-6 lg:gap-12 ">
+        <div className="flex flex-col lg:flex-row gap-2 md:gap-6 lg:gap-12 flex-1 overflow-hidden">
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center">
-              <p className="block md:hidden text-xs text-gray-500 max-w-2xl mx-auto font-light">Select the options:</p>
-            <div className="w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[480px]">
-              <Canvas
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                onPinSelect={handlePinSelect}
-                onPinRemove={handlePinRemove}
-                onSaveImage={handleSaveImageFunction}
-                products={Products}
-              />
+          <div className="w-full lg:w-1/2 flex flex-col items-center justify-center flex-1 min-h-0">
+
+            <div className="w-full max-w-[280px] sm:max-w-[400px] lg:max-w-[480px] flex flex-col">
+              <div className="flex-shrink-0">
+                <Canvas
+                  selectedCaseType={selectedCaseType}
+                  selectedColor={selectedColor}
+                  onPinSelect={handlePinSelect}
+                  onPinRemove={handlePinRemove}
+                  onSaveImage={handleSaveImageFunction}
+                  products={Products}
+                />
+              </div>
+              
+              {/* Mobile Step Buttons - Under the case image on mobile */}
+              {isMobile && (
+                <div className="mt-2 w-full flex-shrink-0">
+                  <MobileStepButtons
+                    mobileCurrentStep={mobileCurrentStep}
+                    setMobileCurrentStep={setMobileCurrentStep}
+                    selectedCaseType={selectedCaseType}
+                    selectedColor={selectedColor}
+                    onOpenAddText={() => setShowAddTextModal(true)}
+                  />
+                </div>
+              )}
               
               {/* Action Buttons - Bottom */}
-              <div className="mt-4 flex flex-row gap-2">
+              <div className="mt-2 md:mt-4 flex flex-row gap-2 flex-shrink-0">
                 <ViewMoreImagesButton
                   caseImages={caseImages}
                   onOpenModal={() => {
@@ -382,6 +447,7 @@ const CreateYours = () => {
                 />
               </div>
             </div>
+            
             {/* Save Your Design Button - Hidden for now */}
             {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
           </div>

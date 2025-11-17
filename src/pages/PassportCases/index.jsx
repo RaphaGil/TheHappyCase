@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Products from '../../products.json';
 import { useCart } from '../../context/CartContext';
 import AddToCartBtn from '../../component/AddToCartBtn';
@@ -7,6 +7,7 @@ import GlueInfoModal from '../../component/GlueInfoModal';
 
 const PassportCases = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const filterParam = searchParams.get('filter');
   const { addToCart } = useCart();
   
@@ -369,7 +370,7 @@ const PassportCases = () => {
                 <button
                   onClick={() => {
                     // Navigate to CreateYours with selected case and color
-                    window.location.href = `/TheHappyCase/CreateYours?case=${selectedCaseType}&color=${selectedColor}`;
+                    navigate(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
                   }}
                   className="w-full py-3 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
                   style={{fontFamily: "'Poppins', sans-serif"}}
