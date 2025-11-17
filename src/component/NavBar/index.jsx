@@ -358,8 +358,8 @@ const NavBar = () => {
             )}
           </button>
           
-          {/* Logo - Next to burger on mobile, centered on desktop */}
-          <Link to="/" className="hover:opacity-90 transition-opacity duration-300 lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2" aria-label="HappyCase home">
+          {/* Logo - Next to burger on mobile, left on desktop */}
+          <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
             <div
               className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
               style={{ fontFamily: "'Fredoka One', cursive" }}

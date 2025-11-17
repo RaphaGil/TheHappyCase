@@ -354,16 +354,16 @@ const Charms = () => {
         </div>
 
         {/* Charm Type Selection - Minimalist Tabs */}
-        <div className="flex justify-center mb-12">
-          <div className="flex gap-1 border-b border-gray-200 flex-wrap justify-center">
+        <div className="flex justify-center mb-6">
+          <div className="flex gap-1 border-b-2 border-gray-300 flex-wrap justify-center">
             {charmTypes.map((type) => (
               <button
                 key={type.key}
                 onClick={() => handleCharmTypeChange(type.key)}
-                className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 ${
+                className={`px-6 py-3 text-sm uppercase tracking-wider transition-all duration-200 font-medium ${
                   selectedCharmType === type.key
-                    ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
-                    : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                    ? 'border-b-2 border-gray-900 text-gray-900 bg-gray-50'
+                    : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-400 hover:bg-gray-50/50'
                 }`}
                 style={{fontFamily: "'Poppins', sans-serif"}}
               >
@@ -375,8 +375,8 @@ const Charms = () => {
 
         {/* Continent Selection Tabs - Only show for Flags */}
         {selectedCharmType === 'flags' && (
-          <div className="flex justify-center mb-8">
-            <div className="flex gap-1 border-b border-gray-200 flex-wrap justify-center">
+          <div className="flex justify-center mb-6">
+            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
               {[
                 { key: 'all', label: 'ALL' },
                 { key: 'europe', label: 'EUROPE' },
@@ -391,10 +391,10 @@ const Charms = () => {
                     setSelectedContinent(key);
                     setFlagsCurrentPage(1); // Reset to first page when continent changes
                   }}
-                  className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
                     selectedContinent === key
-                      ? 'border-b-2 border-gray-900 text-gray-900'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                      ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
+                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
                   }`}
                   style={{fontFamily: "'Poppins', sans-serif"}}
                 >
@@ -407,8 +407,8 @@ const Charms = () => {
 
         {/* Bronze Category Selection Tabs - Only show for Bronze Charms */}
         {selectedCharmType === 'bronze' && (
-          <div className="flex justify-center mb-8">
-            <div className="flex gap-1 border-b border-gray-200 flex-wrap justify-center">
+          <div className="flex justify-center mb-6">
+            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
               {[
                 { key: 'all', label: 'ALL' },
                 { key: 'travel', label: 'TRAVEL' },
@@ -423,10 +423,10 @@ const Charms = () => {
                     setSelectedBronzeCategory(key);
                     setBronzeCurrentPage(1); // Reset to first page when category changes
                   }}
-                  className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
                     selectedBronzeCategory === key
-                      ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                      ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
+                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
                   }`}
                   style={{fontFamily: "'Poppins', sans-serif"}}
                 >
@@ -439,8 +439,8 @@ const Charms = () => {
 
         {/* Colorful Category Selection Tabs - Only show for Colorful Charms */}
         {selectedCharmType === 'colorful' && (
-          <div className="flex justify-center mb-8">
-            <div className="flex gap-1 border-b border-gray-200 flex-wrap justify-center">
+          <div className="flex justify-center mb-6">
+            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
               {[
                 { key: 'all', label: 'ALL' },
                 { key: 'travel', label: 'TRAVEL' },
@@ -457,10 +457,10 @@ const Charms = () => {
                     setSelectedColorfulCategory(key);
                     setColorfulCurrentPage(1); // Reset to first page when category changes
                   }}
-                  className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
                     selectedColorfulCategory === key
-                      ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                      ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
+                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
                   }`}
                   style={{fontFamily: "'Poppins', sans-serif"}}
                 >
