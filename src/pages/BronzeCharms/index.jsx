@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Products from '../../products.json';
+import { useCart } from '../../context/CartContext';
+import { useCurrency } from '../../context/CurrencyContext';
 
 const BronzeCharms = () => {
   const navigate = useNavigate();
-  const [selectedCharm, setSelectedCharm] = useState(null);
+  const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 16; // 4 columns × 4 rows
 
   const bronzePins = Products.pins.bronze;
 
@@ -54,60 +59,90 @@ const BronzeCharms = () => {
     return matchesSearch;
   });
 
-  const handleCharmClick = (charm) => {
-    setSelectedCharm(charm);
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPins.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPins = filteredPins.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchTerm]);
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prev => Math.max(1, prev - 1));
   };
 
-  const handleAddToDesign = () => {
-    if (selectedCharm) {
-      navigate('/CreateYours', { state: { selectedPin: selectedCharm, category: 'bronze' } });
-    }
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(totalPages, prev + 1));
+  };
+
+  const handleAddToCart = (charm) => {
+    const product = {
+      name: `${charm.name} - Bronze Charm`,
+      price: charm.price || 1.0,
+      totalPrice: charm.price || 1.0,
+      image: charm.src,
+      pin: charm,
+      category: 'bronze',
+      type: 'charm'
+    };
+    addToCart(product);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-green-100 to-green-200 py-8">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold happy-text-gradient lazy-dog-title mb-4"  style={{fontFamily: "'Fredoka One', cursive"}}>
-            Bronze Charms Collection
+          <h1 className="text-3xl md:text-4xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+            Bronze Charms
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto student-text">
-            Classic, elegant, and timeless! Our bronze charms add a sophisticated touch to your phone case. 
-            Perfect for the refined traveler and classic style lover! 
+          <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
+          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+            Create your case with charms glued, or buy charms separately and glue them yourself for the fun of doing it.
           </p>
         </div>
 
         {/* Search and Filter */}
-        <div className="happy-card p-6 mb-8">
+        <div className="mb-10">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search Bar */}
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1 max-w-md w-full">
               <input
                 type="text"
-                placeholder="Search bronze charms..."
+                placeholder="Search charms..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 pl-10 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400"
+                style={{fontFamily: "'Poppins', sans-serif"}}
               />
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                🔍
-              </span>
+              <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
 
             {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
-              {['all', 'travel', 'landmarks', 'animals', 'symbols'].map((category) => (
+              {[
+                { key: 'all', label: 'ALL' },
+                { key: 'travel', label: 'TRAVEL' },
+                { key: 'landmarks', label: 'LANDMARKS' },
+                { key: 'animals', label: 'ANIMALS' },
+                { key: 'symbols', label: 'SYMBOLS' }
+              ].map(({ key, label }) => (
                 <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-2xl text-sm font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg ${
-                    selectedCategory === category
-                      ? 'bg-gradient-to-r from-green-400 to-green-500 text-white'
-                      : 'bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white'
+                  key={key}
+                  onClick={() => setSelectedCategory(key)}
+                  className={`px-4 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
+                    selectedCategory === key
+                      ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
+                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
                   }`}
+                  style={{fontFamily: "'Poppins', sans-serif"}}
                 >
-                  {category === 'all' ? 'All' : category.charAt(0).toUpperCase() + category.slice(1)}
+                  {label}
                 </button>
               ))}
             </div>
@@ -115,57 +150,130 @@ const BronzeCharms = () => {
         </div>
 
         {/* Results Count */}
-        <div className="mb-6">
-          <p className="text-gray-600">
-            Showing {filteredPins.length} of {bronzePins.length} bronze charms
+        <div className="mb-8 flex items-center justify-between text-sm text-gray-500">
+          <p style={{fontFamily: "'Poppins', sans-serif"}}>
+            {filteredPins.length} {filteredPins.length === 1 ? 'item' : 'items'}
           </p>
+          {totalPages > 1 && (
+            <p style={{fontFamily: "'Poppins', sans-serif"}}>
+              {currentPage} / {totalPages}
+            </p>
+          )}
         </div>
 
-        {/* Charms Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-12">
-          {filteredPins.map((charm, index) => (
+        {/* Navigation and Charms Grid */}
+        <div className="relative">
+          {/* Previous Button */}
+          {totalPages > 1 && currentPage > 1 && (
+            <button
+              onClick={handlePreviousPage}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 z-10 bg-white rounded-full p-2 md:p-3 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+              aria-label="Previous page"
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+
+          {/* Charms Grid - 4 columns on large screens, responsive on smaller */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-12">
+            {currentPins.map((charm, index) => {
+              const pastelColors = ['bg-pink-50', 'bg-blue-50', 'bg-purple-50', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50'];
+              const pastelBorders = ['border-pink-100', 'border-blue-100', 'border-purple-100', 'border-green-100', 'border-yellow-100', 'border-orange-100'];
+              const colorIndex = index % pastelColors.length;
+              return (
             <div
               key={index}
-              className="happy-card p-4 cursor-pointer group hover:scale-105 transition-all duration-300"
-              onClick={() => handleCharmClick(charm)}
+              className="flex flex-col group"
             >
-              <div className="aspect-square mb-4 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-md">
+              <div className={`aspect-square mb-3 ${pastelColors[colorIndex]} flex items-center justify-center overflow-hidden border ${pastelBorders[colorIndex]} relative`}>
                 <img
                   src={charm.src}
                   alt={charm.name}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-contain p-2 transition-opacity duration-200 group-hover:opacity-80"
                   onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
+                    if (e.target) {
+                      e.target.style.display = 'none';
+                    }
+                    if (e.target?.nextSibling) {
+                      e.target.nextSibling.style.display = 'flex';
+                    }
                   }}
                 />
-             
+                {/* Add to Cart Button Overlay - Always visible on mobile, shows on hover on desktop */}
+                <button
+                  onClick={() => handleAddToCart(charm)}
+                  className="absolute bottom-0 left-0 right-0 py-2 text-gray-900 border-t border-gray-200 bg-white transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50"
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                >
+                  {/* Bag Icon - Visible on mobile */}
+                  <svg className="w-4 h-4 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                  {/* Button Text - Visible on desktop */}
+                  <span className="hidden md:inline">Add to Cart</span>
+                </button>
               </div>
-              <h3 className="font-semibold text-gray-800 text-center mb-2 group-hover:text-purple-600 transition-colors line-clamp-2">
+              <h3 className="text-sm text-gray-700 text-center mb-1 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
                 {charm.name}
               </h3>
               <div className="text-center">
-                <span className="text-lg font-bold happy-text-gradient">£1.50</span>
-   
+                <span className="text-sm text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>{formatPrice(charm.price || 1.0)}</span>
               </div>
             </div>
-          ))}
+            );
+            })}
+          </div>
+
+          {/* Next Button */}
+          {totalPages > 1 && currentPage < totalPages && (
+            <button
+              onClick={handleNextPage}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 z-10 bg-white rounded-full p-2 md:p-3 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+              aria-label="Next page"
+            >
+              <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
         </div>
+
+        {/* Pagination Numbers */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-1 mb-12">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-1 text-xs transition-all duration-200 ${
+                  currentPage === page
+                    ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
+                    : 'border-b-2 border-transparent text-gray-400 hover:text-gray-700 hover:border-gray-300'
+                }`}
+                style={{fontFamily: "'Poppins', sans-serif"}}
+                aria-label={`Go to page ${page}`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* No Results */}
         {filteredPins.length === 0 && (
-          <div className="happy-card p-12 text-center">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold happy-text-gradient mb-4">No charms found</h3>
-            <p className="text-gray-600 mb-6">
-              Try adjusting your search terms or category filter to find the perfect bronze charm!
+          <div className="py-16 text-center">
+            <p className="text-gray-400 mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+              No charms found
             </p>
             <button
               onClick={() => {
                 setSearchTerm('');
                 setSelectedCategory('all');
               }}
-              className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+              className="text-xs uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200"
+              style={{fontFamily: "'Poppins', sans-serif"}}
             >
               Clear Filters
             </button>
@@ -173,82 +281,34 @@ const BronzeCharms = () => {
         )}
 
         {/* Call to Action */}
-        <div className="happy-card p-8 text-center">
-          <h2 className="text-3xl font-bold happy-text-gradient lazy-dog-title mb-4" style={{fontFamily: "'Fredoka One', cursive"}}>
-            Ready to Create Your Bronze Design?
-          </h2>
-          <p className="text-gray-600 mb-6 text-lg student-text" style={{fontFamily: "'Poppins', sans-serif"}}>
-            Click on any charm above to start designing your custom phone case, or explore our other collections!
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button
-              onClick={() => navigate('/CreateYours')}
-              className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
-            >
-              Start Creating
-            </button>
-            <button
-              onClick={() => navigate('/ColorfulCharms')}
-              className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
-            >
-              View Colorful Charms
-            </button>
-            <button
-              onClick={() => navigate('/Flags')}
-              className="px-8 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg text-lg"
-            >
-              View Flags
-            </button>
-          </div>
-        </div>
-
-        {/* Selected Charm Modal */}
-        {selectedCharm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="happy-card p-8 max-w-md w-full">
-              <div className="text-center">
-                <div className="w-32 h-32 mx-auto mb-4 bg-white rounded-xl flex items-center justify-center overflow-hidden shadow-md">
-                  <img
-                    src={selectedCharm.src}
-                    alt={selectedCharm.name}
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                  <div className="hidden w-full h-full items-center justify-center text-amber-400">
-                    <span className="text-6xl">🥉</span>
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold happy-text-gradient mb-2">
-                  {selectedCharm.name}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  An elegant bronze charm to add sophistication to your phone case!
-                </p>
-                <div className="mb-6">
-                  <span className="text-3xl font-bold happy-text-gradient">£1.50</span>
-                  <span className="text-gray-500 ml-2">Bronze Charm</span>
-                </div>
-                <div className="flex space-x-4">
-                  <button
-                    onClick={handleAddToDesign}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-                  >
-                    Add to Design
-                  </button>
-                  <button
-                    onClick={() => setSelectedCharm(null)}
-                    className="px-6 py-3 bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
+        {filteredPins.length > 0 && (
+          <div className="pt-12 pb-8 text-center border-t border-gray-100">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <button
+                onClick={() => navigate('/CreateYours')}
+                className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+                style={{fontFamily: "'Poppins', sans-serif"}}
+              >
+                Start Creating
+              </button>
+              <button
+                onClick={() => navigate('/ColorfulCharms')}
+                className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+                style={{fontFamily: "'Poppins', sans-serif"}}
+              >
+                Colorful Charms
+              </button>
+              <button
+                onClick={() => navigate('/Flags')}
+                className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+                style={{fontFamily: "'Poppins', sans-serif"}}
+              >
+                Flags
+              </button>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

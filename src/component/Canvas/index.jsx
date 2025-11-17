@@ -12,6 +12,10 @@ const Canvas = ({
 }) => {
   const canvasRef = useRef(null);
   const fabricCanvas = useRef(null);
+  const caseInstanceRef = useRef(null);
+  const boundaryRectRef = useRef(null);
+  const caseBorderRectRef = useRef(null); // Red border around the case image
+  const borderRectsRef = useRef(new Map()); // Store border rectangles for selected objects
   const [selectedPin, setSelectedPin] = useState(null);
   const [controlsPosition, setControlsPosition] = useState({ x: 0, y: 0 });
   const [showControls, setShowControls] = useState(false);
@@ -41,9 +45,24 @@ const Canvas = ({
           scaleX = scale;
           scaleY = scale;
         } else {
-          // Fixed size for pins
-          scaleX = pinWidth / imgElement.width;
-          scaleY = pinHeight / imgElement.height;
+          // Allow pins to maintain their natural aspect ratio with a max size
+          // Scale proportionally to fit within the max size while maintaining aspect ratio
+          const maxSize = Math.max(pinWidth, pinHeight);
+          const naturalAspectRatio = imgElement.width / imgElement.height;
+          let targetWidth, targetHeight;
+          
+          if (imgElement.width >= imgElement.height) {
+            // Landscape or square - fit to width
+            targetWidth = maxSize;
+            targetHeight = maxSize / naturalAspectRatio;
+          } else {
+            // Portrait - fit to height
+            targetHeight = maxSize;
+            targetWidth = maxSize * naturalAspectRatio;
+          }
+          
+          scaleX = targetWidth / imgElement.width;
+          scaleY = targetHeight / imgElement.height;
         }
   
         const imgInstance = new fabric.Image(imgElement, {
@@ -57,17 +76,78 @@ const Canvas = ({
           hasControls: isCase,
           lockScalingX: isCase,
           lockScalingY: isCase,
-          borderColor: isCase ? "transparent" : "gray",
+          borderColor: "transparent",
           cornerColor: isCase ? "transparent" : "blue",
           cornerSize: isCase ? 0 : 8,
           transparentCorners: false,
+          hasBorders: false,
           isCase
         });
   
         if (isCase) {
           imgInstance.set('evented', false);
+          caseInstanceRef.current = imgInstance;
           fabricCanvas.current.add(imgInstance);
           fabricCanvas.current.sendObjectToBack(imgInstance);
+          
+          // Create red boundary rectangle after case is loaded
+          setTimeout(() => {
+            if (boundaryRectRef.current) {
+              fabricCanvas.current.remove(boundaryRectRef.current);
+            }
+            
+            // Remove existing case border if any
+            if (caseBorderRectRef.current) {
+              fabricCanvas.current.remove(caseBorderRectRef.current);
+            }
+            
+            const rect = imgInstance.getBoundingRect();
+            // Add inset to make boundary smaller (inside the case image)
+            // Separate horizontal and vertical insets - larger horizontal for smaller width
+            // Business class case needs wider boundary (more inset from edges)
+            const insetHorizontal = selectedCaseType === 'business' ? 140 : 120; // Horizontal inset (left/right) - wider for business, more space for all cases
+            const insetVertical = selectedCaseType === 'business' ? 50 : 40; // Vertical inset (top/bottom) - wider for business, more space for all cases
+            const boundaryRect = new fabric.Rect({
+              left: rect.left + insetHorizontal,
+              top: rect.top + insetVertical,
+              width: rect.width - (insetHorizontal * 2),
+              height: rect.height - (insetVertical * 2),
+              fill: 'transparent',
+              stroke: 'rgba(239, 68, 68, 0.3)', // Subtle red with transparency
+              strokeWidth: 1,
+              strokeDashArray: [4, 4],
+              selectable: false,
+              evented: false,
+              visible: false, // Hidden by default, shown only when moving objects
+            });
+            
+            boundaryRectRef.current = boundaryRect;
+            fabricCanvas.current.add(boundaryRect);
+            fabricCanvas.current.sendObjectToBack(boundaryRect);
+            
+            // Create red border around the case image itself (shown when charm is at edge)
+            // Make border wider for business and first class cases
+            const borderWidth = (selectedCaseType === 'business' || selectedCaseType === 'firstclass') ? 5 : 3;
+            const caseBorderRect = new fabric.Rect({
+              left: rect.left,
+              top: rect.top,
+              width: rect.width,
+              height: rect.height,
+              fill: 'transparent',
+              stroke: 'red',
+              strokeWidth: borderWidth,
+              selectable: false,
+              evented: false,
+              visible: false, // Hidden by default, shown when charm is at edge
+            });
+            
+            caseBorderRectRef.current = caseBorderRect;
+            fabricCanvas.current.add(caseBorderRect);
+            fabricCanvas.current.sendObjectToBack(caseBorderRect);
+            fabricCanvas.current.sendObjectToBack(imgInstance);
+            
+            fabricCanvas.current.renderAll();
+          }, 100);
         } else {
           fabricCanvas.current.add(imgInstance);
         }
@@ -82,23 +162,105 @@ const Canvas = ({
   
   
 
+  // Create or update border rectangle for selected object
+  const updateBorderRect = useCallback((obj) => {
+    if (!obj || !fabricCanvas.current || obj.isCase) return;
+    
+    // Remove existing border if any
+    const existingBorder = borderRectsRef.current.get(obj);
+    if (existingBorder) {
+      fabricCanvas.current.remove(existingBorder);
+      borderRectsRef.current.delete(obj);
+    }
+    
+    // Get the exact bounding rectangle of the object (accounts for scale, rotation, etc.)
+    const boundingRect = obj.getBoundingRect(true);
+    
+    // Calculate inset as a percentage of the smaller dimension to adjust to image shape
+    // Use 2.5% of the smaller dimension for proportional scaling
+    const minDimension = Math.min(boundingRect.width, boundingRect.height);
+    const inset = Math.max(2, minDimension * 0.075); // Minimum 2px, or 2.5% of smaller dimension
+    
+    // Create border rectangle with proportional inset based on image size
+    const borderRect = new fabric.Rect({
+      left: boundingRect.left + inset,
+      top: boundingRect.top + inset,
+      width: boundingRect.width - (inset * 2),
+      height: boundingRect.height - (inset * 2),
+      originX: 'left',
+      originY: 'top',
+      fill: 'transparent',
+      stroke: '#111827',
+      strokeWidth: 1,
+      strokeDashArray: [3, 3], // Dashed border (dots)
+      selectable: false,
+      evented: false,
+      excludeFromExport: false,
+    });
+    
+    borderRectsRef.current.set(obj, borderRect);
+    fabricCanvas.current.add(borderRect);
+    
+    // Position border above case but below the selected object
+    // Ensure case is at the back
+    const caseInstance = caseInstanceRef.current;
+    if (caseInstance) {
+      fabricCanvas.current.sendObjectToBack(caseInstance);
+    }
+    // Ensure boundary rect and case border are also at the back
+    if (boundaryRectRef.current) {
+      fabricCanvas.current.sendObjectToBack(boundaryRectRef.current);
+    }
+    if (caseBorderRectRef.current) {
+      fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+    }
+    // Bring the selected object to front so border appears below it
+    fabricCanvas.current.bringObjectToFront(obj);
+    
+    fabricCanvas.current.renderAll();
+  }, []);
+
+  // Remove border rectangle for object
+  const removeBorderRect = useCallback((obj) => {
+    if (!obj || !fabricCanvas.current) return;
+    const borderRect = borderRectsRef.current.get(obj);
+    if (borderRect) {
+      fabricCanvas.current.remove(borderRect);
+      borderRectsRef.current.delete(obj);
+      fabricCanvas.current.renderAll();
+    }
+  }, []);
+
   // Update controls position
   const updateControls = useCallback((obj) => {
-    if (!obj) return;
+    if (!obj || !fabricCanvas.current) return;
     
     const rect = obj.getBoundingRect(true);
-    const canvasWidth = fabricCanvas.current.getWidth();
-    const canvasHeight = fabricCanvas.current.getHeight();
+    const canvas = fabricCanvas.current;
+    const canvasElement = canvas.getElement();
+    const canvasContainer = canvasElement.parentElement;
     
-    // Calculate desired position (above the charm)
-    const desiredX = rect.left + rect.width / 2;
-    const desiredY = rect.top - 60; // 60px above the charm
+    if (!canvasContainer) return;
     
-    // Clamp within canvas bounds
-    const clampedX = Math.max(10, Math.min(desiredX - 50, canvasWidth - 110)); // 50px for half control width
-    const clampedY = Math.max(10, Math.min(desiredY, canvasHeight - 50));
+    // Get canvas position relative to its container
+    const canvasRect = canvasElement.getBoundingClientRect();
+    const containerRect = canvasContainer.getBoundingClientRect();
     
-    setControlsPosition({ x: clampedX + 16, y: clampedY + 16 }); // Add padding offset
+    // Calculate position relative to container
+    const canvasOffsetX = canvasRect.left - containerRect.left;
+    const canvasOffsetY = canvasRect.top - containerRect.top;
+    
+    // Calculate desired position (just above the charm)
+    const desiredX = canvasOffsetX + rect.left + rect.width / 2;
+    const desiredY = canvasOffsetY + rect.top - 14; // closer to the charm
+    
+    // Clamp within container bounds
+    const controlWidth = 70; // tighter controls
+    const controlHeight = 32;
+    const clampedX = Math.max(6, Math.min(desiredX - controlWidth / 2, containerRect.width - controlWidth - 6));
+    const clampedY = Math.max(6, Math.min(desiredY, containerRect.height - controlHeight - 6));
+    
+    setControlsPosition({ x: clampedX, y: clampedY });
   }, []);
 
 
@@ -108,8 +270,8 @@ const Canvas = ({
   
     const isMobile = window.innerWidth < 768;
   
-    const canvasWidth = isMobile ? 300 : 400;
-    const canvasHeight = isMobile ? 400 : 600;
+    const canvasWidth = isMobile ? 380 : 500;
+    const canvasHeight = isMobile ? 380 : 500;
   
     canvas.setWidth(canvasWidth);
     canvas.setHeight(canvasHeight);
@@ -120,8 +282,8 @@ const Canvas = ({
     if (!canvasRef.current) return;
   
     const isMobile = window.innerWidth < 768;
-    const canvasWidth = isMobile ? 400 : 500;
-    const canvasHeight = isMobile ? 400 : 500;
+    const canvasWidth = isMobile ? 380 : 500;
+    const canvasHeight = isMobile ? 380 : 500;
   
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,
@@ -131,39 +293,170 @@ const Canvas = ({
     
 
 
-
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
       const obj = e.target;
-      if (!obj || !obj.getBoundingRect || obj.isCase) return; // Skip case object
+      if (!obj || !obj.getBoundingRect || obj.isCase || obj === boundaryRectRef.current || obj === caseBorderRectRef.current) return; // Skip case object, boundary, and case border
       
-      const rect = obj.getBoundingRect(true);
-      const canvasHeight = fabricCanvas.current.getHeight();
-      const canvasWidth = fabricCanvas.current.getWidth();
+      // Get case bounds for constraint
+      const caseInstance = caseInstanceRef.current;
+      if (!caseInstance) return;
       
-      // Keep object within canvas bounds with minimal margin for more charm space
-      const margin = 10;
+      const caseRect = caseInstance.getBoundingRect();
+      const objRect = obj.getBoundingRect(true);
       
-      if (rect.left < margin) {
-        obj.set('left', margin);
+      // Calculate the actual bounds of the case image with inset (matching the red boundary)
+      // Separate horizontal and vertical insets to match the red boundary
+      // Business class case needs wider boundary (more inset from edges)
+      const insetHorizontal = selectedCaseType === 'business' ? 14 : 12; // Horizontal inset (left/right) - wider for business, more space for all cases
+      const insetVertical = selectedCaseType === 'business' ? 40 : 30; // Vertical inset (top/bottom) - wider for business, more space for all cases
+      const caseLeft = caseRect.left + insetHorizontal;
+      const caseTop = caseRect.top + insetVertical;
+      const caseRight = caseRect.left + caseRect.width - insetHorizontal;
+      const caseBottom = caseRect.top + caseRect.height - insetVertical;
+      
+      // Check if object is near or over the boundary line (within threshold)
+      const threshold = 2; // Distance threshold to show boundary (smaller margin to show warning when closer to edge)
+      const isNearLeft = objRect.left <= caseLeft + threshold && objRect.left + objRect.width >= caseLeft;
+      const isNearRight = objRect.left <= caseRight && objRect.left + objRect.width >= caseRight - threshold;
+      const isNearTop = objRect.top <= caseTop + threshold && objRect.top + objRect.height >= caseTop;
+      const isNearBottom = objRect.top <= caseBottom && objRect.top + objRect.height >= caseBottom - threshold;
+      const isOverBoundary = isNearLeft || isNearRight || isNearTop || isNearBottom;
+      
+      // Minimalist alert: subtle boundary only when very close
+      // Show subtle boundary only when object is very close to the edge (not just near)
+      if (boundaryRectRef.current) {
+        boundaryRectRef.current.set('visible', isOverBoundary);
+      }
+      
+      // Hide red border around the case image (no longer showing it)
+      if (caseBorderRectRef.current) {
+        caseBorderRectRef.current.set('visible', false);
+      }
+      
+      if (isOverBoundary) {
+        fabricCanvas.current.renderAll();
+      }
+      
+      // Keep object within case bounds (strictly inside the red boundary)
+      const margin = 0.5; // Small margin to keep objects inside the boundary, not on it
+      
+      // Calculate object dimensions from bounding rect
+      const objWidth = objRect.width;
+      const objHeight = objRect.height;
+      const halfWidth = objWidth / 2;
+      const halfHeight = objHeight / 2;
+      
+      // Get current object center position
+      let newLeft = obj.left;
+      let newTop = obj.top;
+      
+      // Constrain horizontal position (accounting for center origin)
+      // Keep object strictly inside the boundary (left edge)
+      if (objRect.left < caseLeft + margin) {
+        newLeft = caseLeft + margin + halfWidth;
+      }
+      // Keep object strictly inside the boundary (right edge)
+      if (objRect.left + objWidth > caseRight - margin) {
+        newLeft = caseRight - margin - halfWidth;
+      }
+      
+      // Constrain vertical position (accounting for center origin)
+      // Keep object strictly inside the boundary (top edge)
+      if (objRect.top < caseTop + margin) {
+        newTop = caseTop + margin + halfHeight;
+      }
+      // Keep object strictly inside the boundary (bottom edge)
+      if (objRect.top + objHeight > caseBottom - margin) {
+        newTop = caseBottom - margin - halfHeight;
+      }
+      
+      // Apply constraints if needed
+      if (newLeft !== obj.left || newTop !== obj.top) {
+        obj.set({
+          left: newLeft,
+          top: newTop
+        });
         obj.setCoords();
       }
-      if (rect.left + rect.width > canvasWidth - margin) {
-        obj.set('left', canvasWidth - rect.width - margin);
-        obj.setCoords();
-      }
-      if (rect.top < margin) {
-        obj.set('top', margin);
-        obj.setCoords();
-      }
-      if (rect.top + rect.height > canvasHeight - margin) {
-        obj.set('top', canvasHeight - rect.height - margin);
-        obj.setCoords();
+      
+      // Update border rectangle during movement
+      const borderRect = borderRectsRef.current.get(obj);
+      if (borderRect) {
+        // Get the exact bounding rectangle of the object (accounts for scale, rotation, etc.)
+        const boundingRect = obj.getBoundingRect(true);
+        
+        // Calculate inset as a percentage of the smaller dimension to adjust to image shape
+        // Use 2.5% of the smaller dimension for proportional scaling
+        const minDimension = Math.min(boundingRect.width, boundingRect.height);
+        const inset = Math.max(2, minDimension * 0.025); // Minimum 2px, or 2.5% of smaller dimension
+        
+        borderRect.set({
+          left: boundingRect.left + inset,
+          top: boundingRect.top + inset,
+          width: boundingRect.width - (inset * 2),
+          height: boundingRect.height - (inset * 2),
+        });
+        borderRect.setCoords();
+        // Ensure border stays below object by bringing object to front
+        fabricCanvas.current.bringObjectToFront(obj);
       }
       
-      // Update controls position during movement if this is the selected object
-      if (obj === selectedPin) {
+      // Update controls position during movement for the active object
+      const activeObj = fabricCanvas.current.getActiveObject();
+      if (activeObj === obj) {
         updateControls(obj);
+      }
+    });
+
+    // Update controls after object is modified (moved, rotated, etc.)
+    fabricCanvas.current.on('object:modified', (e) => {
+      const obj = e.target;
+      
+      // Hide red boundary and case border when object movement is complete
+      if (boundaryRectRef.current && obj && !obj.isCase && obj !== boundaryRectRef.current) {
+        boundaryRectRef.current.set('visible', false);
+      }
+      if (caseBorderRectRef.current && obj && !obj.isCase && obj !== caseBorderRectRef.current) {
+        caseBorderRectRef.current.set('visible', false);
+      }
+      if (obj && !obj.isCase && obj !== boundaryRectRef.current && obj !== caseBorderRectRef.current) {
+        fabricCanvas.current.renderAll();
+      }
+      
+      if (obj && !obj.isCase) {
+        // Ensure text scaling stays locked after modification
+        const isActive = fabricCanvas.current.getActiveObject() === obj;
+        if (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') {
+          obj.set({
+            lockScalingX: true,
+            lockScalingY: true,
+            lockUniScaling: true,
+            hasControls: false,
+            hasBorders: false,
+            borderColor: 'transparent',
+            cornerColor: 'transparent',
+            cornerSize: 0,
+            transparentCorners: true,
+          });
+        } else if (obj.type === 'image') {
+          obj.set({
+            hasBorders: false,
+            borderColor: 'transparent',
+          });
+        }
+        
+        // Update custom border if object is active
+        if (isActive) {
+          updateBorderRect(obj);
+        } else {
+          removeBorderRect(obj);
+        }
+        
+        const activeObj = fabricCanvas.current.getActiveObject();
+        if (activeObj === obj) {
+          updateControls(obj);
+        }
       }
     });
 
@@ -171,9 +464,39 @@ const Canvas = ({
     fabricCanvas.current.on('selection:created', (e) => {
       const obj = e.selected[0];
       if (obj && !obj.isCase) {
+        // Remove border from all other objects (only one border at a time)
+        borderRectsRef.current.forEach((borderRect, existingObj) => {
+          if (existingObj !== obj) {
+            fabricCanvas.current.remove(borderRect);
+            borderRectsRef.current.delete(existingObj);
+          }
+        });
+        
+        // Lock text scaling and hide controls if it's a text object
+        if (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') {
+          obj.set({
+            lockScalingX: true,
+            lockScalingY: true,
+            lockUniScaling: true,
+            hasControls: false,
+            hasBorders: false,
+            borderColor: 'transparent',
+            cornerColor: 'transparent',
+            cornerSize: 0,
+            transparentCorners: true,
+          });
+        } else if (obj.type === 'image') {
+          obj.set({
+            hasBorders: false,
+            borderColor: 'transparent',
+          });
+        }
+        // Create custom border rectangle
+        updateBorderRect(obj);
         setSelectedPin(obj);
         setShowControls(true);
         updateControls(obj);
+        fabricCanvas.current.renderAll();
         // Do not notify parent here; handled when adding the pin
       }
     });
@@ -181,14 +504,79 @@ const Canvas = ({
     fabricCanvas.current.on('selection:updated', (e) => {
       const obj = e.selected[0];
       if (obj && !obj.isCase) {
+        // Remove border from all other objects (only one border at a time)
+        borderRectsRef.current.forEach((borderRect, existingObj) => {
+          if (existingObj !== obj) {
+            fabricCanvas.current.remove(borderRect);
+            borderRectsRef.current.delete(existingObj);
+          }
+        });
+        
+        // Lock text scaling and hide controls if it's a text object
+        if (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') {
+          obj.set({
+            lockScalingX: true,
+            lockScalingY: true,
+            lockUniScaling: true,
+            hasControls: false,
+            hasBorders: false,
+            borderColor: 'transparent',
+            cornerColor: 'transparent',
+            cornerSize: 0,
+            transparentCorners: true,
+          });
+        } else if (obj.type === 'image') {
+          obj.set({
+            hasBorders: false,
+            borderColor: 'transparent',
+          });
+        }
+        // Update custom border rectangle
+        updateBorderRect(obj);
         setSelectedPin(obj);
         setShowControls(true);
         updateControls(obj);
+        fabricCanvas.current.renderAll();
         // Don't call onPinSelect here to avoid duplicate additions
       }
     });
 
+    // Prevent text scaling during scaling events
+    fabricCanvas.current.on('object:scaling', (e) => {
+      const obj = e.target;
+      if (obj && (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text')) {
+        // Reset scale to 1 if user tries to scale text and hide controls
+        obj.set({
+          scaleX: 1,
+          scaleY: 1,
+          lockScalingX: true,
+          lockScalingY: true,
+          lockUniScaling: true,
+          hasControls: false,
+          hasBorders: false,
+          borderColor: 'transparent',
+          cornerColor: 'transparent',
+          cornerSize: 0,
+          transparentCorners: true,
+        });
+        fabricCanvas.current.renderAll();
+      }
+    });
+
     fabricCanvas.current.on('selection:cleared', () => {
+      // Hide red boundary and case border when selection is cleared
+      if (boundaryRectRef.current) {
+        boundaryRectRef.current.set('visible', false);
+      }
+      if (caseBorderRectRef.current) {
+        caseBorderRectRef.current.set('visible', false);
+      }
+      // Remove all custom border rectangles when selection is cleared
+      borderRectsRef.current.forEach((borderRect, obj) => {
+        fabricCanvas.current.remove(borderRect);
+        borderRectsRef.current.delete(obj);
+      });
+      fabricCanvas.current.renderAll();
       setSelectedPin(null);
       setShowControls(false);
       onPinSelect && onPinSelect(null);
@@ -201,34 +589,79 @@ const Canvas = ({
     
   window.addEventListener('resize', handleResize);
 
-  return () => {
-    window.removeEventListener('resize', handleResize);
-    fabricCanvas.current?.dispose();
-  };
-}, []);
-
-  const reloadCaseImage = () => {
-    if (!fabricCanvas.current || !selectedCaseType || !selectedColor) return;
-  
-    // Remove old case objects
-    const objects = fabricCanvas.current.getObjects();
-    objects.forEach(obj => {
-      if (obj.isCase) {
-        fabricCanvas.current.remove(obj);
+    // Store refs in variables for cleanup
+    const borderRects = borderRectsRef.current;
+    const canvas = fabricCanvas.current;
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      // Clean up border rectangles
+      if (canvas && borderRects) {
+        borderRects.forEach((borderRect) => {
+          canvas.remove(borderRect);
+        });
+        borderRects.clear();
       }
-    });
-  
-    // Get case image
-    const selectedCase = products.cases.find(c => c.type === selectedCaseType);
-    const selectedColorData = selectedCase?.colors.find(c => c.color === selectedColor);
-  
-    if (selectedColorData?.image) {
-      loadImage(selectedColorData.image, true).then(() => {
-        fabricCanvas.current.renderAll();
+      canvas?.dispose();
+    };
+}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect]);
+
+  // Update controls position when selectedPin changes
+  useEffect(() => {
+    if (selectedPin && showControls) {
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        updateControls(selectedPin);
       });
     }
-  };
-  
+  }, [selectedPin, showControls, updateControls]);
+
+  const handleAddText = useCallback(
+    (text, options = {}) => {
+      if (!fabricCanvas.current) return;
+
+      const trimmed = (text || '').trim();
+      if (!trimmed) return;
+
+      const canvasWidth = fabricCanvas.current.getWidth();
+      const canvasHeight = fabricCanvas.current.getHeight();
+
+      const textInstance = new fabric.Textbox(trimmed, {
+        left: canvasWidth / 2,
+        top: canvasHeight / 2,
+        originX: 'center',
+        originY: 'center',
+        fontSize: Number(options.fontSize) || 28,
+        fill: options.fill || '#1f2937',
+        fontFamily: options.fontFamily || "'Poppins', sans-serif",
+        textAlign: 'center',
+        lineHeight: 1.2,
+        borderColor: 'transparent',
+        cornerColor: 'transparent',
+        cornerSize: 0,
+        transparentCorners: true,
+        padding: 6,
+        editable: true,
+        lockScalingX: true,
+        lockScalingY: true,
+        lockUniScaling: true,
+        hasControls: false,
+        hasBorders: false,
+      });
+
+      fabricCanvas.current.add(textInstance);
+      fabricCanvas.current.setActiveObject(textInstance);
+      // Create custom border rectangle
+      updateBorderRect(textInstance);
+      fabricCanvas.current.renderAll();
+
+      setSelectedPin(textInstance);
+      setShowControls(true);
+      updateControls(textInstance);
+    },
+    [updateControls, updateBorderRect]
+  );
+
   // Load case image when case type or color changes
   useEffect(() => {
     if (!fabricCanvas.current || !selectedCaseType || !selectedColor) return;
@@ -245,13 +678,21 @@ const Canvas = ({
       return; // Case already loaded with correct image
     }
 
-    // Remove old case objects
+    // Remove old case objects, boundary, case border, and border rectangles
     const objects = fabricCanvas.current.getObjects();
     objects.forEach(obj => {
-      if (obj.isCase) {
+      if (obj.isCase || obj === boundaryRectRef.current || obj === caseBorderRectRef.current) {
         fabricCanvas.current.remove(obj);
       }
     });
+    // Clear all border rectangles
+    borderRectsRef.current.forEach((borderRect) => {
+      fabricCanvas.current.remove(borderRect);
+    });
+    borderRectsRef.current.clear();
+    caseInstanceRef.current = null;
+    boundaryRectRef.current = null;
+    caseBorderRectRef.current = null;
 
     // Load new case image
     loadImage(selectedColorData.image, true).then((caseInstance) => {
@@ -261,15 +702,15 @@ const Canvas = ({
   }, [selectedCaseType, selectedColor, products.cases]);
 
   // Handle pin selection from PinSelector
-  const handlePinSelection = async (pin) => {
+  const handlePinSelection = useCallback(async (pin) => {
     if (!fabricCanvas.current) return;
 
     console.log('Adding pin to canvas:', pin.name); // Debug log
 
     try {
-      // Adjust pin size based on screen size
+      // Adjust pin size based on screen size - increased for better visibility
       const isMobile = window.innerWidth < 768;
-      const pinSize = isMobile ? 80 : 100;
+      const pinSize = isMobile ? 120 : 150;
       
       const imgInstance = await loadImage(pin.src, false, pinSize, pinSize);
       
@@ -282,7 +723,15 @@ const Canvas = ({
       // Store pin data
       imgInstance.pinData = pin;
       
+      // Remove default borders
+      imgInstance.set({
+        hasBorders: false,
+        borderColor: 'transparent',
+      });
+      
       fabricCanvas.current.setActiveObject(imgInstance);
+      // Create custom border rectangle
+      updateBorderRect(imgInstance);
       fabricCanvas.current.renderAll();
       
       // Notify parent about pin addition exactly once per click
@@ -292,11 +741,12 @@ const Canvas = ({
     } catch (error) {
       console.error('Error loading pin:', error);
     }
-  };
+  }, [onPinSelect, updateBorderRect]);
 
   // Expose pin selection method globally
   useEffect(() => {
     window.addPinToCanvas = handlePinSelection;
+    window.addTextToCanvas = handleAddText;
     // Expose getter so parent can fetch current composed design image
     window.getDesignImageDataURL = getDesignImageDataURL;
     if (onSaveImage) {
@@ -304,12 +754,22 @@ const Canvas = ({
     }
     return () => {
       delete window.addPinToCanvas;
+      delete window.addTextToCanvas;
       delete window.getDesignImageDataURL;
     };
-  }, [onSaveImage]);
+  }, [handleAddText, handlePinSelection, onSaveImage, updateBorderRect, removeBorderRect]);
 
   // Control handlers
-  const handleRotate = () => {
+  const handleRotateLeft = () => {
+    if (selectedPin) {
+      const currentAngle = selectedPin.angle || 0;
+      selectedPin.set('angle', currentAngle - 15);
+      fabricCanvas.current.renderAll();
+      updateControls(selectedPin);
+    }
+  };
+
+  const handleRotateRight = () => {
     if (selectedPin) {
       const currentAngle = selectedPin.angle || 0;
       selectedPin.set('angle', currentAngle + 15);
@@ -320,6 +780,8 @@ const Canvas = ({
 
   const handleDelete = () => {
     if (selectedPin) {
+      // Remove border rectangle if exists
+      removeBorderRect(selectedPin);
       fabricCanvas.current.remove(selectedPin);
       fabricCanvas.current.discardActiveObject();
       fabricCanvas.current.renderAll();
@@ -333,6 +795,16 @@ const Canvas = ({
   const handleSaveImage = () => {
     if (!fabricCanvas.current) return;
 
+    // Temporarily hide boundary and case border for export
+    const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
+    const caseBorderVisible = caseBorderRectRef.current ? caseBorderRectRef.current.visible : true;
+    if (boundaryRectRef.current) {
+      boundaryRectRef.current.visible = false;
+    }
+    if (caseBorderRectRef.current) {
+      caseBorderRectRef.current.visible = false;
+    }
+
     // Create a temporary canvas with white background for better visibility
     const dataURL = fabricCanvas.current.toDataURL({
       format: 'png',
@@ -340,6 +812,17 @@ const Canvas = ({
       multiplier: 2, // Higher resolution
       backgroundColor: 'white'
     });
+
+    // Restore boundary and case border visibility
+    if (boundaryRectRef.current) {
+      boundaryRectRef.current.visible = boundaryVisible;
+    }
+    if (caseBorderRectRef.current) {
+      caseBorderRectRef.current.visible = caseBorderVisible;
+    }
+    if (boundaryRectRef.current || caseBorderRectRef.current) {
+      fabricCanvas.current.renderAll();
+    }
 
     // Create download link
     const link = document.createElement('a');
@@ -355,17 +838,41 @@ const Canvas = ({
   // Get current composed design image as data URL
   const getDesignImageDataURL = () => {
     if (!fabricCanvas.current) return null;
-    return fabricCanvas.current.toDataURL({
+    
+    // Temporarily hide boundary and case border for export
+    const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
+    const caseBorderVisible = caseBorderRectRef.current ? caseBorderRectRef.current.visible : true;
+    if (boundaryRectRef.current) {
+      boundaryRectRef.current.visible = false;
+    }
+    if (caseBorderRectRef.current) {
+      caseBorderRectRef.current.visible = false;
+    }
+
+    const dataURL = fabricCanvas.current.toDataURL({
       format: 'png',
       quality: 1,
       multiplier: 2,
       backgroundColor: 'white'
     });
+
+    // Restore boundary and case border visibility
+    if (boundaryRectRef.current) {
+      boundaryRectRef.current.visible = boundaryVisible;
+    }
+    if (caseBorderRectRef.current) {
+      caseBorderRectRef.current.visible = caseBorderVisible;
+    }
+    if (boundaryRectRef.current || caseBorderRectRef.current) {
+      fabricCanvas.current.renderAll();
+    }
+
+    return dataURL;
   };
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-4 mb-2 relative w-full flex items-center justify-center">
+      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center ">
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
@@ -379,7 +886,7 @@ const Canvas = ({
         {/* Controls */}
         {showControls && selectedPin && (
           <div 
-            className="absolute z-50 bg-white/98 backdrop-blur-sm border-2 border-blue-500 rounded-lg p-2 shadow-lg flex gap-2"
+            className="absolute z-50 flex items-center gap-1 bg-white/90 border border-gray-200 rounded px-1.5 py-0.5 shadow-sm"
             style={{
               left: controlsPosition.x,
               top: controlsPosition.y,
@@ -387,14 +894,26 @@ const Canvas = ({
             }}
           >
             <button
-              onClick={handleRotate}
-              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-cyan-400 text-white rounded-full hover:from-blue-600 hover:to-cyan-500 transition-all duration-300 flex items-center justify-center text-sm sm:text-lg font-bold shadow-md hover:shadow-lg"
+              onClick={handleRotateLeft}
+              className="w-4 h-4 mr-2 flex items-center justify-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+              aria-label="Rotate Left"
+              title="Rotate Left"
             >
-              ↻
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M24 192l144 0c9.7 0 18.5-5.8 22.2-14.8s1.7-19.3-5.2-26.2l-46.7-46.7c75.3-58.6 184.3-53.3 253.5 15.9 75 75 75 196.5 0 271.5s-196.5 75-271.5 0c-10.2-10.2-19-21.3-26.4-33-9.5-14.9-29.3-19.3-44.2-9.8s-19.3 29.3-9.8 44.2C49.7 408.7 61.4 423.5 75 437 175 537 337 537 437 437S537 175 437 75C342.8-19.3 193.3-24.7 92.7 58.8L41 7C34.1 .2 23.8-1.9 14.8 1.8S0 14.3 0 24L0 168c0 13.3 10.7 24 24 24z"/></svg>
+            </button>
+            <button
+              onClick={handleRotateRight}
+              className="w-4 h-4 flex items-center justify-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+              aria-label="Rotate Right"
+              title="Rotate Right"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M488 192l-144 0c-9.7 0-18.5-5.8-22.2-14.8s-1.7-19.3 5.2-26.2l46.7-46.7c-75.3-58.6-184.3-53.3-253.5 15.9-75 75-75 196.5 0 271.5s196.5 75 271.5 0c8.2-8.2 15.5-16.9 21.9-26.1 10.1-14.5 30.1-18 44.6-7.9s18 30.1 7.9 44.6c-8.5 12.2-18.2 23.8-29.1 34.7-100 100-262.1 100-362 0S-25 175 75 75c94.3-94.3 243.7-99.6 344.3-16.2L471 7c6.9-6.9 17.2-8.9 26.2-5.2S512 14.3 512 24l0 144c0 13.3-10.7 24-24 24z"/>
+              </svg>
             </button>
             <button
               onClick={handleDelete}
-              className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center text-sm sm:text-lg font-bold shadow-md hover:shadow-lg"
+              className="w-6 h-6 flex items-center justify-center text-lg text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+              aria-label="Remove"
             >
               ×
             </button>

@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 body{
-background: rgb(244, 243, 243);
+background: #fef9c3; /* yellow-100 */
 }
 
 html {
@@ -28,4 +28,40 @@ html {
   100% {
     transform: translateX(100%);
   }
+}
+
+/* Stripe Checkout Styling */
+.stripe-checkout-container {
+  min-height: 400px;
+}
+
+/* Ensure Stripe payment button is visible and styled */
+.stripe-checkout-container iframe {
+  min-height: 500px;
+}
+
+/* Style Stripe Embedded Checkout */
+#checkout {
+  width: 100%;
+}
+
+/* Make sure payment button in Stripe checkout is prominent */
+.stripe-checkout-container button[type="submit"],
+.stripe-checkout-container [data-testid="hosted-payment-submit-button"] {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 14px 28px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  width: 100% !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3) !important;
+}
+
+.stripe-checkout-container button[type="submit"]:hover,
+.stripe-checkout-container [data-testid="hosted-payment-submit-button"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4) !important;
 }

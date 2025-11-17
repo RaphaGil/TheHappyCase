@@ -1,130 +1,117 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { allItems } from '../../data/landing';
+import Products from '../../products.json';
+import { useCurrency } from '../../context/CurrencyContext';
 
 const Items = () => {
-  // Define colors matching What We Do section
-  const buttonColors = [
-    'bg-orange-400 hover:bg-orange-500',
-    'bg-blue-400 hover:bg-blue-500', 
-    'bg-green-400 hover:bg-green-500'
-  ];
+  const { formatPrice } = useCurrency();
+  
+  // Map case types to display names
+  const caseDisplayNames = {
+    economy: "Economy Case",
+    business: "Business Class Case",
+    firstclass: "First Class Case"
+  };
 
   return (
-    <section className="relative py-24 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
-      {/* Background decoration with different shapes */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        {/* Hexagonal shapes */}
-        <div className="absolute top-16 left-16 w-24 h-24 bg-orange-200 opacity-25 animate-pulse" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'}}></div>
-        <div className="absolute top-32 right-24 w-20 h-20 bg-blue-200 opacity-20 animate-bounce" style={{clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', animationDelay: '1s', animationDuration: '3s'}}></div>
-        
-        {/* Diamond shapes */}
-        <div className="absolute bottom-24 left-32 w-28 h-28 bg-green-200 opacity-30 animate-pulse" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', animationDelay: '2s'}}></div>
-        <div className="absolute bottom-40 right-16 w-16 h-16 bg-pink-200 opacity-25 animate-bounce" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', animationDelay: '0.5s', animationDuration: '2.5s'}}></div>
-        
-        {/* Triangle shapes */}
-        <div className="absolute top-1/3 left-1/4 w-20 h-20 bg-orange-300 opacity-20 animate-pulse" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)', animationDelay: '1.5s'}}></div>
-        <div className="absolute bottom-1/3 right-1/3 w-14 h-14 bg-blue-300 opacity-25 animate-bounce" style={{clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)', animationDelay: '3s', animationDuration: '2s'}}></div>
-        
-        {/* Star shapes */}
-        <div className="absolute top-1/4 right-1/4 w-18 h-18 bg-green-300 opacity-20 animate-pulse" style={{clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)', animationDelay: '2.5s'}}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-12 h-12 bg-pink-300 opacity-30 animate-bounce" style={{clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)', animationDelay: '0.8s', animationDuration: '3.5s'}}></div>
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
+    <section className="bg-white relative items-center justify-center py-16 md:py-24 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
         {/* Header Section */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 tracking-tight" 
-              style={{fontFamily: "'Fredoka One', cursive"}}>
-            Products Available
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-light text-gray-800 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+            Our Cases
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-pink-400 mx-auto rounded-full"></div>
-          <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto leading-relaxed" 
-             style={{fontFamily: "'Poppins', sans-serif"}}>
-            Choose from our premium collection of passport cases
-          </p>
+          <div className="w-16 h-px bg-gray-300 mx-auto"></div>
         </div>
       
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {allItems.map((item, index) => (
-            <ProductCard key={index} item={item} buttonColor={buttonColors[index % buttonColors.length]} />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full xl:max-w-7xl mx-auto items-stretch">
+          {Products.cases.map((item, index) => (
+            <ProductCard key={index} item={item} displayName={caseDisplayNames[item.type] || item.name} formatPrice={formatPrice} />
           ))}
         </div>
 
         {/* Bottom decoration */}
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-2 text-gray-500">
-            <div className="w-2 h-2 bg-orange-400 rounded-full animate-bounce"></div>
-            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce delay-100"></div>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce delay-200"></div>
-            <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-300"></div>
-          </div>
-        </div>
+      
       </div>
     </section>
   );
 };
 
-const ProductCard = ({ item, buttonColor }) => {
-  const [selectedImage, setSelectedImage] = useState(item.images[0].src);
-  const [selectedColor, setSelectedColor] = useState(item.images[0].color);
+const ProductCard = ({ item, displayName, formatPrice }) => {
+  const [selectedColorData, setSelectedColorData] = useState(item.colors[0] || null);
+  const selectedImage = selectedColorData?.image || item.images[0];
+
+  // Convert hex color to rgba with opacity
+  const getColorWithOpacity = (hexColor, opacity = 0.15) => {
+    if (!hexColor) return '#f9fafb';
+    // Remove # if present
+    const hex = hexColor.replace('#', '');
+    // Convert to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  };
 
   return (
-    <div className="group bg-white/80 backdrop-blur-md rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-500 shadow-lg hover:shadow-xl transform hover:-translate-y-2">
+    <div className="group flex flex-col h-full">
       {/* Product Image */}
-      <div className="relative mb-6">
-        <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-white to-gray-100 shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+      <div className="relative mb-4">
+        <div 
+          className="aspect-square overflow-hidden border border-gray-200 rounded-lg w-full max-w-md mx-auto sm:max-w-xs md:max-w-none transition-all duration-300 hover:border-gray-300"
+          style={{ 
+            backgroundColor: getColorWithOpacity(selectedColorData?.color, 0.15)
+          }}
+        >
           <img
             src={selectedImage}
-            alt={item.text}
-            className="w-full h-full object-cover transition-transform duration-500 transform group-hover:scale-105"
+            alt={displayName}
+            className="w-full h-full object-contain p-4 transition-opacity duration-200"
           />
         </div>
-        
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
       </div>
 
       {/* Color Selector */}
-      <div className="flex justify-center space-x-3 mb-6">
-        {item.images.map((img, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setSelectedImage(img.src);
-              setSelectedColor(img.color);
-            }}
-            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${img.color} ${
-              selectedColor === img.color ? 'border-3 border-gray-400 scale-110 shadow-lg' : 'border-2 border-gray-200'
-            } hover:border-gray-400 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg`}
-          ></button>
-        ))}
-      </div>
+      {item.colors && item.colors.length > 0 && (
+        <div className="col-span-2 text-center flex justify-center flex-wrap gap-2 mb-4">
+          {item.colors.map((colorData, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setSelectedColorData(colorData);
+              }}
+              className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+                selectedColorData?.color === colorData.color 
+                  ? 'border-gray-900 ring-2 ring-gray-300 scale-110' 
+                  : 'border-gray-200 hover:border-gray-400 hover:scale-105'
+              }`}
+              style={{ backgroundColor: colorData.color }}
+              title={colorData.color}
+            ></button>
+          ))}
+        </div>
+      )}
 
       {/* Product Info */}
-      <div className="text-center">
-        <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 group-hover:text-gray-900 transition-colors duration-300" 
-            style={{fontFamily: "'Fredoka One', cursive"}}>
-          {item.text}
+      <div className="text-center flex flex-col flex-grow">
+        <h3 className="text-lg font-light text-gray-800 mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+          {displayName}
         </h3>
-        <p className="text-lg sm:text-xl text-gray-600 font-semibold mb-6" 
-           style={{fontFamily: "'Poppins', sans-serif"}}>
-          {item.price}
+        <p className="text-sm text-gray-700 mb-6 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          {formatPrice(item.basePrice || 0)}
         </p>
         
         {/* Create Now Button */}
-        <Link
-          to="/pages/CreateYours"
-          className={`inline-block ${buttonColor} text-white font-bold py-3 px-6 sm:px-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1`}
-          style={{fontFamily: "'Poppins', sans-serif"}}
-        >
-          Create Now
-        </Link>
+        <div className="mt-auto">
+          <Link
+            to="/CreateYours"
+            className="inline-block text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 py-2 px-6 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+            style={{fontFamily: "'Poppins', sans-serif"}}
+          >
+            Personalize Now
+          </Link>
+        </div>
       </div>
-
-      {/* Decorative elements */}
-      <div className="absolute top-4 right-4 w-6 h-6 bg-white/20 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
-      <div className="absolute bottom-4 left-4 w-4 h-4 bg-white/20 rounded-full opacity-40 group-hover:opacity-80 transition-opacity duration-300"></div>
     </div>
   );
 };

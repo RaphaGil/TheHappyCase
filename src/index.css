@@ -30,7 +30,7 @@ body {
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, var(--light-yellow) 0%, var(--sky-blue) 100%);
+  background: #fef9c3; /* yellow-100 */
   color: var(--text-dark);
   line-height: 1.6;
 }

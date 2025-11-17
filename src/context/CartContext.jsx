@@ -51,6 +51,13 @@ const cartReducer = (state, action) => {
         ...state,
         checkoutSession: action.payload,
       };
+    case 'UPDATE_ITEM_NOTE':
+      return {
+        ...state,
+        items: state.items.map((item, index) =>
+          index === action.payload.index ? { ...item, note: action.payload.note } : item
+        ),
+      };
     default:
       return state;
   }
@@ -87,6 +94,10 @@ export const CartProvider = ({ children }) => {
     dispatch({ type: 'SET_CHECKOUT_SESSION', payload: session });
   };
 
+  const updateItemNote = (index, note) => {
+    dispatch({ type: 'UPDATE_ITEM_NOTE', payload: { index, note } });
+  };
+
   const getTotalPrice = () => {
     return state.items.reduce((total, item) => total + item.totalPrice * (item.quantity || 1), 0);
   };
@@ -107,6 +118,7 @@ export const CartProvider = ({ children }) => {
     incrementItemQty: (id) => dispatch({ type: 'INCREMENT_ITEM_QTY', payload: id }),
     decrementItemQty: (id) => dispatch({ type: 'DECREMENT_ITEM_QTY', payload: id }),
     setCheckoutSession,
+    updateItemNote,
     getTotalPrice,
     getTotalItems,
   };
