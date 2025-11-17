@@ -33,12 +33,13 @@ function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const hideNavBar = location.pathname === '/checkout';
+  const hideNavBarOnMobile = location.pathname === '/CreateYours';
   const hideFooter = location.pathname === '/checkout' || location.pathname === '/CreateYours';
 
   return (
     <div className="App bg-yellow-50 min-h-screen">
       {!hideNavBar && (
-        <header className="App-header" style={{background: 'white'}}>
+        <header className={`App-header ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{background: 'white'}}>
           <NavBar isHomePage={isHomePage} />
         </header>
       )}

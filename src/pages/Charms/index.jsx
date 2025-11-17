@@ -354,16 +354,16 @@ const Charms = () => {
         </div>
 
         {/* Charm Type Selection - Minimalist Tabs */}
-        <div className="flex justify-center mb-6">
-          <div className="flex gap-1 border-b-2 border-gray-300 flex-wrap justify-center">
+        <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="flex gap-1 border-b-2 border-gray-300 flex-nowrap md:flex-wrap justify-center min-w-max md:min-w-0">
             {charmTypes.map((type) => (
               <button
                 key={type.key}
                 onClick={() => handleCharmTypeChange(type.key)}
-                className={`px-6 py-3 text-sm uppercase tracking-wider transition-all duration-200 font-medium ${
+                className={`px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider transition-all duration-200 font-medium whitespace-nowrap ${
                   selectedCharmType === type.key
-                    ? 'border-b-2 border-gray-900 text-gray-900 bg-gray-50'
-                    : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-400 hover:bg-gray-50/50'
+                    ? 'border-b-2 border-blue-600 text-blue-700 bg-blue-50/50'
+                    : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50/30'
                 }`}
                 style={{fontFamily: "'Poppins', sans-serif"}}
               >

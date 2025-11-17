@@ -266,12 +266,19 @@ const Canvas = ({
 
   const resizeCanvasToFitScreen = () => {
     const canvas = fabricCanvas.current;
-    if (!canvas) return;
+    if (!canvas || !canvasRef.current) return;
   
+    const container = canvasRef.current.parentElement;
+    if (!container) return;
+  
+    const containerWidth = container.clientWidth;
     const isMobile = window.innerWidth < 768;
-  
-    const canvasWidth = isMobile ? 380 : 500;
-    const canvasHeight = isMobile ? 380 : 500;
+    
+    // Use container width, but ensure minimum size and max size for mobile
+    const canvasWidth = isMobile 
+      ? Math.max(280, Math.min(containerWidth, 380))
+      : Math.min(500, containerWidth);
+    const canvasHeight = canvasWidth; // Keep it square
   
     canvas.setWidth(canvasWidth);
     canvas.setHeight(canvasHeight);
@@ -281,9 +288,17 @@ const Canvas = ({
   useEffect(() => {
     if (!canvasRef.current) return;
   
+    const container = canvasRef.current.parentElement;
+    if (!container) return;
+  
+    const containerWidth = container.clientWidth;
     const isMobile = window.innerWidth < 768;
-    const canvasWidth = isMobile ? 380 : 500;
-    const canvasHeight = isMobile ? 380 : 500;
+    
+    // Use container width, but ensure minimum size and max size for mobile
+    const canvasWidth = isMobile 
+      ? Math.max(280, Math.min(containerWidth, 380))
+      : Math.min(500, containerWidth);
+    const canvasHeight = canvasWidth; // Keep it square
   
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,

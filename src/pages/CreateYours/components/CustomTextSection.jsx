@@ -71,14 +71,14 @@ const CustomTextSection = ({
         <div className="flex flex-row gap-2">
           <button
             onClick={handleAddText}
-            className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+            className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 transition-all duration-200 rounded shadow-sm"
             style={{fontFamily: "'Poppins', sans-serif"}}
           >
            Add Text
           </button>
           <button
             onClick={handleClear}
-            className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+            className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 transition-all duration-200 rounded shadow-sm"
             style={{fontFamily: "'Poppins', sans-serif"}}
           >
            Clear

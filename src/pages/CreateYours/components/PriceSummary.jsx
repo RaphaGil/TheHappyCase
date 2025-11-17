@@ -21,20 +21,21 @@ const PriceSummary = ({
   onShowTerms,
   agreedToTerms,
   setAgreedToTerms,
-  showTermsError
+  showTermsError,
+  isMobile = false
 }) => {
   const { formatPrice } = useCurrency();
 
   return (
-    <div className="pt-6 flex-shrink-0 relative z-0 mt-auto">
-      <div className="flex flex-row justify-between items-center gap-2 mb-4">
-        <h3 className="text-sm text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+    <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
+      <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-2' : 'mb-4'}`}>
+        <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} text-gray-900 font-medium`} style={{fontFamily: "'Poppins', sans-serif"}}>
           Subtotal: {formatPrice(totalPrice)}
         </h3>
         
         <button
           onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-          className="text-xs uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200" 
+          className={`${isMobile ? 'text-[10px]' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200`} 
           style={{fontFamily: "'Poppins', sans-serif"}}
         >
           {showPriceBreakdown ? 'Hide' : 'Details'}
@@ -43,7 +44,7 @@ const PriceSummary = ({
       
       {/* Price Breakdown Dropdown */}
       {showPriceBreakdown && (
-        <div className="space-y-2 text-xs text-gray-600 mb-4 border-t border-gray-100 pt-4">
+        <div className={`space-y-1 ${isMobile ? 'text-[10px] mb-2 pt-2' : 'text-xs mb-4 pt-4'} text-gray-600 border-t border-gray-100`}>
           <div className="flex justify-between">
             <span style={{fontFamily: "'Poppins', sans-serif"}}>Case:</span>
             <span style={{fontFamily: "'Poppins', sans-serif"}}>{formatPrice(caseBasePrice)}</span>
@@ -58,7 +59,7 @@ const PriceSummary = ({
       )}
       
       {/* Terms Agreement Checkbox */}
-      <div className="mt-4 mb-4">
+      <div className={`${isMobile ? 'mt-2 mb-2' : 'mt-4 mb-4'}`}>
         <label className="flex items-start gap-2 cursor-pointer">
           <input
             type="checkbox"
@@ -66,7 +67,18 @@ const PriceSummary = ({
             onChange={(e) => setAgreedToTerms(e.target.checked)}
             className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
           />
-          <span className="text-xs text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+          {/* Mobile: Simplified text */}
+          <span className="text-[10px] md:text-xs text-gray-700 leading-relaxed md:hidden" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <button
+              type="button"
+              onClick={onShowTerms}
+              className="text-gray-900 underline hover:text-gray-700 transition-colors"
+            >
+              Terms of Use
+            </button>
+          </span>
+          {/* Desktop: Full text */}
+          <span className="hidden md:block text-xs text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
             I agree to the{' '}
             <button
               type="button"
@@ -80,32 +92,32 @@ const PriceSummary = ({
         </label>
         {/* Error message when trying to add to cart without accepting terms */}
         {showTermsError && (
-          <div className="mt-2 text-xs text-red-600" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="mt-2 text-[10px] md:text-xs text-red-600" style={{fontFamily: "'Poppins', sans-serif"}}>
             You must accept the terms to add items to cart.
           </div>
         )}
       </div>
 
-      <div className="mt-4 flex flex-row gap-2">
-        <div className="flex items-center border border-gray-200 rounded-sm p-1">
+      <div className={`${isMobile ? 'mt-2' : 'mt-4'} flex flex-row gap-2`}>
+        <div className={`flex items-center border border-gray-200 rounded-sm ${isMobile ? 'p-0.5' : 'p-1'}`}>
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200"
+            className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
             aria-label="Decrease quantity"
           > 
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
             </svg>
           </button>
-          <span className="text-sm font-medium text-gray-900 min-w-[2rem] text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className={`${isMobile ? 'text-xs min-w-[1.5rem]' : 'text-sm min-w-[2rem]'} font-medium text-gray-900 text-center`} style={{fontFamily: "'Poppins', sans-serif"}}>
             {quantity}
           </span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200"
+            className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
             aria-label="Increase quantity"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
             </svg>
           </button>
@@ -137,9 +149,11 @@ const PriceSummary = ({
           />
         </div>
       </div>
-      <p className="text-xs text-gray-500 text-center mt-4" style={{fontFamily: "'Poppins', sans-serif"}}>
-      <Link to="/shipping" className="text-gray-600 hover:text-gray-900 underline">Shipping</Link> calculated at checkout.
-      </p>
+      {!isMobile && (
+        <p className="text-xs text-gray-500 text-center mt-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <Link to="/shipping" className="text-gray-600 hover:text-gray-900 underline">Shipping</Link> calculated at checkout.
+        </p>
+      )}
     </div>
   );
 };

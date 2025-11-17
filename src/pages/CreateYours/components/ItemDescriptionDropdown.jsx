@@ -19,7 +19,7 @@ const ItemDescriptionDropdown = ({ selectedCase, showDescriptionDropdown, setSho
     <div className="w-full max-w-[400px] sm:max-w-[500px] lg:max-w-[600px] relative" ref={descriptionDropdownRef}>
       <button
         onClick={() => setShowDescriptionDropdown(!showDescriptionDropdown)}
-        className="w-full px-3 sm:px-6 py-1.5 sm:py-2 text-[10px] sm:text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2"
+        className="w-full px-3 sm:px-6 py-1.5 sm:py-2 text-[10px] sm:text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 rounded shadow-sm"
         style={{fontFamily: "'Poppins', sans-serif"}} 
       >
         <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -37,7 +37,7 @@ const ItemDescriptionDropdown = ({ selectedCase, showDescriptionDropdown, setSho
       </button>
       
       {showDescriptionDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 shadow-lg md:shadow-xl" style={{zIndex: 99999, maxHeight: 'calc(100vh - 200px)'}}>
+        <div className="absolute top-full left-0 right-0 mt-2  shadow-lg md:shadow-xl" style={{zIndex: 99999, maxHeight: 'calc(100vh - 200px)'}}>
           <div className="p-3 sm:p-4 md:px-6 space-y-3 sm:space-y-4 max-h-[calc(100vh-220px)] overflow-y-auto">
             {/* Case Name */}
             <div>
