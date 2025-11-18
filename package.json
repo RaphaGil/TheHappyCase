@@ -33,7 +33,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
- 
+    "deploy": "gh-pages -d build -r https://github.com/RaphaGil/TheHappyCase.git",
     "server": "node server.js",
     "dev": "concurrently \"npm run server\" \"npm start\""
   },
