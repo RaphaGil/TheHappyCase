@@ -241,7 +241,7 @@ const PassportCases = () => {
             {/* Detail Images Gallery */}
             <div className="mt-6">
            
-              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-4">
+              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-4 gap-2">
                 {detailImages.map((image, index) => (
                   <button
                     key={index}

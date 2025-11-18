@@ -8,14 +8,10 @@ import { faInstagram, faTiktok, faFacebook } from '@fortawesome/free-brands-svg-
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isCharmsDropdownOpen, setIsCharmsDropdownOpen] = useState(false);
-  const [isPassportDropdownOpen, setIsPassportDropdownOpen] = useState(false);
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
   const [showEuropeanCountries, setShowEuropeanCountries] = useState(false);
   const { getTotalItems } = useCart();
   const { currency, setCurrency, currencySymbol, formatPrice } = useCurrency();
-  const charmsDropdownRef = useRef(null);
-  const passportDropdownRef = useRef(null);
   const currencyDropdownRef = useRef(null);
   
   // Currency to country name mapping
@@ -89,23 +85,10 @@ const NavBar = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
-  const toggleCharmsDropdown = () => setIsCharmsDropdownOpen(!isCharmsDropdownOpen);
-  const togglePassportDropdown = () => setIsPassportDropdownOpen(!isPassportDropdownOpen);
-  const closeAllMenus = () => {
-    setIsOpen(false);
-    setIsCharmsDropdownOpen(false);
-    setIsPassportDropdownOpen(false);
-  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (charmsDropdownRef.current && !charmsDropdownRef.current.contains(event.target)) {
-        setIsCharmsDropdownOpen(false);
-      }
-      if (passportDropdownRef.current && !passportDropdownRef.current.contains(event.target)) {
-        setIsPassportDropdownOpen(false);
-      }
       if (isCurrencyDropdownOpen && currencyDropdownRef.current && !currencyDropdownRef.current.contains(event.target)) {
         setIsCurrencyDropdownOpen(false);
         setShowEuropeanCountries(false);
@@ -464,99 +447,25 @@ const NavBar = () => {
              Create Yours
             </Link>
           </li>
-          <li className="relative" ref={passportDropdownRef}>
-            {/* Desktop: Direct link */}
+          <li>
             <Link 
               to="/PassportCases" 
-              className="hidden lg:block px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider"
-              style={{color: '#6b7280'}}
+              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block"
+              style={{color: isOpen ? '#6b7280' : '#6b7280'}}
+              onClick={closeMenu}
             >
               Passport Cases
             </Link>
-            {/* Mobile: Dropdown button */}
-            <button
-              onClick={togglePassportDropdown}
-            className={`lg:hidden px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-all duration-200 w-full text-left flex items-center justify-between text-xs uppercase tracking-wider ${isPassportDropdownOpen ? 'bg-gray-50' : ''}`}
-            style={{color: isOpen ? '#6b7280' : '#6b7280'}}
-            >
-            Passport Cases
-            <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isPassportDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {isPassportDropdownOpen && (
-            <div className="lg:hidden bg-gray-50 border-t border-gray-100 overflow-hidden transition-all duration-200">
-                <Link
-                to="/PassportCases?filter=firstclass"
-                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
-                style={{fontFamily: "'Poppins', sans-serif"}}
-                  onClick={closeAllMenus}
-                >
-                 First Class
-                </Link>
-                <Link
-                to="/PassportCases?filter=business"
-                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
-                style={{fontFamily: "'Poppins', sans-serif"}}
-                  onClick={closeAllMenus}
-                >
-                 Business Class
-                </Link>
-                <Link
-                to="/PassportCases?filter=economy"
-                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
-                style={{fontFamily: "'Poppins', sans-serif"}}
-                  onClick={closeAllMenus}
-                >
-                 Economy Class
-                </Link>
-              </div>
-            )}
           </li>
-          <li className="relative" ref={charmsDropdownRef}>
-            {/* Desktop: Direct link */}
+          <li>
             <Link 
               to="/Charms" 
-              className="hidden lg:block px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider"
-              style={{color: '#6b7280'}}
+              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block"
+              style={{color: isOpen ? '#6b7280' : '#6b7280'}}
+              onClick={closeMenu}
             >
               Charms
             </Link>
-            {/* Mobile: Dropdown button */}
-            <button
-              onClick={toggleCharmsDropdown}
-            className={`lg:hidden px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-all duration-200 w-full text-left flex items-center justify-between text-xs uppercase tracking-wider ${isCharmsDropdownOpen ? 'bg-gray-50' : ''}`}
-            style={{color: isOpen ? '#6b7280' : '#6b7280'}}
-            >
-             Charms
-            <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isCharmsDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {isCharmsDropdownOpen && (
-            <div className="lg:hidden bg-gray-50 border-t border-gray-100 overflow-hidden transition-all duration-200">
-                <Link
-                  to="/Charms?filter=flags"
-                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
-                style={{fontFamily: "'Poppins', sans-serif"}}
-                  onClick={closeAllMenus}
-                >
-                  Flags 
-                </Link>
-                <Link
-                  to="/Charms?filter=colorful"
-                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
-                style={{fontFamily: "'Poppins', sans-serif"}}
-                  onClick={closeAllMenus}
-                >
-                  Colorful Charms 
-                </Link>
-                <Link
-                  to="/Charms?filter=bronze"
-                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
-                style={{fontFamily: "'Poppins', sans-serif"}}
-                  onClick={closeAllMenus}
-                >
-                  Bronze Charms 
-                </Link>
-              </div>
-            )}
           </li>
           {/* Design Ideas link hidden */}
         {isOpen && (

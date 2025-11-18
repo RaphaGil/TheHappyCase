@@ -87,7 +87,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Color Selector */}
       {item.colors && item.colors.length > 0 && (
-        <div className="col-span-2 text-center flex justify-center flex-wrap gap-1.5 sm:gap-2 mt-4">
+        <div className="col-span-2 text-center flex justify-center flex-wrap gap-1.5 sm:gap-2 mt-1 md:mt-4">
           {item.colors.map((colorData, i) => (
             <button
               key={i}
