@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
+  const [quickLinksOpen, setQuickLinksOpen] = useState(false);
+  const [customerServiceOpen, setCustomerServiceOpen] = useState(false);
 
   return (
     <footer className="bg-yellow-100 border-t border-gray-100">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
           
           {/* Company Info */}
-          <div className="space-y-4">
-            <div className="flex items-center">
+          <div className="space-y-5 pb-6 md:pb-0 border-b md:border-b-0 border-gray-200 md:border-0">
+            <div className="flex items-center mb-2">
               <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
                 <div
                   className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
@@ -61,12 +64,13 @@ function Footer() {
                 `}</style>
               </Link>
             </div>
-            <p className="text-gray-500 text-xs leading-relaxed font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className="text-gray-900 text-xs leading-relaxed font-light pt-2" style={{fontFamily: "'Poppins', sans-serif"}}>
               Creating personalized passport cases that bring joy to your travels. 
               Made with love and attention to detail.
             </p>
+            <div className="flex flex-col gap-3 pt-2">
+            <p className="text-sm text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>Follow us!</p>
             <div className="flex gap-3">
-            
               <a 
                 href="https://instagram.com/thehappycase.store" 
                 target="_blank" 
@@ -94,55 +98,76 @@ function Footer() {
               >
                 <FontAwesomeIcon icon={faFacebookBrand} className="text-lg" style={{color: '#1877F2'}} />
               </a>
+              </div>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-              Quick Links
-            </h4>
-            <ul className="space-y-2">
-            <li>
-                <Link to="/about" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                 About 
-                </Link>
-              </li>
-              <li>
-                <a href="/" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                 Home
-                </a>
-              </li>
-              {/* <li>
-                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  Design Ideas
-                </a>
-              </li> */}
-              <li>
-                <a href="/CreateYours" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  Create Yours
-                </a>
-              </li>
-            </ul>
+          <div className="space-y-3 pb-6 md:pb-0 border-b md:border-b-0 border-gray-200 md:border-0">
+            <button
+              onClick={() => setQuickLinksOpen(!quickLinksOpen)}
+              className="flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
+              style={{fontFamily: "'Poppins', sans-serif"}}
+            >
+              <span>Quick Links</span>
+              <FontAwesomeIcon 
+                icon={quickLinksOpen ? faChevronUp : faChevronDown} 
+                className="text-xs ml-2"
+              />
+            </button>
+            {quickLinksOpen && (
+              <ul className="space-y-3 pl-2">
+                <li>
+                  <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                   About 
+                  </Link>
+                </li>
+                <li>
+                  <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                   Home
+                  </a>
+                </li>
+                {/* <li>
+                  <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    Design Ideas
+                  </a>
+                </li> */}
+                <li>
+                  <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    Create Yours
+                  </a>
+                </li>
+              </ul>
+            )}
           </div>
 
           {/* Customer Service */}
-          <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-              Customer Service
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/shipping" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  Shipping and Processing Times
-                </Link>
-              </li>
-              <li>
-                <Link to="/returns" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  Refund Policy
-                </Link>
-              </li>
-            </ul>
+          <div className="space-y-3">
+            <button
+              onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
+              className="flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
+              style={{fontFamily: "'Poppins', sans-serif"}}
+            >
+              <span>Customer Service</span>
+              <FontAwesomeIcon 
+                icon={customerServiceOpen ? faChevronUp : faChevronDown} 
+                className="text-xs ml-2"
+              />
+            </button>
+            {customerServiceOpen && (
+              <ul className="space-y-3 pl-2">
+                <li>
+                  <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    Shipping and Processing Times
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    Refund Policy
+                  </Link>
+                </li>
+              </ul>
+            )}
           </div>
 
           {/* Contact Info */}
@@ -168,13 +193,12 @@ function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-100 bg-yellow-100">
+      <div className=" bg-yellow-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             
             {/* Payment Methods */}
             <div className="flex items-center space-x-4">
-              <span className="text-xs text-gray-500 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>We Accept:</span>
               <div className="flex space-x-3 items-center">
                 <FontAwesomeIcon icon={faCcVisa} className="text-xl" style={{color: '#1434CB'}} />
                 <FontAwesomeIcon icon={faCcMastercard} className="text-xl" style={{color: '#EB001B'}} />
@@ -185,7 +209,7 @@ function Footer() {
 
             {/* Copyright */}
             <div className="text-center md:text-right">
-              <p className="text-xs text-gray-500 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <p className="text-xs text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
                 © {currentYear} The Happy Case. Made with love for all the travelers out there. All rights reserved.
               </p>
             </div>

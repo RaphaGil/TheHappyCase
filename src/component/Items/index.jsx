@@ -39,7 +39,25 @@ const Items = () => {
 
 const ProductCard = ({ item, displayName, formatPrice }) => {
   const [selectedColorData, setSelectedColorData] = useState(item.colors[0] || null);
+  const [isHovered, setIsHovered] = useState(false);
   const selectedImage = selectedColorData?.image || item.images[0];
+  
+  // For all case types, show inside image on hover
+  const getHoverImage = () => {
+    if (!isHovered) return null;
+    
+    if (item.type === 'firstclass') {
+      return '/TheHappyCase/images/FirstClassCase/firstclassinside.jpg';
+    } else if (item.type === 'economy') {
+      return '/TheHappyCase/images/SmartCase/economycaseinside.jpg';
+    } else if (item.type === 'business') {
+      return '/TheHappyCase/images/BusinessClassCase/businessclassinside.png';
+    }
+    
+    return null;
+  };
+  
+  const hoverImage = getHoverImage();
 
   // Convert hex color to rgba with opacity
   const getColorWithOpacity = (hexColor, opacity = 0.15) => {
@@ -56,31 +74,30 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
   return (
     <div className="group flex flex-col h-full">
       {/* Product Image */}
-      <div className="relative mb-4">
+      <div className="relative ">
         <div 
-          className="aspect-square overflow-hidden border border-gray-200 rounded-lg w-full max-w-md mx-auto sm:max-w-xs md:max-w-none transition-all duration-300 hover:border-gray-300"
-          style={{ 
-            backgroundColor: getColorWithOpacity(selectedColorData?.color, 0.15)
-          }}
+          className="aspect-square overflow-hidden w-full max-w-xl mx-auto sm:max-w-lg md:max-w-none transition-all duration-300 hover:border-gray-300 h-[300px] relative"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           <img
-            src={selectedImage}
+            src={hoverImage || selectedImage}
             alt={displayName}
-            className="w-full h-full object-contain p-4 transition-opacity duration-200"
+            className="w-full h-full object-contain transition-opacity duration-300"
           />
         </div>
       </div>
 
       {/* Color Selector */}
       {item.colors && item.colors.length > 0 && (
-        <div className="col-span-2 text-center flex justify-center flex-wrap gap-2 mb-4">
+        <div className="col-span-2 text-center flex justify-center flex-wrap gap-1.5 sm:gap-2 mt-4">
           {item.colors.map((colorData, i) => (
             <button
               key={i}
               onClick={() => {
                 setSelectedColorData(colorData);
               }}
-              className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+              className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 transition-all duration-200 ${
                 selectedColorData?.color === colorData.color 
                   ? 'border-gray-900 ring-2 ring-gray-300 scale-110' 
                   : 'border-gray-200 hover:border-gray-400 hover:scale-105'
@@ -94,7 +111,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Product Info */}
       <div className="text-center flex flex-col flex-grow">
-        <h3 className="text-lg font-light text-gray-800 mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <h3 className="text-lg font-light text-gray-800 mb-2 mt-4" style={{fontFamily: "'Poppins', sans-serif"}}>
           {displayName}
         </h3>
         <p className="text-sm text-gray-700 mb-6 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>

@@ -87,15 +87,23 @@ function Hero() {
         <div className="absolute inset-0 bg-black/50 z-10"></div>
       </div>
 
-      {/* Shop Now Button - Overlay on Video */}
-      <div className="relative z-20 h-full flex items-end ">
-        <button 
-          onClick={handleStartDesigning}
-          className="px-8 py-3 text-xs uppercase tracking-wider text-white border-2 border-white/80 hover:border-white bg-white/20 hover:bg-white/30 backdrop-blur-md transition-all duration-200 rounded-lg shadow-lg drop-shadow-lg mb-10 ml-10 "
-          style={{fontFamily: "'Poppins', sans-serif", textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'}}
-        >
-          Shop Now
-        </button>
+      {/* Text and Shop Now Button - Overlay on Video */}
+      <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
+        <div className="flex flex-col gap-4 items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
+          <h1 
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white"
+            style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
+          >
+            Create Your Own Passport Case
+          </h1>
+          <button 
+            onClick={handleStartDesigning}
+            className="px-8 py-3 text-xs uppercase tracking-wider text-white border-2 border-white/80 hover:border-white bg-white/20 hover:bg-white/30 backdrop-blur-md transition-all duration-200 rounded-lg shadow-lg drop-shadow-lg w-fit"
+            style={{fontFamily: "'Poppins', sans-serif", textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'}}
+          >
+            Shop Now
+          </button>
+        </div>
       </div>
     
     </section>

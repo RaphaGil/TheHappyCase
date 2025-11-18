@@ -385,8 +385,8 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-2 md:py-12 relative overflow-hidden bg-white">
-      <div className={`lg:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-24' : 'pb-2 sm:pb-24'} h-screen md:h-auto flex flex-col overflow-hidden`}>
+    <section className="min-h-screen py-2 md:py-12 relative bg-white">
+      <div className={`lg:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-24' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
@@ -414,10 +414,10 @@ const CreateYours = () => {
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className="flex flex-col lg:flex-row gap-2 md:gap-6 lg:gap-12 flex-1 min-h-0 overflow-hidden">
+        <div className={`flex flex-col lg:flex-row gap-2 md:gap-6 lg:gap-12 flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center justify-center flex-1 min-h-0 overflow-hidden">
+          <div className={`w-full lg:w-1/2 flex flex-col items-center justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
 
             <div className="w-full max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px] flex flex-col">
               <div className="flex-shrink-0 w-full">

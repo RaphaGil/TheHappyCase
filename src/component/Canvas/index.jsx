@@ -105,8 +105,14 @@ const Canvas = ({
             // Add inset to make boundary smaller (inside the case image)
             // Separate horizontal and vertical insets - larger horizontal for smaller width
             // Business class case needs wider boundary (more inset from edges)
-            const insetHorizontal = selectedCaseType === 'business' ? 140 : 120; // Horizontal inset (left/right) - wider for business, more space for all cases
-            const insetVertical = selectedCaseType === 'business' ? 50 : 40; // Vertical inset (top/bottom) - wider for business, more space for all cases
+            // On mobile, use minimal insets to maximize usable area
+            const isMobile = window.innerWidth < 768;
+            const insetHorizontal = isMobile
+              ? (selectedCaseType === 'business' ? 20 : 15)  // Minimal insets on mobile (scaled proportionally)
+              : (selectedCaseType === 'business' ? 140 : 120); // Original insets on desktop
+            const insetVertical = isMobile
+              ? (selectedCaseType === 'business' ? 6 : 5)  // Minimal insets on mobile (scaled proportionally)
+              : (selectedCaseType === 'business' ? 50 : 40); // Original insets on desktop
             const boundaryRect = new fabric.Rect({
               left: rect.left + insetHorizontal,
               top: rect.top + insetVertical,
@@ -317,14 +323,25 @@ const Canvas = ({
       const caseInstance = caseInstanceRef.current;
       if (!caseInstance) return;
       
+      // Update object coordinates first to ensure accurate calculations
+      obj.setCoords();
+      
       const caseRect = caseInstance.getBoundingRect();
       const objRect = obj.getBoundingRect(true);
+      
+      // Check if we're on mobile
+      const isMobile = window.innerWidth < 768;
       
       // Calculate the actual bounds of the case image with inset (matching the red boundary)
       // Separate horizontal and vertical insets to match the red boundary
       // Business class case needs wider boundary (more inset from edges)
-      const insetHorizontal = selectedCaseType === 'business' ? 14 : 12; // Horizontal inset (left/right) - wider for business, more space for all cases
-      const insetVertical = selectedCaseType === 'business' ? 40 : 30; // Vertical inset (top/bottom) - wider for business, more space for all cases
+      // On mobile, use minimal insets to maximize usable area
+      const insetHorizontal = isMobile 
+        ? (selectedCaseType === 'business' ? 2 : 1)  // Minimal insets on mobile for maximum area
+        : (selectedCaseType === 'business' ? 14 : 12); // Original insets on desktop
+      const insetVertical = isMobile
+        ? (selectedCaseType === 'business' ? 5 : 4)  // Minimal insets on mobile for maximum area
+        : (selectedCaseType === 'business' ? 40 : 30); // Original insets on desktop
       const caseLeft = caseRect.left + insetHorizontal;
       const caseTop = caseRect.top + insetVertical;
       const caseRight = caseRect.left + caseRect.width - insetHorizontal;
@@ -354,7 +371,9 @@ const Canvas = ({
       }
       
       // Keep object within case bounds (strictly inside the red boundary)
-      const margin = 0.5; // Small margin to keep objects inside the boundary, not on it
+      // Use minimal margin on mobile to maximize usable area
+      const margin = isMobile ? 0.1 : 1; // Minimal margin on mobile
+      const tolerance = 0.1; // Tolerance to prevent unnecessary updates
       
       // Calculate object dimensions from bounding rect
       const objWidth = objRect.width;
@@ -365,29 +384,50 @@ const Canvas = ({
       // Get current object center position
       let newLeft = obj.left;
       let newTop = obj.top;
+      let needsUpdate = false;
       
       // Constrain horizontal position (accounting for center origin)
       // Keep object strictly inside the boundary (left edge)
       if (objRect.left < caseLeft + margin) {
-        newLeft = caseLeft + margin + halfWidth;
+        const constrainedLeft = caseLeft + margin + halfWidth;
+        if (Math.abs(newLeft - constrainedLeft) > tolerance) {
+          newLeft = constrainedLeft;
+          needsUpdate = true;
+        }
       }
       // Keep object strictly inside the boundary (right edge)
       if (objRect.left + objWidth > caseRight - margin) {
-        newLeft = caseRight - margin - halfWidth;
+        const constrainedLeft = caseRight - margin - halfWidth;
+        if (Math.abs(newLeft - constrainedLeft) > tolerance) {
+          newLeft = constrainedLeft;
+          needsUpdate = true;
+        }
       }
       
       // Constrain vertical position (accounting for center origin)
       // Keep object strictly inside the boundary (top edge)
       if (objRect.top < caseTop + margin) {
-        newTop = caseTop + margin + halfHeight;
+        const constrainedTop = caseTop + margin + halfHeight;
+        if (Math.abs(newTop - constrainedTop) > tolerance) {
+          newTop = constrainedTop;
+          needsUpdate = true;
+        }
       }
       // Keep object strictly inside the boundary (bottom edge)
       if (objRect.top + objHeight > caseBottom - margin) {
-        newTop = caseBottom - margin - halfHeight;
+        const constrainedTop = caseBottom - margin - halfHeight;
+        if (Math.abs(newTop - constrainedTop) > tolerance) {
+          newTop = constrainedTop;
+          needsUpdate = true;
+        }
       }
       
-      // Apply constraints if needed
-      if (newLeft !== obj.left || newTop !== obj.top) {
+      // Apply constraints only if significant change is needed (prevents vibrating)
+      if (needsUpdate) {
+        // Round positions to avoid floating point precision issues
+        newLeft = Math.round(newLeft * 100) / 100;
+        newTop = Math.round(newTop * 100) / 100;
+        
         obj.set({
           left: newLeft,
           top: newTop
@@ -638,16 +678,19 @@ const Canvas = ({
       const trimmed = (text || '').trim();
       if (!trimmed) return;
 
+      // Convert text to uppercase
+      const uppercaseText = trimmed.toUpperCase();
+
       const canvasWidth = fabricCanvas.current.getWidth();
       const canvasHeight = fabricCanvas.current.getHeight();
 
-      const textInstance = new fabric.Textbox(trimmed, {
+      const textInstance = new fabric.Textbox(uppercaseText, {
         left: canvasWidth / 2,
         top: canvasHeight / 2,
         originX: 'center',
         originY: 'center',
-        fontSize: Number(options.fontSize) || 28,
-        fill: options.fill || '#1f2937',
+        fontSize: Number(options.fontSize) || 36,
+        fill: options.fill || '#CD7F32', // Old bronze color
         fontFamily: options.fontFamily || "'Poppins', sans-serif",
         textAlign: 'center',
         lineHeight: 1.2,
@@ -887,7 +930,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center ">
+      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center bg-yellow-50 w-[380px] sm:w-[480px]">
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
