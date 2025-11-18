@@ -118,6 +118,29 @@ const NavBar = () => {
     };
   }, [isCurrencyDropdownOpen]);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      // Disable body scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore body scroll
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        // Restore scroll position
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isOpen]);
+
   return (
     <>
       {/* Promotional Banner */}
@@ -425,7 +448,7 @@ const NavBar = () => {
       <ul
         className={`lg:flex lg:space-x-1 ${
             isOpen
-            ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(100vh-104px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
+            ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(75vh-100px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
               : 'hidden'
           }`}
         style={{fontFamily: "'Poppins', sans-serif"}}
