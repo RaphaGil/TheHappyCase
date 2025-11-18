@@ -391,7 +391,7 @@ const Charms = () => {
                     setSelectedContinent(key);
                     setFlagsCurrentPage(1); // Reset to first page when continent changes
                   }}
-                  className={`px-3 py-1.5 text-[12px] uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
                     selectedContinent === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
@@ -423,7 +423,7 @@ const Charms = () => {
                     setSelectedBronzeCategory(key);
                     setBronzeCurrentPage(1); // Reset to first page when category changes
                   }}
-                  className={`px-3 py-1.5 text-[12px] uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
                     selectedBronzeCategory === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
@@ -457,7 +457,7 @@ const Charms = () => {
                     setSelectedColorfulCategory(key);
                     setColorfulCurrentPage(1); // Reset to first page when category changes
                   }}
-                  className={`px-3 py-1.5 text-[12px] uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
                     selectedColorfulCategory === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'

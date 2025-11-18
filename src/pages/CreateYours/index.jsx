@@ -449,22 +449,6 @@ const CreateYours = () => {
                 </div>
               )}
               
-              {/* Action Buttons - Bottom - Hidden on mobile */}
-              <div className="mt-2 md:mt-4 hidden md:flex flex-row gap-2 flex-shrink-0">
-                <ViewMoreImagesButton
-                  caseImages={caseImages}
-                  onOpenModal={() => {
-                    setShowImageModal(true);
-                    setSelectedModalImage(0);
-                  }}
-                />
-                
-                <ItemDescriptionDropdown
-                  selectedCase={selectedCase}
-                  showDescriptionDropdown={showDescriptionDropdown}
-                  setShowDescriptionDropdown={setShowDescriptionDropdown}
-                />
-              </div>
             </div>
             
             {/* Save Your Design Button - Hidden for now */}
@@ -544,6 +528,25 @@ const CreateYours = () => {
                 customTextAdded={customTextAdded}
                 setCustomTextAdded={setCustomTextAdded}
               />
+            )}
+
+            {/* Action Buttons - Right above Add to Cart - Hidden on mobile */}
+            {!isMobile && (
+              <div className="flex flex-row gap-2 flex-shrink-0 mb-4">
+                <ViewMoreImagesButton
+                  caseImages={caseImages}
+                  onOpenModal={() => {
+                    setShowImageModal(true);
+                    setSelectedModalImage(0);
+                  }}
+                />
+                
+                <ItemDescriptionDropdown
+                  selectedCase={selectedCase}
+                  showDescriptionDropdown={showDescriptionDropdown}
+                  setShowDescriptionDropdown={setShowDescriptionDropdown}
+                />
+              </div>
             )}
 
             {/* Price Summary - Hidden on mobile */}
