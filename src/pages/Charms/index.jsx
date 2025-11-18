@@ -354,13 +354,13 @@ const Charms = () => {
         </div>
 
         {/* Charm Type Selection - Minimalist Tabs */}
-        <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
-          <div className="flex gap-1 border-b-2 border-gray-300 flex-nowrap md:flex-wrap justify-center min-w-max md:min-w-0">
+        <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
+          <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
             {charmTypes.map((type) => (
               <button
                 key={type.key}
                 onClick={() => handleCharmTypeChange(type.key)}
-                className={`px-4 md:px-6 py-3 text-sm md:text-md uppercase tracking-wider transition-all duration-200 font-medium whitespace-nowrap ${
+                className={`px-3 py-1.5 text-sm uppercase tracking-wider transition-all duration-200  ${
                   selectedCharmType === type.key
                     ? 'border-b-2 border-blue-600 text-blue-700 bg-blue-50/50'
                     : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50/30'
@@ -376,7 +376,7 @@ const Charms = () => {
         {/* Continent Selection Tabs - Only show for Flags */}
         {selectedCharmType === 'flags' && (
           <div className="flex justify-center mb-6">
-            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
+            <div className="flex gap-0.5 border-b  border-gray-200 flex-wrap justify-center">
               {[
                 { key: 'all', label: 'ALL' },
                 { key: 'europe', label: 'EUROPE' },
@@ -391,7 +391,7 @@ const Charms = () => {
                     setSelectedContinent(key);
                     setFlagsCurrentPage(1); // Reset to first page when continent changes
                   }}
-                  className={`px-3 py-1.5 text-sm uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[12px] uppercase tracking-wider transition-all duration-200 ${
                     selectedContinent === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
@@ -423,7 +423,7 @@ const Charms = () => {
                     setSelectedBronzeCategory(key);
                     setBronzeCurrentPage(1); // Reset to first page when category changes
                   }}
-                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[12px] uppercase tracking-wider transition-all duration-200 ${
                     selectedBronzeCategory === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
@@ -457,7 +457,7 @@ const Charms = () => {
                     setSelectedColorfulCategory(key);
                     setColorfulCurrentPage(1); // Reset to first page when category changes
                   }}
-                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-[12px] uppercase tracking-wider transition-all duration-200 ${
                     selectedColorfulCategory === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'

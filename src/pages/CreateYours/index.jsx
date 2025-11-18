@@ -385,8 +385,8 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-1.5 sm:py-2 md:py-12 relative bg-white">
-      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-20 sm:pb-24' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}>
+    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white">
+      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-20 sm:pb-24' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
@@ -401,20 +401,20 @@ const CreateYours = () => {
         )}
         
         {/* Header Section - Fixed at top, never overlaps */}
-        <div className="text-center mb-1.5 sm:mb-2 md:mb-4 lg:mb-2 flex-shrink-0 mt-6">
-          <h1 className="text-lg sm:text-xl md:text-3xl font-light text-gray-900 mb-0.5 sm:mb-1 md:mb-2 lg:mb-1" 
+        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-0.5 mt-1' : 'mb-1 sm:mb-1.5 md:mb-2 lg:mb-1 mt-2 sm:mt-3 md:mt-4'}`}>
+          <h1 className={`text-lg sm:text-xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-0' : 'mb-0.5 sm:mb-0.5 md:mb-1 lg:mb-0.5'}`} 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
           </h1>
-          <div className="w-12 sm:w-16 md:w-20 h-px bg-gray-300 mx-auto mb-1 sm:mb-2 md:mb-4 lg:mb-2"></div>
-          <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light mb-4" 
+          <div className={`w-12 sm:w-16 md:w-20 h-px bg-gray-300 mx-auto ${isMobile ? 'mb-0' : 'mb-0.5 sm:mb-1 md:mb-1.5 lg:mb-1'}`}></div>
+          <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light mb-2" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case with our interactive creator
           </p>
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col lg:flex-row gap-1.5 sm:gap-2 md:gap-6 lg:gap-8 flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
+        <div className={`flex flex-col lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
           
           {/* LEFT - Design Canvas - Centered */}
           <div className={`w-full lg:w-1/2 flex flex-col items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
@@ -504,6 +504,7 @@ const CreateYours = () => {
                 onSelect={handleCaseTypeSelection}
                 isCaseDropdownOpen={isCaseDropdownOpen}
                 setIsCaseDropdownOpen={setIsCaseDropdownOpen}
+                Products={Products}
               />
               
               {selectedColor && (

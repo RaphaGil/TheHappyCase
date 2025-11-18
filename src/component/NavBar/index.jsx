@@ -448,7 +448,7 @@ const NavBar = () => {
       <ul
         className={`lg:flex lg:space-x-1 ${
             isOpen
-            ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(75vh-100px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
+            ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(100vh-100px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
               : 'hidden'
           }`}
         style={{fontFamily: "'Poppins', sans-serif"}}

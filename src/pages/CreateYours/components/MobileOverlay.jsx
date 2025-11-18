@@ -79,21 +79,39 @@ const MobileOverlay = ({
         <div className="space-y-4">
           {mobileCurrentStep === 'case' && (
             <div>
-              <div className="space-y-2">
-                {CASE_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => handleCaseTypeSelection(opt.value)}
-                    className={`w-full p-3 text-left transition-all duration-200 ${
-                      selectedCaseType === opt.value
-                        ? ' text-gray-900'
-                        : ' hover:border-gray-300'
-                    }`}
-                    style={{fontFamily: "'Poppins', sans-serif"}}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
+              <div className="grid grid-cols-3 gap-3">
+                {CASE_OPTIONS.map((opt) => {
+                  const caseData = Products.cases.find(c => c.type === opt.value);
+                  const caseImage = caseData && caseData.colors && caseData.colors.length > 0 
+                    ? caseData.colors[0].image 
+                    : null;
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => handleCaseTypeSelection(opt.value)}
+                      className={`p-3 transition-all duration-200 flex flex-col items-center gap-2 ${
+                        selectedCaseType === opt.value
+                          ? 'bg-gray-50 text-gray-900 font-medium '
+                          : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                      }`}
+                      style={{fontFamily: "'Poppins', sans-serif"}}
+                    >
+                      {caseImage && (
+                        <div className="w-full aspect-square bg-gray-50  rounded overflow-hidden">
+                          <img
+                            src={caseImage}
+                            alt={opt.label}
+                            className="w-full h-full object-contain p-2"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </div>
+                      )}
+                      <span className="text-xs text-center">{opt.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -133,9 +151,9 @@ const MobileOverlay = ({
                       <button
                         key={cat.value || 'all'}
                         onClick={() => setSelectedCategory(cat.value)}
-                        className={`flex flex-col items-center p-3 border transition-all duration-200 ${
+                        className={`flex flex-col items-center p-3 transition-all duration-200 ${
                           selectedCategory === cat.value
-                            ? 'border-gray-900 bg-gray-50'
+                            ? ' bg-gray-50'
                             : ' hover:border-gray-300'
                         }`}
                         style={{fontFamily: "'Poppins', sans-serif"}}

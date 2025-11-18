@@ -1,8 +1,18 @@
 import React, { useRef, useEffect } from 'react';
 import { CASE_OPTIONS } from '../constants';
 
-const CaseSelector = ({ selectedCaseType, onSelect, isCaseDropdownOpen, setIsCaseDropdownOpen }) => {
+const CaseSelector = ({ selectedCaseType, onSelect, isCaseDropdownOpen, setIsCaseDropdownOpen, Products }) => {
   const caseDropdownRef = useRef(null);
+  
+  // Get image for a case type
+  const getCaseImage = (caseType) => {
+    if (!Products || !Products.cases) return null;
+    const caseData = Products.cases.find(c => c.type === caseType);
+    if (caseData && caseData.colors && caseData.colors.length > 0) {
+      return caseData.colors[0].image;
+    }
+    return null;
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -39,30 +49,47 @@ const CaseSelector = ({ selectedCaseType, onSelect, isCaseDropdownOpen, setIsCas
         </svg>
       </button>
       {isCaseDropdownOpen && (
-        <ul
-          className="absolute z-50 mt-1 w-full max-h-64 overflow-auto bg-white border border-gray-200 shadow-lg focus:outline-none"
+        <div
+          className="absolute z-50 mt-1 w-full bg-white border border-gray-200 shadow-lg focus:outline-none p-3"
           role="listbox"
         >
-          {CASE_OPTIONS.map((opt) => (
-            <li
-              key={opt.value}
-              role="option"
-              aria-selected={selectedCaseType === opt.value}
-              className={`px-4 py-2 cursor-pointer transition-colors duration-200 border-b border-gray-50 last:border-b-0 ${
-                selectedCaseType === opt.value 
-                  ? 'bg-gray-50 text-gray-900 font-medium' 
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-              style={{fontFamily: "'Poppins', sans-serif"}}
-              onClick={() => {
-                onSelect(opt.value);
-                setIsCaseDropdownOpen(false);
-              }}
-            >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
+          <div className="grid grid-cols-3 gap-3">
+            {CASE_OPTIONS.map((opt) => {
+              const caseImage = getCaseImage(opt.value);
+              return (
+                <button
+                  key={opt.value}
+                  role="option"
+                  aria-selected={selectedCaseType === opt.value}
+                  className={`p-3 cursor-pointer transition-all duration-200 border rounded flex flex-col items-center gap-2 ${
+                    selectedCaseType === opt.value 
+                      ? 'bg-gray-50 text-gray-900 font-medium border-gray-400 ring-2 ring-gray-300' 
+                      : 'text-gray-700 hover:bg-gray-50 border-gray-200 hover:border-gray-300'
+                  }`}
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  onClick={() => {
+                    onSelect(opt.value);
+                    setIsCaseDropdownOpen(false);
+                  }}
+                >
+                  {caseImage && (
+                    <div className="w-full aspect-square bg-gray-50 border border-gray-200 rounded overflow-hidden">
+                      <img
+                        src={caseImage}
+                        alt={opt.label}
+                        className="w-full h-full object-contain p-2"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  )}
+                  <span className="text-xs text-center">{opt.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       )}
     </div>
   );

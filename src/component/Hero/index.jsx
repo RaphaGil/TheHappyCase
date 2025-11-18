@@ -89,7 +89,7 @@ function Hero() {
 
       {/* Text and Shop Now Button - Overlay on Video */}
       <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
-        <div className="flex flex-col gap-4 items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
+        <div className="flex flex-col  items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
           <h1 
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white"
             style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
@@ -97,7 +97,7 @@ function Hero() {
             Create Your Own 
           </h1>
             <h1 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4"
             style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
             Passport Case
