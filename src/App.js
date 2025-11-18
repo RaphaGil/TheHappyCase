@@ -37,7 +37,7 @@ function AppContent() {
   const hideFooter = location.pathname === '/checkout' || location.pathname === '/CreateYours';
 
   return (
-    <div className="App bg-yellow-50 min-h-screen">
+    <div className="App bg-white min-h-screen">
       {!hideNavBar && (
         <header className={`App-header ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{background: 'white'}}>
           <NavBar isHomePage={isHomePage} />

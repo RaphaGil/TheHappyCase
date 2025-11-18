@@ -59,3 +59,4 @@ const GlueInfoModal = ({ show, onClose, onProceed, productType = 'item' }) => {
 export default GlueInfoModal;
 
 
+

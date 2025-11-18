@@ -14,6 +14,7 @@ const Canvas = ({
   const fabricCanvas = useRef(null);
   const caseInstanceRef = useRef(null);
   const boundaryRectRef = useRef(null);
+  const boundaryTextRef = useRef(null); // Text message for limit area
   const caseBorderRectRef = useRef(null); // Red border around the case image
   const borderRectsRef = useRef(new Map()); // Store border rectangles for selected objects
   const [selectedPin, setSelectedPin] = useState(null);
@@ -95,6 +96,9 @@ const Canvas = ({
             if (boundaryRectRef.current) {
               fabricCanvas.current.remove(boundaryRectRef.current);
             }
+            if (boundaryTextRef.current) {
+              fabricCanvas.current.remove(boundaryTextRef.current);
+            }
             
             // Remove existing case border if any
             if (caseBorderRectRef.current) {
@@ -107,29 +111,58 @@ const Canvas = ({
             // Business class case needs wider boundary (more inset from edges)
             // On mobile, use minimal insets to maximize usable area
             const isMobile = window.innerWidth < 768;
-            const insetHorizontal = isMobile
-              ? (selectedCaseType === 'business' ? 20 : 15)  // Minimal insets on mobile (scaled proportionally)
-              : (selectedCaseType === 'business' ? 140 : 120); // Original insets on desktop
+            const isLargeScreen = window.innerWidth >= 1024; // lg breakpoint
+            // Left margin is wider, right margin is smaller - but overall more area
+            // Economy class cases get wider area (smaller insets)
+            const insetHorizontalLeft = isMobile
+              ? (selectedCaseType === 'business' ? 15 : 10)  // Minimal insets on mobile (scaled proportionally)
+              : isLargeScreen
+                ? (selectedCaseType === 'business' ? 20 : 15)  // Wider left margin, Economy gets more area
+                : (selectedCaseType === 'business' ? 140 : 120); // Original insets on desktop
+            const insetHorizontalRight = isMobile
+              ? (selectedCaseType === 'business' ? 15 : 10)  // Minimal insets on mobile (scaled proportionally)
+              : isLargeScreen
+                ? (selectedCaseType === 'business' ? 3 : 1)  // Very small right margin, Economy gets more area
+                : (selectedCaseType === 'business' ? 140 : 120); // Original insets on desktop
             const insetVertical = isMobile
-              ? (selectedCaseType === 'business' ? 6 : 5)  // Minimal insets on mobile (scaled proportionally)
-              : (selectedCaseType === 'business' ? 50 : 40); // Original insets on desktop
+              ? (selectedCaseType === 'business' ? 5 : 4)  // Minimal insets on mobile (scaled proportionally)
+              : isLargeScreen
+                ? (selectedCaseType === 'business' ? 2 : 0.5)  // Very minimal vertical insets, Economy gets more area
+                : (selectedCaseType === 'business' ? 50 : 40); // Original insets on desktop
             const boundaryRect = new fabric.Rect({
-              left: rect.left + insetHorizontal,
+              left: rect.left + insetHorizontalLeft,
               top: rect.top + insetVertical,
-              width: rect.width - (insetHorizontal * 2),
+              width: rect.width - (insetHorizontalLeft + insetHorizontalRight),
               height: rect.height - (insetVertical * 2),
               fill: 'transparent',
-              stroke: 'rgba(239, 68, 68, 0.3)', // Subtle red with transparency
-              strokeWidth: 1,
-              strokeDashArray: [4, 4],
+              stroke: 'rgba(239, 68, 68, 0.7)', // Red - shown only when charm is near boundary
+              strokeWidth: 2,
+              strokeDashArray: [5, 5],
               selectable: false,
               evented: false,
-              visible: false, // Hidden by default, shown only when moving objects
+              visible: false, // Hidden by default, shown only when charm is near boundary
             });
             
             boundaryRectRef.current = boundaryRect;
             fabricCanvas.current.add(boundaryRect);
             fabricCanvas.current.sendObjectToBack(boundaryRect);
+            
+            // Create "Limit Area" text message
+            const boundaryText = new fabric.Text('Limit Area', {
+              left: rect.left + insetHorizontalLeft + 10,
+              top: rect.top + insetVertical + 5,
+              fontSize: 12,
+              fill: 'rgba(239, 68, 68, 0.9)',
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 'bold',
+              selectable: false,
+              evented: false,
+              visible: false, // Hidden by default, shown only when boundary is visible
+            });
+            
+            boundaryTextRef.current = boundaryText;
+            fabricCanvas.current.add(boundaryText);
+            fabricCanvas.current.sendObjectToBack(boundaryText);
             
             // Create red border around the case image itself (shown when charm is at edge)
             // Make border wider for business and first class cases
@@ -213,9 +246,12 @@ const Canvas = ({
     if (caseInstance) {
       fabricCanvas.current.sendObjectToBack(caseInstance);
     }
-    // Ensure boundary rect and case border are also at the back
+    // Ensure boundary rect, text, and case border are also at the back
     if (boundaryRectRef.current) {
       fabricCanvas.current.sendObjectToBack(boundaryRectRef.current);
+    }
+    if (boundaryTextRef.current) {
+      fabricCanvas.current.sendObjectToBack(boundaryTextRef.current);
     }
     if (caseBorderRectRef.current) {
       fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
@@ -317,7 +353,7 @@ const Canvas = ({
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
       const obj = e.target;
-      if (!obj || !obj.getBoundingRect || obj.isCase || obj === boundaryRectRef.current || obj === caseBorderRectRef.current) return; // Skip case object, boundary, and case border
+      if (!obj || !obj.getBoundingRect || obj.isCase || obj === boundaryRectRef.current || obj === boundaryTextRef.current || obj === caseBorderRectRef.current) return; // Skip case object, boundary, text, and case border
       
       // Get case bounds for constraint
       const caseInstance = caseInstanceRef.current;
@@ -336,29 +372,62 @@ const Canvas = ({
       // Separate horizontal and vertical insets to match the red boundary
       // Business class case needs wider boundary (more inset from edges)
       // On mobile, use minimal insets to maximize usable area
-      const insetHorizontal = isMobile 
-        ? (selectedCaseType === 'business' ? 2 : 1)  // Minimal insets on mobile for maximum area
-        : (selectedCaseType === 'business' ? 14 : 12); // Original insets on desktop
+      const isLargeScreen = window.innerWidth >= 1024; // lg breakpoint
+      // Left margin is wider, right margin is smaller - but overall more area
+      // Economy class cases get wider area (smaller insets)
+      const insetHorizontalLeft = isMobile 
+        ? (selectedCaseType === 'business' ? 1 : 0.5)  // Minimal insets on mobile for maximum area
+        : isLargeScreen
+          ? (selectedCaseType === 'business' ? 16 : 16)  // Wider left margin, Economy gets more area
+          : (selectedCaseType === 'business' ? 14 : 12); // Original insets on desktop
+      const insetHorizontalRight = isMobile 
+        ? (selectedCaseType === 'business' ? 1 : 0.5)  // Minimal insets on mobile for maximum area
+        : isLargeScreen
+          ? (selectedCaseType === 'business' ? 0.5 : 0.2)  // Very small right margin, Economy gets more area
+          : (selectedCaseType === 'business' ? 14 : 12); // Original insets on desktop
       const insetVertical = isMobile
-        ? (selectedCaseType === 'business' ? 5 : 4)  // Minimal insets on mobile for maximum area
-        : (selectedCaseType === 'business' ? 40 : 30); // Original insets on desktop
-      const caseLeft = caseRect.left + insetHorizontal;
+        ? (selectedCaseType === 'business' ? 4 : 3)  // Minimal insets on mobile for maximum area
+        : isLargeScreen
+          ? (selectedCaseType === 'business' ? 2 : 1)  // Very minimal vertical insets, Economy gets more area
+          : (selectedCaseType === 'business' ? 40 : 30); // Original insets on desktop
+      const caseLeft = caseRect.left + insetHorizontalLeft;
       const caseTop = caseRect.top + insetVertical;
-      const caseRight = caseRect.left + caseRect.width - insetHorizontal;
+      const caseRight = caseRect.left + caseRect.width - insetHorizontalRight;
       const caseBottom = caseRect.top + caseRect.height - insetVertical;
       
       // Check if object is near or over the boundary line (within threshold)
-      const threshold = 2; // Distance threshold to show boundary (smaller margin to show warning when closer to edge)
+      const threshold = 1; // Distance threshold to show boundary (smaller margin to show warning when closer to edge)
       const isNearLeft = objRect.left <= caseLeft + threshold && objRect.left + objRect.width >= caseLeft;
       const isNearRight = objRect.left <= caseRight && objRect.left + objRect.width >= caseRight - threshold;
       const isNearTop = objRect.top <= caseTop + threshold && objRect.top + objRect.height >= caseTop;
       const isNearBottom = objRect.top <= caseBottom && objRect.top + objRect.height >= caseBottom - threshold;
       const isOverBoundary = isNearLeft || isNearRight || isNearTop || isNearBottom;
       
-      // Minimalist alert: subtle boundary only when very close
-      // Show subtle boundary only when object is very close to the edge (not just near)
+      // Show boundary only when charm is near/over it
       if (boundaryRectRef.current) {
-        boundaryRectRef.current.set('visible', isOverBoundary);
+        if (isOverBoundary) {
+          boundaryRectRef.current.set({
+            visible: true,
+            stroke: 'rgba(239, 68, 68, 0.7)', // Red when near boundary
+            strokeWidth: 2
+          });
+          // Show limit area text
+          if (boundaryTextRef.current) {
+            boundaryTextRef.current.set({
+              visible: true
+            });
+          }
+        } else {
+          boundaryRectRef.current.set({
+            visible: false // Hide when not near boundary
+          });
+          // Hide limit area text
+          if (boundaryTextRef.current) {
+            boundaryTextRef.current.set({
+              visible: false
+            });
+          }
+        }
       }
       
       // Hide red border around the case image (no longer showing it)
@@ -444,10 +513,10 @@ const Canvas = ({
         // Calculate inset as a percentage of the smaller dimension to adjust to image shape
         // Use 2.5% of the smaller dimension for proportional scaling
         const minDimension = Math.min(boundingRect.width, boundingRect.height);
-        const inset = Math.max(2, minDimension * 0.025); // Minimum 2px, or 2.5% of smaller dimension
+        const inset = Math.max(2, minDimension * 0.005); // Minimum 2px, or 2.5% of smaller dimension
         
         borderRect.set({
-          left: boundingRect.left + inset,
+          left: boundingRect.left + 2,
           top: boundingRect.top + inset,
           width: boundingRect.width - (inset * 2),
           height: boundingRect.height - (inset * 2),
@@ -468,14 +537,22 @@ const Canvas = ({
     fabricCanvas.current.on('object:modified', (e) => {
       const obj = e.target;
       
-      // Hide red boundary and case border when object movement is complete
+      // Hide boundary when object movement is complete
       if (boundaryRectRef.current && obj && !obj.isCase && obj !== boundaryRectRef.current) {
-        boundaryRectRef.current.set('visible', false);
+        boundaryRectRef.current.set({
+          visible: false
+        });
+      }
+      // Hide limit area text when object movement is complete
+      if (boundaryTextRef.current && obj && !obj.isCase && obj !== boundaryTextRef.current) {
+        boundaryTextRef.current.set({
+          visible: false
+        });
       }
       if (caseBorderRectRef.current && obj && !obj.isCase && obj !== caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
       }
-      if (obj && !obj.isCase && obj !== boundaryRectRef.current && obj !== caseBorderRectRef.current) {
+      if (obj && !obj.isCase && obj !== boundaryRectRef.current && obj !== boundaryTextRef.current && obj !== caseBorderRectRef.current) {
         fabricCanvas.current.renderAll();
       }
       
@@ -619,9 +696,17 @@ const Canvas = ({
     });
 
     fabricCanvas.current.on('selection:cleared', () => {
-      // Hide red boundary and case border when selection is cleared
+      // Hide boundary when selection is cleared
       if (boundaryRectRef.current) {
-        boundaryRectRef.current.set('visible', false);
+        boundaryRectRef.current.set({
+          visible: false
+        });
+      }
+      // Hide limit area text when selection is cleared
+      if (boundaryTextRef.current) {
+        boundaryTextRef.current.set({
+          visible: false
+        });
       }
       if (caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
@@ -736,10 +821,10 @@ const Canvas = ({
       return; // Case already loaded with correct image
     }
 
-    // Remove old case objects, boundary, case border, and border rectangles
+    // Remove old case objects, boundary, text, case border, and border rectangles
     const objects = fabricCanvas.current.getObjects();
     objects.forEach(obj => {
-      if (obj.isCase || obj === boundaryRectRef.current || obj === caseBorderRectRef.current) {
+      if (obj.isCase || obj === boundaryRectRef.current || obj === boundaryTextRef.current || obj === caseBorderRectRef.current) {
         fabricCanvas.current.remove(obj);
       }
     });
@@ -750,6 +835,7 @@ const Canvas = ({
     borderRectsRef.current.clear();
     caseInstanceRef.current = null;
     boundaryRectRef.current = null;
+    boundaryTextRef.current = null;
     caseBorderRectRef.current = null;
 
     // Load new case image
@@ -853,11 +939,15 @@ const Canvas = ({
   const handleSaveImage = () => {
     if (!fabricCanvas.current) return;
 
-    // Temporarily hide boundary and case border for export
+    // Temporarily hide boundary, text, and case border for export
     const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
+    const boundaryTextVisible = boundaryTextRef.current ? boundaryTextRef.current.visible : true;
     const caseBorderVisible = caseBorderRectRef.current ? caseBorderRectRef.current.visible : true;
     if (boundaryRectRef.current) {
       boundaryRectRef.current.visible = false;
+    }
+    if (boundaryTextRef.current) {
+      boundaryTextRef.current.visible = false;
     }
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = false;
@@ -871,14 +961,17 @@ const Canvas = ({
       backgroundColor: 'white'
     });
 
-    // Restore boundary and case border visibility
+    // Restore boundary, text, and case border visibility
     if (boundaryRectRef.current) {
       boundaryRectRef.current.visible = boundaryVisible;
+    }
+    if (boundaryTextRef.current) {
+      boundaryTextRef.current.visible = boundaryTextVisible;
     }
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = caseBorderVisible;
     }
-    if (boundaryRectRef.current || caseBorderRectRef.current) {
+    if (boundaryRectRef.current || boundaryTextRef.current || caseBorderRectRef.current) {
       fabricCanvas.current.renderAll();
     }
 
@@ -897,11 +990,15 @@ const Canvas = ({
   const getDesignImageDataURL = () => {
     if (!fabricCanvas.current) return null;
     
-    // Temporarily hide boundary and case border for export
+    // Temporarily hide boundary, text, and case border for export
     const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
+    const boundaryTextVisible = boundaryTextRef.current ? boundaryTextRef.current.visible : true;
     const caseBorderVisible = caseBorderRectRef.current ? caseBorderRectRef.current.visible : true;
     if (boundaryRectRef.current) {
       boundaryRectRef.current.visible = false;
+    }
+    if (boundaryTextRef.current) {
+      boundaryTextRef.current.visible = false;
     }
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = false;
@@ -914,14 +1011,17 @@ const Canvas = ({
       backgroundColor: 'white'
     });
 
-    // Restore boundary and case border visibility
+    // Restore boundary, text, and case border visibility
     if (boundaryRectRef.current) {
       boundaryRectRef.current.visible = boundaryVisible;
+    }
+    if (boundaryTextRef.current) {
+      boundaryTextRef.current.visible = boundaryTextVisible;
     }
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = caseBorderVisible;
     }
-    if (boundaryRectRef.current || caseBorderRectRef.current) {
+    if (boundaryRectRef.current || boundaryTextRef.current || caseBorderRectRef.current) {
       fabricCanvas.current.renderAll();
     }
 
@@ -930,7 +1030,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center bg-yellow-50 w-[380px] sm:w-[480px]">
+      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center w-[380px] sm:w-[480px]">
         <canvas 
           ref={canvasRef} 
           className="max-w-full"

@@ -385,41 +385,41 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-2 md:py-12 relative bg-white">
-      <div className={`lg:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-24' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}>
+    <section className="min-h-screen py-1.5 sm:py-2 md:py-12 relative bg-white">
+      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-20 sm:pb-24' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
             onClick={() => navigate('/')}
-            className="absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
+            className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 z-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
             aria-label="Close and go back to home"
           >
-            <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         )}
         
         {/* Header Section - Fixed at top, never overlaps */}
-        <div className="text-center mb-2 md:mb-6 flex-shrink-0">
-          <h1 className="text-xl md:text-3xl font-light text-gray-900 mb-1 md:mb-2" 
+        <div className="text-center mb-1.5 sm:mb-2 md:mb-4 lg:mb-2 flex-shrink-0 mt-6">
+          <h1 className="text-lg sm:text-xl md:text-3xl font-light text-gray-900 mb-0.5 sm:mb-1 md:mb-2 lg:mb-1" 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
           </h1>
-          <div className="w-16 h-px bg-gray-300 mx-auto mb-2 md:mb-4"></div>
-          <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
+          <div className="w-12 sm:w-16 md:w-20 h-px bg-gray-300 mx-auto mb-1 sm:mb-2 md:mb-4 lg:mb-2"></div>
+          <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light mb-4" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case with our interactive creator
           </p>
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col lg:flex-row gap-2 md:gap-6 lg:gap-12 flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
+        <div className={`flex flex-col lg:flex-row gap-1.5 sm:gap-2 md:gap-6 lg:gap-8 flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className={`w-full lg:w-1/2 flex flex-col items-center justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
+          <div className={`w-full lg:w-1/2 flex flex-col items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
 
-            <div className="w-full max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px] flex flex-col">
+            <div className="w-full max-w-[calc(100vw-1rem)] xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col ">
               <div className="flex-shrink-0 w-full">
                 <div className="w-full" style={{aspectRatio: '1'}}>
                   <Canvas
@@ -435,8 +435,8 @@ const CreateYours = () => {
               
               {/* Mobile Step Buttons - Under the case image on mobile */}
               {isMobile && (
-                <div className="mt-2 w-full flex-shrink-0">
-                  <p className="text-xs text-gray-600 mb-2 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <div className="w-full flex-shrink-0 mt-1 sm:mt-2">
+                  <p className="text-[10px] xs:text-xs text-gray-600 mb-1 sm:mb-2 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
                     Choose the options below:
                   </p>
                   <MobileStepButtons
@@ -579,7 +579,7 @@ const CreateYours = () => {
         {/* Fixed Price Summary - Mobile only */}
         {isMobile && (
           <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] overflow-y-auto">
-            <div className="px-3 py-1.5">
+            <div className="px-2 sm:px-3 py-1 sm:py-1.5">
               <PriceSummary
                 totalPrice={totalPrice}
                 caseBasePrice={caseBasePrice}

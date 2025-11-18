@@ -10,13 +10,13 @@ function Footer() {
   const [customerServiceOpen, setCustomerServiceOpen] = useState(false);
 
   return (
-    <footer className="bg-yellow-100 border-t border-gray-100">
+    <footer className="bg-white border-t border-gray-100">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
           
           {/* Company Info */}
-          <div className="space-y-5 pb-6 md:pb-0 border-b md:border-b-0 border-gray-200 md:border-0">
+          <div className="space-y-5 pb-6 md:pb-0  md:border-0">
             <div className="flex items-center mb-2">
               <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
                 <div
@@ -103,10 +103,11 @@ function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-3 pb-6 md:pb-0 border-b md:border-b-0 border-gray-200 md:border-0">
+          <div className="space-y-3 pb-6 md:pb-0 ">
+            {/* Mobile: Dropdown button */}
             <button
               onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-              className="flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
+              className="md:hidden flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
               style={{fontFamily: "'Poppins', sans-serif"}}
             >
               <span>Quick Links</span>
@@ -115,8 +116,13 @@ function Footer() {
                 className="text-xs ml-2"
               />
             </button>
+            {/* Desktop: Static heading */}
+            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+              Quick Links
+            </h4>
+            {/* Mobile: Conditional content */}
             {quickLinksOpen && (
-              <ul className="space-y-3 pl-2">
+              <ul className="md:hidden space-y-3 pl-2">
                 <li>
                   <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
                    About 
@@ -139,13 +145,37 @@ function Footer() {
                 </li>
               </ul>
             )}
+            {/* Desktop: Always visible content */}
+            <ul className="hidden md:block space-y-3 pl-2">
+              <li>
+                <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                 About 
+                </Link>
+              </li>
+              <li>
+                <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                 Home
+                </a>
+              </li>
+              {/* <li>
+                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  Design Ideas
+                </a>
+              </li> */}
+              <li>
+                <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  Create Yours
+                </a>
+              </li>
+            </ul>
           </div>
 
           {/* Customer Service */}
           <div className="space-y-3">
+            {/* Mobile: Dropdown button */}
             <button
               onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
-              className="flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
+              className="md:hidden flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
               style={{fontFamily: "'Poppins', sans-serif"}}
             >
               <span>Customer Service</span>
@@ -154,8 +184,13 @@ function Footer() {
                 className="text-xs ml-2"
               />
             </button>
+            {/* Desktop: Static heading */}
+            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+              Customer Service
+            </h4>
+            {/* Mobile: Conditional content */}
             {customerServiceOpen && (
-              <ul className="space-y-3 pl-2">
+              <ul className="md:hidden space-y-3 pl-2">
                 <li>
                   <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
                     Shipping and Processing Times
@@ -168,6 +203,19 @@ function Footer() {
                 </li>
               </ul>
             )}
+            {/* Desktop: Always visible content */}
+            <ul className="hidden md:block space-y-3 pl-2">
+              <li>
+                <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  Shipping and Processing Times
+                </Link>
+              </li>
+              <li>
+                <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  Refund Policy
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Contact Info */}
@@ -193,7 +241,7 @@ function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className=" bg-yellow-100">
+      <div className=" bg-white ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             

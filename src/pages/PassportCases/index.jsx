@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import Products from '../../products.json';
 import { useCart } from '../../context/CartContext';
 import AddToCartBtn from '../../component/AddToCartBtn';
@@ -31,8 +33,19 @@ const PassportCases = () => {
   const [selectedDetailImage, setSelectedDetailImage] = useState(null);
   const [showGlueModal, setShowGlueModal] = useState(false);
   const [pendingProduct, setPendingProduct] = useState(null);
+  const [isSpecificationsOpen, setIsSpecificationsOpen] = useState(false);
 
   const selectedCase = Products.cases.find(c => c.type === selectedCaseType);
+  
+  // Function to format case type to display name
+  const getCaseDisplayName = (caseType) => {
+    const caseTypeMap = {
+      'economy': 'Economy Class',
+      'business': 'Business Class',
+      'firstclass': 'First Class'
+    };
+    return caseTypeMap[caseType] || caseType;
+  };
   
   // Update case type when filter param changes
   useEffect(() => {
@@ -77,13 +90,28 @@ const PassportCases = () => {
       smartCaseImages.push(colorImage);
     }
     
-    // Add detail images from SmartCase folder
-    // These are common detail images that apply to all colors
-    const detailImages = [
-      '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
-    ];
+    // Add detail images based on case type
+    let detailImages = [];
+    
+    if (selectedCaseType === 'economy') {
+      detailImages = [
+        '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
+        '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
+        '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
+      ];
+    } else if (selectedCaseType === 'business') {
+      detailImages = [
+        '/TheHappyCase/images/BusinessClassCase/businessclassinside.png',
+        '/TheHappyCase/images/BusinessClassCase/businessclassinside2.png'
+      ];
+    } else if (selectedCaseType === 'firstclass') {
+      detailImages = [
+        '/TheHappyCase/images/FirstClassCase/firstclassinside.jpg',
+        '/TheHappyCase/images/FirstClassCase/firstclassinside1.jpg',
+        '/TheHappyCase/images/FirstClassCase/firstclassinside2.jpg',
+        '/TheHappyCase/images/FirstClassCase/firstclassinside3.jpg'
+      ];
+    }
     
     // Add detail images if they exist
     detailImages.forEach(img => {
@@ -171,7 +199,7 @@ const PassportCases = () => {
                 }`}
                 style={{fontFamily: "'Poppins', sans-serif"}}
               >
-                {caseItem.name}
+                {getCaseDisplayName(caseItem.type)}
               </button>
             ))}
           </div>
@@ -181,7 +209,7 @@ const PassportCases = () => {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-12 mb-16">
           
           {/* Left Side - Image Gallery */}
-          <div className="space-y-6">
+          <div className="">
             <div className="text-center mb-6">
               {/* <h2 className="text-2xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
                 {selectedCase.name}
@@ -190,11 +218,11 @@ const PassportCases = () => {
               
             {/* Main Image Display */}
             <div className="relative group">
-              <div className="relative overflow-hidden bg-gray-50 border border-gray-100 p-8">
+              <div className="relative overflow-hidden bg-gray-50 border border-gray-100 ">
                 <img
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
-                  className="w-full h-80 object-contain transition-opacity duration-200"
+                  className="w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     if (e.target.nextSibling) {
@@ -202,7 +230,7 @@ const PassportCases = () => {
                     }
                   }}
                 />
-                <div className="hidden w-full h-80 items-center justify-center text-gray-400 bg-gray-50">
+                <div className="hidden w-full h-[300px] lg:h-[400px] xl:h-[500px] items-center justify-center text-gray-400 bg-gray-50">
                   <div className="text-center">
                     <p className="text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Image not available</p>
                   </div>
@@ -212,15 +240,13 @@ const PassportCases = () => {
             
             {/* Detail Images Gallery */}
             <div className="mt-6">
-              <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-4 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                View Details
-              </h3>
-              <div className="grid grid-cols-4 gap-3">
+           
+              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-4">
                 {detailImages.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => handleDetailImageClick(image)}
-                    className={`relative aspect-square overflow-hidden bg-gray-50 border transition-all duration-200 ${
+                    className={`relative aspect-square overflow-hidden bg-gray-50 border transition-all duration-200 max-w-[80px] mx-auto ${
                       selectedDetailImage === image || (!selectedDetailImage && index === 0 && currentImage === image)
                         ? 'border-gray-900 ring-2 ring-gray-300'
                         : 'border-gray-200 hover:border-gray-400'
@@ -229,7 +255,7 @@ const PassportCases = () => {
                     <img
                       src={image}
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
-                      className="w-full h-full object-contain p-2"
+                      className="w-full h-full object-contain"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         if (e.target.nextSibling) {
@@ -250,14 +276,14 @@ const PassportCases = () => {
           <div className="space-y-8">
             
             {/* Color Selection */}
-            <div className="border-b border-gray-100 pb-8">
-              <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>Available Colors</h3>
-              <div className="grid grid-cols-8 gap-3">
+            <div className="border-b border-gray-100 pb-8 mt-6">
+              <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>Colours Available</h3>
+              <div className="grid grid-cols-8 gap-1">
                 {selectedCase.colors.map((colorOption, index) => (
                   <button
                     key={index}
                     onClick={() => handleColorChange(colorOption.color)}
-                    className={`w-10 h-10 rounded-full border-2 transition-all duration-200 ${
+                    className={`md:w-8 md:h-8 w-6 h-6 rounded-full border-2 transition-all duration-200 ${
                       selectedColor === colorOption.color
                         ? 'border-gray-900 ring-2 ring-gray-300 scale-110'
                         : 'border-gray-200 hover:border-gray-400'
@@ -269,78 +295,90 @@ const PassportCases = () => {
               </div>
             </div>
 
-            {/* Specifications */}
+            {/* Specifications - Dropdown */}
             {selectedCase.specifications && (
               <div className="border-b border-gray-100 pb-8">
-                <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>Specifications</h3>
-                <div className="flex flex-col gap-3">
-                  {selectedCase.specifications.dimensions && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Dimensions</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.dimensions}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.weight && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Weight</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.weight}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.material && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Material</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.material}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.closure && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Closure</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.closure}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.cardSlots && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Card Slots</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.cardSlots}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.interior && (
-                    <div className="flex justify-between items-start py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Interior</span>
-                      <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.interior}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.rfid && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>RFID Protection</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.rfid}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.features && (
-                    <div className="flex justify-between items-start py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Features</span>
-                      <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.features}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.passportCapacity && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Capacity</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.passportCapacity}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.care && (
-                    <div className="flex justify-between items-start py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Care Instructions</span>
-                      <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.care}</span>
-                    </div>
-                  )}
-                  {selectedCase.specifications.warranty && (
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Warranty</span>
-                      <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.warranty}</span>
-                    </div>
-                  )}
-                </div>
+                <button
+                  onClick={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
+                  className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors"
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                >
+                  <span>Specifications</span>
+                  <FontAwesomeIcon 
+                    icon={isSpecificationsOpen ? faChevronUp : faChevronDown} 
+                    className="text-xs transition-transform duration-200"
+                  />
+                </button>
+                {isSpecificationsOpen && (
+                  <div className="flex flex-col gap-3 mt-4">
+                    {selectedCase.specifications.dimensions && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Dimensions</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.dimensions}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.weight && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Weight</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.weight}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.material && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Material</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.material}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.closure && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Closure</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.closure}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.cardSlots && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Card Slots</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.cardSlots}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.interior && (
+                      <div className="flex justify-between items-start py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Interior</span>
+                        <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.interior}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.rfid && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>RFID Protection</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.rfid}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.features && (
+                      <div className="flex justify-between items-start py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Features</span>
+                        <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.features}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.passportCapacity && (
+                      <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Capacity</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.passportCapacity}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.care && (
+                      <div className="flex justify-between items-start py-2 border-b border-gray-50">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Care Instructions</span>
+                        <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.care}</span>
+                      </div>
+                    )}
+                    {selectedCase.specifications.warranty && (
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-sm text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Warranty</span>
+                        <span className="text-sm text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{selectedCase.specifications.warranty}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -425,7 +463,7 @@ const PassportCases = () => {
                 </div>
                 
                 <h3 className="text-lg font-light text-gray-900 mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  {caseItem.name}
+                  {getCaseDisplayName(caseItem.type)}
                 </h3>
                 
                 <div className="text-xs text-gray-500 space-y-2 mb-4">
@@ -433,14 +471,30 @@ const PassportCases = () => {
                     <span style={{fontFamily: "'Poppins', sans-serif"}}>Colors:</span>
                     <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{caseItem.colors.length} options</span>
                   </div>
-                  <div className="flex justify-between items-center py-1 border-b border-gray-50">
-                    <span style={{fontFamily: "'Poppins', sans-serif"}}>Material:</span>
-                    <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{caseItem.specifications.material}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-1">
-                    <span style={{fontFamily: "'Poppins', sans-serif"}}>RFID:</span>
-                    <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>Protected</span>
-                  </div>
+                  {caseItem.specifications?.material && (
+                    <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                      <span style={{fontFamily: "'Poppins', sans-serif"}}>Material:</span>
+                      <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{caseItem.specifications.material}</span>
+                    </div>
+                  )}
+                  {caseItem.specifications?.dimensions && (
+                    <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                      <span style={{fontFamily: "'Poppins', sans-serif"}}>Dimensions:</span>
+                      <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{caseItem.specifications.dimensions}</span>
+                    </div>
+                  )}
+                  {caseItem.specifications?.cardSlots && (
+                    <div className="flex justify-between items-center py-1 border-b border-gray-50">
+                      <span style={{fontFamily: "'Poppins', sans-serif"}}>Card Slots:</span>
+                      <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{caseItem.specifications.cardSlots}</span>
+                    </div>
+                  )}
+                  {caseItem.specifications?.rfid && (
+                    <div className="flex justify-between items-center py-1">
+                      <span style={{fontFamily: "'Poppins', sans-serif"}}>RFID:</span>
+                      <span className="text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>{caseItem.specifications.rfid}</span>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="text-xl font-light text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>

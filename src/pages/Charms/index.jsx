@@ -360,7 +360,7 @@ const Charms = () => {
               <button
                 key={type.key}
                 onClick={() => handleCharmTypeChange(type.key)}
-                className={`px-4 md:px-6 py-3 text-xs md:text-sm uppercase tracking-wider transition-all duration-200 font-medium whitespace-nowrap ${
+                className={`px-4 md:px-6 py-3 text-sm md:text-md uppercase tracking-wider transition-all duration-200 font-medium whitespace-nowrap ${
                   selectedCharmType === type.key
                     ? 'border-b-2 border-blue-600 text-blue-700 bg-blue-50/50'
                     : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50/30'
@@ -391,7 +391,7 @@ const Charms = () => {
                     setSelectedContinent(key);
                     setFlagsCurrentPage(1); // Reset to first page when continent changes
                   }}
-                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
+                  className={`px-3 py-1.5 text-sm uppercase tracking-wider transition-all duration-200 ${
                     selectedContinent === key
                       ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'

@@ -2,6 +2,16 @@ import React, { useRef, useEffect } from 'react';
 
 const ItemDescriptionDropdown = ({ selectedCase, showDescriptionDropdown, setShowDescriptionDropdown }) => {
   const descriptionDropdownRef = useRef(null);
+  
+  // Function to format case type to display name
+  const getCaseDisplayName = (caseType) => {
+    const caseTypeMap = {
+      'economy': 'Economy Class',
+      'business': 'Business Class',
+      'firstclass': 'First Class'
+    };
+    return caseTypeMap[caseType] || caseType;
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -37,12 +47,12 @@ const ItemDescriptionDropdown = ({ selectedCase, showDescriptionDropdown, setSho
       </button>
       
       {showDescriptionDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-2  shadow-lg md:shadow-xl" style={{zIndex: 99999, maxHeight: 'calc(100vh - 200px)'}}>
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded shadow-lg md:shadow-xl" style={{zIndex: 99999, maxHeight: 'calc(100vh - 200px)'}}>
           <div className="p-3 sm:p-4 md:px-6 space-y-3 sm:space-y-4 max-h-[calc(100vh-220px)] overflow-y-auto">
             {/* Case Name */}
             <div>
               <h4 className="text-xs sm:text-sm font-medium text-gray-900 mb-1 sm:mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
-                {selectedCase.name}
+                {getCaseDisplayName(selectedCase.type)}
               </h4>
             </div>
             

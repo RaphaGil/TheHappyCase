@@ -14,17 +14,16 @@ const Items = () => {
   };
 
   return (
-    <section className="bg-white relative items-center justify-center py-16 md:py-24 overflow-hidden">
+    <section className="bg-white relative items-center justify-center py-20 md:py-32 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-light text-gray-800 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+        <div className="text-center mb-16 md:mb-20">
+          <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             Our Cases
           </h2>
-          <div className="w-16 h-px bg-gray-300 mx-auto"></div>
         </div>
       
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full xl:max-w-7xl mx-auto items-stretch">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 w-full xl:max-w-7xl mx-auto items-stretch">
           {Products.cases.map((item, index) => (
             <ProductCard key={index} item={item} displayName={caseDisplayNames[item.type] || item.name} formatPrice={formatPrice} />
           ))}
@@ -44,8 +43,6 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
   
   // For all case types, show inside image on hover
   const getHoverImage = () => {
-    if (!isHovered) return null;
-    
     if (item.type === 'firstclass') {
       return '/TheHappyCase/images/FirstClassCase/firstclassinside.jpg';
     } else if (item.type === 'economy') {
@@ -59,32 +56,32 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
   
   const hoverImage = getHoverImage();
 
-  // Convert hex color to rgba with opacity
-  const getColorWithOpacity = (hexColor, opacity = 0.15) => {
-    if (!hexColor) return '#f9fafb';
-    // Remove # if present
-    const hex = hexColor.replace('#', '');
-    // Convert to RGB
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-  };
-
   return (
     <div className="group flex flex-col h-full">
       {/* Product Image */}
       <div className="relative ">
         <div 
-          className="aspect-square overflow-hidden w-full max-w-xl mx-auto sm:max-w-lg md:max-w-none transition-all duration-300 hover:border-gray-300 h-[300px] relative"
+          className="aspect-square overflow-hidden w-full max-w-2xl mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl transition-all duration-300 hover:border-gray-300 h-[350px] sm:h-[400px] md:h-[450px]  relative"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
+          {/* Main image - no zoom */}
           <img
-            src={hoverImage || selectedImage}
+            src={selectedImage}
             alt={displayName}
-            className="w-full h-full object-contain transition-opacity duration-300"
+            className={`w-full h-full object-contain transition-opacity duration-300 ${isHovered && hoverImage ? 'opacity-0' : 'opacity-100'}`}
+            style={{ display: isHovered && hoverImage ? 'none' : 'block' }}
           />
+          
+          {/* Hover image - with zoom out effect (appears further away) */}
+          {hoverImage && (
+            <img
+              src={hoverImage}
+              alt={`${displayName} - Inside view`}
+              className={`absolute inset-0 w-full h-full object-contain transition-all duration-300 ${isHovered ? 'opacity-100 scale-90' : 'opacity-0 scale-100'}`}
+              style={{ display: isHovered ? 'block' : 'none' }}
+            />
+          )}
         </div>
       </div>
 
@@ -122,7 +119,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
         <div className="mt-auto">
           <Link
             to="/CreateYours"
-            className="inline-block text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 py-2 px-6 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+            className="inline-block text-xs uppercase tracking-wider text-gray-700 hover:text-gray-900 py-2.5 px-8 border border-gray-300 hover:border-gray-900 transition-all duration-300 font-light"
             style={{fontFamily: "'Poppins', sans-serif"}}
           >
             Personalize Now

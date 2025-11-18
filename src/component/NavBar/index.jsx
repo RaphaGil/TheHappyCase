@@ -37,9 +37,29 @@ const NavBar = () => {
     'NOK': 'Norway',
   };
   
-  const getCurrencyDisplay = () => {
+  // Currency to flag emoji mapping
+  const currencyToFlag = {
+    'GBP': '🇬🇧',
+    'USD': '🇺🇸',
+    'EUR': '🇪🇺',
+    'BRL': '🇧🇷',
+    'CAD': '🇨🇦',
+    'AUD': '🇦🇺',
+    'PLN': '🇵🇱',
+    'CZK': '🇨🇿',
+    'HUF': '🇭🇺',
+    'RON': '🇷🇴',
+    'BGN': '🇧🇬',
+    'DKK': '🇩🇰',
+    'SEK': '🇸🇪',
+    'CHF': '🇨🇭',
+    'NOK': '🇳🇴',
+  };
+
+  const getCurrencyDisplayWithFlag = () => {
+    const flag = currencyToFlag[currency] || '';
     const country = currencyToCountry[currency] || currency;
-    return `${currencySymbol} ${currency} - ${country}`;
+    return `${flag} ${currencySymbol} ${currency} - ${country}`;
   };
   
   // Promotional banner messages - reactive to currency changes
@@ -101,7 +121,7 @@ const NavBar = () => {
   return (
     <>
       {/* Promotional Banner */}
-      <div className="text-gray-900 text-center py-2 px-4 relative bg-yellow-100 border-b border-gray-100">
+      <div className="text-gray-700 text-center py-2 px-4 relative bg-yellow-100 border-b border-gray-100">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {/* Left side - empty for balance */}
           <div className="lg:w-20"></div>
@@ -125,7 +145,7 @@ const NavBar = () => {
                 href="https://instagram.com/thehappycase.store"
                 target="_blank"
                 rel="noopener noreferrer"
-                className=" hover:text-gray-900 transition-colors"
+                className=" hover:text-gray-700 transition-colors"
                 aria-label="Follow us on Instagram"
               >
                 <FontAwesomeIcon icon={faInstagram} className="text-md" />
@@ -134,7 +154,7 @@ const NavBar = () => {
                 href="https://tiktok.com/@thehappycase.store"
                 target="_blank"
                 rel="noopener noreferrer"
-                className=" hover:text-gray-900 transition-colors"
+                className=" hover:text-gray-700 transition-colors"
                 aria-label="Follow us on TikTok"
               >
                 <FontAwesomeIcon icon={faTiktok} className="text-md" />
@@ -143,7 +163,7 @@ const NavBar = () => {
                 href="https://facebook.com/thehappycase"
                 target="_blank"
                 rel="noopener noreferrer"
-                className=" hover:text-gray-900 transition-colors"
+                className=" hover:text-gray-700 transition-colors"
                 aria-label="Follow us on Facebook"
               >
                 <FontAwesomeIcon icon={faFacebook} className="text-md" />
@@ -157,15 +177,15 @@ const NavBar = () => {
                   e.stopPropagation();
                   toggleCurrencyDropdown();
                 }}
-                className="px-2 md:px-3 py-1 text-gray-900 hover:text-gray-900 focus:outline-none transition-colors flex items-center text-[12px] md:text-xs"
+                className="px-2 md:px-3 py-1 text-gray-700 hover:text-gray-900 focus:outline-none transition-colors flex items-center text-[12px] md:text-xs"
                 aria-label="Select currency"
                 style={{fontFamily: "'Poppins', sans-serif"}}
               >
-                <span className="mr-1 whitespace-nowrap">{getCurrencyDisplay()}</span>
+                <span className="mr-1 whitespace-nowrap">{getCurrencyDisplayWithFlag()}</span>
                 <FontAwesomeIcon icon={faChevronDown} className={`text-[6px] md:text-xs transition-transform ml-1 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCurrencyDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white border border-gray-200 min-w-40 max-h-[80vh] overflow-y-auto" style={{zIndex: 9999}} onClick={(e) => e.stopPropagation()}>
+                <div className="absolute right-0 mt-2 bg-white  min-w-40 max-h-[80vh] overflow-y-auto" style={{zIndex: 9999}} onClick={(e) => e.stopPropagation()}>
                   <button
                     onClick={(e) => { 
                       e.stopPropagation();
@@ -405,29 +425,12 @@ const NavBar = () => {
       <ul
         className={`lg:flex lg:space-x-1 ${
             isOpen
-            ? 'flex flex-col fixed left-0 top-0 w-full h-screen bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto'
+            ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(100vh-104px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
               : 'hidden'
           }`}
         style={{fontFamily: "'Poppins', sans-serif"}}
         >
-          {isOpen && (
-          <li className="flex justify-end pr-4 mb-4">
-              <button
-                onClick={closeMenu}
-              className="p-2 text-gray-400 hover:text-gray-900 transition-colors"
-                aria-label="Close menu"
-              >
-                <svg
-                className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </li>
-          )}
+    
           <li>
           <Link to="/" className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 block transition-colors text-xs uppercase tracking-wider font-light" style={{color: isOpen ? '#6b7280' : '#6b7280'}} onClick={closeMenu}>
            Home
@@ -439,19 +442,28 @@ const NavBar = () => {
             </Link>
           </li>
           <li className="relative" ref={passportDropdownRef}>
+            {/* Desktop: Direct link */}
+            <Link 
+              to="/PassportCases" 
+              className="hidden lg:block px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider"
+              style={{color: '#6b7280'}}
+            >
+              Passport Cases
+            </Link>
+            {/* Mobile: Dropdown button */}
             <button
               onClick={togglePassportDropdown}
-            className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors w-full text-left flex items-center justify-between text-xs uppercase tracking-wider"
+            className={`lg:hidden px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-all duration-200 w-full text-left flex items-center justify-between text-xs uppercase tracking-wider ${isPassportDropdownOpen ? 'bg-gray-50' : ''}`}
             style={{color: isOpen ? '#6b7280' : '#6b7280'}}
             >
             Passport Cases
-            <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform ${isPassportDropdownOpen ? 'rotate-180' : ''}`} />
+            <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isPassportDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
             {isPassportDropdownOpen && (
-            <div className="absolute left-0 bg-white mt-1 border border-gray-200 z-50 min-w-48">
+            <div className="lg:hidden bg-gray-50 border-t border-gray-100 overflow-hidden transition-all duration-200">
                 <Link
                 to="/PassportCases?filter=firstclass"
-                className="block px-4 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors text-sm border-b border-gray-100"
+                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
                 style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={closeAllMenus}
                 >
@@ -459,7 +471,7 @@ const NavBar = () => {
                 </Link>
                 <Link
                 to="/PassportCases?filter=business"
-                className="block px-4 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors text-sm border-b border-gray-100"
+                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
                 style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={closeAllMenus}
                 >
@@ -467,7 +479,7 @@ const NavBar = () => {
                 </Link>
                 <Link
                 to="/PassportCases?filter=economy"
-                className="block px-4 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors text-sm"
+                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
                 style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={closeAllMenus}
                 >
@@ -477,19 +489,28 @@ const NavBar = () => {
             )}
           </li>
           <li className="relative" ref={charmsDropdownRef}>
+            {/* Desktop: Direct link */}
+            <Link 
+              to="/Charms" 
+              className="hidden lg:block px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider"
+              style={{color: '#6b7280'}}
+            >
+              Charms
+            </Link>
+            {/* Mobile: Dropdown button */}
             <button
               onClick={toggleCharmsDropdown}
-            className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors w-full text-left flex items-center justify-between text-xs uppercase tracking-wider"
+            className={`lg:hidden px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-all duration-200 w-full text-left flex items-center justify-between text-xs uppercase tracking-wider ${isCharmsDropdownOpen ? 'bg-gray-50' : ''}`}
             style={{color: isOpen ? '#6b7280' : '#6b7280'}}
             >
              Charms
-            <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform ${isCharmsDropdownOpen ? 'rotate-180' : ''}`} />
+            <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isCharmsDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
             {isCharmsDropdownOpen && (
-            <div className="absolute left-0 bg-white mt-1 border border-gray-200 z-50 min-w-48">
+            <div className="lg:hidden bg-gray-50 border-t border-gray-100 overflow-hidden transition-all duration-200">
                 <Link
                   to="/Charms?filter=flags"
-                className="block px-4 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors text-sm border-b border-gray-100"
+                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
                 style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={closeAllMenus}
                 >
@@ -497,7 +518,7 @@ const NavBar = () => {
                 </Link>
                 <Link
                   to="/Charms?filter=colorful"
-                className="block px-4 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors text-sm border-b border-gray-100"
+                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
                 style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={closeAllMenus}
                 >
@@ -505,7 +526,7 @@ const NavBar = () => {
                 </Link>
                 <Link
                   to="/Charms?filter=bronze"
-                className="block px-4 py-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-colors text-sm"
+                className="block px-8 py-2.5 hover:bg-gray-100 text-gray-700 hover:text-gray-900 transition-colors text-xs"
                 style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={closeAllMenus}
                 >
@@ -517,13 +538,16 @@ const NavBar = () => {
           {/* Design Ideas link hidden */}
         {isOpen && (
           <>
-          {/* Social Media Icons - Mobile */}
-            <li className="pt-4 border-t border-gray-100">
+          {/* Spacer to push bottom items down */}
+          <li className="flex-1"></li>
+          {/* Bottom section - Follow Us and Currency */}
+          {/* Social Media Icons - Mobile - Moved to bottom */}
+          <li className="pt-4 border-t border-gray-100">
               <div className="px-4">
-                <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3 font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Follow Us
               </h3>
-                <div className="flex gap-3">
+                <div className="flex">
                 <a
                   href="https://instagram.com/thehappycase.store"
                   target="_blank"
@@ -555,21 +579,21 @@ const NavBar = () => {
             </div>
           </li>
           
-            {/* Currency Selector - Mobile */}
-            <li className="relative px-4 py-2 border-t border-gray-100">
+            {/* Currency Selector - Mobile - Moved to bottom */}
+            <li className="relative px-4 py-3 border-t border-gray-100" ref={currencyDropdownRef}>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleCurrencyDropdown();
                 }}
-                className="w-full text-left hover:text-gray-900 font-light transition-colors flex items-center justify-between text-sm" 
+                className={`w-full text-left hover:text-gray-900 font-light transition-all duration-200 flex items-center justify-between text-xs uppercase tracking-wider ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
                 style={{fontFamily: "'Poppins', sans-serif", color: '#6b7280'}}
               >
-                <span>Currency: {getCurrencyDisplay()}</span>
-                <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
+                <span> {getCurrencyDisplayWithFlag()}</span>
+                <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {isCurrencyDropdownOpen && (
-                <div className="mt-2 bg-white border border-gray-200 max-h-[70vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                <div className="bg-gray-50 border-t border-gray-100 transition-all duration-200 max-h-[70vh] overflow-y-auto w-full" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => { 
                     e.stopPropagation();
@@ -577,8 +601,8 @@ const NavBar = () => {
                     setIsCurrencyDropdownOpen(false);
                     closeMenu();
                   }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${currency === 'GBP' ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'}`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'GBP' ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === 'GBP' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'GBP' ? '#111827' : '#374151'}}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -595,8 +619,8 @@ const NavBar = () => {
                     setIsCurrencyDropdownOpen(false);
                     closeMenu();
                   }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${currency === 'USD' ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'}`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'USD' ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === 'USD' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'USD' ? '#111827' : '#374151'}}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -615,8 +639,8 @@ const NavBar = () => {
                     setShowEuropeanCountries(false);
                     closeMenu();
                   }}
-                  className={`w-full text-left px-4 py-2 text-sm transition-colors ${currency === 'EUR' ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-                  style={{fontFamily: "'Poppins', sans-serif", color: currency === 'EUR' ? '#111827' : '#6b7280'}}
+                  className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === 'EUR' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                  style={{fontFamily: "'Poppins', sans-serif", color: currency === 'EUR' ? '#111827' : '#374151'}}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -634,16 +658,16 @@ const NavBar = () => {
                       e.stopPropagation();
                       setShowEuropeanCountries(!showEuropeanCountries);
                     }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${['PLN', 'CZK', 'HUF', 'RON', 'BGN', 'DKK', 'SEK', 'CHF', 'NOK'].includes(currency) ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: ['PLN', 'CZK', 'HUF', 'RON', 'BGN', 'DKK', 'SEK', 'CHF', 'NOK'].includes(currency) ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${['PLN', 'CZK', 'HUF', 'RON', 'BGN', 'DKK', 'SEK', 'CHF', 'NOK'].includes(currency) ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                    style={{fontFamily: "'Poppins', sans-serif", color: ['PLN', 'CZK', 'HUF', 'RON', 'BGN', 'DKK', 'SEK', 'CHF', 'NOK'].includes(currency) ? '#111827' : '#374151'}}
                   >
                     <div className="flex items-center justify-between flex-1">
                       <span className="text-xs text-gray-500">Other European Countries</span>
                     </div>
-                    <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform ${showEuropeanCountries ? 'rotate-180' : ''}`} />
+                    <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${showEuropeanCountries ? 'rotate-180' : ''}`} />
                   </button>
                   {showEuropeanCountries && (
-                    <div className="pl-4 ml-2 max-h-64 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                    <div className="pl-8 max-h-64 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                       {[
                         { code: 'PLN', symbol: 'zł', name: 'Poland', flag: '🇵🇱' },
                         { code: 'CZK', symbol: 'Kč', name: 'Czech Republic', flag: '🇨🇿' },
@@ -664,8 +688,8 @@ const NavBar = () => {
                             setShowEuropeanCountries(false);
                             closeMenu();
                           }}
-                          className={`w-full text-left px-3 py-1.5 text-xs transition-colors ${currency === country.code ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-                          style={{fontFamily: "'Poppins', sans-serif", color: currency === country.code ? '#111827' : '#6b7280'}}
+                          className={`w-full text-left px-4 py-2 text-xs transition-colors ${currency === country.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                          style={{fontFamily: "'Poppins', sans-serif", color: currency === country.code ? '#111827' : '#374151'}}
                         >
                           <div className="flex items-center gap-2">
                             <span>{country.flag}</span>
@@ -684,8 +708,8 @@ const NavBar = () => {
                     setIsCurrencyDropdownOpen(false);
                     closeMenu();
                   }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${currency === 'BRL' ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'}`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'BRL' ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === 'BRL' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'BRL' ? '#111827' : '#374151'}}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -702,8 +726,8 @@ const NavBar = () => {
                     setIsCurrencyDropdownOpen(false);
                     closeMenu();
                   }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${currency === 'CAD' ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'}`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'CAD' ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === 'CAD' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'CAD' ? '#111827' : '#374151'}}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -720,8 +744,8 @@ const NavBar = () => {
                     setIsCurrencyDropdownOpen(false);
                     closeMenu();
                   }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${currency === 'AUD' ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'}`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'AUD' ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === 'AUD' ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                    style={{fontFamily: "'Poppins', sans-serif", color: currency === 'AUD' ? '#111827' : '#374151'}}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -734,12 +758,6 @@ const NavBar = () => {
               </div>
             )}
           </li>
-            
-            <li>
-              <Link to="/cart" className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-xs uppercase tracking-wider border-t border-gray-100 mt-4 pt-4" style={{color: '#6b7280'}} onClick={closeMenu}>
-                Cart {getTotalItems() > 0 && `(${getTotalItems()})`}
-              </Link>
-            </li>
           </>
         )}
         </ul>

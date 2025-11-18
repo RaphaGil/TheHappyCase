@@ -93,11 +93,11 @@ const Reviews = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setReviewsPerSlide(3);
+        setReviewsPerSlide(4); // lg screens and above: 4 reviews
       } else if (window.innerWidth >= 768) {
-        setReviewsPerSlide(2);
+        setReviewsPerSlide(2); // md screens: 2 reviews
       } else {
-        setReviewsPerSlide(1);
+        setReviewsPerSlide(1); // mobile: 1 review
       }
     };
 
@@ -162,14 +162,13 @@ const Reviews = () => {
   const visibleReviews = isMobile ? reviews : reviews.slice(currentSlide, currentSlide + reviewsPerSlide);
 
   return (
-    <div className="bg-white py-12 md:py-16 lg:py-20 relative overflow-hidden border-t border-gray-100">
-      <div className="max-w-7xl mx-auto relative z-10 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white py-20 md:py-28 lg:py-32 relative overflow-hidden">
+      <div className="max-full  relative z-10 px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-800 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+        <div className="text-center mb-16 md:mb-20">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-gray-900 mb-3" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             What Our Customers Say
           </h2>
-          <div className="w-16 h-px bg-green-300/60 mx-auto"></div>
         </div>
 
         {/* Reviews Carousel */}
@@ -177,28 +176,28 @@ const Reviews = () => {
           {/* Navigation arrows - Hidden on mobile */}
           <button 
             onClick={prevSlide}
-            className="hidden md:block absolute left-0 sm:left-2 md:left-8 top-1/2 transform -translate-y-1/2 -translate-x-2 sm:-translate-x-4 md:-translate-x-8 lg:-translate-x-12 z-20 bg-green-50/90 border-2 border-green-200/50 hover:border-green-300/70 hover:bg-green-50 rounded-full p-1.5 sm:p-2 md:p-3 transition-all duration-200 shadow-sm"
+            className="hidden md:block absolute left-0 sm:left-2 md:left-8 top-1/2 transform -translate-y-1/2 -translate-x-2 sm:-translate-x-4 md:-translate-x-8 lg:-translate-x-12 z-20 p-1.5 sm:p-2 md:p-3 transition-all duration-200 "
             aria-label="Previous reviews"
           >
-            <FontAwesomeIcon icon={faChevronLeft} className="text-green-600/70 text-xs sm:text-sm" />
+            <FontAwesomeIcon icon={faChevronLeft} className="text-gray-600/70 text-xs sm:text-sm" />
           </button>
           
           <button 
             onClick={nextSlide}
-            className="hidden md:block absolute right-0 sm:right-2 md:right-8 top-1/2 transform -translate-y-1/2 translate-x-2 sm:translate-x-4 md:translate-x-8 lg:translate-x-12 z-20 bg-green-50/90 border-2 border-green-200/50 hover:border-green-300/70 hover:bg-green-50 rounded-full p-1.5 sm:p-2 md:p-3 transition-all duration-200 shadow-sm"
+            className="hidden md:block absolute right-0 sm:right-2 md:right-8 top-1/2 transform -translate-y-1/2 translate-x-2 sm:translate-x-4 md:translate-x-8 lg:translate-x-12 z-20 b p-1.5 sm:p-2 md:p-3 transition-all duration-200 "
             aria-label="Next reviews"
           >
-            <FontAwesomeIcon icon={faChevronRight} className="text-green-600/70 text-xs sm:text-sm" />
+            <FontAwesomeIcon icon={faChevronRight} className="text-gray-600/70 text-xs sm:text-sm" />
           </button>
 
           {/* Reviews Container - Flex on mobile, Grid on desktop */}
           <div 
-            className={`md:grid md:gap-8 md:px-12 lg:px-8 ${
-              reviewsPerSlide === 3 
-                ? 'md:grid-cols-2 xl:grid-cols-3 md:max-w-7xl' 
+            className={`md:grid md:gap-8 md:px-12 ${
+              reviewsPerSlide === 4 
+                ? 'md:grid-cols-2 lg:grid-cols-4' 
                 : reviewsPerSlide === 2
-                ? 'md:grid-cols-2 md:max-w-5xl'
-                : 'md:grid-cols-1 md:max-w-2xl'
+                ? 'md:grid-cols-2'
+                : 'md:grid-cols-1'
             } md:mx-auto`}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
@@ -215,18 +214,18 @@ const Reviews = () => {
                 {reviews.map((review, index) => (
                   <div
                     key={review.id}
-                    className="flex-shrink-0 bg-white/80 backdrop-blur-sm border-2 border-green-200/40 p-4 transition-all duration-200 rounded-lg"
-                    style={{ width: 'calc(66.67vw - 0.5rem)' }}
+                    className="flex-shrink-0 bg-white border border-gray-200 p-4 transition-all duration-200 flex flex-col"
+                    style={{ width: 'calc(66.67vw - 0.5rem)', minHeight: '280px' }}
                   >
                     <div className="flex items-center gap-1.5 mb-3">
                       {renderStars(review.rating)}
                     </div>
-                    <p className="text-gray-700 mb-4 leading-relaxed text-xs" style={{fontFamily: "'Poppins', sans-serif", fontWeight: 300}}>
+                    <p className="text-gray-700 mb-4 leading-relaxed text-xs flex-grow" style={{fontFamily: "'Poppins', sans-serif", fontWeight: 300}}>
                       "{review.text}"
                     </p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 mt-auto">
                       {review.avatar && (
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-gray-900 font-medium border border-gray-200 bg-gray-50 text-xs flex-shrink-0" style={{fontFamily: "'Poppins', sans-serif"}}>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-gray-900 font-medium  bg-gray-50 text-xs flex-shrink-0" style={{fontFamily: "'Poppins', sans-serif"}}>
                           {review.avatar}
                         </div>
                       )}
@@ -251,19 +250,19 @@ const Reviews = () => {
             {visibleReviews.map((review, index) => (
               <div
                 key={review.id}
-                className="hidden md:block bg-white/80 backdrop-blur-sm border-2 border-green-200/40 p-4 sm:p-5 md:p-6 lg:p-8 transition-all duration-200 rounded-lg hover:border-green-300/60 hover:shadow-md"
+                className="hidden md:flex bg-white border border-gray-200 p-4 sm:p-5 md:p-6 lg:p-8 transition-all duration-200 hover:border-gray-300 flex-col min-h-[320px]"
               >
                 <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                   {renderStars(review.rating)}
                 </div>
 
                 {/* Review Text */}
-                <p className="text-gray-700 mb-4 sm:mb-5 md:mb-6 leading-relaxed text-xs sm:text-sm" style={{fontFamily: "'Poppins', sans-serif", fontWeight: 300}}>
+                <p className="text-gray-700 mb-4 sm:mb-5 md:mb-6 leading-relaxed text-xs sm:text-sm flex-grow" style={{fontFamily: "'Poppins', sans-serif", fontWeight: 300}}>
                   "{review.text}"
                 </p>
 
                 {/* Customer Info */}
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 mt-auto">
                   {review.avatar && (
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-gray-900 font-medium border border-gray-200 bg-gray-50 text-xs flex-shrink-0" style={{fontFamily: "'Poppins', sans-serif"}}>
                       {review.avatar}
@@ -294,8 +293,8 @@ const Reviews = () => {
                   onClick={() => setCurrentSlide(index * reviewsPerSlide)}
                   className={`h-1 sm:h-1.5 rounded-full transition-all duration-200 ${
                     Math.floor(currentSlide / reviewsPerSlide) === index 
-                      ? 'bg-green-400 w-6 sm:w-8 shadow-sm' 
-                      : 'bg-green-200/60 hover:bg-green-300/80 w-1.5 sm:w-2'
+                      ? 'bg-gray-800 w-6 sm:w-8 shadow-sm' 
+                      : 'bg-gray-900/60 hover:bg-gray-800/80 w-1.5 sm:w-2'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
