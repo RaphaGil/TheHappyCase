@@ -11,33 +11,108 @@ const AddTextModal = ({
   customTextAdded, 
   setCustomTextAdded 
 }) => {
-  // Prevent page movement when modal is open
+  // Prevent page movement when modal is open - especially on mobile
   useEffect(() => {
     if (show) {
       // Save current scroll position
       const scrollY = window.scrollY;
+      const scrollX = window.scrollX;
+      const isMobile = window.innerWidth < 768;
       
-      // Prevent scrolling
+      // Prevent scrolling on body and html
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
+      document.body.style.height = '100%';
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
+      document.body.style.left = `-${scrollX}px`;
       document.body.style.right = '0';
-      
-      // Prevent touch scrolling
       document.body.style.touchAction = 'none';
+      document.body.style.overscrollBehavior = 'none';
+      
+      // Also prevent scrolling on html element
+      document.documentElement.style.overflow = 'hidden';
+      document.documentElement.style.position = 'fixed';
+      document.documentElement.style.width = '100%';
+      document.documentElement.style.height = '100%';
+      document.documentElement.style.touchAction = 'none';
+      document.documentElement.style.overscrollBehavior = 'none';
+      
+      // Prevent viewport movement on mobile when keyboard appears
+      if (isMobile) {
+        // Prevent zoom on input focus (iOS)
+        const viewport = document.querySelector('meta[name="viewport"]');
+        const originalContent = viewport ? viewport.getAttribute('content') : '';
+        if (viewport) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }
+        
+        // Prevent scroll on touch
+        const preventScroll = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        };
+        
+        document.addEventListener('touchmove', preventScroll, { passive: false });
+        document.addEventListener('touchstart', preventScroll, { passive: false });
+        document.addEventListener('wheel', preventScroll, { passive: false });
+        document.addEventListener('scroll', preventScroll, { passive: false });
+        
+        return () => {
+          // Restore viewport
+          if (viewport && originalContent) {
+            viewport.setAttribute('content', originalContent);
+          }
+          
+          // Remove event listeners
+          document.removeEventListener('touchmove', preventScroll);
+          document.removeEventListener('touchstart', preventScroll);
+          document.removeEventListener('wheel', preventScroll);
+          document.removeEventListener('scroll', preventScroll);
+          
+          // Restore scrolling
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.height = '';
+          document.body.style.top = '';
+          document.body.style.left = '';
+          document.body.style.right = '';
+          document.body.style.touchAction = '';
+          document.body.style.overscrollBehavior = '';
+          
+          document.documentElement.style.overflow = '';
+          document.documentElement.style.position = '';
+          document.documentElement.style.width = '';
+          document.documentElement.style.height = '';
+          document.documentElement.style.touchAction = '';
+          document.documentElement.style.overscrollBehavior = '';
+          
+          window.scrollTo(scrollX, scrollY);
+        };
+      }
       
       return () => {
         // Restore scrolling when modal closes
         document.body.style.overflow = '';
         document.body.style.position = '';
         document.body.style.width = '';
+        document.body.style.height = '';
         document.body.style.top = '';
         document.body.style.left = '';
         document.body.style.right = '';
         document.body.style.touchAction = '';
-        window.scrollTo(0, scrollY);
+        document.body.style.overscrollBehavior = '';
+        
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.position = '';
+        document.documentElement.style.width = '';
+        document.documentElement.style.height = '';
+        document.documentElement.style.touchAction = '';
+        document.documentElement.style.overscrollBehavior = '';
+        
+        window.scrollTo(scrollX, scrollY);
       };
     }
   }, [show]);
@@ -115,23 +190,35 @@ const AddTextModal = ({
                 setCustomTextAdded(false);
               }}
               onFocus={(e) => {
-                // Prevent page movement when input is focused
-                e.preventDefault();
-                document.body.style.overflow = 'hidden';
-                document.body.style.position = 'fixed';
-                document.body.style.width = '100%';
-                document.body.style.height = '100%';
-                // Prevent scroll on mobile
-                if (window.innerWidth < 768) {
-                  window.scrollTo(0, window.scrollY);
+                // Prevent page movement when input is focused on mobile
+                const isMobile = window.innerWidth < 768;
+                if (isMobile) {
+                  // Lock scroll position
+                  const scrollY = window.scrollY;
+                  const scrollX = window.scrollX;
+                  
+                  // Prevent any movement
+                  document.body.style.position = 'fixed';
+                  document.body.style.top = `-${scrollY}px`;
+                  document.body.style.left = `-${scrollX}px`;
+                  document.body.style.width = '100%';
+                  document.body.style.height = '100%';
+                  document.body.style.overflow = 'hidden';
+                  document.body.style.touchAction = 'none';
+                  
+                  // Prevent viewport zoom on iOS
+                  const viewport = document.querySelector('meta[name="viewport"]');
+                  if (viewport) {
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                  }
+                  
+                  // Lock scroll
+                  window.scrollTo(scrollX, scrollY);
                 }
               }}
               onBlur={() => {
-                // Restore scrolling when input loses focus
-                document.body.style.overflow = '';
-                document.body.style.position = '';
-                document.body.style.width = '';
-                document.body.style.height = '';
+                // Restore when input loses focus (but keep modal locked)
+                // The useEffect will handle cleanup when modal closes
               }}
               placeholder="e.g. Your name"
               className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
