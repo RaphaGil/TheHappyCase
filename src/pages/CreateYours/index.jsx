@@ -233,17 +233,6 @@ const CreateYours = () => {
     // Get the main color image
     const colorImage = selectedColorData?.image || selectedCase?.images?.[0] || '';
     
-    // Extract the filename from the color image path to match SmartCase images
-    let imageBaseName = '';
-    if (colorImage) {
-      const imagePath = colorImage.split('/').pop(); // Get filename
-      // For economy case, images are like "economycasepink.png"
-      // Extract the color part (e.g., "pink", "red", etc.)
-      if (imagePath.includes('economycase')) {
-        imageBaseName = imagePath.replace('economycase', '').replace('.png', '');
-      }
-    }
-    
     // Build images array from SmartCase folder
     const smartCaseImages = [];
     
@@ -252,13 +241,25 @@ const CreateYours = () => {
       smartCaseImages.push(colorImage);
     }
     
-    // Add detail images from SmartCase folder
-    // These are common detail images that apply to all colors
-    const detailImages = [
-      '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
-    ];
+    // Add detail images based on case type
+    let detailImages = [];
+    
+    if (selectedCaseType === 'economy') {
+      detailImages = [
+        '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
+        '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
+        '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
+      ];
+    } else if (selectedCaseType === 'business') {
+      detailImages = [
+        '/TheHappyCase/images/BusinessClassCase/businessclass.png'
+      ];
+    } else if (selectedCaseType === 'firstclass') {
+      detailImages = [
+        '/TheHappyCase/images/FirstClassCase/firstclass.jpg'
+      
+      ];
+    }
     
     // Add detail images if they exist
     detailImages.forEach(img => {
@@ -448,6 +449,25 @@ const CreateYours = () => {
                   />
                 </div>
               )}
+
+              {/* Action Buttons - Under canvas on big screens */}
+              {!isMobile && (
+                <div className="w-full flex flex-row gap-2 flex-shrink-0 mt-4">
+                  <ViewMoreImagesButton
+                    caseImages={caseImages}
+                    onOpenModal={() => {
+                      setShowImageModal(true);
+                      setSelectedModalImage(0);
+                    }}
+                  />
+                  
+                  <ItemDescriptionDropdown
+                    selectedCase={selectedCase}
+                    showDescriptionDropdown={showDescriptionDropdown}
+                    setShowDescriptionDropdown={setShowDescriptionDropdown}
+                  />
+                </div>
+              )}
               
             </div>
             
@@ -528,25 +548,6 @@ const CreateYours = () => {
                 customTextAdded={customTextAdded}
                 setCustomTextAdded={setCustomTextAdded}
               />
-            )}
-
-            {/* Action Buttons - Right above Add to Cart - Hidden on mobile */}
-            {!isMobile && (
-              <div className="flex flex-row gap-2 flex-shrink-0 mb-4">
-                <ViewMoreImagesButton
-                  caseImages={caseImages}
-                  onOpenModal={() => {
-                    setShowImageModal(true);
-                    setSelectedModalImage(0);
-                  }}
-                />
-                
-                <ItemDescriptionDropdown
-                  selectedCase={selectedCase}
-                  showDescriptionDropdown={showDescriptionDropdown}
-                  setShowDescriptionDropdown={setShowDescriptionDropdown}
-                />
-              </div>
             )}
 
             {/* Price Summary - Hidden on mobile */}

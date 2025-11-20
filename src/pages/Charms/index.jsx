@@ -520,6 +520,9 @@ const Charms = () => {
                       src={charm.src}
                       alt={charm.name}
                       className="w-full h-full object-contain p-2 transition-opacity duration-200 group-hover:opacity-80"
+                      style={{
+                        transform: `scale(${charm.size !== undefined ? charm.size : 1.0})`
+                      }}
                       onError={(e) => {
                         if (e.target) {
                           e.target.style.display = 'none';

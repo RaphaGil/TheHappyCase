@@ -186,6 +186,9 @@ const Flags = () => {
                   src={flag.src}
                   alt={flag.name}
                   className="w-full h-full object-contain p-2 transition-opacity duration-200 group-hover:opacity-80"
+                  style={{
+                    transform: `scale(${flag.size !== undefined ? flag.size : 1.0})`
+                  }}
                   onError={(e) => {
                     if (e.target) {
                       e.target.style.display = 'none';

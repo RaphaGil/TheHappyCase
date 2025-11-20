@@ -101,15 +101,11 @@ const PassportCases = () => {
       ];
     } else if (selectedCaseType === 'business') {
       detailImages = [
-        '/TheHappyCase/images/BusinessClassCase/businessclassinside.png',
-        '/TheHappyCase/images/BusinessClassCase/businessclassinside2.png'
+        '/TheHappyCase/images/BusinessClassCase/businessclass.png'
       ];
     } else if (selectedCaseType === 'firstclass') {
       detailImages = [
-        '/TheHappyCase/images/FirstClassCase/firstclassinside.jpg',
-        '/TheHappyCase/images/FirstClassCase/firstclassinside1.jpg',
-        '/TheHappyCase/images/FirstClassCase/firstclassinside2.jpg',
-        '/TheHappyCase/images/FirstClassCase/firstclassinside3.jpg'
+        '/TheHappyCase/images/FirstClassCase/firstclass.jpg'
       ];
     }
     
@@ -182,7 +178,7 @@ const PassportCases = () => {
           <h1 className="text-3xl md:text-3xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             PASSPORT CASES
           </h1>
-          <div className="w-16 h-px bg-gray-300 mx-auto"></div>
+          <div className="w-16 h-px  mx-auto"></div>
         </div>
 
         {/* Case Type Selection - Minimalist Tabs */}
@@ -218,7 +214,7 @@ const PassportCases = () => {
               
             {/* Main Image Display */}
             <div className="relative group">
-              <div className="relative overflow-hidden bg-gray-50 border border-gray-100 ">
+              <div className="relative overflow-hidden  ">
                 <img
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}

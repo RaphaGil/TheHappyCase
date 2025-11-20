@@ -63,8 +63,8 @@ const CaseSelector = ({ selectedCaseType, onSelect, isCaseDropdownOpen, setIsCas
                   aria-selected={selectedCaseType === opt.value}
                   className={`p-3 cursor-pointer transition-all duration-200 border rounded flex flex-col items-center gap-2 ${
                     selectedCaseType === opt.value 
-                      ? 'bg-gray-50 text-gray-900 font-medium border-gray-400 ring-2 ring-gray-300' 
-                      : 'text-gray-700 hover:bg-gray-50 border-gray-200 hover:border-gray-300'
+                      ? 'bg-gray-50 text-gray-900 font-medium  ring-2 ring-gray-300' 
+                      : 'text-gray-700 hover:bg-gray-50  hover:border-gray-300'
                   }`}
                   style={{fontFamily: "'Poppins', sans-serif"}}
                   onClick={() => {
@@ -73,7 +73,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, isCaseDropdownOpen, setIsCas
                   }}
                 >
                   {caseImage && (
-                    <div className="w-full aspect-square bg-gray-50 border border-gray-200 rounded overflow-hidden">
+                    <div className="w-full aspect-square  overflow-hidden">
                       <img
                         src={caseImage}
                         alt={opt.label}

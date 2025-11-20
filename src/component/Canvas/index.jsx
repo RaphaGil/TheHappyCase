@@ -854,7 +854,11 @@ const Canvas = ({
     try {
       // Adjust pin size based on screen size - increased for better visibility
       const isMobile = window.innerWidth < 768;
-      const pinSize = isMobile ? 120 : 150;
+      let basePinSize = isMobile ? 120 : 150;
+      
+      // Use size multiplier from pin data (default to 1.0 if not specified)
+      const sizeMultiplier = pin.size !== undefined ? pin.size : 1.0;
+      const pinSize = basePinSize * sizeMultiplier;
       
       const imgInstance = await loadImage(pin.src, false, pinSize, pinSize);
       
