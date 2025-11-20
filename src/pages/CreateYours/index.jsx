@@ -418,9 +418,9 @@ const CreateYours = () => {
         <div className={`flex flex-col  lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '-mt-1' : 'overflow-hidden mt-8'}`}>
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
+          <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1  ${isMobile ? '' : 'overflow-hidden'}`}>
 
-            <div className="w-full max-w-[420px] xs:max-w-[420px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col mt-10 sm:mt-0 ">
+            <div className="w-full max-w-[380px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 ">
               <div className="flex-shrink-0 w-full">
                 <div className="w-full" style={{aspectRatio: isMobile ? '1/1.2' : '1'}}>
                   <Canvas

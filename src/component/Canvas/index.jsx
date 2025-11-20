@@ -38,9 +38,9 @@ const Canvas = ({
         let top = canvasHeight / 2;
   
         if (isCase) {
-          // Fixed scaling for the case image - smaller on mobile
+          // Fixed scaling for the case image - bigger but fits without cutting
           const isMobile = window.innerWidth < 768;
-          const scaleMultiplier = isMobile ? 0.65 : 1.1; // Smaller on mobile, bigger on desktop
+          const scaleMultiplier = isMobile ? 0.95 : 1.1; // Fits within canvas on mobile, bigger on desktop
           const scale = Math.min(
             canvasWidth * scaleMultiplier / imgElement.width,
             canvasHeight * scaleMultiplier / imgElement.height
@@ -336,7 +336,7 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(320, Math.min(containerWidth, 400))
+      ? Math.max(300, Math.min(containerWidth, 360))
       : Math.min(500, containerWidth);
     const canvasHeight = isMobile ? canvasWidth * 1.2 : canvasWidth; // Taller on mobile, square on desktop
   
@@ -366,7 +366,7 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(320, Math.min(containerWidth, 400))
+      ? Math.max(300, Math.min(containerWidth, 360))
       : Math.min(500, containerWidth);
     const canvasHeight = isMobile ? canvasWidth * 1.2 : canvasWidth; // Taller on mobile, square on desktop
   
@@ -1076,7 +1076,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[420px] sm:w-[580px]" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1'}}>
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[380px] sm:w-[580px]" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
