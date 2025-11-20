@@ -38,10 +38,12 @@ const Canvas = ({
         let top = canvasHeight / 2;
   
         if (isCase) {
-          // Fixed scaling for the case image - increased to make it bigger
+          // Fixed scaling for the case image - smaller on mobile
+          const isMobile = window.innerWidth < 768;
+          const scaleMultiplier = isMobile ? 1.0 : 1.1; // Smaller on mobile, bigger on desktop
           const scale = Math.min(
-            canvasWidth * 1.2 / imgElement.width,
-            canvasHeight * 1.05 / imgElement.height
+            canvasWidth * scaleMultiplier / imgElement.width,
+            canvasHeight * scaleMultiplier / imgElement.height
           );
 
           scaleX = scale;
@@ -334,9 +336,9 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(200, Math.min(containerWidth, 280))
-      : Math.min(400, containerWidth);
-    const canvasHeight = canvasWidth; // Keep it square
+      ? Math.max(320, Math.min(containerWidth, 400))
+      : Math.min(500, containerWidth);
+    const canvasHeight = isMobile ? canvasWidth * 1.2 : canvasWidth; // Taller on mobile, square on desktop
   
     canvas.setWidth(canvasWidth);
     canvas.setHeight(canvasHeight);
@@ -364,9 +366,9 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(240, Math.min(containerWidth, 320))
-      : Math.min(400, containerWidth);
-    const canvasHeight = canvasWidth; // Keep it square
+      ? Math.max(320, Math.min(containerWidth, 400))
+      : Math.min(500, containerWidth);
+    const canvasHeight = isMobile ? canvasWidth * 1.2 : canvasWidth; // Taller on mobile, square on desktop
   
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,
@@ -1074,7 +1076,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-1 sm:p-4 mb-2 relative flex items-center justify-center w-[280px] sm:w-[400px] bg-gray-50">
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[420px] sm:w-[580px] bg-gray-50" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"

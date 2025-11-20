@@ -386,7 +386,7 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen  h-screen  py-0 sm:py-1 md:py-2 lg:py-4 relative ">
+    <section className="min-h-screen  py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white">
       <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-64 sm:pb-72' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
@@ -403,7 +403,7 @@ const CreateYours = () => {
         
         {/* Header Section - Fixed at top, never overlaps */}
         <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-0 mt-1' : 'mb-1 sm:mb-1.5 md:mb-2 lg:mb-1 mt-2 sm:mt-3 md:mt-4'}`}>
-          <h1 className={`text-lg sm:text-xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-0' : 'mb-0.5 sm:mb-0.5 md:mb-1 lg:mb-0.5'}`} 
+          <h1 className={`text-lg sm:text-xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-0 mt-4' : 'mb-0.5 sm:mb-0.5 md:mb-1 lg:mb-0.5'}`} 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
           </h1>
@@ -420,9 +420,9 @@ const CreateYours = () => {
           {/* LEFT - Design Canvas - Centered */}
           <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
 
-            <div className="w-full max-w-[280px] xs:max-w-[280px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col ">
+            <div className="w-full max-w-[420px] xs:max-w-[420px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col mt-10 sm:mt-0 ">
               <div className="flex-shrink-0 w-full">
-                <div className="w-full" style={{aspectRatio: '1'}}>
+                <div className="w-full" style={{aspectRatio: isMobile ? '1/1.2' : '1'}}>
                   <Canvas
                     selectedCaseType={selectedCaseType}
                     selectedColor={selectedColor}
