@@ -40,7 +40,7 @@ const Canvas = ({
         if (isCase) {
           // Fixed scaling for the case image - smaller on mobile
           const isMobile = window.innerWidth < 768;
-          const scaleMultiplier = isMobile ? 1.0 : 1.1; // Smaller on mobile, bigger on desktop
+          const scaleMultiplier = isMobile ? 0.65 : 1.1; // Smaller on mobile, bigger on desktop
           const scale = Math.min(
             canvasWidth * scaleMultiplier / imgElement.width,
             canvasHeight * scaleMultiplier / imgElement.height
@@ -382,7 +382,7 @@ const Canvas = ({
       top: 0,
       width: canvasWidth,
       height: canvasHeight,
-      fill: '#f9fafb', // bg-gray-50 equivalent
+      fill: 'transparent',
       selectable: false,
       evented: false,
       excludeFromExport: false,
@@ -1076,7 +1076,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[420px] sm:w-[580px] bg-gray-50" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1'}}>
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[420px] sm:w-[580px]" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
