@@ -475,9 +475,9 @@ const CreateYours = () => {
           {/* LEFT - Design Canvas - Centered */}
           <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1  ${isMobile ? 'overflow-x-hidden' : 'overflow-hidden'}`}>
 
-            <div className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 overflow-x-hidden">
-              <div className="flex-shrink-0 w-full overflow-x-hidden">
-                <div className="w-full overflow-x-hidden" style={{aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1'}}>
+            <div className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto'}}>
+              <div className="flex-shrink-0 w-full overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto'}}>
+                <div className="w-full overflow-hidden" style={{aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', touchAction: isMobile ? 'none' : 'auto'}}>
                   <Canvas
                     selectedCaseType={selectedCaseType}
                     selectedColor={selectedColor}

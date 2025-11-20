@@ -846,18 +846,28 @@ const Canvas = ({
 
       setSelectedPin(textInstance);
       setShowControls(true);
-      updateControls(textInstance);
       
-      // Prevent page from expanding on mobile when text is added
-      if (window.innerWidth < 768) {
-        // Ensure canvas container doesn't cause horizontal overflow
+      // On mobile, just show the border without any movement effects
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        // Just update controls position without scrolling
+        updateControls(textInstance);
+        // Prevent any page movement or scrolling
+        document.body.style.overflowX = 'hidden';
+        document.body.style.overflowY = 'hidden';
+        document.documentElement.style.overflowX = 'hidden';
+        document.documentElement.style.overflowY = 'hidden';
+        // Ensure canvas container doesn't cause overflow
         const canvasContainer = fabricCanvas.current.getElement().parentElement;
         if (canvasContainer) {
           canvasContainer.style.maxWidth = '100%';
           canvasContainer.style.overflowX = 'hidden';
+          canvasContainer.style.overflowY = 'hidden';
         }
-        // Prevent body scroll
-        document.body.style.overflowX = 'hidden';
+        // Prevent any scroll behavior
+        window.scrollTo(0, window.scrollY);
+      } else {
+        updateControls(textInstance);
       }
     },
     [updateControls, updateBorderRect]
@@ -1090,16 +1100,23 @@ const Canvas = ({
     return dataURL;
   };
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
   return (
-    <div className="w-full flex flex-col items-center overflow-x-hidden">
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[320px] xs:w-[380px] sm:w-[580px] overflow-x-hidden" style={{aspectRatio: window.innerWidth < 768 ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', maxWidth: '100%'}}>
+    <div className="w-full flex flex-col items-center overflow-hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'hidden', touchAction: isMobile ? 'none' : 'auto'}}>
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[320px] xs:w-[380px] sm:w-[580px] overflow-hidden" style={{aspectRatio: window.innerWidth < 768 ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', maxWidth: '100%', scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'hidden', touchAction: isMobile ? 'none' : 'auto'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
           style={{ 
             background: 'transparent',
             maxWidth: '100%',
-            height: 'auto'
+            height: 'auto',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            overflow: 'hidden',
+            touchAction: isMobile ? 'none' : 'auto',
+            display: 'block'
           }}
         />
         
