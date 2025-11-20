@@ -240,7 +240,7 @@ const MobileOverlay = ({
                                   : ''
                               }`}
                             >
-                              <div className={`relative w-20 h-20 flex items-center justify-center bg-gray-50 transition-all duration-200 overflow-hidden ${isSelected ? 'rounded' : ''}`}>
+                              <div className={`relative w-20 h-20 flex items-center justify-center bg-gray-50 transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
                                 <img
                                   src={pin.src}
                                   alt={pin.name}
@@ -249,7 +249,7 @@ const MobileOverlay = ({
                                   decoding="async"
                                 />
                                 {isSelected && (
-                                  <div className="absolute -top-1 -right-1 bg-gray-900 text-white w-4 h-4 flex items-center justify-center text-xs rounded-full">
+                                  <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 flex items-center justify-center text-xs rounded-full z-10">
                                     ✓
                                   </div>
                                 )}

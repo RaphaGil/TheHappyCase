@@ -40,7 +40,7 @@ const Canvas = ({
         if (isCase) {
           // Fixed scaling for the case image - bigger but fits without cutting
           const isMobile = window.innerWidth < 768;
-          const scaleMultiplier = isMobile ? 0.95 : 1.1; // Fits within canvas on mobile, bigger on desktop
+          const scaleMultiplier = isMobile ? 0.95 : 1; // Fits within canvas on mobile, bigger on desktop
           const scale = Math.min(
             canvasWidth * scaleMultiplier / imgElement.width,
             canvasHeight * scaleMultiplier / imgElement.height
@@ -843,6 +843,28 @@ const Canvas = ({
       setSelectedPin(textInstance);
       setShowControls(true);
       updateControls(textInstance);
+      
+      // Prevent page from expanding on mobile when text is added
+      if (window.innerWidth < 768) {
+        // Ensure canvas container doesn't cause horizontal overflow
+        const canvasContainer = fabricCanvas.current.getElement().parentElement;
+        if (canvasContainer) {
+          canvasContainer.style.maxWidth = '100%';
+          canvasContainer.style.overflowX = 'hidden';
+        }
+        // Prevent body scroll
+        document.body.style.overflowX = 'hidden';
+        // Scroll to top of canvas to keep it visible
+        setTimeout(() => {
+          const canvasElement = document.querySelector('.happy-card');
+          if (canvasElement) {
+            canvasElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'start' 
+            });
+          }
+        }, 100);
+      }
     },
     [updateControls, updateBorderRect]
   );
@@ -1075,8 +1097,8 @@ const Canvas = ({
   };
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[380px] sm:w-[580px]" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1'}}>
+    <div className="w-full flex flex-col items-center overflow-x-hidden">
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[380px] sm:w-[580px] overflow-x-hidden" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1', maxWidth: '100%'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
