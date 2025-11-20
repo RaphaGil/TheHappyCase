@@ -386,7 +386,7 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white">
+    <section className="min-h-screen  h-screen  py-0 sm:py-1 md:py-2 lg:py-4 relative ">
       <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-64 sm:pb-72' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
@@ -415,12 +415,12 @@ const CreateYours = () => {
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '-mt-1' : 'overflow-hidden mt-8'}`}>
+        <div className={`flex flex-col  lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '-mt-1' : 'overflow-hidden mt-8'}`}>
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className={`w-full lg:w-1/2 flex flex-col items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
+          <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
 
-            <div className="w-full max-w-[calc(100vw-1rem)] xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col ">
+            <div className="w-full max-w-[280px] xs:max-w-[280px] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col ">
               <div className="flex-shrink-0 w-full">
                 <div className="w-full" style={{aspectRatio: '1'}}>
                   <Canvas

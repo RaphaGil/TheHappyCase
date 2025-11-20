@@ -334,7 +334,7 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(240, Math.min(containerWidth, 320))
+      ? Math.max(200, Math.min(containerWidth, 280))
       : Math.min(400, containerWidth);
     const canvasHeight = canvasWidth; // Keep it square
   
@@ -1074,7 +1074,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center w-[320px] sm:w-[400px] bg-gray-50">
+      <div className="happy-card p-1 sm:p-4 mb-2 relative flex items-center justify-center w-[280px] sm:w-[400px] bg-gray-50">
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
