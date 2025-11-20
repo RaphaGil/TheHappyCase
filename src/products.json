@@ -278,7 +278,7 @@
       },
       {
         "name": "Italy Flag",
-        "src": "/TheHappyCase/images/Flags/italian.png",
+        "src": "/TheHappyCase/images/Flags/italy.png",
         "price": 2.0,
         "size": 0.5,
         "continent": "europe"
@@ -286,6 +286,20 @@
       {
         "name": "Jamaica  Flag",
         "src": "/TheHappyCase/images/Flags/jamaica.png",
+        "price": 2.0,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "name": "Japan  Flag",
+        "src": "/TheHappyCase/images/Flags/japan.png",
+        "price": 2.0,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "name": "Hungary Flag",
+        "src": "/TheHappyCase/images/Flags/hungary.png",
         "price": 2.0,
         "size": 0.5,
         "continent": "americas"

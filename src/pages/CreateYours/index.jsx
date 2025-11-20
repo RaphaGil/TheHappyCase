@@ -387,7 +387,7 @@ const CreateYours = () => {
 
   return (
     <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white">
-      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-20 sm:pb-24' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`}>
+      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-64 sm:pb-72' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
@@ -402,7 +402,7 @@ const CreateYours = () => {
         )}
         
         {/* Header Section - Fixed at top, never overlaps */}
-        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-0.5 mt-1' : 'mb-1 sm:mb-1.5 md:mb-2 lg:mb-1 mt-2 sm:mt-3 md:mt-4'}`}>
+        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-0 mt-1' : 'mb-1 sm:mb-1.5 md:mb-2 lg:mb-1 mt-2 sm:mt-3 md:mt-4'}`}>
           <h1 className={`text-lg sm:text-xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-0' : 'mb-0.5 sm:mb-0.5 md:mb-1 lg:mb-0.5'}`} 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
@@ -415,7 +415,7 @@ const CreateYours = () => {
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
+        <div className={`flex flex-col lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '-mt-1' : 'overflow-hidden mt-8'}`}>
           
           {/* LEFT - Design Canvas - Centered */}
           <div className={`w-full lg:w-1/2 flex flex-col items-center lg:justify-start justify-center flex-1 min-h-0 ${isMobile ? '' : 'overflow-hidden'}`}>
@@ -433,22 +433,6 @@ const CreateYours = () => {
                   />
                 </div>
               </div>
-              
-              {/* Mobile Step Buttons - Under the case image on mobile */}
-              {isMobile && (
-                <div className="w-full flex-shrink-0 mt-1 sm:mt-2">
-                  <p className="text-[10px] xs:text-xs text-gray-600 mb-1 sm:mb-2 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
-                    Choose the options below:
-                  </p>
-                  <MobileStepButtons
-                    mobileCurrentStep={mobileCurrentStep}
-                    setMobileCurrentStep={setMobileCurrentStep}
-                    selectedCaseType={selectedCaseType}
-                    selectedColor={selectedColor}
-                    onOpenAddText={() => setShowAddTextModal(true)}
-                  />
-                </div>
-              )}
 
               {/* Action Buttons - Under canvas on big screens */}
               {!isMobile && (
@@ -581,36 +565,53 @@ const CreateYours = () => {
           </div>
         </div>
 
-        {/* Fixed Price Summary - Mobile only */}
+        {/* Fixed Bottom Section - Mobile only */}
         {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] overflow-y-auto">
-            <div className="px-2 sm:px-3 py-1 sm:py-1.5">
-              <PriceSummary
-                totalPrice={totalPrice}
-                caseBasePrice={caseBasePrice}
-                groupedPinsList={groupedPinsList}
-                showPriceBreakdown={showPriceBreakdown}
-                setShowPriceBreakdown={setShowPriceBreakdown}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                selectedCase={selectedCase}
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden">
+            {/* Choose Options Section */}
+            <div className="px-2 sm:px-3 pt-2 pb-1 border-b border-gray-100">
+              <p className="text-[10px] xs:text-xs text-gray-600 mb-1 sm:mb-2 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
+                Choose the options below:
+              </p>
+              <MobileStepButtons
+                mobileCurrentStep={mobileCurrentStep}
+                setMobileCurrentStep={setMobileCurrentStep}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
-                selectedPins={selectedPins}
-                selectedCaseImage={selectedCaseImage}
-                pinsPrice={pinsPrice}
-                onAddToCart={handleAddToCart}
-                onShowTerms={() => setShowTermsModal(true)}
-                agreedToTerms={agreedToTerms}
-                setAgreedToTerms={(value) => {
-                  setAgreedToTerms(value);
-                  if (value) {
-                    setShowTermsError(false);
-                  }
-                }}
-                showTermsError={showTermsError}
-                isMobile={true}
+                onOpenAddText={() => setShowAddTextModal(true)}
               />
+            </div>
+            
+            {/* Price Summary and Add to Cart */}
+            <div className="max-h-[40vh] overflow-y-auto">
+              <div className="px-2 sm:px-3 py-2 sm:py-2.5">
+                <PriceSummary
+                  totalPrice={totalPrice}
+                  caseBasePrice={caseBasePrice}
+                  groupedPinsList={groupedPinsList}
+                  showPriceBreakdown={showPriceBreakdown}
+                  setShowPriceBreakdown={setShowPriceBreakdown}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  selectedCase={selectedCase}
+                  selectedCaseType={selectedCaseType}
+                  selectedColor={selectedColor}
+                  selectedPins={selectedPins}
+                  selectedCaseImage={selectedCaseImage}
+                  pinsPrice={pinsPrice}
+                  onAddToCart={handleAddToCart}
+                  onShowTerms={() => setShowTermsModal(true)}
+                  agreedToTerms={agreedToTerms}
+                  setAgreedToTerms={(value) => {
+                    setAgreedToTerms(value);
+                    if (value) {
+                      setShowTermsError(false);
+                    }
+                  }}
+                  showTermsError={showTermsError}
+                  isMobile={true}
+                />
+              </div>
             </div>
           </div>
         )}

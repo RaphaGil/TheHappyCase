@@ -16,6 +16,7 @@ const Canvas = ({
   const boundaryRectRef = useRef(null);
   const boundaryTextRef = useRef(null); // Text message for limit area
   const caseBorderRectRef = useRef(null); // Red border around the case image
+  const backgroundRectRef = useRef(null); // Background rectangle behind all objects
   const borderRectsRef = useRef(new Map()); // Store border rectangles for selected objects
   const [selectedPin, setSelectedPin] = useState(null);
   const [controlsPosition, setControlsPosition] = useState({ x: 0, y: 0 });
@@ -37,12 +38,12 @@ const Canvas = ({
         let top = canvasHeight / 2;
   
         if (isCase) {
-          // Fixed scaling for the case image
+          // Fixed scaling for the case image - increased to make it bigger
           const scale = Math.min(
-            canvasWidth * 1 / imgElement.width,
-            canvasHeight * 1 / imgElement.height
+            canvasWidth * 1.2 / imgElement.width,
+            canvasHeight * 1.05 / imgElement.height
           );
-  
+
           scaleX = scale;
           scaleY = scale;
         } else {
@@ -89,6 +90,10 @@ const Canvas = ({
           imgInstance.set('evented', false);
           caseInstanceRef.current = imgInstance;
           fabricCanvas.current.add(imgInstance);
+          // Ensure background stays at the back, then case, then other elements
+          if (backgroundRectRef.current) {
+            fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+          }
           fabricCanvas.current.sendObjectToBack(imgInstance);
           
           // Create red boundary rectangle after case is loaded
@@ -145,6 +150,10 @@ const Canvas = ({
             
             boundaryRectRef.current = boundaryRect;
             fabricCanvas.current.add(boundaryRect);
+            // Ensure background stays at the very back
+            if (backgroundRectRef.current) {
+              fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+            }
             fabricCanvas.current.sendObjectToBack(boundaryRect);
             
             // Create "Limit Area" text message
@@ -182,6 +191,10 @@ const Canvas = ({
             
             caseBorderRectRef.current = caseBorderRect;
             fabricCanvas.current.add(caseBorderRect);
+            // Ensure background stays at the very back
+            if (backgroundRectRef.current) {
+              fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+            }
             fabricCanvas.current.sendObjectToBack(caseBorderRect);
             fabricCanvas.current.sendObjectToBack(imgInstance);
             
@@ -241,7 +254,10 @@ const Canvas = ({
     fabricCanvas.current.add(borderRect);
     
     // Position border above case but below the selected object
-    // Ensure case is at the back
+    // Ensure background is at the very back, then case, then other elements
+    if (backgroundRectRef.current) {
+      fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+    }
     const caseInstance = caseInstanceRef.current;
     if (caseInstance) {
       fabricCanvas.current.sendObjectToBack(caseInstance);
@@ -318,12 +334,22 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(280, Math.min(containerWidth, 380))
-      : Math.min(500, containerWidth);
+      ? Math.max(240, Math.min(containerWidth, 320))
+      : Math.min(400, containerWidth);
     const canvasHeight = canvasWidth; // Keep it square
   
     canvas.setWidth(canvasWidth);
     canvas.setHeight(canvasHeight);
+    
+    // Resize background rectangle if it exists
+    if (backgroundRectRef.current) {
+      backgroundRectRef.current.set({
+        width: canvasWidth,
+        height: canvasHeight
+      });
+      canvas.sendObjectToBack(backgroundRectRef.current);
+    }
+    
     canvas.renderAll();
   };
   // Initialize canvas
@@ -338,8 +364,8 @@ const Canvas = ({
     
     // Use container width, but ensure minimum size and max size for mobile
     const canvasWidth = isMobile 
-      ? Math.max(280, Math.min(containerWidth, 380))
-      : Math.min(500, containerWidth);
+      ? Math.max(240, Math.min(containerWidth, 320))
+      : Math.min(400, containerWidth);
     const canvasHeight = canvasWidth; // Keep it square
   
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
@@ -348,7 +374,21 @@ const Canvas = ({
       backgroundColor: 'transparent'
     });
     
-
+    // Create background rectangle
+    const backgroundRect = new fabric.Rect({
+      left: 0,
+      top: 0,
+      width: canvasWidth,
+      height: canvasHeight,
+      fill: '#f9fafb', // bg-gray-50 equivalent
+      selectable: false,
+      evented: false,
+      excludeFromExport: false,
+    });
+    
+    backgroundRectRef.current = backgroundRect;
+    fabricCanvas.current.add(backgroundRect);
+    fabricCanvas.current.sendObjectToBack(backgroundRect);
 
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
@@ -1034,7 +1074,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center w-[380px] sm:w-[480px]">
+      <div className="happy-card p-2 sm:p-4 mb-2 relative flex items-center justify-center w-[320px] sm:w-[400px] bg-gray-50">
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
