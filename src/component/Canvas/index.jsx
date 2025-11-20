@@ -854,16 +854,6 @@ const Canvas = ({
         }
         // Prevent body scroll
         document.body.style.overflowX = 'hidden';
-        // Scroll to top of canvas to keep it visible
-        setTimeout(() => {
-          const canvasElement = document.querySelector('.happy-card');
-          if (canvasElement) {
-            canvasElement.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'start' 
-            });
-          }
-        }, 100);
       }
     },
     [updateControls, updateBorderRect]
