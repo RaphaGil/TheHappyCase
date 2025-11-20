@@ -1,14 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../constants';
 
-const CustomTextSection = ({ 
-  customText, 
-  setCustomText, 
-  customTextError, 
-  setCustomTextError, 
-  customTextAdded, 
-  setCustomTextAdded 
-}) => {
+const CustomTextSection = () => {
+  const [customText, setCustomText] = useState('');
+  const [customTextError, setCustomTextError] = useState('');
+  const [customTextAdded, setCustomTextAdded] = useState(false);
   const handleAddText = () => {
     if (!customText.trim()) {
       setCustomTextError('Please enter the text you want to add.');

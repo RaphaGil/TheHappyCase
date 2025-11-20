@@ -18,7 +18,7 @@ import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
 import CaseSelector from "./components/CaseSelector";
 import TermsOfUseModal from "./components/TermsOfUseModal";
-import AddTextModal from "./components/AddTextModal";
+import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE } from "./constants";
 
 
 const CreateYours = () => {
@@ -85,9 +85,6 @@ const CreateYours = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [mobileCurrentStep, setMobileCurrentStep] = useState(null); // null = showing passport case, 'case' = case selection, 'color' = color selection, 'charms' = charms selection
   const [quantity, setQuantity] = useState(1);
-  const [customText, setCustomText] = useState('');
-  const [customTextError, setCustomTextError] = useState('');
-  const [customTextAdded, setCustomTextAdded] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedModalImage, setSelectedModalImage] = useState(0);
   const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false);
@@ -95,7 +92,6 @@ const CreateYours = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
-  const [showAddTextModal, setShowAddTextModal] = useState(false);
   const caseDropdownRef = useRef(null);
   const { addToCart } = useCart();
 
@@ -187,6 +183,22 @@ const CreateYours = () => {
           window.addPinToCanvas(selectedPin);
         }
       }, 1000);
+      
+      // Clear the navigation state
+      window.history.replaceState({}, document.title);
+    }
+    
+    // Handle text addition from AddText page
+    if (location.state?.addText && location.state?.text) {
+      const textToAdd = location.state.text;
+      setTimeout(() => {
+        if (window.addTextToCanvas) {
+          window.addTextToCanvas(textToAdd, {
+            fill: CUSTOM_TEXT_COLOR,
+            fontSize: CUSTOM_TEXT_SIZE,
+          });
+        }
+      }, 300);
       
       // Clear the navigation state
       window.history.replaceState({}, document.title);
@@ -579,14 +591,7 @@ const CreateYours = () => {
             
             {/* Personalized Text - Hidden on mobile */}
             {!isMobile && (
-              <CustomTextSection
-                customText={customText}
-                setCustomText={setCustomText}
-                customTextError={customTextError}
-                setCustomTextError={setCustomTextError}
-                customTextAdded={customTextAdded}
-                setCustomTextAdded={setCustomTextAdded}
-              />
+              <CustomTextSection />
             )}
 
             {/* Price Summary - Hidden on mobile */}
@@ -633,7 +638,7 @@ const CreateYours = () => {
                 setMobileCurrentStep={setMobileCurrentStep}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
-                onOpenAddText={() => setShowAddTextModal(true)}
+                onOpenAddText={() => navigate('/AddText')}
               />
             </div>
             
@@ -701,19 +706,6 @@ const CreateYours = () => {
           }}
         />
 
-        {/* Add Text Modal - Mobile only */}
-        {isMobile && (
-          <AddTextModal
-            show={showAddTextModal}
-            onClose={() => setShowAddTextModal(false)}
-            customText={customText}
-            setCustomText={setCustomText}
-            customTextError={customTextError}
-            setCustomTextError={setCustomTextError}
-            customTextAdded={customTextAdded}
-            setCustomTextAdded={setCustomTextAdded}
-          />
-        )}
       </div>
     </section>
   );

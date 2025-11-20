@@ -26,6 +26,7 @@ import Charms from './pages/Charms';
 import RefundPolicy from './pages/RefundPolicy';
 import ShippingPolicy from './pages/ShippingPolicy';
 import About from './pages/About';
+import AddText from './pages/AddText';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -33,8 +34,8 @@ function AppContent() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const hideNavBar = location.pathname === '/checkout';
-  const hideNavBarOnMobile = location.pathname === '/CreateYours';
-  const hideFooter = location.pathname === '/checkout' || location.pathname === '/CreateYours';
+  const hideNavBarOnMobile = location.pathname === '/CreateYours' || location.pathname === '/AddText';
+  const hideFooter = location.pathname === '/checkout' || location.pathname === '/CreateYours' || location.pathname === '/AddText';
 
   return (
     <div className="App bg-white min-h-screen">
@@ -71,6 +72,7 @@ function AppContent() {
           <Route path="/BronzeCharms" element={<BronzeCharms />} />
           <Route path="/PassportCases" element={<PassportCases />} />
           <Route path="/Charms" element={<Charms />} />
+          <Route path="/AddText" element={<AddText />} />
           <Route path="/returns" element={<RefundPolicy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />
