@@ -207,7 +207,7 @@ const CreateYours = () => {
     setMobileSubCategory('all');
   }, [selectedCategory]);
 
-  // Prevent horizontal and vertical scrolling on mobile, maintain page size
+  // Prevent horizontal and vertical scrolling on mobile, maintain page size, hide scrollbar
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
     
@@ -219,12 +219,18 @@ const CreateYours = () => {
       document.body.style.maxWidth = '100vw';
       document.body.style.height = '100vh';
       document.body.style.maxHeight = '100vh';
+      // Hide scrollbar
+      document.body.style.scrollbarWidth = 'none'; // Firefox
+      document.body.style.msOverflowStyle = 'none'; // IE and Edge
       document.documentElement.style.overflowX = 'hidden';
       document.documentElement.style.overflowY = 'hidden';
       document.documentElement.style.width = '100%';
       document.documentElement.style.maxWidth = '100vw';
       document.documentElement.style.height = '100vh';
       document.documentElement.style.maxHeight = '100vh';
+      // Hide scrollbar
+      document.documentElement.style.scrollbarWidth = 'none'; // Firefox
+      document.documentElement.style.msOverflowStyle = 'none'; // IE and Edge
     } else {
       // Desktop: only prevent horizontal scrolling
       document.body.style.overflowX = 'hidden';
@@ -243,12 +249,16 @@ const CreateYours = () => {
       document.body.style.maxWidth = '';
       document.body.style.height = '';
       document.body.style.maxHeight = '';
+      document.body.style.scrollbarWidth = '';
+      document.body.style.msOverflowStyle = '';
       document.documentElement.style.overflowX = '';
       document.documentElement.style.overflowY = '';
       document.documentElement.style.width = '';
       document.documentElement.style.maxWidth = '';
       document.documentElement.style.height = '';
       document.documentElement.style.maxHeight = '';
+      document.documentElement.style.scrollbarWidth = '';
+      document.documentElement.style.msOverflowStyle = '';
     };
   }, []);
 
@@ -431,8 +441,8 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none'}}>
-      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-64 sm:pb-72' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none'}}>
+    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
+      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-48 xs:pb-56 sm:pb-64' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
@@ -465,9 +475,9 @@ const CreateYours = () => {
           {/* LEFT - Design Canvas - Centered */}
           <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1  ${isMobile ? 'overflow-x-hidden' : 'overflow-hidden'}`}>
 
-            <div className="w-full max-w-[380px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 overflow-x-hidden">
+            <div className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 overflow-x-hidden">
               <div className="flex-shrink-0 w-full overflow-x-hidden">
-                <div className="w-full overflow-x-hidden" style={{aspectRatio: isMobile ? '1/1.2' : '1'}}>
+                <div className="w-full overflow-x-hidden" style={{aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1'}}>
                   <Canvas
                     selectedCaseType={selectedCaseType}
                     selectedColor={selectedColor}

@@ -335,10 +335,12 @@ const Canvas = ({
     const isMobile = window.innerWidth < 768;
     
     // Use container width, but ensure minimum size and max size for mobile
+    // For very small screens (iPhone SE), use smaller canvas
+    const isSmallScreen = window.innerWidth < 375; // iPhone SE width
     const canvasWidth = isMobile 
-      ? Math.max(300, Math.min(containerWidth, 360))
+      ? (isSmallScreen ? Math.max(280, Math.min(containerWidth, 320)) : Math.max(300, Math.min(containerWidth, 360)))
       : Math.min(500, containerWidth);
-    const canvasHeight = isMobile ? canvasWidth * 1.2 : canvasWidth; // Taller on mobile, square on desktop
+    const canvasHeight = isMobile ? (isSmallScreen ? canvasWidth * 1.1 : canvasWidth * 1.2) : canvasWidth; // Slightly shorter on very small screens
   
     canvas.setWidth(canvasWidth);
     canvas.setHeight(canvasHeight);
@@ -365,10 +367,12 @@ const Canvas = ({
     const isMobile = window.innerWidth < 768;
     
     // Use container width, but ensure minimum size and max size for mobile
+    // For very small screens (iPhone SE), use smaller canvas
+    const isSmallScreen = window.innerWidth < 375; // iPhone SE width
     const canvasWidth = isMobile 
-      ? Math.max(300, Math.min(containerWidth, 360))
+      ? (isSmallScreen ? Math.max(280, Math.min(containerWidth, 320)) : Math.max(300, Math.min(containerWidth, 360)))
       : Math.min(500, containerWidth);
-    const canvasHeight = isMobile ? canvasWidth * 1.2 : canvasWidth; // Taller on mobile, square on desktop
+    const canvasHeight = isMobile ? (isSmallScreen ? canvasWidth * 1.1 : canvasWidth * 1.2) : canvasWidth; // Slightly shorter on very small screens
   
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,
@@ -1088,7 +1092,7 @@ const Canvas = ({
 
   return (
     <div className="w-full flex flex-col items-center overflow-x-hidden">
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[380px] sm:w-[580px] overflow-x-hidden" style={{aspectRatio: window.innerWidth < 768 ? '1/1.2' : '1', maxWidth: '100%'}}>
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[320px] xs:w-[380px] sm:w-[580px] overflow-x-hidden" style={{aspectRatio: window.innerWidth < 768 ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', maxWidth: '100%'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
