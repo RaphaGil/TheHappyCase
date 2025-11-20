@@ -535,17 +535,17 @@ const Charms = () => {
                     <div className="hidden w-full h-full items-center justify-center text-gray-400">
                       <span className="text-4xl">🎁</span>
                     </div>
-                    {/* Add to Cart Button Overlay - Always visible on mobile, shows on hover on desktop */}
+                    {/* Add to Cart Button Overlay - Bottom right on mobile, bottom bar on desktop hover */}
                     <button
                       onClick={() => handleAddToCart(charm)}
-                      className="absolute bottom-0 left-0 right-0 py-2 text-gray-900 border-t border-gray-200 bg-white transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50"
+                      className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10"
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
-                      {/* Bag Icon - Visible on mobile */}
-                      <svg className="w-4 h-4 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {/* Bag Icon - Visible on mobile and desktop */}
+                      <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                       </svg>
-                      {/* Button Text - Visible on desktop */}
+                      {/* Button Text - Visible on desktop only */}
                       <span className="hidden md:inline">Add to Cart</span>
                     </button>
                   </div>

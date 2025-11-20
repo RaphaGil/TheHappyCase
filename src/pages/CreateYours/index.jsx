@@ -207,6 +207,51 @@ const CreateYours = () => {
     setMobileSubCategory('all');
   }, [selectedCategory]);
 
+  // Prevent horizontal and vertical scrolling on mobile, maintain page size
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // Set body and html overflow constraints - prevent both horizontal and vertical scrolling on mobile
+      document.body.style.overflowX = 'hidden';
+      document.body.style.overflowY = 'hidden';
+      document.body.style.width = '100%';
+      document.body.style.maxWidth = '100vw';
+      document.body.style.height = '100vh';
+      document.body.style.maxHeight = '100vh';
+      document.documentElement.style.overflowX = 'hidden';
+      document.documentElement.style.overflowY = 'hidden';
+      document.documentElement.style.width = '100%';
+      document.documentElement.style.maxWidth = '100vw';
+      document.documentElement.style.height = '100vh';
+      document.documentElement.style.maxHeight = '100vh';
+    } else {
+      // Desktop: only prevent horizontal scrolling
+      document.body.style.overflowX = 'hidden';
+      document.body.style.width = '100%';
+      document.body.style.maxWidth = '100vw';
+      document.documentElement.style.overflowX = 'hidden';
+      document.documentElement.style.width = '100%';
+      document.documentElement.style.maxWidth = '100vw';
+    }
+    
+    return () => {
+      // Cleanup on unmount
+      document.body.style.overflowX = '';
+      document.body.style.overflowY = '';
+      document.body.style.width = '';
+      document.body.style.maxWidth = '';
+      document.body.style.height = '';
+      document.body.style.maxHeight = '';
+      document.documentElement.style.overflowX = '';
+      document.documentElement.style.overflowY = '';
+      document.documentElement.style.width = '';
+      document.documentElement.style.maxWidth = '';
+      document.documentElement.style.height = '';
+      document.documentElement.style.maxHeight = '';
+    };
+  }, []);
+
 
   // Update color when case type changes
   useEffect(() => {
@@ -386,8 +431,8 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden">
-      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-64 sm:pb-72' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`}>
+    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none'}}>
+      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-64 sm:pb-72' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none'}}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
