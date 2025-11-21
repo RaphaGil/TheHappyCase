@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../constants';
 
-const CustomTextSection = () => {
+const CustomTextSection = ({ onTextAdded }) => {
   const [customText, setCustomText] = useState('');
   const [customTextError, setCustomTextError] = useState('');
   const [customTextAdded, setCustomTextAdded] = useState(false);
@@ -18,6 +18,10 @@ const CustomTextSection = () => {
       });
       setCustomTextAdded(true);
       setCustomTextError('');
+      // Notify parent that text was added
+      if (onTextAdded) {
+        onTextAdded();
+      }
     } else {
       setCustomTextError('Canvas is still loading. Please try again in a moment.');
     }
@@ -30,11 +34,7 @@ const CustomTextSection = () => {
   };
 
   return (
-    <div className="pb-6 border-b border-gray-100">
-      <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-        4. Add Text
-      </h3>
-      <div className="space-y-4">
+    <div className="space-y-4">
         <div>
           <input
             type="text"
@@ -80,7 +80,6 @@ const CustomTextSection = () => {
            Clear
           </button>
         </div>
-      </div>
     </div>
   );
 };

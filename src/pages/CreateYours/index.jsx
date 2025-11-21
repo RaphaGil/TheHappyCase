@@ -537,13 +537,66 @@ const CreateYours = () => {
     return () => document.removeEventListener('mousedown', onDocClick);
   }, []);
 
+  // Prevent viewport changes when text modal opens on mobile
+  useEffect(() => {
+    if (isMobile && mobileCurrentStep === 'text') {
+      // Lock viewport to prevent zoom and movement
+      const viewport = document.querySelector('meta[name="viewport"]');
+      const originalContent = viewport ? viewport.getAttribute('content') : '';
+      
+      if (viewport) {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+      }
+      
+      // Prevent body scroll
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore viewport
+        if (viewport) {
+          viewport.setAttribute('content', originalContent);
+        }
+        
+        // Restore body scroll
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isMobile, mobileCurrentStep]);
+
 
   return (
     <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
       {/* Text Input Modal - Mobile only */}
       {isMobile && mobileCurrentStep === 'text' && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-sm shadow-lg w-full max-w-sm p-6">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh'
+          }}
+        >
+          <div 
+            className="bg-white rounded-sm shadow-lg w-full max-w-sm p-6"
+            style={{
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }}
+          >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Add Text
@@ -573,7 +626,10 @@ const CreateYours = () => {
                   }}
                   placeholder="e.g. Your name"
                   className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
-                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  style={{
+                    fontFamily: "'Poppins', sans-serif",
+                    fontSize: '16px' // Prevent zoom on iOS
+                  }}
                   maxLength={MAX_TEXT_LENGTH}
                   autoFocus
                 />
@@ -641,23 +697,23 @@ const CreateYours = () => {
         )}
         
         {/* Header Section - Fixed at top, never overlaps */}
-        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-0 mt-1' : 'mb-1 sm:mb-1.5 md:mb-2 lg:mb-1 mt-2 sm:mt-3 md:mt-4'}`}>
-          <h1 className={`text-lg sm:text-xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-0 mt-4' : 'mb-0.5 sm:mb-0.5 md:mb-1 lg:mb-0.5'}`} 
+        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-4 mt-4' : 'mb-8 mt-6'}`}>
+          <h1 className={`text-xl sm:text-2xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-2' : 'mb-3'}`} 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
           </h1>
-          <div className={`w-12 sm:w-16 md:w-20 h-px bg-gray-300 mx-auto ${isMobile ? 'mb-0' : 'mb-0.5 sm:mb-1 md:mb-1.5 lg:mb-1'}`}></div>
-          <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light mb-2" 
+          <div className={`w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto ${isMobile ? 'mb-2' : 'mb-4'}`}></div>
+          <p className="lg:block hidden text-xs text-gray-400 max-w-xl mx-auto font-light" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
-            Design your perfect passport case with our interactive creator
+            Design your perfect passport case
           </p>
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col  lg:flex-row ${isMobile ? 'gap-0' : 'gap-1 sm:gap-1.5 md:gap-4 lg:gap-6'} flex-1 min-h-0 ${isMobile ? '-mt-1' : 'overflow-hidden mt-8'}`}>
+        <div className={`flex flex-col lg:flex-row ${isMobile ? 'gap-0' : 'gap-8 lg:gap-12'} flex-1 min-h-0 ${isMobile ? '' : ''}`}>
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className={`w-full lg:w-1/2 flex flex-col  items-center lg:justify-start justify-center flex-1  ${isMobile ? 'overflow-x-hidden' : 'overflow-hidden'}`}>
+          <div className={`w-full lg:w-1/2 flex flex-col items-center lg:justify-start justify-center flex-1 ${isMobile ? 'overflow-x-hidden' : ''}`}>
 
             <div className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto'}}>
               <div className="flex-shrink-0 w-full overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto'}}>
@@ -675,7 +731,7 @@ const CreateYours = () => {
 
               {/* Action Buttons - Under canvas on big screens */}
               {!isMobile && (
-                <div className="w-full flex flex-row gap-2 flex-shrink-0 mt-4">
+                <div className="w-full flex flex-row gap-3 flex-shrink-0 mt-6">
                   <ViewMoreImagesButton
                     caseImages={caseImages}
                     onOpenModal={() => {
@@ -698,8 +754,8 @@ const CreateYours = () => {
             {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
           </div>
 
-          {/* Right Side - Charms Selection */}
-          <div className="w-full lg:w-1/2 flex flex-col space-y-4 sm:space-y-6 order-1 lg:order-2">
+          {/* Right Side - Steps Section */}
+          <div className="w-full lg:w-1/2 flex flex-col order-1 lg:order-2">
             
             {/* Mobile Step Content Overlay */}
             {isMobile && (
@@ -720,79 +776,129 @@ const CreateYours = () => {
                 Products={productsWithQuantities}
               />
             )}
-            {/* Passport Case Selection - Hidden on mobile */}
-            <div className={`pb-6 border-b border-gray-100 flex-shrink-0 ${isMobile ? 'hidden' : ''}`}>
-              <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                1. Choose Case
-              </h3>
-
-              <CaseSelector
-                selectedCaseType={selectedCaseType}
-                onSelect={handleCaseTypeSelection}
-                isCaseDropdownOpen={isCaseDropdownOpen}
-                setIsCaseDropdownOpen={setIsCaseDropdownOpen}
-                Products={productsWithQuantities}
-              />
-              
-              {selectedColor && (
-                <div className="mt-10">
-                  <ColorSelector
-                    colors={selectedCase?.colors || []}
-                    selectedColor={selectedColor}
-                    onSelect={handleColorSelection}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Charms Selection - Hidden on mobile */}
-            <div className={`pb-6 border-b border-gray-100 ${isMobile ? 'hidden' : 'block'}`}>
-              <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                3. Choose Charms
-              </h3>
-              <div className="relative z-10">
-                <PinSelector
-                  pins={pins}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  selectedPins={selectedPins}
-                  onSelect={handlePinSelection}
-                />
-              </div>
-            </div>
-            
-            {/* Personalized Text - Hidden on mobile */}
+            {/* Desktop Steps Section */}
             {!isMobile && (
-              <CustomTextSection />
+              <div className="w-full space-y-8">
+                {/* Step 1: Case & Color */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
+                      1
+                    </div>
+                    <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                      Choose Case & Color
+                    </h3>
+                  </div>
+                  
+                  <div className="pl-9 space-y-6">
+                    <CaseSelector
+                      selectedCaseType={selectedCaseType}
+                      onSelect={handleCaseTypeSelection}
+                      isCaseDropdownOpen={isCaseDropdownOpen}
+                      setIsCaseDropdownOpen={setIsCaseDropdownOpen}
+                      Products={productsWithQuantities}
+                    />
+                    
+                    {selectedColor && (
+                      <ColorSelector
+                        colors={selectedCase?.colors || []}
+                        selectedColor={selectedColor}
+                        onSelect={handleColorSelection}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-100"></div>
+
+                {/* Step 2: Charms */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                      2
+                    </div>
+                    <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                      Add Charms
+                      {selectedPins.length > 0 && (
+                        <span className="ml-2 text-gray-400 font-normal normal-case">({selectedPins.length} selected)</span>
+                      )}
+                    </h3>
+                  </div>
+                  
+                  <div className="pl-9">
+                    <PinSelector
+                      pins={pins}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                      selectedPins={selectedPins}
+                      onSelect={handlePinSelection}
+                    />
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="border-t border-gray-100"></div>
+
+                {/* Step 3: Text */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                      3
+                    </div>
+                    <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                      Add Text
+                      <span className="ml-2 text-gray-400 font-normal normal-case">(optional)</span>
+                    </h3>
+                  </div>
+                  
+                  <div className="pl-9">
+                    <CustomTextSection />
+                  </div>
+                </div>
+              </div>
             )}
 
-            {/* Price Summary - Hidden on mobile */}
+            {/* Step 4: Review & Add to Cart - Desktop only */}
             {!isMobile && (
-              <PriceSummary
-                totalPrice={totalPrice}
-                caseBasePrice={caseBasePrice}
-                groupedPinsList={groupedPinsList}
-                showPriceBreakdown={showPriceBreakdown}
-                setShowPriceBreakdown={setShowPriceBreakdown}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                selectedCase={selectedCase}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedPins={selectedPins}
-                selectedCaseImage={selectedCaseImage}
-                pinsPrice={pinsPrice}
-                onAddToCart={handleAddToCart}
-                onShowTerms={() => setShowTermsModal(true)}
-                agreedToTerms={agreedToTerms}
-                setAgreedToTerms={(value) => {
-                  setAgreedToTerms(value);
-                  if (value) {
-                    setShowTermsError(false);
-                  }
-                }}
-                showTermsError={showTermsError}
-              />
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                    4
+                  </div>
+                  <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    Review & Add to Cart
+                  </h3>
+                </div>
+                
+                <div className="pl-9">
+                  <PriceSummary
+                    totalPrice={totalPrice}
+                    caseBasePrice={caseBasePrice}
+                    groupedPinsList={groupedPinsList}
+                    showPriceBreakdown={showPriceBreakdown}
+                    setShowPriceBreakdown={setShowPriceBreakdown}
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                    selectedCase={selectedCase}
+                    selectedCaseType={selectedCaseType}
+                    selectedColor={selectedColor}
+                    selectedPins={selectedPins}
+                    selectedCaseImage={selectedCaseImage}
+                    pinsPrice={pinsPrice}
+                    onAddToCart={handleAddToCart}
+                    onShowTerms={() => setShowTermsModal(true)}
+                    agreedToTerms={agreedToTerms}
+                    setAgreedToTerms={(value) => {
+                      setAgreedToTerms(value);
+                      if (value) {
+                        setShowTermsError(false);
+                      }
+                    }}
+                    showTermsError={showTermsError}
+                  />
+                </div>
+              </div>
             )}
           </div>
         </div>

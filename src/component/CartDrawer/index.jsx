@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,6 +9,7 @@ const CartDrawer = () => {
   const { cart, isDrawerOpen, closeCartDrawer, getTotalPrice, incrementItemQty, decrementItemQty, removeFromCart, updateItemNote } = useCart();
   const { formatPrice } = useCurrency();
   const navigate = useNavigate();
+  const location = useLocation();
   const [openNoteIndex, setOpenNoteIndex] = useState(null);
   const [noteTexts, setNoteTexts] = useState({});
 
@@ -354,7 +355,15 @@ const CartDrawer = () => {
             <button
               className="w-full py-2.5 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-light"
               style={{fontFamily: "'Poppins', sans-serif"}}
-              onClick={() => closeCartDrawer()}
+              onClick={() => {
+                closeCartDrawer();
+                // If on Create Yours page, refresh it
+                if (location.pathname === '/CreateYours') {
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 100);
+                }
+              }}
             >
               Continue Shopping
             </button>

@@ -72,7 +72,6 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
 
   return (
     <div>
-      <p className="hidden md:block text-xs uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>2. Choose Color</p>
       <div className="flex flex-wrap gap-3">
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
