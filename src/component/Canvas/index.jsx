@@ -38,6 +38,8 @@ const Canvas = ({
         let top = canvasHeight / 2;
   
         if (isCase) {
+          // Move case image a bit higher (reduce top position)
+          top = canvasHeight / 2 - (canvasHeight * 0.05); // Move up by 5% of canvas height
           // Fixed scaling for the case image - bigger but fits without cutting
           const isMobile = window.innerWidth < 768;
           const scaleMultiplier = isMobile ? 0.95 : 1; // Fits within canvas on mobile, bigger on desktop

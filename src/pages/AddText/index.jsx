@@ -90,11 +90,23 @@ const AddText = () => {
       return;
     }
 
-    // Navigate back to CreateYours with the text
+    // Add text to canvas before navigating
+    if (typeof window !== 'undefined' && window.addTextToCanvas) {
+      window.addTextToCanvas(customText.trim(), {
+        fill: CUSTOM_TEXT_COLOR,
+        fontSize: CUSTOM_TEXT_SIZE,
+      });
+      // Save canvas state after adding text
+      if (window.saveCanvasState) {
+        setTimeout(() => {
+          window.saveCanvasState();
+        }, 300);
+      }
+    }
+
+    // Navigate back to CreateYours
     navigate('/CreateYours', {
       state: { 
-        addText: true,
-        text: customText.trim(),
         caseType: selectedCaseType,
         caseColor: selectedColor
       }
