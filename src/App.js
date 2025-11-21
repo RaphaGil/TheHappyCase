@@ -27,6 +27,7 @@ import RefundPolicy from './pages/RefundPolicy';
 import ShippingPolicy from './pages/ShippingPolicy';
 import About from './pages/About';
 import AddText from './pages/AddText';
+import Dashboard from './pages/Dashboard';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -73,6 +74,7 @@ function AppContent() {
           <Route path="/PassportCases" element={<PassportCases />} />
           <Route path="/Charms" element={<Charms />} />
           <Route path="/AddText" element={<AddText />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/returns" element={<RefundPolicy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />

@@ -218,7 +218,7 @@ const PassportCases = () => {
                 <img
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
-                  className="w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200"
+                  className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${(selectedCase.quantity !== undefined && selectedCase.quantity === 0) ? 'opacity-50' : ''}`}
                   onError={(e) => {
                     e.target.style.display = 'none';
                     if (e.target.nextSibling) {
@@ -231,6 +231,14 @@ const PassportCases = () => {
                     <p className="text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>Image not available</p>
                   </div>
                 </div>
+                {/* Sold Out Overlay */}
+                {(selectedCase.quantity !== undefined && selectedCase.quantity === 0) && (
+                  <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
+                    <span className="text-white text-2xl font-medium uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
+                      Sold Out
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
             

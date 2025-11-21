@@ -18,7 +18,7 @@ import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
 import CaseSelector from "./components/CaseSelector";
 import TermsOfUseModal from "./components/TermsOfUseModal";
-import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE } from "./constants";
+import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from "./constants";
 
 
 const CreateYours = () => {
@@ -28,6 +28,10 @@ const CreateYours = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [pins, setPins] = useState([]);
   const [mobileSubCategory, setMobileSubCategory] = useState('all');
+  const textAddedRef = useRef(false);
+  const lastTextRef = useRef(null);
+  const [mobileCustomText, setMobileCustomText] = useState('');
+  const [mobileTextError, setMobileTextError] = useState('');
   
   // Initialize default case and color from URL params or defaults
   const getDefaultCaseAndColor = () => {
@@ -191,17 +195,47 @@ const CreateYours = () => {
     // Handle text addition from AddText page
     if (location.state?.addText && location.state?.text) {
       const textToAdd = location.state.text;
+      
+      // Prevent duplicate additions - check if this is the same text we just added
+      if (textAddedRef.current && lastTextRef.current === textToAdd) {
+        // Already added this text, skip and clear state
+        window.history.replaceState({}, document.title);
+        return;
+      }
+      
+      // Mark as processing immediately to prevent duplicate calls
+      textAddedRef.current = true;
+      lastTextRef.current = textToAdd;
+      
+      // Clear the navigation state immediately to prevent re-triggering
+      window.history.replaceState({}, document.title);
+      
+      // Wait longer to ensure charms are restored first, then add text
       setTimeout(() => {
         if (window.addTextToCanvas) {
           window.addTextToCanvas(textToAdd, {
             fill: CUSTOM_TEXT_COLOR,
             fontSize: CUSTOM_TEXT_SIZE,
           });
+          // Save state after adding text
+          if (window.saveCanvasState) {
+            setTimeout(() => {
+              window.saveCanvasState();
+            }, 500);
+          }
         }
-      }, 300);
-      
-      // Clear the navigation state
-      window.history.replaceState({}, document.title);
+        // Reset after a delay to allow for new text additions
+        setTimeout(() => {
+          textAddedRef.current = false;
+          lastTextRef.current = null;
+        }, 2000);
+      }, 1500); // Wait 1.5 seconds to ensure restoration completes
+    } else {
+      // Reset if no text in state
+      if (!location.state?.addText) {
+        textAddedRef.current = false;
+        lastTextRef.current = null;
+      }
     }
   }, [location.state]);
 
@@ -638,9 +672,69 @@ const CreateYours = () => {
                 setMobileCurrentStep={setMobileCurrentStep}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
-                onOpenAddText={() => navigate('/AddText')}
               />
             </div>
+            
+            {/* Text Input Section - Show when text step is selected */}
+            {mobileCurrentStep === 'text' && (
+              <div className="px-2 sm:px-3 py-3 border-b border-gray-100 bg-gray-50">
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={mobileCustomText}
+                    onChange={(e) => {
+                      setMobileCustomText(e.target.value);
+                      setMobileTextError('');
+                    }}
+                    placeholder="e.g. Your name"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
+                    style={{fontFamily: "'Poppins', sans-serif"}}
+                    maxLength={MAX_TEXT_LENGTH}
+                    autoFocus
+                  />
+                  {mobileTextError && (
+                    <div className="text-xs text-red-600 border border-red-200 bg-red-50 px-3 py-2 rounded">
+                      {mobileTextError}
+                    </div>
+                  )}
+                  <div className="flex flex-row gap-2">
+                    <button
+                      onClick={() => {
+                        if (!mobileCustomText.trim()) {
+                          setMobileTextError('Please enter the text you want to add.');
+                          return;
+                        }
+                        if (typeof window !== 'undefined' && window.addTextToCanvas) {
+                          window.addTextToCanvas(mobileCustomText.trim(), {
+                            fill: CUSTOM_TEXT_COLOR,
+                            fontSize: CUSTOM_TEXT_SIZE,
+                          });
+                          setMobileCustomText('');
+                          setMobileTextError('');
+                          setMobileCurrentStep(null); // Close text input, don't open case selection
+                        } else {
+                          setMobileTextError('Canvas is still loading. Please try again in a moment.');
+                        }
+                      }}
+                      className="flex-1 px-4 py-2 text-xs uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded"
+                      style={{fontFamily: "'Poppins', sans-serif"}}
+                    >
+                      Add Text
+                    </button>
+                    <button
+                      onClick={() => {
+                        setMobileCustomText('');
+                        setMobileTextError('');
+                      }}
+                      className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-colors rounded"
+                      style={{fontFamily: "'Poppins', sans-serif"}}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Price Summary and Add to Cart */}
             <div className="max-h-[40vh] overflow-y-auto">

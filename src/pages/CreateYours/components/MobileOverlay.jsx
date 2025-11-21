@@ -38,7 +38,8 @@ const MobileOverlay = ({
     };
   }, []);
 
-  if (!mobileCurrentStep) return null;
+  // Don't show overlay for 'text' step - it's handled inline in the bottom section
+  if (!mobileCurrentStep || mobileCurrentStep === 'text') return null;
 
   const filteredPinsForMobile = filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
 

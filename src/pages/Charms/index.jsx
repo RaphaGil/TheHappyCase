@@ -519,7 +519,7 @@ const Charms = () => {
                     <img
                       src={charm.src}
                       alt={charm.name}
-                      className="w-full h-full object-contain p-2 transition-opacity duration-200 group-hover:opacity-80"
+                      className={`w-full h-full object-contain p-2 transition-opacity duration-200 group-hover:opacity-80 ${(charm.quantity !== undefined && charm.quantity === 0) ? 'opacity-50' : ''}`}
                       style={{
                         transform: `scale(${charm.size !== undefined ? charm.size : 1.0})`
                       }}
@@ -535,19 +535,29 @@ const Charms = () => {
                     <div className="hidden w-full h-full items-center justify-center text-gray-400">
                       <span className="text-4xl">🎁</span>
                     </div>
+                    {/* Sold Out Overlay */}
+                    {(charm.quantity !== undefined && charm.quantity === 0) && (
+                      <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
+                        <span className="text-white text-lg font-medium uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
+                          Sold Out
+                        </span>
+                      </div>
+                    )}
                     {/* Add to Cart Button Overlay - Bottom right on mobile, bottom bar on desktop hover */}
-                    <button
-                      onClick={() => handleAddToCart(charm)}
-                      className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10"
-                      style={{fontFamily: "'Poppins', sans-serif"}}
-                    >
-                      {/* Bag Icon - Visible on mobile and desktop */}
-                      <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                      </svg>
-                      {/* Button Text - Visible on desktop only */}
-                      <span className="hidden md:inline">Add to Cart</span>
-                    </button>
+                    {(!charm.quantity || charm.quantity > 0) && (
+                      <button
+                        onClick={() => handleAddToCart(charm)}
+                        className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10"
+                        style={{fontFamily: "'Poppins', sans-serif"}}
+                      >
+                        {/* Bag Icon - Visible on mobile and desktop */}
+                        <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        {/* Button Text - Visible on desktop only */}
+                        <span className="hidden md:inline">Add to Cart</span>
+                      </button>
+                    )}
                   </div>
                   <h3 className="text-sm text-gray-700 text-center mb-1 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
                     {charm.name}

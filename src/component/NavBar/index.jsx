@@ -403,6 +403,39 @@ const NavBar = () => {
           </Link>
         </div>
         
+        {/* Navbar links - Desktop */}
+        <ul
+          className="hidden lg:flex lg:items-center lg:space-x-1 flex-1 justify-center"
+          style={{fontFamily: "'Poppins', sans-serif"}}
+        >
+          <li>
+            <Link to="/" className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 block transition-colors text-xs uppercase tracking-wider font-light text-gray-600">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/CreateYours" className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-xs uppercase tracking-wider text-gray-600">
+              Create Yours
+            </Link>
+          </li>
+          <li>
+            <Link 
+              to="/PassportCases" 
+              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
+            >
+              Passport Cases
+            </Link>
+          </li>
+          <li>
+            <Link 
+              to="/Charms" 
+              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
+            >
+              Charms
+            </Link>
+          </li>
+        </ul>
+        
         {/* Right side - Mobile Icons (Cart) */}
         <div className="md:hidden flex items-center gap-3">
           {/* Cart Icon - Mobile */}
@@ -427,9 +460,9 @@ const NavBar = () => {
           </Link>
         </div>
           
-      {/* Navbar links */}
+      {/* Navbar links - Mobile */}
       <ul
-        className={`lg:flex lg:space-x-1 ${
+        className={`${
             isOpen
             ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(100vh-100px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
               : 'hidden'

@@ -312,7 +312,10 @@ const Canvas = ({
     
     // Calculate desired position (just above the charm)
     const desiredX = canvasOffsetX + rect.left + rect.width / 2;
-    const desiredY = canvasOffsetY + rect.top - 14; // closer to the charm
+    // Higher offset on mobile, closer on desktop
+    const isMobile = window.innerWidth < 768;
+    const verticalOffset = isMobile ? -50 : -14; // Higher on mobile
+    const desiredY = canvasOffsetY + rect.top + verticalOffset;
     
     // Clamp within container bounds
     const controlWidth = 70; // tighter controls
