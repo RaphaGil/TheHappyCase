@@ -231,9 +231,11 @@ const Canvas = ({
     const boundingRect = obj.getBoundingRect(true);
     
     // Calculate inset as a percentage of the smaller dimension to adjust to image shape
-    // Use 2.5% of the smaller dimension for proportional scaling
+    // Use larger margin on mobile for better visibility
+    const isMobile = window.innerWidth < 768;
     const minDimension = Math.min(boundingRect.width, boundingRect.height);
-    const inset = Math.max(2, minDimension * 0.075); // Minimum 2px, or 2.5% of smaller dimension
+    const insetPercentage = isMobile ? 0.12 : 0.075; // 12% on mobile, 7.5% on desktop
+    const inset = Math.max(2, minDimension * insetPercentage); // Minimum 2px
     
     // Create border rectangle with proportional inset based on image size
     const borderRect = new fabric.Rect({
@@ -560,12 +562,14 @@ const Canvas = ({
         const boundingRect = obj.getBoundingRect(true);
         
         // Calculate inset as a percentage of the smaller dimension to adjust to image shape
-        // Use 2.5% of the smaller dimension for proportional scaling
+        // Use larger margin on mobile for better visibility
+        const isMobile = window.innerWidth < 768;
         const minDimension = Math.min(boundingRect.width, boundingRect.height);
-        const inset = Math.max(2, minDimension * 0.005); // Minimum 2px, or 2.5% of smaller dimension
+        const insetPercentage = isMobile ? 0.12 : 0.075; // 12% on mobile, 7.5% on desktop
+        const inset = Math.max(2, minDimension * insetPercentage); // Minimum 2px
         
         borderRect.set({
-          left: boundingRect.left + 2,
+          left: boundingRect.left + inset,
           top: boundingRect.top + inset,
           width: boundingRect.width - (inset * 2),
           height: boundingRect.height - (inset * 2),
