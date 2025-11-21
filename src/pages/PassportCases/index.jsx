@@ -35,7 +35,78 @@ const PassportCases = () => {
   const [pendingProduct, setPendingProduct] = useState(null);
   const [isSpecificationsOpen, setIsSpecificationsOpen] = useState(false);
 
-  const selectedCase = Products.cases.find(c => c.type === selectedCaseType);
+  // Helper function to get products with quantities from localStorage
+  const getProductsWithQuantities = () => {
+    const savedQuantities = localStorage.getItem('productQuantities');
+    if (!savedQuantities) return Products;
+    
+    try {
+      const quantities = JSON.parse(savedQuantities);
+      const mergedProducts = { ...Products };
+      
+      // Merge case quantities and color quantities
+      if (quantities.cases) {
+        mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
+          const updatedCase = {
+            ...caseItem,
+            quantity: quantities.cases[index] !== undefined ? quantities.cases[index] : caseItem.quantity
+          };
+          
+          // Merge color quantities if they exist
+          if (quantities.caseColors && quantities.caseColors[index]) {
+            updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
+              ...colorItem,
+              quantity: quantities.caseColors[index][colorIndex] !== undefined 
+                ? quantities.caseColors[index][colorIndex] 
+                : colorItem.quantity
+            }));
+          }
+          
+          return updatedCase;
+        });
+      }
+      
+      return mergedProducts;
+    } catch (error) {
+      console.error('Error loading saved quantities:', error);
+      return Products;
+    }
+  };
+
+  const productsWithQuantities = getProductsWithQuantities();
+  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+  
+  // Helper function to check if selected color is sold out
+  const isSelectedColorSoldOut = () => {
+    if (!selectedCase || !selectedColor) return false;
+    const selectedColorData = selectedCase.colors.find(c => c.color === selectedColor);
+    if (selectedColorData && selectedColorData.quantity !== undefined) {
+      return selectedColorData.quantity === 0;
+    }
+    // Fallback to case-level quantity
+    return selectedCase.quantity !== undefined && selectedCase.quantity === 0;
+  };
+  
+  // Helper function to check if a case type is sold out (all colors sold out or case-level quantity is 0)
+  const isCaseTypeSoldOut = (caseType) => {
+    const caseData = productsWithQuantities.cases.find(c => c.type === caseType);
+    if (!caseData) return false;
+    
+    // Check case-level quantity first
+    if (caseData.quantity !== undefined && caseData.quantity === 0) {
+      return true;
+    }
+    
+    // Check if all colors are sold out
+    if (caseData.colors && caseData.colors.length > 0) {
+      const allColorsSoldOut = caseData.colors.every(color => 
+        color.quantity !== undefined && color.quantity === 0
+      );
+      return allColorsSoldOut;
+    }
+    
+    return false;
+  };
   
   // Function to format case type to display name
   const getCaseDisplayName = (caseType) => {
@@ -135,7 +206,8 @@ const PassportCases = () => {
     const filterValue = typeToFilter[type] || 'economy';
     setSearchParams({ filter: filterValue });
     // Set first color as default
-    const caseData = Products.cases.find(c => c.type === type);
+    const productsWithQuantities = getProductsWithQuantities();
+    const caseData = productsWithQuantities.cases.find(c => c.type === type);
     if (caseData && caseData.colors.length > 0) {
       setSelectedColor(caseData.colors[0].color);
     }
@@ -184,20 +256,28 @@ const PassportCases = () => {
         {/* Case Type Selection - Minimalist Tabs */}
         <div className="flex justify-center mb-12">
           <div className="flex gap-1 border-b border-gray-200">
-            {Products.cases.map((caseItem) => (
-              <button
-                key={caseItem.type}
-                onClick={() => handleCaseTypeChange(caseItem.type)}
-                className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 ${
-                  selectedCaseType === caseItem.type
-                    ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
-                    : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
-                }`}
-                style={{fontFamily: "'Poppins', sans-serif"}}
-              >
-                {getCaseDisplayName(caseItem.type)}
-              </button>
-            ))}
+            {productsWithQuantities.cases.map((caseItem) => {
+              const isSoldOut = isCaseTypeSoldOut(caseItem.type);
+              return (
+                <button
+                  key={caseItem.type}
+                  onClick={() => handleCaseTypeChange(caseItem.type)}
+                  className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 relative ${
+                    selectedCaseType === caseItem.type
+                      ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
+                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                  } ${isSoldOut ? 'opacity-60' : ''}`}
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                >
+                  <span className="flex items-center gap-2">
+                    {getCaseDisplayName(caseItem.type)}
+                    {isSoldOut && (
+                      <span className="text-[10px] text-red-600 font-medium">(Sold Out)</span>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -218,7 +298,7 @@ const PassportCases = () => {
                 <img
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
-                  className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${(selectedCase.quantity !== undefined && selectedCase.quantity === 0) ? 'opacity-50' : ''}`}
+                  className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50' : ''}`}
                   onError={(e) => {
                     e.target.style.display = 'none';
                     if (e.target.nextSibling) {
@@ -232,7 +312,7 @@ const PassportCases = () => {
                   </div>
                 </div>
                 {/* Sold Out Overlay */}
-                {(selectedCase.quantity !== undefined && selectedCase.quantity === 0) && (
+                {isSelectedColorSoldOut() && (
                   <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
                     <span className="text-white text-2xl font-medium uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
                       Sold Out
@@ -283,19 +363,27 @@ const PassportCases = () => {
             <div className="border-b border-gray-100 pb-8 mt-6">
               <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>Colours Available</h3>
               <div className="grid grid-cols-8 gap-1">
-                {selectedCase.colors.map((colorOption, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleColorChange(colorOption.color)}
-                    className={`md:w-8 md:h-8 w-6 h-6 rounded-full border-2 transition-all duration-200 ${
-                      selectedColor === colorOption.color
-                        ? 'border-gray-900 ring-2 ring-gray-300 scale-110'
-                        : 'border-gray-200 hover:border-gray-400'
-                    }`}
-                    style={{ backgroundColor: colorOption.color }}
-                    title={`Color ${index + 1}`}
-                  />
-                ))}
+                {selectedCase.colors.map((colorOption, index) => {
+                  const isColorSoldOut = colorOption.quantity !== undefined && colorOption.quantity === 0;
+                  return (
+                    <div key={index} className="flex flex-col items-center gap-1">
+                      <button
+                        onClick={() => handleColorChange(colorOption.color)}
+                        disabled={isColorSoldOut}
+                        className={`md:w-8 md:h-8 w-6 h-6 rounded-full border-2 transition-all duration-200 relative ${
+                          selectedColor === colorOption.color
+                            ? 'border-gray-900 ring-2 ring-gray-300 scale-110'
+                            : 'border-gray-200 hover:border-gray-400'
+                        } ${isColorSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        style={{ backgroundColor: colorOption.color }}
+                        title={isColorSoldOut ? 'Sold Out' : `Color ${index + 1}`}
+                      />
+                      {isColorSoldOut && (
+                        <span className="text-[9px] text-red-600 font-medium text-center">Sold Out</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -406,6 +494,7 @@ const PassportCases = () => {
                     caseImage: currentImage,
                     quantity: 1
                   }}
+                  disabled={isSelectedColorSoldOut()}
                   onAdd={handleAddToCart}
                   className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
                 />

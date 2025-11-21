@@ -74,15 +74,16 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
     <div>
       <p className="hidden md:block text-xs uppercase tracking-wider text-gray-900 mb-4 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>2. Choose Color</p>
       <div className="flex flex-wrap gap-3">
-        {colors.map(({ color, image }) => {
+        {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
+          const isSoldOut = quantity !== undefined && quantity === 0;
           
           return (
             <div
               key={color}
-              className="cursor-pointer transition-all duration-200 flex flex-col items-center"
-              onClick={() => onSelect(color, image)}
+              className={`transition-all duration-200 flex flex-col items-center ${isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              onClick={() => !isSoldOut && onSelect(color, image)}
             >
               <div className="relative">
                 <div
@@ -90,10 +91,10 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
                     isSelected
                       ? "border-gray-900 ring-2 ring-gray-300 scale-110"
                       : "border-gray-200 hover:border-gray-400"
-                  }`}
+                  } ${isSoldOut ? 'opacity-50' : ''}`}
                   style={{ backgroundColor: color }}
                 />
-                {isSelected && (
+                {isSelected && !isSoldOut && (
                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -105,6 +106,9 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
                 <span className="text-xs text-gray-700 font-medium mt-2 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
                   {colorName}
                 </span>
+              )}
+              {isSoldOut && (
+                <span className="text-[10px] text-red-600 font-medium mt-1">Sold Out</span>
               )}
             </div>
           );

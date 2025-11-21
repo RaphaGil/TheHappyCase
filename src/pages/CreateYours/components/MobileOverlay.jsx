@@ -86,31 +86,52 @@ const MobileOverlay = ({
                   const caseImage = caseData && caseData.colors && caseData.colors.length > 0 
                     ? caseData.colors[0].image 
                     : null;
+                  const isCaseSoldOut = () => {
+                    if (!caseData) return false;
+                    // Check case-level quantity
+                    if (caseData.quantity !== undefined && caseData.quantity === 0) {
+                      return true;
+                    }
+                    // Check if all colors are sold out
+                    if (caseData.colors && caseData.colors.length > 0) {
+                      return caseData.colors.every(color => 
+                        color.quantity !== undefined && color.quantity === 0
+                      );
+                    }
+                    return false;
+                  };
+                  const soldOut = isCaseSoldOut();
+                  
                   return (
-                    <button
-                      key={opt.value}
-                      onClick={() => handleCaseTypeSelection(opt.value)}
-                      className={`p-3 transition-all duration-200 flex flex-col items-center gap-2 ${
-                        selectedCaseType === opt.value
-                          ? 'bg-gray-50 text-gray-900 font-medium '
-                          : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300'
-                      }`}
-                      style={{fontFamily: "'Poppins', sans-serif"}}
-                    >
-                      {caseImage && (
-                        <div className="w-full aspect-square bg-gray-50  rounded overflow-hidden">
-                          <img
-                            src={caseImage}
-                            alt={opt.label}
-                            className="w-full h-full object-contain p-2"
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
-                          />
-                        </div>
+                    <div key={opt.value} className="flex flex-col items-center gap-1">
+                      <button
+                        onClick={() => !soldOut && handleCaseTypeSelection(opt.value)}
+                        disabled={soldOut}
+                        className={`p-3 transition-all duration-200 flex flex-col items-center gap-2 w-full ${
+                          selectedCaseType === opt.value
+                            ? 'bg-gray-50 text-gray-900 font-medium '
+                            : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                        } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        style={{fontFamily: "'Poppins', sans-serif"}}
+                      >
+                        {caseImage && (
+                          <div className="w-full aspect-square bg-gray-50 rounded overflow-hidden">
+                            <img
+                              src={caseImage}
+                              alt={opt.label}
+                              className={`w-full h-full object-contain p-2 ${soldOut ? 'opacity-50' : ''}`}
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        )}
+                        <span className="text-xs text-center">{opt.label}</span>
+                      </button>
+                      {soldOut && (
+                        <span className="text-[10px] text-red-600 font-medium">Sold Out</span>
                       )}
-                      <span className="text-xs text-center">{opt.label}</span>
-                    </button>
+                    </div>
                   );
                 })}
               </div>
@@ -230,35 +251,41 @@ const MobileOverlay = ({
                     {filteredPinsForMobile.length > 0 ? (
                       <div className="grid grid-cols-3 gap-3">
                         {filteredPinsForMobile.map((pin) => {
+                          const isSoldOut = pin.quantity !== undefined && pin.quantity === 0;
                           const isSelected = selectedPins.some((p) => p.pin === pin);
                           return (
-                            <button
-                              key={pin.name}
-                              onClick={() => handlePinSelection(pin)}
-                              className={`p-2 transition-all duration-200 flex flex-col items-center ${
-                                isSelected
-                                  ? 'bg-gray-50'
-                                  : ''
-                              }`}
-                            >
-                              <div className={`relative w-20 h-20 flex items-center justify-center bg-gray-50 transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
-                                <img
-                                  src={pin.src}
-                                  alt={pin.name}
-                                  className="max-w-full max-h-full object-contain"
-                                  loading="lazy"
-                                  decoding="async"
-                                />
-                                {isSelected && (
-                                  <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 flex items-center justify-center text-xs rounded-full z-10">
-                                    ✓
-                                  </div>
-                                )}
-                              </div>
-                              <span className="text-xs text-center text-gray-700 line-clamp-2 mt-1" style={{fontFamily: "'Poppins', sans-serif"}}>
-                                {pin.name}
-                              </span>
-                            </button>
+                            <div key={pin.name} className="flex flex-col items-center gap-1">
+                              <button
+                                onClick={() => !isSoldOut && handlePinSelection(pin)}
+                                disabled={isSoldOut}
+                                className={`p-2 transition-all duration-200 flex flex-col items-center w-full ${
+                                  isSelected
+                                    ? 'bg-gray-50'
+                                    : ''
+                                } ${isSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              >
+                                <div className={`relative w-20 h-20 flex items-center justify-center bg-gray-50 transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
+                                  <img
+                                    src={pin.src}
+                                    alt={pin.name}
+                                    className={`max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`}
+                                    loading="lazy"
+                                    decoding="async"
+                                  />
+                                  {isSelected && !isSoldOut && (
+                                    <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 flex items-center justify-center text-xs rounded-full z-10">
+                                      ✓
+                                    </div>
+                                  )}
+                                </div>
+                                <span className="text-xs text-center text-gray-700 line-clamp-2 mt-1" style={{fontFamily: "'Poppins', sans-serif"}}>
+                                  {pin.name}
+                                </span>
+                              </button>
+                              {isSoldOut && (
+                                <span className="text-[9px] text-red-600 font-medium">Sold Out</span>
+                              )}
+                            </div>
                           );
                         })}
                       </div>

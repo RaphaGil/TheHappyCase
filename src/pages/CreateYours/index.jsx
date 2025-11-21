@@ -239,19 +239,71 @@ const CreateYours = () => {
     }
   }, [location.state]);
 
-  // When category changes, update pins from Products
+  // Helper function to get products with quantities from localStorage
+  const getProductsWithQuantities = () => {
+    const savedQuantities = localStorage.getItem('productQuantities');
+    if (!savedQuantities) return Products;
+    
+    try {
+      const quantities = JSON.parse(savedQuantities);
+      const mergedProducts = { ...Products };
+      
+      // Merge case quantities and color quantities
+      if (quantities.cases) {
+        mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
+          const updatedCase = {
+            ...caseItem,
+            quantity: quantities.cases[index] !== undefined ? quantities.cases[index] : caseItem.quantity
+          };
+          
+          // Merge color quantities if they exist
+          if (quantities.caseColors && quantities.caseColors[index]) {
+            updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
+              ...colorItem,
+              quantity: quantities.caseColors[index][colorIndex] !== undefined 
+                ? quantities.caseColors[index][colorIndex] 
+                : colorItem.quantity
+            }));
+          }
+          
+          return updatedCase;
+        });
+      }
+      
+      // Merge charm quantities
+      if (quantities.pins) {
+        ['flags', 'colorful', 'bronze'].forEach(category => {
+          if (quantities.pins[category]) {
+            mergedProducts.pins[category] = mergedProducts.pins[category].map((charm, index) => ({
+              ...charm,
+              quantity: quantities.pins[category][index] !== undefined ? quantities.pins[category][index] : charm.quantity
+            }));
+          }
+        });
+      }
+      
+      return mergedProducts;
+    } catch (error) {
+      console.error('Error loading saved quantities:', error);
+      return Products;
+    }
+  };
+
+  const productsWithQuantities = getProductsWithQuantities();
+
+  // When category changes, update pins from productsWithQuantities
   useEffect(() => {
     if (selectedCategory) {
       if (selectedCategory === 'flags') {
-        const flagPins = Products.pins.flags || [];
+        const flagPins = productsWithQuantities.pins.flags || [];
         setPins(flagPins);
       } else {
-        setPins(Products.pins[selectedCategory] || []);
+        setPins(productsWithQuantities.pins[selectedCategory] || []);
       }
     }
     // Reset subcategory when category changes
     setMobileSubCategory('all');
-  }, [selectedCategory]);
+  }, [selectedCategory, productsWithQuantities]);
 
   // Prevent horizontal and vertical scrolling on mobile, maintain page size, hide scrollbar
   useEffect(() => {
@@ -321,9 +373,9 @@ const CreateYours = () => {
       }
     }
   }, [selectedCaseType]); // Run when selectedCaseType changes
-
+  
   // Calculate total price
-  const selectedCase = Products.cases.find(c => c.type === selectedCaseType);
+  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   const caseBasePrice = selectedCase?.basePrice || 0;
   
   // Get images for the selected case and color
@@ -488,6 +540,92 @@ const CreateYours = () => {
 
   return (
     <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
+      {/* Text Input Modal - Mobile only */}
+      {isMobile && mobileCurrentStep === 'text' && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-sm shadow-lg w-full max-w-sm p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                Add Text
+              </h2>
+              <button
+                onClick={() => {
+                  setMobileCurrentStep(null);
+                  setMobileCustomText('');
+                  setMobileTextError('');
+                }}
+                className="p-1 hover:bg-gray-50 transition-colors rounded"
+              >
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  value={mobileCustomText}
+                  onChange={(e) => {
+                    setMobileCustomText(e.target.value);
+                    setMobileTextError('');
+                  }}
+                  placeholder="e.g. Your name"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  maxLength={MAX_TEXT_LENGTH}
+                  autoFocus
+                />
+                {mobileTextError && (
+                  <div className="text-xs text-red-600 border border-red-200 bg-red-50 px-3 py-2 rounded mt-2">
+                    {mobileTextError}
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => {
+                    if (!mobileCustomText.trim()) {
+                      setMobileTextError('Please enter the text you want to add.');
+                      return;
+                    }
+                    if (typeof window !== 'undefined' && window.addTextToCanvas) {
+                      window.addTextToCanvas(mobileCustomText.trim(), {
+                        fill: CUSTOM_TEXT_COLOR,
+                        fontSize: CUSTOM_TEXT_SIZE,
+                      });
+                      setMobileCustomText('');
+                      setMobileTextError('');
+                      setMobileCurrentStep(null);
+                    } else {
+                      setMobileTextError('Canvas is still loading. Please try again in a moment.');
+                    }
+                  }}
+                  className="flex-1 px-4 py-2 text-xs uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded"
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                >
+                  Add Text
+                </button>
+                <button
+                  onClick={() => {
+                    setMobileCustomText('');
+                    setMobileTextError('');
+                  }}
+                  className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-colors rounded"
+                  style={{fontFamily: "'Poppins', sans-serif"}}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Hide main content when text modal is open on mobile */}
+      <div className={isMobile && mobileCurrentStep === 'text' ? 'hidden' : ''}>
       <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-48 xs:pb-56 sm:pb-64' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
         {/* Close Button - Mobile only */}
         {isMobile && (
@@ -579,7 +717,7 @@ const CreateYours = () => {
                 handleCaseTypeSelection={handleCaseTypeSelection}
                 handleColorSelection={handleColorSelection}
                 handlePinSelection={handlePinSelection}
-                Products={Products}
+                Products={productsWithQuantities}
               />
             )}
             {/* Passport Case Selection - Hidden on mobile */}
@@ -593,7 +731,7 @@ const CreateYours = () => {
                 onSelect={handleCaseTypeSelection}
                 isCaseDropdownOpen={isCaseDropdownOpen}
                 setIsCaseDropdownOpen={setIsCaseDropdownOpen}
-                Products={Products}
+                Products={productsWithQuantities}
               />
               
               {selectedColor && (
@@ -675,67 +813,6 @@ const CreateYours = () => {
               />
             </div>
             
-            {/* Text Input Section - Show when text step is selected */}
-            {mobileCurrentStep === 'text' && (
-              <div className="px-2 sm:px-3 py-3 border-b border-gray-100 bg-gray-50">
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    value={mobileCustomText}
-                    onChange={(e) => {
-                      setMobileCustomText(e.target.value);
-                      setMobileTextError('');
-                    }}
-                    placeholder="e.g. Your name"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
-                    maxLength={MAX_TEXT_LENGTH}
-                    autoFocus
-                  />
-                  {mobileTextError && (
-                    <div className="text-xs text-red-600 border border-red-200 bg-red-50 px-3 py-2 rounded">
-                      {mobileTextError}
-                    </div>
-                  )}
-                  <div className="flex flex-row gap-2">
-                    <button
-                      onClick={() => {
-                        if (!mobileCustomText.trim()) {
-                          setMobileTextError('Please enter the text you want to add.');
-                          return;
-                        }
-                        if (typeof window !== 'undefined' && window.addTextToCanvas) {
-                          window.addTextToCanvas(mobileCustomText.trim(), {
-                            fill: CUSTOM_TEXT_COLOR,
-                            fontSize: CUSTOM_TEXT_SIZE,
-                          });
-                          setMobileCustomText('');
-                          setMobileTextError('');
-                          setMobileCurrentStep(null); // Close text input, don't open case selection
-                        } else {
-                          setMobileTextError('Canvas is still loading. Please try again in a moment.');
-                        }
-                      }}
-                      className="flex-1 px-4 py-2 text-xs uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded"
-                      style={{fontFamily: "'Poppins', sans-serif"}}
-                    >
-                      Add Text
-                    </button>
-                    <button
-                      onClick={() => {
-                        setMobileCustomText('');
-                        setMobileTextError('');
-                      }}
-                      className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-colors rounded"
-                      style={{fontFamily: "'Poppins', sans-serif"}}
-                    >
-                      Clear
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-            
             {/* Price Summary and Add to Cart */}
             <div className="max-h-[40vh] overflow-y-auto">
               <div className="px-2 sm:px-3 py-2 sm:py-2.5">
@@ -800,6 +877,7 @@ const CreateYours = () => {
           }}
         />
 
+      </div>
       </div>
     </section>
   );

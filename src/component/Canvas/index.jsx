@@ -230,12 +230,9 @@ const Canvas = ({
     // Get the exact bounding rectangle of the object (accounts for scale, rotation, etc.)
     const boundingRect = obj.getBoundingRect(true);
     
-    // Calculate inset as a percentage of the smaller dimension to adjust to image shape
-    // Use larger margin on mobile for better visibility
+    // Use fixed pixel inset for all charms - same size border regardless of charm size
     const isMobile = window.innerWidth < 768;
-    const minDimension = Math.min(boundingRect.width, boundingRect.height);
-    const insetPercentage = isMobile ? 0.12 : 0.075; // 12% on mobile, 7.5% on desktop
-    const inset = Math.max(2, minDimension * insetPercentage); // Minimum 2px
+    const inset = isMobile ? 0 : 0; // Fixed 10px on mobile, 8px on desktop
     
     // Create border rectangle with proportional inset based on image size
     const borderRect = new fabric.Rect({
@@ -561,12 +558,9 @@ const Canvas = ({
         // Get the exact bounding rectangle of the object (accounts for scale, rotation, etc.)
         const boundingRect = obj.getBoundingRect(true);
         
-        // Calculate inset as a percentage of the smaller dimension to adjust to image shape
-        // Use larger margin on mobile for better visibility
+        // Use fixed pixel inset for all charms - same size border regardless of charm size
         const isMobile = window.innerWidth < 768;
-        const minDimension = Math.min(boundingRect.width, boundingRect.height);
-        const insetPercentage = isMobile ? 0.12 : 0.075; // 12% on mobile, 7.5% on desktop
-        const inset = Math.max(2, minDimension * insetPercentage); // Minimum 2px
+        const inset = isMobile ? 0 : 0; // Fixed 10px on mobile, 8px on desktop
         
         borderRect.set({
           left: boundingRect.left + inset,
@@ -1111,7 +1105,7 @@ const Canvas = ({
   
   return (
     <div className="w-full flex flex-col items-center overflow-hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'hidden', touchAction: isMobile ? 'none' : 'auto'}}>
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[320px] xs:w-[380px] sm:w-[580px] overflow-hidden" style={{aspectRatio: window.innerWidth < 768 ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', maxWidth: '100%', scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'hidden', touchAction: isMobile ? 'none' : 'auto'}}>
+      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[320px] xs:w-[380px] sm:w-[580px] overflow-visible" style={{aspectRatio: window.innerWidth < 768 ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', maxWidth: '100%', scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'visible', touchAction: isMobile ? 'none' : 'auto'}}>
         <canvas 
           ref={canvasRef} 
           className="max-w-full"
@@ -1130,11 +1124,13 @@ const Canvas = ({
         {/* Controls */}
         {showControls && selectedPin && (
           <div 
-            className="absolute z-50 flex items-center gap-1 bg-white/90 border border-gray-200 rounded px-1.5 py-0.5 shadow-sm"
+            className="absolute z-[9999] flex items-center gap-1 bg-white border border-gray-200 text-gray-800 rounded px-1.5 py-0.5 shadow-lg"
             style={{
-              left: controlsPosition.x,
-              top: controlsPosition.y,
-              position: 'absolute'
+              left: `${controlsPosition.x}px`,
+              top: `${controlsPosition.y}px`,
+              position: 'absolute',
+              pointerEvents: 'auto',
+              zIndex: 9999
             }}
           >
             <button

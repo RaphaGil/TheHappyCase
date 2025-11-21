@@ -31,14 +31,43 @@ const Charms = () => {
   const [colorfulCurrentPage, setColorfulCurrentPage] = useState(1);
   const [flagsCurrentPage, setFlagsCurrentPage] = useState(1);
 
-  // Get charms based on selected type
+  // Helper function to get products with quantities from localStorage
+  const getProductsWithQuantities = () => {
+    const savedQuantities = localStorage.getItem('productQuantities');
+    if (!savedQuantities) return Products;
+    
+    try {
+      const quantities = JSON.parse(savedQuantities);
+      const mergedProducts = { ...Products };
+      
+      // Merge charm quantities
+      if (quantities.pins) {
+        ['flags', 'colorful', 'bronze'].forEach(category => {
+          if (quantities.pins[category]) {
+            mergedProducts.pins[category] = mergedProducts.pins[category].map((charm, index) => ({
+              ...charm,
+              quantity: quantities.pins[category][index] !== undefined ? quantities.pins[category][index] : charm.quantity
+            }));
+          }
+        });
+      }
+      
+      return mergedProducts;
+    } catch (error) {
+      console.error('Error loading saved quantities:', error);
+      return Products;
+    }
+  };
+
+  // Get charms based on selected type with quantities from localStorage
   const getAllCharms = () => {
+    const productsWithQuantities = getProductsWithQuantities();
     if (selectedCharmType === 'colorful') {
-      return Products.pins.colorful || [];
+      return productsWithQuantities.pins.colorful || [];
     } else if (selectedCharmType === 'bronze') {
-      return Products.pins.bronze || [];
+      return productsWithQuantities.pins.bronze || [];
     } else if (selectedCharmType === 'flags') {
-      return Products.pins.flags || [];
+      return productsWithQuantities.pins.flags || [];
     }
     return [];
   };

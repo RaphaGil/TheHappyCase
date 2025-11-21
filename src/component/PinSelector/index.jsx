@@ -304,19 +304,20 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
             <div className="grid grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2">
               {filteredPins.map((pin) => {
                 const isSelected = selectedPins.some((p) => p.pin === pin);
+                const isSoldOut = pin.quantity !== undefined && pin.quantity === 0;
                 return (
                   <div
                     key={pin.name}
-                    className="cursor-pointer flex flex-col items-center space-y-1 sm:space-y-2 p-2 sm:p-3 transition-colors group touch-manipulation"
-                    onClick={() => onSelect(pin)}
+                    className={`flex flex-col items-center space-y-1 sm:space-y-2 p-2 sm:p-3 transition-colors group touch-manipulation ${isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    onClick={() => !isSoldOut && onSelect(pin)}
                   >
                     <div className={`relative ${isSelected ? 'border-2 border-gray-900 rounded' : ''}`}>
                       <img
                         src={pin.src}
                         alt={pin.name}
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain bg-gray-50 transition-all duration-200"
+                        className={`w-16 h-16 sm:w-20 sm:h-20 object-contain bg-gray-50 transition-all duration-200 ${isSoldOut ? 'opacity-50' : ''}`}
                       />
-                      {isSelected && (
+                      {isSelected && !isSoldOut && (
                         <div className="absolute -top-1 -right-1 bg-gray-900 text-white w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs rounded-full">
                           ✓
                         </div>
@@ -325,6 +326,9 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
                     <span className="text-xs text-center text-gray-700 transition-colors line-clamp-2" style={{fontFamily: "'Poppins', sans-serif"}}>
                       {pin.name}
                     </span>
+                    {isSoldOut && (
+                      <span className="text-[9px] text-red-600 font-medium">Sold Out</span>
+                    )}
                   </div>
                 );
               })}
