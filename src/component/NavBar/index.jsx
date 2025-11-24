@@ -390,13 +390,13 @@ const NavBar = () => {
               className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
               style={{ fontFamily: "'Fredoka One', cursive" }}
             >
-              <span className="text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
+              <span className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
                 THE
               </span>
-              <span className="text-xl md:text-3xl font-bold leading-none text-blue-900 uppercase">
+              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold leading-none text-blue-900 uppercase">
                 HAPPY
               </span>
-              <span className="text-end text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
+              <span className="text-end text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
                 CASE
               </span>
             </div>
@@ -432,6 +432,14 @@ const NavBar = () => {
               className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
             >
               Charms
+            </Link>
+          </li>
+          <li>
+            <Link 
+              to="/canvas-test" 
+              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
+            >
+              Canvas Test
             </Link>
           </li>
         </ul>
@@ -498,6 +506,16 @@ const NavBar = () => {
               onClick={closeMenu}
             >
               Charms
+            </Link>
+          </li>
+          <li>
+            <Link 
+              to="/canvas-test" 
+              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block"
+              style={{color: isOpen ? '#6b7280' : '#6b7280'}}
+              onClick={closeMenu}
+            >
+              Canvas Test
             </Link>
           </li>
           {/* Design Ideas link hidden */}

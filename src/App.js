@@ -28,6 +28,7 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import About from './pages/About';
 import AddText from './pages/AddText';
 import Dashboard from './pages/Dashboard';
+import CanvasTest from './pages/CanvasTest';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -75,6 +76,7 @@ function AppContent() {
           <Route path="/Charms" element={<Charms />} />
           <Route path="/AddText" element={<AddText />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/canvas-test" element={<CanvasTest />} />
           <Route path="/returns" element={<RefundPolicy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />

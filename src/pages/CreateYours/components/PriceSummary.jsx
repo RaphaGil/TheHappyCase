@@ -27,11 +27,11 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-    <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
-      <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-2' : 'mb-4'}`}>
-        <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} text-gray-900 font-medium`} style={{fontFamily: "'Poppins', sans-serif"}}>
-          Subtotal: {formatPrice(totalPrice)}
-        </h3>
+      <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
+        <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-2' : 'mb-4'}`}>
+          <h3 className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-900 font-medium`} style={{fontFamily: "'Poppins', sans-serif"}}>
+            Subtotal: {formatPrice(totalPrice)}
+          </h3>
         
         <button
           onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
@@ -78,12 +78,12 @@ const PriceSummary = ({
             </button>
           </span>
           {/* Desktop: Full text */}
-          <span className="hidden md:block text-xs text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="hidden md:block text-sm text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
             I agree to the{' '}
             <button
               type="button"
               onClick={onShowTerms}
-              className="text-gray-900 underline hover:text-gray-700 transition-colors"
+              className="text-gray-900 underline hover:text-gray-700 transition-colors text-sm"
             >
               Terms of Use
             </button>

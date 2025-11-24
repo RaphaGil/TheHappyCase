@@ -86,6 +86,7 @@ const CreateYours = () => {
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
   const [saveImageFunction, setSaveImageFunction] = useState(null);
   const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
+  const [closePinSelectorDropdown, setClosePinSelectorDropdown] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [mobileCurrentStep, setMobileCurrentStep] = useState(null); // null = showing passport case, 'case' = case selection, 'color' = color selection, 'charms' = charms selection
   const [quantity, setQuantity] = useState(1);
@@ -98,6 +99,37 @@ const CreateYours = () => {
   const [showTermsError, setShowTermsError] = useState(false);
   const caseDropdownRef = useRef(null);
   const { addToCart } = useCart();
+  
+  // Desktop step dropdown states
+  const [openSteps, setOpenSteps] = useState({
+    step1: true, // Case & Color - open by default
+    step2: false, // Charms
+    step3: false // Text
+    // Step 4 (Review & Add to Cart) is always visible, not a dropdown
+  });
+  
+  const toggleStep = (step) => {
+    setOpenSteps(prev => {
+      const newState = !prev[step];
+      // If opening this step, close all other steps
+      if (newState) {
+        return {
+          step1: step === 'step1',
+          step2: step === 'step2',
+          step3: step === 'step3'
+        };
+      } else {
+        // If closing, just toggle this step
+        return {
+          ...prev,
+          [step]: false
+        };
+      }
+    });
+    // Also close any open dropdowns when toggling steps
+    setIsCaseDropdownOpen(false);
+    setClosePinSelectorDropdown(prev => prev + 1);
+  };
 
   // Update case and color when URL params change
   useEffect(() => {
@@ -142,6 +174,10 @@ const CreateYours = () => {
     if (isMobile) {
       setMobileCurrentStep(null);
     }
+    // Close canvas controls if open
+    if (typeof window !== 'undefined' && window.closeCanvasControls) {
+      window.closeCanvasControls();
+    }
   };
 
   // Handle color selection
@@ -151,6 +187,10 @@ const CreateYours = () => {
     // Close mobile step after selection
     if (isMobile) {
       setMobileCurrentStep(null);
+    }
+    // Close canvas controls if open
+    if (typeof window !== 'undefined' && window.closeCanvasControls) {
+      window.closeCanvasControls();
     }
   };
 
@@ -176,7 +216,12 @@ const CreateYours = () => {
         });
       }
     }, 100); // Small delay to ensure the charm is added first
-  }, [isMobile]);
+    
+    // Auto-open step 3 on desktop after first charm is added
+    if (!isMobile && selectedPins.length === 0 && !openSteps.step3) {
+      setOpenSteps(prev => ({ ...prev, step3: true }));
+    }
+  }, [isMobile, selectedPins.length, openSteps.step3]);
 
   // Handle navigation from other pages
   useEffect(() => {
@@ -373,7 +418,7 @@ const CreateYours = () => {
       }
     }
   }, [selectedCaseType]); // Run when selectedCaseType changes
-  
+
   // Calculate total price
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   const caseBasePrice = selectedCase?.basePrice || 0;
@@ -399,10 +444,10 @@ const CreateYours = () => {
     
     if (selectedCaseType === 'economy') {
       detailImages = [
-        '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-        '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-        '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
-      ];
+      '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
+      '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
+      '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
+    ];
     } else if (selectedCaseType === 'business') {
       detailImages = [
         '/TheHappyCase/images/BusinessClassCase/businessclass.png'
@@ -659,7 +704,7 @@ const CreateYours = () => {
                       setMobileTextError('Canvas is still loading. Please try again in a moment.');
                     }
                   }}
-                  className="flex-1 px-4 py-2 text-xs uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded"
+                  className="flex-1 px-4 py-3 text-sm font-medium uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded shadow-md"
                   style={{fontFamily: "'Poppins', sans-serif"}}
                 >
                   Add Text
@@ -669,7 +714,7 @@ const CreateYours = () => {
                     setMobileCustomText('');
                     setMobileTextError('');
                   }}
-                  className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-colors rounded"
+                  className="px-4 py-3 text-sm font-medium uppercase tracking-wider text-gray-700 hover:text-gray-900 bg-white border-2 border-gray-300 hover:border-gray-400 transition-colors rounded shadow-sm"
                   style={{fontFamily: "'Poppins', sans-serif"}}
                 >
                   Clear
@@ -682,12 +727,12 @@ const CreateYours = () => {
       
       {/* Hide main content when text modal is open on mobile */}
       <div className={isMobile && mobileCurrentStep === 'text' ? 'hidden' : ''}>
-      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-48 xs:pb-56 sm:pb-64' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
+      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-[40vh]' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'auto' : 'auto', height: isMobile ? 'auto' : 'auto', maxHeight: isMobile ? 'none' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
             onClick={() => navigate('/')}
-            className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 z-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
+            className="absolute top-4 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 z-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
             aria-label="Close and go back to home"
           >
             <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -697,12 +742,12 @@ const CreateYours = () => {
         )}
         
         {/* Header Section - Fixed at top, never overlaps */}
-        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-4 mt-4' : 'mb-8 mt-6'}`}>
-          <h1 className={`text-xl sm:text-2xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-2' : 'mb-3'}`} 
+        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-2 mt-6' : 'mb-4 mt-6'}`}>
+          <h1 className={`text-xl sm:text-2xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-1' : 'mb-2'}`} 
               style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
             CREATE YOURS
           </h1>
-          <div className={`w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto ${isMobile ? 'mb-2' : 'mb-4'}`}></div>
+          <div className={`w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto ${isMobile ? 'mb-1' : 'mb-2'}`}></div>
           <p className="lg:block hidden text-xs text-gray-400 max-w-xl mx-auto font-light" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case
@@ -710,14 +755,14 @@ const CreateYours = () => {
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col lg:flex-row ${isMobile ? 'gap-0' : 'gap-8 lg:gap-12'} flex-1 min-h-0 ${isMobile ? '' : ''}`}>
+        <div className={`flex flex-col md:flex-row ${isMobile ? 'gap-0' : 'gap-8 md:gap-12'} flex-1 min-h-0 ${isMobile ? '' : ''}`}>
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className={`w-full lg:w-1/2 flex flex-col items-center lg:justify-start justify-center flex-1 ${isMobile ? 'overflow-x-hidden' : ''}`}>
+          <div className={`w-full md:w-1/2 flex flex-col items-center md:justify-start justify-center flex-1 ${isMobile ? 'overflow-x-hidden' : ''}`} id="canvas-container">
 
-            <div className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[580px] md:max-w-[580px] lg:max-w-[800px] xl:max-w-[900px] 2xl:max-w-[1000px] flex flex-col sm:mt-0 overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto'}}>
-              <div className="flex-shrink-0 w-full overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto'}}>
-                <div className="w-full overflow-hidden" style={{aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', touchAction: isMobile ? 'none' : 'auto'}}>
+            <div className="w-full max-w-full flex flex-col -mt-2 sm:-mt-1 overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto', height: isMobile ? 'auto' : '100%'}}>
+              <div className="flex-shrink-0 w-full overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto', height: isMobile ? 'auto' : '100%'}}>
+                <div className="w-full overflow-hidden" style={{aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : 'none', height: isMobile ? 'auto' : '100%', touchAction: isMobile ? 'none' : 'auto'}}>
                   <Canvas
                     selectedCaseType={selectedCaseType}
                     selectedColor={selectedColor}
@@ -728,7 +773,7 @@ const CreateYours = () => {
                   />
                 </div>
               </div>
-
+              
               {/* Action Buttons - Under canvas on big screens */}
               {!isMobile && (
                 <div className="w-full flex flex-row gap-3 flex-shrink-0 mt-6">
@@ -755,7 +800,7 @@ const CreateYours = () => {
           </div>
 
           {/* Right Side - Steps Section */}
-          <div className="w-full lg:w-1/2 flex flex-col order-1 lg:order-2">
+          <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2" id="right-side-container">
             
             {/* Mobile Step Content Overlay */}
             {isMobile && (
@@ -776,90 +821,136 @@ const CreateYours = () => {
                 Products={productsWithQuantities}
               />
             )}
-            {/* Desktop Steps Section */}
+            {/* Desktop Steps Section - Dropdown Style */}
             {!isMobile && (
-              <div className="w-full space-y-8">
+              <div className="w-full space-y-2">
                 {/* Step 1: Case & Color */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
-                      1
+                <div className="border border-gray-200 rounded-sm">
+                  <button
+                    onClick={() => toggleStep('step1')}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                    style={{fontFamily: "'Poppins', sans-serif"}}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
+                        1
+                      </div>
+                      <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
+                        Choose Case & Color
+              </h3>
                     </div>
-                    <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                      Choose Case & Color
-                    </h3>
-                  </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openSteps.step1 ? 'rotate-180' : ''}`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
                   
-                  <div className="pl-9 space-y-6">
-                    <CaseSelector
-                      selectedCaseType={selectedCaseType}
-                      onSelect={handleCaseTypeSelection}
-                      isCaseDropdownOpen={isCaseDropdownOpen}
-                      setIsCaseDropdownOpen={setIsCaseDropdownOpen}
-                      Products={productsWithQuantities}
-                    />
-                    
-                    {selectedColor && (
-                      <ColorSelector
-                        colors={selectedCase?.colors || []}
-                        selectedColor={selectedColor}
-                        onSelect={handleColorSelection}
-                      />
-                    )}
-                  </div>
+                  {openSteps.step1 && (
+                    <div className="px-4 pb-4 pt-2 space-y-6 border-t border-gray-100">
+              <CaseSelector
+                selectedCaseType={selectedCaseType}
+                onSelect={handleCaseTypeSelection}
+                Products={productsWithQuantities}
+                onDropdownToggle={() => setClosePinSelectorDropdown(prev => prev + 1)}
+              />
+              
+              {selectedColor && (
+                  <ColorSelector
+                    colors={selectedCase?.colors || []}
+                    selectedColor={selectedColor}
+                    onSelect={handleColorSelection}
+                  />
+                      )}
                 </div>
-
-                {/* Divider */}
-                <div className="border-t border-gray-100"></div>
+              )}
+            </div>
 
                 {/* Step 2: Charms */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                      2
+                <div className="border border-gray-200 rounded-sm">
+                  <button
+                    onClick={() => toggleStep('step2')}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                    style={{fontFamily: "'Poppins', sans-serif"}}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                        2
+                      </div>
+                      <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
+                        Add Charms
+                        {selectedPins.length > 0 && (
+                          <span className="ml-2 text-gray-400 font-normal normal-case">({selectedPins.length} selected)</span>
+                        )}
+              </h3>
                     </div>
-                    <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                      Add Charms
-                      {selectedPins.length > 0 && (
-                        <span className="ml-2 text-gray-400 font-normal normal-case">({selectedPins.length} selected)</span>
-                      )}
-                    </h3>
-                  </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openSteps.step2 ? 'rotate-180' : ''}`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
                   
-                  <div className="pl-9">
-                    <PinSelector
-                      pins={pins}
-                      selectedCategory={selectedCategory}
-                      setSelectedCategory={setSelectedCategory}
-                      selectedPins={selectedPins}
-                      onSelect={handlePinSelection}
-                    />
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div className="border-t border-gray-100"></div>
-
+                  {openSteps.step2 && (
+                    <div className="px-4 pb-4 pt-2 border-t border-gray-100">
+                <PinSelector
+                  pins={pins}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  selectedPins={selectedPins}
+                  onSelect={handlePinSelection}
+                  onRemove={handlePinRemove}
+                  onDropdownToggle={() => setIsCaseDropdownOpen(false)}
+                  closeOtherDropdowns={closePinSelectorDropdown}
+                  Products={productsWithQuantities}
+                />
+              </div>
+                  )}
+            </div>
+            
                 {/* Step 3: Text */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-medium flex-shrink-0">
-                      3
+                <div className="border border-gray-200 rounded-sm">
+                  <button
+                    onClick={() => toggleStep('step3')}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
+                    style={{fontFamily: "'Poppins', sans-serif"}}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                        3
+                      </div>
+                      <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
+                        Add Text
+                        <span className="ml-2 text-gray-400 font-normal normal-case">(optional)</span>
+                      </h3>
                     </div>
-                    <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                      Add Text
-                      <span className="ml-2 text-gray-400 font-normal normal-case">(optional)</span>
-                    </h3>
-                  </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openSteps.step3 ? 'rotate-180' : ''}`}
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
                   
-                  <div className="pl-9">
-                    <CustomTextSection />
-                  </div>
+                  {openSteps.step3 && (
+                    <div className="px-4 pb-4 pt-2 border-t border-gray-100">
+                      <CustomTextSection />
+                    </div>
+                  )}
                 </div>
+
               </div>
             )}
 
-            {/* Step 4: Review & Add to Cart - Desktop only */}
+            {/* Step 4: Review & Add to Cart - Always visible, not a dropdown */}
             {!isMobile && (
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <div className="flex items-center gap-3 mb-6">
@@ -872,31 +963,31 @@ const CreateYours = () => {
                 </div>
                 
                 <div className="pl-9">
-                  <PriceSummary
-                    totalPrice={totalPrice}
-                    caseBasePrice={caseBasePrice}
-                    groupedPinsList={groupedPinsList}
-                    showPriceBreakdown={showPriceBreakdown}
-                    setShowPriceBreakdown={setShowPriceBreakdown}
-                    quantity={quantity}
-                    setQuantity={setQuantity}
-                    selectedCase={selectedCase}
-                    selectedCaseType={selectedCaseType}
-                    selectedColor={selectedColor}
-                    selectedPins={selectedPins}
-                    selectedCaseImage={selectedCaseImage}
-                    pinsPrice={pinsPrice}
-                    onAddToCart={handleAddToCart}
-                    onShowTerms={() => setShowTermsModal(true)}
-                    agreedToTerms={agreedToTerms}
-                    setAgreedToTerms={(value) => {
-                      setAgreedToTerms(value);
-                      if (value) {
-                        setShowTermsError(false);
-                      }
-                    }}
-                    showTermsError={showTermsError}
-                  />
+              <PriceSummary
+                totalPrice={totalPrice}
+                caseBasePrice={caseBasePrice}
+                groupedPinsList={groupedPinsList}
+                showPriceBreakdown={showPriceBreakdown}
+                setShowPriceBreakdown={setShowPriceBreakdown}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                selectedCase={selectedCase}
+                selectedCaseType={selectedCaseType}
+                selectedColor={selectedColor}
+                selectedPins={selectedPins}
+                selectedCaseImage={selectedCaseImage}
+                pinsPrice={pinsPrice}
+                onAddToCart={handleAddToCart}
+                onShowTerms={() => setShowTermsModal(true)}
+                agreedToTerms={agreedToTerms}
+                setAgreedToTerms={(value) => {
+                  setAgreedToTerms(value);
+                  if (value) {
+                    setShowTermsError(false);
+                  }
+                }}
+                showTermsError={showTermsError}
+              />
                 </div>
               </div>
             )}
@@ -905,10 +996,10 @@ const CreateYours = () => {
 
         {/* Fixed Bottom Section - Mobile only */}
         {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden">
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden" style={{maxHeight: '30vh'}}>
             {/* Choose Options Section */}
-            <div className="px-2 sm:px-3 pt-2 pb-1 border-b border-gray-100">
-              <p className="text-[10px] xs:text-xs text-gray-600 mb-1 sm:mb-2 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <div className="px-2 sm:px-3 pt-1.5 pb-1 border-b border-gray-100">
+              <p className="text-[10px] xs:text-xs text-gray-600 mb-1 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
               </p>
               <MobileStepButtons
@@ -920,34 +1011,34 @@ const CreateYours = () => {
             </div>
             
             {/* Price Summary and Add to Cart */}
-            <div className="max-h-[40vh] overflow-y-auto">
-              <div className="px-2 sm:px-3 py-2 sm:py-2.5">
-                <PriceSummary
-                  totalPrice={totalPrice}
-                  caseBasePrice={caseBasePrice}
-                  groupedPinsList={groupedPinsList}
-                  showPriceBreakdown={showPriceBreakdown}
-                  setShowPriceBreakdown={setShowPriceBreakdown}
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                  selectedCase={selectedCase}
-                  selectedCaseType={selectedCaseType}
-                  selectedColor={selectedColor}
-                  selectedPins={selectedPins}
-                  selectedCaseImage={selectedCaseImage}
-                  pinsPrice={pinsPrice}
-                  onAddToCart={handleAddToCart}
-                  onShowTerms={() => setShowTermsModal(true)}
-                  agreedToTerms={agreedToTerms}
-                  setAgreedToTerms={(value) => {
-                    setAgreedToTerms(value);
-                    if (value) {
-                      setShowTermsError(false);
-                    }
-                  }}
-                  showTermsError={showTermsError}
-                  isMobile={true}
-                />
+            <div className="overflow-y-auto" style={{maxHeight: 'calc(35vh - 80px)'}}>
+              <div className="px-2 sm:px-3 py-1.5 sm:py-2">
+              <PriceSummary
+                totalPrice={totalPrice}
+                caseBasePrice={caseBasePrice}
+                groupedPinsList={groupedPinsList}
+                showPriceBreakdown={showPriceBreakdown}
+                setShowPriceBreakdown={setShowPriceBreakdown}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                selectedCase={selectedCase}
+                selectedCaseType={selectedCaseType}
+                selectedColor={selectedColor}
+                selectedPins={selectedPins}
+                selectedCaseImage={selectedCaseImage}
+                pinsPrice={pinsPrice}
+                onAddToCart={handleAddToCart}
+                onShowTerms={() => setShowTermsModal(true)}
+                agreedToTerms={agreedToTerms}
+                setAgreedToTerms={(value) => {
+                  setAgreedToTerms(value);
+                  if (value) {
+                    setShowTermsError(false);
+                  }
+                }}
+                showTermsError={showTermsError}
+                isMobile={true}
+              />
               </div>
             </div>
           </div>

@@ -28,6 +28,7 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
           n.includes('disney') ||
           n.includes('pluto') ||
           n.includes('minnie') ||
+          n.includes('round') ||
           n.includes('mickey') ||
           n.includes('daisy') ||
           n.includes('duck') ||
@@ -123,7 +124,8 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
       }
     }
     
-    return true;
+    // If no match found, return false (don't show the pin)
+    return false;
   });
 };
 

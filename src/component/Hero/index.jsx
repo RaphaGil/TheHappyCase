@@ -94,7 +94,7 @@ function Hero() {
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white"
             style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
-            Create Your Own 
+            Custom Your Own 
           </h1>
             <h1 
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4"

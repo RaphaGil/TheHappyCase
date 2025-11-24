@@ -4,115 +4,115 @@ import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid
 
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
   return (
-    <div className="mb-0">
-      <div className="grid grid-cols-4 gap-1">
+    <div className="mb-0 flex justify-center">
+      <div className="grid grid-cols-4 gap-4">
         {/* Choose Case Button */}
         <button
-          onClick={() => setMobileCurrentStep('case')}
-          className={`py-1.5 px-0.5 rounded transition-all duration-200 ${
+          onClick={() => {
+            // Close canvas controls if open
+            if (typeof window !== 'undefined' && window.closeCanvasControls) {
+              window.closeCanvasControls();
+            }
+            setMobileCurrentStep('case');
+          }}
+          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
             mobileCurrentStep === 'case'
-              ? 'bg-gray-900 text-white shadow-md'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 shadow-sm'
+              ? 'bg-gray-900 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
-          <div className="text-center flex flex-col items-center gap-0.5">
-            <div className="flex items-center gap-0.5">
-              <span className={`text-[10px] font-medium ${
-                mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-600'
-              }`}>1.</span>
-              <FontAwesomeIcon 
-                icon={faBriefcase} 
-                className={`text-xs ${
-                  mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-600'
-                }`}
-              />
-            </div>
-            <h3 className={`text-[9px] uppercase tracking-wider font-light ${
+          <FontAwesomeIcon 
+            icon={faBriefcase} 
+            className={`text-base mb-1 ${
               mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
-            }`} style={{fontFamily: "'Poppins', sans-serif"}}>
-              Case
-            </h3>
-          </div>
+            }`}
+          />
+          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+            mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+            Case
+          </span>
         </button>
 
         {/* Choose Color Button */}
         <button
-          onClick={() => setMobileCurrentStep('color')}
+          onClick={() => {
+            // Close canvas controls if open
+            if (typeof window !== 'undefined' && window.closeCanvasControls) {
+              window.closeCanvasControls();
+            }
+            setMobileCurrentStep('color');
+          }}
           disabled={!selectedCaseType}
-          className={`py-1.5 px-0.5 rounded transition-all duration-200 ${
+          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
             !selectedCaseType
-              ? 'bg-gray-50 opacity-50 cursor-not-allowed'
+              ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'color'
-              ? 'bg-gray-900 text-white shadow-md'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 shadow-sm'
+              ? 'bg-gray-900 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
-          <div className="text-center flex flex-col items-center gap-0.5">
-            <div className="flex items-center gap-0.5">
-              <span className={`text-[10px] font-medium ${
-                !selectedCaseType
-                  ? 'text-gray-400'
-                  : mobileCurrentStep === 'color'
-                  ? 'text-white'
-                  : 'text-gray-600'
-              }`}>2.</span>
-              <FontAwesomeIcon 
-                icon={faPalette} 
-                className={`text-xs ${
-                  !selectedCaseType
-                    ? 'text-gray-400'
-                    : mobileCurrentStep === 'color'
-                    ? 'text-white'
-                    : 'text-gray-600'
-                }`}
-              />
-            </div>
-            <h3 className={`text-[9px] uppercase tracking-wider font-light ${
-              !selectedCaseType ? 'text-gray-400' : mobileCurrentStep === 'color' ? 'text-white' : 'text-gray-700'
-            }`} style={{fontFamily: "'Poppins', sans-serif"}}>
-              Color
-            </h3>
-          </div>
+          <FontAwesomeIcon 
+            icon={faPalette} 
+            className={`text-base mb-1 ${
+              !selectedCaseType
+                ? 'text-gray-400'
+                : mobileCurrentStep === 'color'
+                ? 'text-white'
+                : 'text-gray-700'
+            }`}
+          />
+          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+            !selectedCaseType
+              ? 'text-gray-400'
+              : mobileCurrentStep === 'color'
+              ? 'text-white'
+              : 'text-gray-700'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+            Color
+          </span>
         </button>
 
         {/* Choose Charms Button */}
         <button
-          onClick={() => setMobileCurrentStep('charms')}
+          onClick={() => {
+            // Close canvas controls if open
+            if (typeof window !== 'undefined' && window.closeCanvasControls) {
+              window.closeCanvasControls();
+            }
+            setMobileCurrentStep('charms');
+          }}
           disabled={!selectedCaseType || !selectedColor}
-          className={`py-1.5 px-0.5 rounded transition-all duration-200 ${
+          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
             !selectedCaseType || !selectedColor
-              ? 'bg-gray-50 opacity-50 cursor-not-allowed'
+              ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'charms'
-              ? 'bg-gray-900 text-white shadow-md'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 shadow-sm'
+              ? 'bg-gray-900 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
+          style={{ WebkitTapHighlightColor: 'transparent' }}
         >
-          <div className="text-center flex flex-col items-center gap-0.5">
-            <div className="flex items-center gap-0.5">
-              <span className={`text-[10px] font-medium ${
-                !selectedCaseType || !selectedColor
-                  ? 'text-gray-400'
-                  : mobileCurrentStep === 'charms'
-                  ? 'text-white'
-                  : 'text-gray-600'
-              }`}>3.</span>
-              <FontAwesomeIcon 
-                icon={faPlane} 
-                className={`text-xs ${
-                  !selectedCaseType || !selectedColor
-                    ? 'text-gray-400'
-                    : mobileCurrentStep === 'charms'
-                    ? 'text-white'
-                    : 'text-gray-600'
-                }`}
-              />
-            </div>
-            <h3 className={`text-[9px] uppercase tracking-wider font-light ${
-              !selectedCaseType || !selectedColor ? 'text-gray-400' : mobileCurrentStep === 'charms' ? 'text-white' : 'text-gray-700'
-            }`} style={{fontFamily: "'Poppins', sans-serif"}}>
-              Charms
-            </h3>
-          </div>
+          <FontAwesomeIcon 
+            icon={faPlane} 
+            className={`text-base mb-1 ${
+              !selectedCaseType || !selectedColor
+                ? 'text-gray-400'
+                : mobileCurrentStep === 'charms'
+                ? 'text-white'
+                : 'text-gray-700'
+            }`}
+          />
+          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+            !selectedCaseType || !selectedColor
+              ? 'text-gray-400'
+              : mobileCurrentStep === 'charms'
+              ? 'text-white'
+              : 'text-gray-700'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+            Charms
+          </span>
         </button>
         
         {/* Add Text Button */}
@@ -121,37 +121,34 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            // Close canvas controls if open
+            if (typeof window !== 'undefined' && window.closeCanvasControls) {
+              window.closeCanvasControls();
+            }
             if (mobileCurrentStep === 'text') {
               setMobileCurrentStep(null); // Close text input, don't open case selection
             } else {
               setMobileCurrentStep('text');
             }
           }}
-          className={`py-1.5 px-0.5 rounded transition-all duration-200 touch-manipulation ${
+          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
             mobileCurrentStep === 'text'
-              ? 'bg-gray-900 text-white shadow-md'
-              : 'bg-gray-100 hover:bg-gray-200 text-gray-700 shadow-sm'
+              ? 'bg-gray-900 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >
-          <div className="text-center flex flex-col items-center gap-0.5">
-            <div className="flex items-center gap-0.5">
-              <span className={`text-[10px] font-medium ${
-                mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-600'
-              }`}>4.</span>
-              <FontAwesomeIcon 
-                icon={faFont} 
-                className={`text-xs ${
-                  mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-600'
-                }`}
-              />
-            </div>
-            <h3 className={`text-[9px] uppercase tracking-wider font-light ${
+          <FontAwesomeIcon 
+            icon={faFont} 
+            className={`text-base mb-1 ${
               mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
-            }`} style={{fontFamily: "'Poppins', sans-serif"}}>
-              Add Text
-            </h3>
-          </div>
+            }`}
+          />
+          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+            mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+            Text
+          </span>
         </button>
       </div>
     </div>

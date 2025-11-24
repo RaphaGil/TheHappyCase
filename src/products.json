@@ -459,12 +459,7 @@
         "price": 2.0,
         "size": 0.4
       },
-      {
-        "name": "Big Camera",
-        "src": "/TheHappyCase/images/ColorfulPins/blackcamera.png",
-        "price": 2.0,
-        "size": 0.7
-      },
+     
       {
         "name": "Beer",
         "src": "/TheHappyCase/images/ColorfulPins/beer.png",
@@ -511,7 +506,7 @@
         "name": "Round Minnnie",
         "src": "/TheHappyCase/images/ColorfulPins/roundminnie.png",
         "price": 2.0,
-        "size":1
+        "size":0.8
       },
       {
         "name": "Round Mickey",
@@ -716,12 +711,7 @@
         "price": 1.0,
         "size": 0.7
       },
-      {
-        "name": "Bronze Camera",
-        "src": "/TheHappyCase/images/BronzePins/camera.png",
-        "price": 1.0,
-        "size": 1.0
-      },
+     
       {
         "name": "Kangaroo",
         "src": "/TheHappyCase/images/BronzePins/kangaroo.png",

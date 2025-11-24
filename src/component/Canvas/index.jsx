@@ -12,15 +12,20 @@ const Canvas = ({
 }) => {
   const canvasRef = useRef(null);
   const fabricCanvas = useRef(null);
+  const containerRef = useRef(null); // Container for background image and canvas
   const caseInstanceRef = useRef(null);
-  const boundaryRectRef = useRef(null);
-  const boundaryTextRef = useRef(null); // Text message for limit area
   const caseBorderRectRef = useRef(null); // Red border around the case image
   const backgroundRectRef = useRef(null); // Background rectangle behind all objects
   const borderRectsRef = useRef(new Map()); // Store border rectangles for selected objects
+  const topLimitRef = useRef(null); // Top limit line
+  const rightLimitRef = useRef(null); // Right limit line
+  const bottomLimitRef = useRef(null); // Bottom limit line
+  const leftLimitRef = useRef(null); // Left limit line
   const [selectedPin, setSelectedPin] = useState(null);
   const [controlsPosition, setControlsPosition] = useState({ x: 0, y: 0 });
   const [showControls, setShowControls] = useState(false);
+  const [caseImageUrl, setCaseImageUrl] = useState(null); // Store case image URL for background
+  const [showInvalidPositionAlert, setShowInvalidPositionAlert] = useState(false);
 
   // Load image function
   const loadImage = (src, isCase = false, pinWidth = 170, pinHeight = 170) => {
@@ -41,8 +46,11 @@ const Canvas = ({
           // Move case image a bit higher (reduce top position)
           top = canvasHeight / 2 - (canvasHeight * 0.05); // Move up by 5% of canvas height
           // Fixed scaling for the case image - bigger but fits without cutting
-          const isMobile = window.innerWidth < 768;
-          const scaleMultiplier = isMobile ? 0.95 : 1; // Fits within canvas on mobile, bigger on desktop
+          const screenWidth = window.innerWidth;
+          const isMobile = screenWidth < 768;
+          const isMediumScreen = screenWidth >= 768 && screenWidth < 1024;
+          // Scale multiplier: mobile 0.95, medium 0.85, large 0.7
+          const scaleMultiplier = isMobile ? 0.95 : (isMediumScreen ? 0.85 : 0.7);
           const scale = Math.min(
             canvasWidth * scaleMultiplier / imgElement.width,
             canvasHeight * scaleMultiplier / imgElement.height
@@ -91,132 +99,132 @@ const Canvas = ({
         });
   
         if (isCase) {
-          imgInstance.set('evented', false);
-          caseInstanceRef.current = imgInstance;
-          fabricCanvas.current.add(imgInstance);
-          // Ensure background stays at the back, then case, then other elements
-          if (backgroundRectRef.current) {
-            fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
-          }
-          fabricCanvas.current.sendObjectToBack(imgInstance);
-          
-          // Create red boundary rectangle after case is loaded
-          setTimeout(() => {
-            if (boundaryRectRef.current) {
-              fabricCanvas.current.remove(boundaryRectRef.current);
-            }
-            if (boundaryTextRef.current) {
-              fabricCanvas.current.remove(boundaryTextRef.current);
-            }
-            
-            // Remove existing case border if any
-            if (caseBorderRectRef.current) {
-              fabricCanvas.current.remove(caseBorderRectRef.current);
-            }
-            
-            const rect = imgInstance.getBoundingRect();
-            // Add inset to make boundary smaller (inside the case image)
-            // Separate horizontal and vertical insets - larger horizontal for smaller width
-            // Business class case needs wider boundary (more inset from edges)
-            // On mobile, use minimal insets to maximize usable area
-            const isMobile = window.innerWidth < 768;
-            const isLargeScreen = window.innerWidth >= 1024; // lg breakpoint
-            // Left margin is wider, right margin is smaller - but overall more area
-            // Economy class cases get wider area (smaller insets)
-            const insetHorizontalLeft = isMobile
-              ? (selectedCaseType === 'business' ? 15 : 10)  // Minimal insets on mobile (scaled proportionally)
-              : isLargeScreen
-                ? (selectedCaseType === 'business' ? 20 : 15)  // Wider left margin, Economy gets more area
-                : (selectedCaseType === 'business' ? 140 : 120); // Original insets on desktop
-            const insetHorizontalRight = isMobile
-              ? (selectedCaseType === 'business' ? 15 : 10)  // Minimal insets on mobile (scaled proportionally)
-              : isLargeScreen
-                ? (selectedCaseType === 'business' ? 3 : 1)  // Very small right margin, Economy gets more area
-                : (selectedCaseType === 'business' ? 140 : 120); // Original insets on desktop
-            const insetVertical = isMobile
-              ? (selectedCaseType === 'business' ? 5 : 4)  // Minimal insets on mobile (scaled proportionally)
-              : isLargeScreen
-                ? (selectedCaseType === 'business' ? 2 : 0.5)  // Very minimal vertical insets, Economy gets more area
-                : (selectedCaseType === 'business' ? 50 : 40); // Original insets on desktop
-            const boundaryRect = new fabric.Rect({
-              left: rect.left + insetHorizontalLeft,
-              top: rect.top + insetVertical,
-              width: rect.width - (insetHorizontalLeft + insetHorizontalRight),
-              height: rect.height - (insetVertical * 2),
-              fill: 'transparent',
-              stroke: 'rgba(239, 68, 68, 0.7)', // Red - shown only when charm is near boundary
-              strokeWidth: 2,
-              strokeDashArray: [5, 5],
-              selectable: false,
-              evented: false,
-              visible: false, // Hidden by default, shown only when charm is near boundary
-            });
-            
-            boundaryRectRef.current = boundaryRect;
-            fabricCanvas.current.add(boundaryRect);
-            // Ensure background stays at the very back
-            if (backgroundRectRef.current) {
-              fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
-            }
-            fabricCanvas.current.sendObjectToBack(boundaryRect);
-            
-            // Create "Limit Area" text message
-            const boundaryText = new fabric.Text('Limit Area', {
-              left: rect.left + insetHorizontalLeft + 10,
-              top: rect.top + insetVertical + 5,
-              fontSize: 12,
-              fill: 'rgba(239, 68, 68, 0.9)',
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 'bold',
-              selectable: false,
-              evented: false,
-              visible: false, // Hidden by default, shown only when boundary is visible
-            });
-            
-            boundaryTextRef.current = boundaryText;
-            fabricCanvas.current.add(boundaryText);
-            fabricCanvas.current.sendObjectToBack(boundaryText);
-            
-            // Create red border around the case image itself (shown when charm is at edge)
-            // Make border wider for business and first class cases
-            const borderWidth = (selectedCaseType === 'business' || selectedCaseType === 'firstclass') ? 5 : 3;
-            const caseBorderRect = new fabric.Rect({
-              left: rect.left,
-              top: rect.top,
-              width: rect.width,
-              height: rect.height,
-              fill: 'transparent',
-              stroke: 'red',
-              strokeWidth: borderWidth,
-              selectable: false,
-              evented: false,
-              visible: false, // Hidden by default, shown when charm is at edge
-            });
-            
-            caseBorderRectRef.current = caseBorderRect;
-            fabricCanvas.current.add(caseBorderRect);
-            // Ensure background stays at the very back
-            if (backgroundRectRef.current) {
-              fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
-            }
-            fabricCanvas.current.sendObjectToBack(caseBorderRect);
-            fabricCanvas.current.sendObjectToBack(imgInstance);
-            
-            fabricCanvas.current.renderAll();
-          }, 100);
+          // Case images are now handled as CSS background, so we don't add them to canvas
+          // This function is kept for pins and other images
+          resolve(null);
+          return;
         } else {
+          // For non-case images (pins), add them to canvas
           fabricCanvas.current.add(imgInstance);
+          resolve(imgInstance);
         }
-  
-        fabricCanvas.current.renderAll();
-        resolve(imgInstance);
       };
   
       imgElement.onerror = reject;
     });
   };
-  
-  
+
+  // Create case border rectangle
+  const createCaseBorder = useCallback(() => {
+    if (!fabricCanvas.current || !containerRef.current) return;
+
+    // Remove existing case border
+    if (caseBorderRectRef.current) {
+      fabricCanvas.current.remove(caseBorderRectRef.current);
+    }
+
+    const canvasWidth = fabricCanvas.current.getWidth();
+    const canvasHeight = fabricCanvas.current.getHeight();
+    
+    // Create visible border around the canvas area to show Fabric.js size
+    // Account for stroke width so all edges are visible
+    const strokeWidth = 2;
+    const halfStroke = strokeWidth / 2;
+    const caseBorderRect = new fabric.Rect({
+      left: halfStroke,
+      top: halfStroke,
+      width: canvasWidth - strokeWidth,
+      height: canvasHeight - strokeWidth,
+      fill: 'transparent',
+      stroke: 'blue',
+      strokeWidth: strokeWidth,
+      selectable: false,
+      evented: false,
+      visible: false, // Hidden - blue edge line removed
+    });
+    
+    caseBorderRectRef.current = caseBorderRect;
+    fabricCanvas.current.add(caseBorderRect);
+    fabricCanvas.current.sendObjectToBack(caseBorderRect);
+    
+    // Canvas dimension text removed - no longer showing canvas area
+    
+    // Remove existing limit lines if they exist
+    if (topLimitRef.current) fabricCanvas.current.remove(topLimitRef.current);
+    if (rightLimitRef.current) fabricCanvas.current.remove(rightLimitRef.current);
+    if (bottomLimitRef.current) fabricCanvas.current.remove(bottomLimitRef.current);
+    if (leftLimitRef.current) fabricCanvas.current.remove(leftLimitRef.current);
+    // Create all 4 limit lines at 0px offset (canvas edges)
+    // Top limit line
+    const topLimitLine = new fabric.Line(
+      [0, 0, canvasWidth, 0],
+      {
+        stroke: 'red',
+        strokeWidth: 2,
+        strokeDashArray: [10, 5],
+        selectable: false,
+        evented: false,
+        visible: false,
+      }
+    );
+    topLimitRef.current = topLimitLine;
+    fabricCanvas.current.add(topLimitLine);
+    fabricCanvas.current.sendObjectToBack(topLimitLine);
+    
+    // Right limit line
+    const rightLimitLine = new fabric.Line(
+      [canvasWidth, 0, canvasWidth, canvasHeight],
+      {
+        stroke: 'red',
+        strokeWidth: 2,
+        strokeDashArray: [10, 5],
+        selectable: false,
+        evented: false,
+        visible: false,
+      }
+    );
+    rightLimitRef.current = rightLimitLine;
+    fabricCanvas.current.add(rightLimitLine);
+    fabricCanvas.current.sendObjectToBack(rightLimitLine);
+    
+    // Bottom limit line
+    const bottomLimitLine = new fabric.Line(
+      [0, canvasHeight, canvasWidth, canvasHeight],
+      {
+        stroke: 'red',
+        strokeWidth: 2,
+        strokeDashArray: [10, 5],
+        selectable: false,
+        evented: false,
+        visible: false,
+      }
+    );
+    bottomLimitRef.current = bottomLimitLine;
+    fabricCanvas.current.add(bottomLimitLine);
+    fabricCanvas.current.sendObjectToBack(bottomLimitLine);
+    
+    // Left limit line
+    const leftLimitLine = new fabric.Line(
+      [0, 0, 0, canvasHeight],
+      {
+        stroke: 'red',
+        strokeWidth: 2,
+        strokeDashArray: [10, 5],
+        selectable: false,
+        evented: false,
+        visible: false,
+      }
+    );
+    leftLimitRef.current = leftLimitLine;
+    fabricCanvas.current.add(leftLimitLine);
+    fabricCanvas.current.sendObjectToBack(leftLimitLine);
+    
+    if (backgroundRectRef.current) {
+      fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+    }
+    
+    fabricCanvas.current.renderAll();
+  }, []);
 
   // Create or update border rectangle for selected object
   const updateBorderRect = useCallback((obj) => {
@@ -247,7 +255,7 @@ const Canvas = ({
       fill: 'transparent',
       stroke: '#111827',
       strokeWidth: 1,
-      strokeDashArray: [3, 3], // Dashed border (dots)
+      strokeDashArray: [4, 4], // Dashed border (dots)
       selectable: false,
       evented: false,
       excludeFromExport: false,
@@ -257,20 +265,9 @@ const Canvas = ({
     fabricCanvas.current.add(borderRect);
     
     // Position border above case but below the selected object
-    // Ensure background is at the very back, then case, then other elements
+    // Ensure background is at the very back, then boundary elements, then other elements
     if (backgroundRectRef.current) {
       fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
-    }
-    const caseInstance = caseInstanceRef.current;
-    if (caseInstance) {
-      fabricCanvas.current.sendObjectToBack(caseInstance);
-    }
-    // Ensure boundary rect, text, and case border are also at the back
-    if (boundaryRectRef.current) {
-      fabricCanvas.current.sendObjectToBack(boundaryRectRef.current);
-    }
-    if (boundaryTextRef.current) {
-      fabricCanvas.current.sendObjectToBack(boundaryTextRef.current);
     }
     if (caseBorderRectRef.current) {
       fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
@@ -328,23 +325,16 @@ const Canvas = ({
   }, []);
 
 
-  const resizeCanvasToFitScreen = () => {
+  const resizeCanvasToFitScreen = useCallback(() => {
     const canvas = fabricCanvas.current;
-    if (!canvas || !canvasRef.current) return;
+    if (!canvas || !canvasRef.current || !containerRef.current) return;
   
-    const container = canvasRef.current.parentElement;
-    if (!container) return;
-  
-    const containerWidth = container.clientWidth;
-    const isMobile = window.innerWidth < 768;
-    
-    // Use container width, but ensure minimum size and max size for mobile
-    // For very small screens (iPhone SE), use smaller canvas
-    const isSmallScreen = window.innerWidth < 375; // iPhone SE width
-    const canvasWidth = isMobile 
-      ? (isSmallScreen ? Math.max(280, Math.min(containerWidth, 320)) : Math.max(300, Math.min(containerWidth, 360)))
-      : Math.min(500, containerWidth);
-    const canvasHeight = isMobile ? (isSmallScreen ? canvasWidth * 1.1 : canvasWidth * 1.2) : canvasWidth; // Slightly shorter on very small screens
+    // Fixed size for all screen sizes
+    const canvasWidth = 450;
+    const canvasHeight = 450;
+
+    const oldWidth = canvas.getWidth();
+    const oldHeight = canvas.getHeight();
   
     canvas.setWidth(canvasWidth);
     canvas.setHeight(canvasHeight);
@@ -357,31 +347,55 @@ const Canvas = ({
       });
       canvas.sendObjectToBack(backgroundRectRef.current);
     }
+
+    // Scale all objects proportionally if canvas size changed
+    if (oldWidth !== canvasWidth || oldHeight !== canvasHeight) {
+      const scaleX = oldWidth > 0 ? canvasWidth / oldWidth : 1;
+      const scaleY = oldHeight > 0 ? canvasHeight / oldHeight : 1;
+
+      const objects = canvas.getObjects();
+      objects.forEach(obj => {
+        if (obj !== backgroundRectRef.current) {
+          // Check if this is a pin (charms image) - pins have pinData property
+          const isPin = obj.pinData !== undefined;
+          
+          if (isPin) {
+            // For pins: only scale position, keep size the same
+            obj.left = (obj.left || 0) * scaleX;
+            obj.top = (obj.top || 0) * scaleY;
+            // Don't scale pin size - keep original scaleX and scaleY
+            obj.setCoords();
+            // Update border rectangle for this pin
+            updateBorderRect(obj);
+          } else {
+            // For other objects (text, boundaries, etc.): scale both position and size
+            obj.scaleX = (obj.scaleX || 1) * scaleX;
+            obj.scaleY = (obj.scaleY || 1) * scaleY;
+            obj.left = (obj.left || 0) * scaleX;
+            obj.top = (obj.top || 0) * scaleY;
+            obj.setCoords();
+          }
+        }
+      });
+
+      // Recreate case border with new dimensions
+      createCaseBorder();
+    }
     
     canvas.renderAll();
-  };
+  }, [createCaseBorder, updateBorderRect]);
   // Initialize canvas
   useEffect(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !containerRef.current) return;
   
-    const container = canvasRef.current.parentElement;
-    if (!container) return;
-  
-    const containerWidth = container.clientWidth;
-    const isMobile = window.innerWidth < 768;
-    
-    // Use container width, but ensure minimum size and max size for mobile
-    // For very small screens (iPhone SE), use smaller canvas
-    const isSmallScreen = window.innerWidth < 375; // iPhone SE width
-    const canvasWidth = isMobile 
-      ? (isSmallScreen ? Math.max(280, Math.min(containerWidth, 320)) : Math.max(300, Math.min(containerWidth, 360)))
-      : Math.min(500, containerWidth);
-    const canvasHeight = isMobile ? (isSmallScreen ? canvasWidth * 1.1 : canvasWidth * 1.2) : canvasWidth; // Slightly shorter on very small screens
-  
+    // Fixed size for all screen sizes
+    const canvasWidth = 450;
+    const canvasHeight = 450;
+
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,
       height: canvasHeight,
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent' // Transparent so background image shows through
     });
     
     // Create background rectangle
@@ -403,24 +417,32 @@ const Canvas = ({
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
       const obj = e.target;
-      if (!obj || !obj.getBoundingRect || obj.isCase || obj === boundaryRectRef.current || obj === boundaryTextRef.current || obj === caseBorderRectRef.current) return; // Skip case object, boundary, text, and case border
+      if (!obj || !obj.getBoundingRect || obj.isCase || obj === caseBorderRectRef.current || 
+          obj === topLimitRef.current || obj === rightLimitRef.current || 
+          obj === bottomLimitRef.current || obj === leftLimitRef.current) return; // Skip case object, case border, and all limit elements
       
-      // Get case bounds for constraint
-      const caseInstance = caseInstanceRef.current;
-      if (!caseInstance) return;
+      // Get canvas bounds for constraint (case is now background image)
+      if (!fabricCanvas.current) return;
       
       // Update object coordinates first to ensure accurate calculations
       obj.setCoords();
       
-      const caseRect = caseInstance.getBoundingRect();
+      const canvasWidth = fabricCanvas.current.getWidth();
+      const canvasHeight = fabricCanvas.current.getHeight();
+      const caseRect = {
+        left: 0,
+        top: 0,
+        width: canvasWidth,
+        height: canvasHeight
+      };
       const objRect = obj.getBoundingRect(true);
       
       // Check if we're on mobile
       const isMobile = window.innerWidth < 768;
       
-      // Calculate the actual bounds of the case image with inset (matching the red boundary)
-      // Separate horizontal and vertical insets to match the red boundary
-      // Business class case needs wider boundary (more inset from edges)
+      // Calculate the actual bounds of the case image with inset
+      // Separate horizontal and vertical insets for case bounds
+      // Business class case needs wider margins (more inset from edges)
       // On mobile, use minimal insets to maximize usable area
       const isLargeScreen = window.innerWidth >= 1024; // lg breakpoint
       // Left margin is wider, right margin is smaller - but overall more area
@@ -445,51 +467,51 @@ const Canvas = ({
       const caseRight = caseRect.left + caseRect.width - insetHorizontalRight;
       const caseBottom = caseRect.top + caseRect.height - insetVertical;
       
-      // Check if object is near or over the boundary line (within threshold)
-      const threshold = 1; // Distance threshold to show boundary (smaller margin to show warning when closer to edge)
-      const isNearLeft = objRect.left <= caseLeft + threshold && objRect.left + objRect.width >= caseLeft;
-      const isNearRight = objRect.left <= caseRight && objRect.left + objRect.width >= caseRight - threshold;
-      const isNearTop = objRect.top <= caseTop + threshold && objRect.top + objRect.height >= caseTop;
-      const isNearBottom = objRect.top <= caseBottom && objRect.top + objRect.height >= caseBottom - threshold;
-      const isOverBoundary = isNearLeft || isNearRight || isNearTop || isNearBottom;
-      
-      // Show boundary only when charm is near/over it
-      if (boundaryRectRef.current) {
-        if (isOverBoundary) {
-          boundaryRectRef.current.set({
-            visible: true,
-            stroke: 'rgba(239, 68, 68, 0.7)', // Red when near boundary
-            strokeWidth: 2
-          });
-          // Show limit area text
-          if (boundaryTextRef.current) {
-            boundaryTextRef.current.set({
-              visible: true
-            });
-          }
-        } else {
-          boundaryRectRef.current.set({
-            visible: false // Hide when not near boundary
-          });
-          // Hide limit area text
-          if (boundaryTextRef.current) {
-            boundaryTextRef.current.set({
-              visible: false
-            });
-          }
-        }
-      }
-      
       // Hide red border around the case image (no longer showing it)
       if (caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
       }
       
-      if (isOverBoundary) {
-        fabricCanvas.current.renderAll();
+      // Check if object is a charm (pin) and if it's over any edge (0px offset)
+      const isPin = obj.pinData !== undefined;
+      if (isPin) {
+        // Check all 4 edges at 0px offset (canvas boundaries)
+        const isOverTop = objRect.top < 0;
+        const isOverRight = objRect.left + objRect.width > canvasWidth;
+        const isOverBottom = objRect.top + objRect.height > canvasHeight;
+        const isOverLeft = objRect.left < 0;
+        const isOverAnyEdge = isOverTop || isOverRight || isOverBottom || isOverLeft;
+        
+        // Show/hide limit lines based on which edge is crossed
+        if (topLimitRef.current) {
+          topLimitRef.current.set({ visible: isOverTop });
+        }
+        if (rightLimitRef.current) {
+          rightLimitRef.current.set({ visible: isOverRight });
+        }
+        if (bottomLimitRef.current) {
+          bottomLimitRef.current.set({ visible: isOverBottom });
+        }
+        if (leftLimitRef.current) {
+          leftLimitRef.current.set({ visible: isOverLeft });
+        }
+        
+        // Show invalid position alert if over any edge
+        setShowInvalidPositionAlert(isOverAnyEdge);
+        
+        if (isOverAnyEdge) {
+          fabricCanvas.current.renderAll();
+        }
+      } else {
+        // Hide all limits if not a pin
+        if (topLimitRef.current) topLimitRef.current.set({ visible: false });
+        if (rightLimitRef.current) rightLimitRef.current.set({ visible: false });
+        if (bottomLimitRef.current) bottomLimitRef.current.set({ visible: false });
+        if (leftLimitRef.current) leftLimitRef.current.set({ visible: false });
+        setShowInvalidPositionAlert(false);
       }
       
-      // Keep object within case bounds (strictly inside the red boundary)
+      // Keep object within case bounds
       // Use minimal margin on mobile to maximize usable area
       const margin = isMobile ? 0.1 : 1; // Minimal margin on mobile
       const tolerance = 0.1; // Tolerance to prevent unnecessary updates
@@ -506,7 +528,7 @@ const Canvas = ({
       let needsUpdate = false;
       
       // Constrain horizontal position (accounting for center origin)
-      // Keep object strictly inside the boundary (left edge)
+      // Keep object strictly inside the case bounds (left edge)
       if (objRect.left < caseLeft + margin) {
         const constrainedLeft = caseLeft + margin + halfWidth;
         if (Math.abs(newLeft - constrainedLeft) > tolerance) {
@@ -514,7 +536,7 @@ const Canvas = ({
           needsUpdate = true;
         }
       }
-      // Keep object strictly inside the boundary (right edge)
+      // Keep object strictly inside the case bounds (right edge)
       if (objRect.left + objWidth > caseRight - margin) {
         const constrainedLeft = caseRight - margin - halfWidth;
         if (Math.abs(newLeft - constrainedLeft) > tolerance) {
@@ -524,7 +546,7 @@ const Canvas = ({
       }
       
       // Constrain vertical position (accounting for center origin)
-      // Keep object strictly inside the boundary (top edge)
+      // Keep object strictly inside the case bounds (top edge)
       if (objRect.top < caseTop + margin) {
         const constrainedTop = caseTop + margin + halfHeight;
         if (Math.abs(newTop - constrainedTop) > tolerance) {
@@ -586,22 +608,18 @@ const Canvas = ({
     fabricCanvas.current.on('object:modified', (e) => {
       const obj = e.target;
       
-      // Hide boundary when object movement is complete
-      if (boundaryRectRef.current && obj && !obj.isCase && obj !== boundaryRectRef.current) {
-        boundaryRectRef.current.set({
-          visible: false
-        });
-      }
-      // Hide limit area text when object movement is complete
-      if (boundaryTextRef.current && obj && !obj.isCase && obj !== boundaryTextRef.current) {
-        boundaryTextRef.current.set({
-          visible: false
-        });
-      }
       if (caseBorderRectRef.current && obj && !obj.isCase && obj !== caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
       }
-      if (obj && !obj.isCase && obj !== boundaryRectRef.current && obj !== boundaryTextRef.current && obj !== caseBorderRectRef.current) {
+      
+      // Hide all limit lines when object movement is complete
+      if (topLimitRef.current) topLimitRef.current.set({ visible: false });
+      if (rightLimitRef.current) rightLimitRef.current.set({ visible: false });
+      if (bottomLimitRef.current) bottomLimitRef.current.set({ visible: false });
+      if (leftLimitRef.current) leftLimitRef.current.set({ visible: false });
+      setShowInvalidPositionAlert(false);
+      
+      if (obj && !obj.isCase && obj !== caseBorderRectRef.current) {
         fabricCanvas.current.renderAll();
       }
       
@@ -745,21 +763,17 @@ const Canvas = ({
     });
 
     fabricCanvas.current.on('selection:cleared', () => {
-      // Hide boundary when selection is cleared
-      if (boundaryRectRef.current) {
-        boundaryRectRef.current.set({
-          visible: false
-        });
-      }
-      // Hide limit area text when selection is cleared
-      if (boundaryTextRef.current) {
-        boundaryTextRef.current.set({
-          visible: false
-        });
-      }
       if (caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
       }
+      
+      // Hide all limit lines when selection is cleared
+      if (topLimitRef.current) topLimitRef.current.set({ visible: false });
+      if (rightLimitRef.current) rightLimitRef.current.set({ visible: false });
+      if (bottomLimitRef.current) bottomLimitRef.current.set({ visible: false });
+      if (leftLimitRef.current) leftLimitRef.current.set({ visible: false });
+      setShowInvalidPositionAlert(false);
+      
       // Remove all custom border rectangles when selection is cleared
       borderRectsRef.current.forEach((borderRect, obj) => {
         fabricCanvas.current.remove(borderRect);
@@ -771,18 +785,23 @@ const Canvas = ({
       onPinSelect && onPinSelect(null);
     });
 
-    // Window resize handler
-     const handleResize = () => {
-    resizeCanvasToFitScreen();
-  };
+    // Window resize handler with debounce
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        resizeCanvasToFitScreen();
+      }, 150);
+    };
     
-  window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
 
     // Store refs in variables for cleanup
     const borderRects = borderRectsRef.current;
     const canvas = fabricCanvas.current;
     
     return () => {
+      clearTimeout(resizeTimeout);
       window.removeEventListener('resize', handleResize);
       // Clean up border rectangles
       if (canvas && borderRects) {
@@ -793,7 +812,7 @@ const Canvas = ({
       }
       canvas?.dispose();
     };
-}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect]);
+}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect, selectedCaseType, selectedColor, products, createCaseBorder, resizeCanvasToFitScreen]);
 
   // Update controls position when selectedPin changes
   useEffect(() => {
@@ -876,9 +895,9 @@ const Canvas = ({
     [updateControls, updateBorderRect]
   );
 
-  // Load case image when case type or color changes
+  // Update case image URL for background when case type or color changes
   useEffect(() => {
-    if (!fabricCanvas.current || !selectedCaseType || !selectedColor) return;
+    if (!selectedCaseType || !selectedColor || !products) return;
 
     const selectedCase = products.cases.find(c => c.type === selectedCaseType);
     if (!selectedCase) return;
@@ -886,35 +905,40 @@ const Canvas = ({
     const selectedColorData = selectedCase.colors.find(c => c.color === selectedColor);
     if (!selectedColorData) return;
 
-    // Check if case already exists to avoid reloading
-    const existingCase = fabricCanvas.current.getObjects().find(obj => obj.isCase);
-    if (existingCase && existingCase.src === selectedColorData.image) {
-      return; // Case already loaded with correct image
+    // Update background image URL
+    setCaseImageUrl(selectedColorData.image);
+
+    // Remove old case objects and case border from canvas
+    if (fabricCanvas.current) {
+      const objects = fabricCanvas.current.getObjects();
+      objects.forEach(obj => {
+        if (obj.isCase || obj === caseBorderRectRef.current ||
+            obj === topLimitRef.current || obj === rightLimitRef.current ||
+            obj === bottomLimitRef.current || obj === leftLimitRef.current) {
+          fabricCanvas.current.remove(obj);
+        }
+      });
+      // Clear all border rectangles
+      borderRectsRef.current.forEach((borderRect) => {
+        fabricCanvas.current.remove(borderRect);
+      });
+      borderRectsRef.current.clear();
+      caseInstanceRef.current = null;
+      caseBorderRectRef.current = null;
+      topLimitRef.current = null;
+      rightLimitRef.current = null;
+      bottomLimitRef.current = null;
+      leftLimitRef.current = null;
+
+      // Recreate case border after a short delay to ensure container is ready
+      setTimeout(() => {
+        if (fabricCanvas.current && containerRef.current) {
+          createCaseBorder();
+        }
+      }, 100);
     }
 
-    // Remove old case objects, boundary, text, case border, and border rectangles
-    const objects = fabricCanvas.current.getObjects();
-    objects.forEach(obj => {
-      if (obj.isCase || obj === boundaryRectRef.current || obj === boundaryTextRef.current || obj === caseBorderRectRef.current) {
-        fabricCanvas.current.remove(obj);
-      }
-    });
-    // Clear all border rectangles
-    borderRectsRef.current.forEach((borderRect) => {
-      fabricCanvas.current.remove(borderRect);
-    });
-    borderRectsRef.current.clear();
-    caseInstanceRef.current = null;
-    boundaryRectRef.current = null;
-    boundaryTextRef.current = null;
-    caseBorderRectRef.current = null;
-
-    // Load new case image
-    loadImage(selectedColorData.image, true).then((caseInstance) => {
-      fabricCanvas.current.renderAll();
-    });
-
-  }, [selectedCaseType, selectedColor, products.cases]);
+  }, [selectedCaseType, selectedColor, products, createCaseBorder]);
 
   // Handle pin selection from PinSelector
   const handlePinSelection = useCallback(async (pin) => {
@@ -923,9 +947,8 @@ const Canvas = ({
     console.log('Adding pin to canvas:', pin.name); // Debug log
 
     try {
-      // Adjust pin size based on screen size - increased for better visibility
-      const isMobile = window.innerWidth < 768;
-      let basePinSize = isMobile ? 120 : 150;
+      // Fixed pin size for all screen sizes
+      const basePinSize = 150;
       
       // Use size multiplier from pin data (default to 1.0 if not specified)
       const sizeMultiplier = pin.size !== undefined ? pin.size : 1.0;
@@ -1014,16 +1037,8 @@ const Canvas = ({
   const handleSaveImage = () => {
     if (!fabricCanvas.current) return;
 
-    // Temporarily hide boundary, text, and case border for export
-    const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
-    const boundaryTextVisible = boundaryTextRef.current ? boundaryTextRef.current.visible : true;
+    // Temporarily hide case border for export
     const caseBorderVisible = caseBorderRectRef.current ? caseBorderRectRef.current.visible : true;
-    if (boundaryRectRef.current) {
-      boundaryRectRef.current.visible = false;
-    }
-    if (boundaryTextRef.current) {
-      boundaryTextRef.current.visible = false;
-    }
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = false;
     }
@@ -1036,17 +1051,11 @@ const Canvas = ({
       backgroundColor: 'white'
     });
 
-    // Restore boundary, text, and case border visibility
-    if (boundaryRectRef.current) {
-      boundaryRectRef.current.visible = boundaryVisible;
-    }
-    if (boundaryTextRef.current) {
-      boundaryTextRef.current.visible = boundaryTextVisible;
-    }
+    // Restore case border visibility
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = caseBorderVisible;
     }
-    if (boundaryRectRef.current || boundaryTextRef.current || caseBorderRectRef.current) {
+    if (caseBorderRectRef.current) {
       fabricCanvas.current.renderAll();
     }
 
@@ -1065,16 +1074,8 @@ const Canvas = ({
   const getDesignImageDataURL = () => {
     if (!fabricCanvas.current) return null;
     
-    // Temporarily hide boundary, text, and case border for export
-    const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
-    const boundaryTextVisible = boundaryTextRef.current ? boundaryTextRef.current.visible : true;
+    // Temporarily hide case border for export
     const caseBorderVisible = caseBorderRectRef.current ? caseBorderRectRef.current.visible : true;
-    if (boundaryRectRef.current) {
-      boundaryRectRef.current.visible = false;
-    }
-    if (boundaryTextRef.current) {
-      boundaryTextRef.current.visible = false;
-    }
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = false;
     }
@@ -1086,17 +1087,11 @@ const Canvas = ({
       backgroundColor: 'white'
     });
 
-    // Restore boundary, text, and case border visibility
-    if (boundaryRectRef.current) {
-      boundaryRectRef.current.visible = boundaryVisible;
-    }
-    if (boundaryTextRef.current) {
-      boundaryTextRef.current.visible = boundaryTextVisible;
-    }
+    // Restore case border visibility
     if (caseBorderRectRef.current) {
       caseBorderRectRef.current.visible = caseBorderVisible;
     }
-    if (boundaryRectRef.current || boundaryTextRef.current || caseBorderRectRef.current) {
+    if (caseBorderRectRef.current) {
       fabricCanvas.current.renderAll();
     }
 
@@ -1106,18 +1101,45 @@ const Canvas = ({
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
-    <div className="w-full flex flex-col items-center overflow-hidden" style={{scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'hidden', touchAction: isMobile ? 'none' : 'auto'}}>
-      <div className="happy-card p-2 sm:p-6 mb-2 relative flex items-center justify-center w-[320px] xs:w-[380px] sm:w-[580px] overflow-visible" style={{aspectRatio: window.innerWidth < 768 ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1', maxWidth: '100%', scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'visible', touchAction: isMobile ? 'none' : 'auto'}}>
+    <div className="flex flex-col items-center justify-center overflow-visible w-[350px] mx-auto" style={{scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'visible', touchAction: isMobile ? 'none' : 'auto', marginBottom: isMobile ? '20px' : '0'}}>
+      <div 
+        ref={containerRef}
+        className="happy-card h-[480px] p-2 mt-0 sm:p-6 mb-2 relative flex items-center justify-center w-full overflow-visible  " 
+        style={{
+         
+          scrollbarWidth: 'none', 
+          msOverflowStyle: 'none', 
+          overflow: 'visible', 
+          touchAction: isMobile ? 'none' : 'auto',
+          aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1/1',
+          zIndex: isMobile ? 10 : 'auto',
+          marginBottom: isMobile ? '30px' : '0',
+        }}
+      >
+        {/* Background Image Div */}
+        <div
+          className="absolute inset-0 w-full h-full flex items-center justify-center mt-6"
+          style={{
+            backgroundImage: caseImageUrl ? `url(${caseImageUrl})` : 'none',
+            backgroundSize: '80%',
+            backgroundPosition: 'top',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: 'transparent',
+          }}
+        />
+        
+        {/* Fabric.js Canvas Overlay */}
         <canvas 
           ref={canvasRef} 
-          className="max-w-full"
+          className="relative z-10 max-w-full w-full bg-black "
           style={{ 
             background: 'transparent',
             maxWidth: '100%',
-            height: 'auto',
+            width: '100%',
+            height: '100%',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            overflow: 'hidden',
+            overflow: 'visible',
             touchAction: isMobile ? 'none' : 'auto',
             display: 'block'
           }}
@@ -1164,6 +1186,19 @@ const Canvas = ({
           </div>
         )}
       </div>
+      
+      {/* Invalid Position Alert */}
+      {showInvalidPositionAlert && (
+        <div className="mt-4 w-full max-w-[450px] mx-auto">
+          <div 
+            className="px-4 py-3 rounded-md shadow-lg border-2  bg-red-500"
+          >
+            <p className="text-sm font-semibold text-center text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              Position is invalid, out of the edge limit
+            </p>
+          </div>
+        </div>
+      )}
       
     </div>
   );

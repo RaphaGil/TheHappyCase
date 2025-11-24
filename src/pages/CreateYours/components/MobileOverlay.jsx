@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ColorSelector from '../../../component/ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../constants';
 import { filterPinsByCategory } from '../filterHelpers';
@@ -24,24 +24,45 @@ const MobileOverlay = ({
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const filterDropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (only when dropdown is open)
   useEffect(() => {
+    if (!isFilterDropdownOpen) return;
+
     const handleClickOutside = (event) => {
       if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
         setIsFilterDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    // Use setTimeout to avoid immediate closure
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+    }, 10);
+
     return () => {
+      clearTimeout(timeoutId);
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isFilterDropdownOpen]);
+
+  // Filter pins by subcategory - recalculate when pins, selectedCategory, or mobileSubCategory changes
+  // Must be before early return to follow React hooks rules
+  const filteredPinsForMobile = useMemo(() => {
+    if (!mobileCurrentStep || mobileCurrentStep === 'text') return [];
+    if (!pins || pins.length === 0) return [];
+    if (!selectedCategory) return pins;
+    
+    // If 'all' is selected, return all pins for the category
+    if (mobileSubCategory === 'all') {
+      return pins;
+    }
+    
+    // Otherwise, filter by subcategory
+    return filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
+  }, [pins, selectedCategory, mobileSubCategory, mobileCurrentStep]);
 
   // Don't show overlay for 'text' step - it's handled inline in the bottom section
   if (!mobileCurrentStep || mobileCurrentStep === 'text') return null;
-
-  const filteredPinsForMobile = filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
 
   const getFilterTabs = () => {
     if (selectedCategory === 'flags') return FLAGS_FILTER_TABS;
@@ -54,30 +75,37 @@ const MobileOverlay = ({
   const selectedFilterTab = filterTabs.find(tab => tab.key === mobileSubCategory);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className={`bg-white rounded-sm p-6 w-full overflow-y-auto  ${
-        mobileCurrentStep === 'charms' 
-          ? 'max-w-sm h-fit' 
-          : 'max-w-sm max-h-[80vh]'
-      }`}>
-        <div className="flex justify-between items-center mb-6 pb-4">
-          <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4"
+      onClick={() => setMobileCurrentStep(null)}
+    >
+      <div 
+        className={`bg-white rounded-lg p-5 w-full overflow-y-auto shadow-lg ${
+          mobileCurrentStep === 'charms' 
+            ? 'max-w-sm h-fit max-h-[90vh]' 
+            : 'max-w-sm max-h-[85vh]'
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-center mb-5 pb-4 border-b border-gray-100">
+          <h2 className="text-base uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
             {mobileCurrentStep === 'case' && 'Choose Case'}
             {mobileCurrentStep === 'color' && 'Choose Color'}
             {mobileCurrentStep === 'charms' && 'Choose Charms'}
           </h2>
           <button
             onClick={() => setMobileCurrentStep(null)}
-            className="p-1 hover:bg-gray-50 transition-colors"
+            className="p-1.5 hover:bg-gray-50 rounded transition-colors"
+            aria-label="Close modal"
           >
             <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
         
         {/* Step Content */}
-        <div className="space-y-4">
+        <div className="space-y-4 pt-2">
           {mobileCurrentStep === 'case' && (
             <div>
               <div className="grid grid-cols-3 gap-3">
@@ -103,33 +131,42 @@ const MobileOverlay = ({
                   const soldOut = isCaseSoldOut();
                   
                   return (
-                    <div key={opt.value} className="flex flex-col items-center gap-1">
+                    <div key={opt.value} className="flex flex-col items-center gap-2">
                       <button
                         onClick={() => !soldOut && handleCaseTypeSelection(opt.value)}
                         disabled={soldOut}
-                        className={`p-3 transition-all duration-200 flex flex-col items-center gap-2 w-full ${
+                        className={`p-2.5 flex flex-col items-center gap-2 w-full rounded-lg transition-colors ${
                           selectedCaseType === opt.value
-                            ? 'bg-gray-50 text-gray-900 font-medium '
-                            : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300'
-                        } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            ? 'bg-gray-50'
+                            : 'hover:bg-gray-50'
+                        } ${soldOut ? 'opacity-40 cursor-not-allowed' : ''}`}
                         style={{fontFamily: "'Poppins', sans-serif"}}
                       >
                         {caseImage && (
-                          <div className="w-full aspect-square bg-gray-50 rounded overflow-hidden">
+                          <div className="relative flex items-center justify-center rounded" style={{ width: '5rem', height: '5rem', overflow: 'visible' }}>
                             <img
                               src={caseImage}
                               alt={opt.label}
-                              className={`w-full h-full object-contain p-2 ${soldOut ? 'opacity-50' : ''}`}
+                              className={`max-w-full max-h-full object-contain ${soldOut ? 'opacity-50' : ''}`}
                               onError={(e) => {
                                 e.target.style.display = 'none';
                               }}
                             />
+                            {selectedCaseType === opt.value && !soldOut && (
+                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
+                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            )}
                           </div>
                         )}
-                        <span className="text-xs text-center">{opt.label}</span>
+                        <span className={`text-xs text-center line-clamp-2 font-light ${
+                          selectedCaseType === opt.value ? 'text-gray-900' : 'text-gray-600'
+                        }`} style={{fontFamily: "'Poppins', sans-serif"}}>{opt.label}</span>
                       </button>
                       {soldOut && (
-                        <span className="text-[10px] text-red-600 font-medium">Sold Out</span>
+                        <span className="text-[10px] text-gray-400 font-light">Sold Out</span>
                       )}
                     </div>
                   );
@@ -173,28 +210,37 @@ const MobileOverlay = ({
                       <button
                         key={cat.value || 'all'}
                         onClick={() => setSelectedCategory(cat.value)}
-                        className={`flex flex-col items-center p-3 transition-all duration-200 ${
+                        className={`flex flex-col items-center p-2.5 rounded-lg transition-colors ${
                           selectedCategory === cat.value
-                            ? ' bg-gray-50'
-                            : ' hover:border-gray-300'
+                            ? 'bg-gray-50'
+                            : 'hover:bg-gray-50'
                         }`}
                         style={{fontFamily: "'Poppins', sans-serif"}}
                       >
                         {previewImage && (
-                          <div className="w-16 h-16 mb-2 flex items-center justify-center bg-gray-50 overflow-hidden">
-                            <img
-                              src={previewImage}
-                              alt={cat.label}
-                              className="max-w-full max-h-full object-contain"
-                              loading="lazy"
-                              decoding="async"
-                            />
+                          <div className="relative mb-2 flex items-center justify-center rounded overflow-visible" style={{ width: '4rem', height: '4rem' }}>
+                            <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
+                              <img
+                                src={previewImage}
+                                alt={cat.label}
+                                className="max-w-full max-h-full object-contain p-1"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </div>
+                            {selectedCategory === cat.value && (
+                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
+                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            )}
                           </div>
                         )}
-                        <span className={`text-xs text-center ${
+                        <span className={`text-xs text-center font-light ${
                           selectedCategory === cat.value
-                            ? 'text-gray-900 font-medium'
-                            : 'text-gray-700'
+                            ? 'text-gray-900'
+                            : 'text-gray-600'
                         }`}>
                           {cat.label}
                         </span>
@@ -206,33 +252,44 @@ const MobileOverlay = ({
 
               {/* Filter Tabs - Dropdown on Mobile */}
               {selectedCategory && filterTabs.length > 0 && (
-                <div className="mb-4 relative" ref={filterDropdownRef}>
+                <div className="mb-4 relative z-20" ref={filterDropdownRef}>
                   <button
-                    onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                    className="w-full px-3 py-2 text-xs uppercase tracking-wider text-left flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-all duration-200 "
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsFilterDropdownOpen(prev => !prev);
+                    }}
+                    className="w-full px-4 py-2.5 text-xs uppercase tracking-wider text-left flex items-center justify-between bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors font-light"
                     style={{fontFamily: "'Poppins', sans-serif"}}
                   >
-                    <span className="text-gray-900 font-medium">
+                    <span className="text-gray-900">
                       {selectedFilterTab ? selectedFilterTab.label : 'All'}
                     </span>
                     <FontAwesomeIcon 
                       icon={faChevronDown} 
-                      className={`text-xs text-gray-600 transition-transform duration-200 ${isFilterDropdownOpen ? 'rotate-180' : ''}`} 
+                      className={`text-xs text-gray-400 transition-transform duration-200 ${isFilterDropdownOpen ? 'rotate-180' : ''}`} 
                     />
                   </button>
                   {isFilterDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white  shadow-lg z-50 max-h-48 overflow-y-auto">
+                    <div 
+                      className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] max-h-48 overflow-y-auto"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       {filterTabs.map(({ key, label }) => (
                         <button
                           key={key}
-                          onClick={() => {
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             setMobileSubCategory(key);
                             setIsFilterDropdownOpen(false);
                           }}
-                          className={`w-full px-3 py-2 text-xs uppercase tracking-wider text-left transition-all duration-200 ${
+                          className={`w-full px-4 py-2.5 text-xs uppercase tracking-wider text-left transition-colors border-b border-gray-50 last:border-b-0 ${
                             mobileSubCategory === key 
-                              ? ' text-gray-900 font-medium' 
-                              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                              ? 'bg-gray-50 text-gray-900 font-light' 
+                              : 'text-gray-600 hover:bg-gray-50'
                           }`}
                           style={{fontFamily: "'Poppins', sans-serif"}}
                         >
@@ -247,24 +304,31 @@ const MobileOverlay = ({
               {/* Charms Grid */}
               {selectedCategory && (
                 <div>
-                  <div className="max-h-96 overflow-y-auto">
+                  <div className="max-h-96 overflow-y-auto -mx-1 px-1">
                     {filteredPinsForMobile.length > 0 ? (
                       <div className="grid grid-cols-3 gap-3">
-                        {filteredPinsForMobile.map((pin) => {
+                        {filteredPinsForMobile.map((pin, index) => {
                           const isSoldOut = pin.quantity !== undefined && pin.quantity === 0;
-                          const isSelected = selectedPins.some((p) => p.pin === pin);
+                          const isSelected = selectedPins.some((p) => p.pin && p.pin.src === pin.src);
+                          // Use src as key since it's unique for each pin (even if names are the same)
+                          const uniqueKey = pin.src ? `${pin.src}-${index}` : `${pin.name}-${index}`;
                           return (
-                            <div key={pin.name} className="flex flex-col items-center gap-1">
+                            <div key={uniqueKey} className="flex flex-col items-center gap-2">
                               <button
-                                onClick={() => !isSoldOut && handlePinSelection(pin)}
+                                onClick={() => {
+                                  if (!isSoldOut) {
+                                    // Ensure we pass the correct pin object
+                                    handlePinSelection({ ...pin });
+                                  }
+                                }}
                                 disabled={isSoldOut}
-                                className={`p-2 transition-all duration-200 flex flex-col items-center w-full ${
+                                className={`p-2.5 flex flex-col items-center w-full rounded-lg transition-colors ${
                                   isSelected
                                     ? 'bg-gray-50'
-                                    : ''
-                                } ${isSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    : 'hover:bg-gray-50'
+                                } ${isSoldOut ? 'opacity-40 cursor-not-allowed' : ''}`}
                               >
-                                <div className={`relative w-20 h-20 flex items-center justify-center bg-gray-50 transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
+                                <div className="relative flex items-center justify-center rounded" style={{ width: '5rem', height: '5rem', overflow: 'visible' }}>
                                   <img
                                     src={pin.src}
                                     alt={pin.name}
@@ -273,25 +337,29 @@ const MobileOverlay = ({
                                     decoding="async"
                                   />
                                   {isSelected && !isSoldOut && (
-                                    <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 flex items-center justify-center text-xs rounded-full z-10">
-                                      ✓
+                                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
+                                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                      </svg>
                                     </div>
                                   )}
                                 </div>
-                                <span className="text-xs text-center text-gray-700 line-clamp-2 mt-1" style={{fontFamily: "'Poppins', sans-serif"}}>
+                                <span className={`text-xs text-center line-clamp-2 mt-1.5 font-light ${
+                                  isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'
+                                }`} style={{fontFamily: "'Poppins', sans-serif"}}>
                                   {pin.name}
                                 </span>
                               </button>
                               {isSoldOut && (
-                                <span className="text-[9px] text-red-600 font-medium">Sold Out</span>
+                                <span className="text-[10px] text-gray-400 font-light">Sold Out</span>
                               )}
                             </div>
                           );
                         })}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500 text-sm" style={{fontFamily: "'Poppins', sans-serif"}}>
-                        No charms found for this filter
+                      <div className="text-center py-12 text-gray-400 text-sm font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                        No charms found
                       </div>
                     )}
                   </div>
