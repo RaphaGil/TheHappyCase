@@ -500,11 +500,13 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
                     onClick={handleClick}
                   >
                     <div className={`relative ${isSelected ? '' : ''}`} style={{ overflow: 'visible' }}>
-                      <img
-                        src={pin.src}
-                        alt={pin.name}
-                        className={`w-16 h-16 sm:w-20 sm:h-20 object-contain transition-all duration-200 rounded ${isSoldOut ? 'opacity-50' : ''}`}
-                      />
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
+                        <img
+                          src={pin.src}
+                          alt={pin.name}
+                          className={`w-full h-full object-contain transition-all duration-200 rounded ${isSoldOut ? 'opacity-50' : ''}`}
+                        />
+                      </div>
                       {isSelected && !isSoldOut && (
                         <div className="absolute -top-1 -right-1 bg-black text-white w-6 h-6 flex items-center justify-center text-xs rounded-full z-10 shadow-md">
                           ✓

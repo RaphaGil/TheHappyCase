@@ -15,7 +15,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             }
             setMobileCurrentStep('case');
           }}
-          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
+          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
             mobileCurrentStep === 'case'
               ? 'bg-gray-900 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -24,11 +24,11 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
-            className={`text-base mb-1 ${
+            className={`text-lg mb-1.5 ${
               mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
             }`}
           />
-          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] uppercase tracking-wide font-medium ${
             mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
           }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Case
@@ -45,7 +45,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             setMobileCurrentStep('color');
           }}
           disabled={!selectedCaseType}
-          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
+          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
             !selectedCaseType
               ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'color'
@@ -56,7 +56,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faPalette} 
-            className={`text-base mb-1 ${
+            className={`text-lg mb-1.5 ${
               !selectedCaseType
                 ? 'text-gray-400'
                 : mobileCurrentStep === 'color'
@@ -64,7 +64,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
                 : 'text-gray-700'
             }`}
           />
-          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] uppercase tracking-wide font-medium ${
             !selectedCaseType
               ? 'text-gray-400'
               : mobileCurrentStep === 'color'
@@ -85,7 +85,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             setMobileCurrentStep('charms');
           }}
           disabled={!selectedCaseType || !selectedColor}
-          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
+          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
             !selectedCaseType || !selectedColor
               ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'charms'
@@ -96,7 +96,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faPlane} 
-            className={`text-base mb-1 ${
+            className={`text-lg mb-1.5 ${
               !selectedCaseType || !selectedColor
                 ? 'text-gray-400'
                 : mobileCurrentStep === 'charms'
@@ -104,7 +104,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
                 : 'text-gray-700'
             }`}
           />
-          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] uppercase tracking-wide font-medium ${
             !selectedCaseType || !selectedColor
               ? 'text-gray-400'
               : mobileCurrentStep === 'charms'
@@ -131,7 +131,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
               setMobileCurrentStep('text');
             }
           }}
-          className={`w-12 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-2 ${
+          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
             mobileCurrentStep === 'text'
               ? 'bg-gray-900 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -140,11 +140,11 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faFont} 
-            className={`text-base mb-1 ${
+            className={`text-lg mb-1.5 ${
               mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
             }`}
           />
-          <span className={`text-[8px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] uppercase tracking-wide font-medium ${
             mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
           }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Text

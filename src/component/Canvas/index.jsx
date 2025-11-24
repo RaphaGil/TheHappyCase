@@ -59,24 +59,35 @@ const Canvas = ({
           scaleX = scale;
           scaleY = scale;
         } else {
-          // Allow pins to maintain their natural aspect ratio with a max size
-          // Scale proportionally to fit within the max size while maintaining aspect ratio
-          const maxSize = Math.max(pinWidth, pinHeight);
-          const naturalAspectRatio = imgElement.width / imgElement.height;
-          let targetWidth, targetHeight;
+          // Use natural image size by default, or scale if size constraint is provided
+          const naturalWidth = imgElement.width;
+          const naturalHeight = imgElement.height;
           
-          if (imgElement.width >= imgElement.height) {
-            // Landscape or square - fit to width
-            targetWidth = maxSize;
-            targetHeight = maxSize / naturalAspectRatio;
+          // If pinWidth/pinHeight are very large (9999), use natural size (1:1 scale)
+          // Otherwise, scale proportionally to fit within the max size constraint
+          if (pinWidth >= 9999 || pinHeight >= 9999) {
+            // Use natural size - no scaling
+            scaleX = 1;
+            scaleY = 1;
           } else {
-            // Portrait - fit to height
-            targetHeight = maxSize;
-            targetWidth = maxSize * naturalAspectRatio;
+            // Scale proportionally to fit within max size while maintaining aspect ratio
+            const maxSize = Math.max(pinWidth, pinHeight);
+            const naturalAspectRatio = naturalWidth / naturalHeight;
+            let targetWidth, targetHeight;
+            
+            if (naturalWidth >= naturalHeight) {
+              // Landscape or square - fit to width
+              targetWidth = maxSize;
+              targetHeight = maxSize / naturalAspectRatio;
+            } else {
+              // Portrait - fit to height
+              targetHeight = maxSize;
+              targetWidth = maxSize * naturalAspectRatio;
+            }
+            
+            scaleX = targetWidth / naturalWidth;
+            scaleY = targetHeight / naturalHeight;
           }
-          
-          scaleX = targetWidth / imgElement.width;
-          scaleY = targetHeight / imgElement.height;
         }
   
         const imgInstance = new fabric.Image(imgElement, {
@@ -390,7 +401,7 @@ const Canvas = ({
   
     // Fixed size for all screen sizes
     const canvasWidth = 450;
-    const canvasHeight = 450;
+    const canvasHeight = 400;
 
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,
@@ -947,14 +958,15 @@ const Canvas = ({
     console.log('Adding pin to canvas:', pin.name); // Debug log
 
     try {
-      // Fixed pin size for all screen sizes
-      const basePinSize = 150;
-      
-      // Use size multiplier from pin data (default to 1.0 if not specified)
+      // Use natural image size by default (pass large values to allow natural sizing)
+      // If size multiplier is specified, apply it as a constraint
       const sizeMultiplier = pin.size !== undefined ? pin.size : 1.0;
-      const pinSize = basePinSize * sizeMultiplier;
       
-      const imgInstance = await loadImage(pin.src, false, pinSize, pinSize);
+      // If size multiplier is 1.0, use natural size (pass large values)
+      // Otherwise, apply the multiplier as a max size constraint
+      const maxSize = sizeMultiplier !== 1.0 ? 150 * sizeMultiplier : 9999;
+      
+      const imgInstance = await loadImage(pin.src, false, maxSize, maxSize);
       
       // Center the pin on the canvas
       imgInstance.set({
