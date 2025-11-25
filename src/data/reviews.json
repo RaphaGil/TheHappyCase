@@ -1,0 +1,75 @@
+{
+  "reviews": [
+    {
+      "id": 1,
+      "name": "Randi",
+      "rating": 5,
+      "text": "The case is perfect! So much nicer in person. The photos don't do it justice. Raphaela gives 5 star service! Don't second guess it. Just buy one!",
+      "location": "London, UK"
+    },
+    {
+      "id": 2,
+      "name": "Viktorija",
+      "rating": 5,
+      "text": "The passport cover is absolutely beautiful, with all the little details that make it feel special. The quality is excellent as well. I'm especially impressed with the seller's communication and helpfulness..she went above and beyond to ship it as quickly as possible so it would arrive in time. Highly recommended! 😄🫶🏽",
+      "location": "Podstrana, Croatia"
+    },
+    {
+      "id": 3,
+      "name": "Nina",
+      "rating": 5,
+      "text": "Love love love this! Fantastic quality!",
+      "location": "Burnley, United Kingdom"
+    },
+    {
+      "id": 4,
+      "name": "Daniela",
+      "rating": 5,
+      "text": "I'm so happy with this passport! better than I expected. The material feels really sturdy and well-made, and the little decorative pins are SO cute, they give it such a fun, personal touch. The delivery was fast and arrived exactly how I ordered. Definitely recommend",
+      "location": "London, United Kingdom"
+    },
+    {
+      "id": 5,
+      "name": "Luana",
+      "rating": 5,
+      "text": "I had been on the hunt for the perfect passport case for a while, and then I got one as a birthday gift. I instantly fell in love with it, so I decided to get another one. The quality is fantastic, and the ability to customise it is such a great idea. I've already started buying them for the people I love, so they can protect their passports with such a beautiful case too!",
+      "location": "London, United Kingdom"
+    },
+    {
+      "id": 6,
+      "name": "Ahmed",
+      "rating": 5,
+      "text": "Outstanding quality and service! The case survived my backpacking trip through Europe. Will definitely order again!",
+      "location": "Cairo, Egypt"
+    },
+    {
+      "id": 7,
+      "name": "Imma",
+      "rating": 5,
+      "text": "This was a birthday gift for my friend and she loved it. Very good quality. I really recommend.",
+      "location": "London, United Kingdom"
+    },
+    {
+      "id": 8,
+      "name": "Margherita",
+      "rating": 5,
+      "text": "I am so happy about this passport holder. Great quality and attention to details",
+      "location": "Brentford, United Kingdom"
+    },
+    {
+      "id": 9,
+      "name": "Kristi",
+      "rating": 5,
+      "text": "The item was as cute and unique as pictured. Very excited for my next travels with it.",
+      "location": "White House, USA"
+    },
+    {
+      "id": 10,
+      "name": "Sandra",
+      "rating": 5,
+      "text": "Great item.... very good quality 👌",
+      "location": "London, United Kingdom"
+    }
+  ]
+}
+

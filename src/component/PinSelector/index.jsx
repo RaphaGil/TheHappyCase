@@ -310,14 +310,7 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
 
   return (
     <div>
-      {/* Show quantity of selected charms at the top */}
-      {selectedPins && selectedPins.length > 0 && (
-        <div className="mb-4 px-2 py-2 bg-gray-50 rounded-sm border border-gray-200">
-          <p className="text-xs text-gray-700 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
-            <span className="font-medium">{selectedPins.length}</span> {selectedPins.length === 1 ? 'charm' : 'charms'} selected
-          </p>
-        </div>
-      )}
+    
       
       {/* Show charm categories directly with images */}
       <div className="grid grid-cols-3 gap-2 mb-4">

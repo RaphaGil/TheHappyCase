@@ -1,24 +1,24 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 
 import Canvas from "../../component/Canvas/index.jsx";
 import ColorSelector from "../../component/ColorSelector/index.jsx";
 import PinSelector from "../../component/PinSelector";
-import Products from "../../products.json";
+import Products from "../../data/products.json";
 import { useCart } from "../../context/CartContext";
 
 // Components
 import MobileStepButtons from "./components/MobileStepButtons";
 import ViewMoreImagesButton from "./components/ViewMoreImagesButton";
 import ItemDescriptionDropdown from "./components/ItemDescriptionDropdown";
-import ImageModal from "./components/ImageModal";
+import ImageModal from "../../component/ImageModal";
 // import SaveDesignButton from "./components/SaveDesignButton";
 import MobileOverlay from "./components/MobileOverlay";
 import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
 import CaseSelector from "./components/CaseSelector";
 import TermsOfUseModal from "./components/TermsOfUseModal";
-import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from "./constants";
+import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from "../../data/constants.js";
 
 
 const CreateYours = () => {
@@ -97,6 +97,7 @@ const CreateYours = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
+  const [hasTextAdded, setHasTextAdded] = useState(false);
   const caseDropdownRef = useRef(null);
   const { addToCart } = useCart();
   
@@ -216,12 +217,7 @@ const CreateYours = () => {
         });
       }
     }, 100); // Small delay to ensure the charm is added first
-    
-    // Auto-open step 3 on desktop after first charm is added
-    if (!isMobile && selectedPins.length === 0 && !openSteps.step3) {
-      setOpenSteps(prev => ({ ...prev, step3: true }));
-    }
-  }, [isMobile, selectedPins.length, openSteps.step3]);
+  }, [isMobile]);
 
   // Handle navigation from other pages
   useEffect(() => {
@@ -334,7 +330,15 @@ const CreateYours = () => {
     }
   };
 
-  const productsWithQuantities = getProductsWithQuantities();
+  // Memoize productsWithQuantities to prevent infinite loops
+  const productsWithQuantities = useMemo(() => getProductsWithQuantities(), []);
+
+  // Reset subcategory when category changes
+  useEffect(() => {
+    if (selectedCategory) {
+      setMobileSubCategory('all');
+    }
+  }, [selectedCategory]);
 
   // When category changes, update pins from productsWithQuantities
   useEffect(() => {
@@ -346,8 +350,6 @@ const CreateYours = () => {
         setPins(productsWithQuantities.pins[selectedCategory] || []);
       }
     }
-    // Reset subcategory when category changes
-    setMobileSubCategory('all');
   }, [selectedCategory, productsWithQuantities]);
 
   // Prevent horizontal and vertical scrolling on mobile, maintain page size, hide scrollbar
@@ -536,6 +538,14 @@ const CreateYours = () => {
     }
   };
 
+  // Handle text added - make number 3 black
+  const handleTextAdded = useCallback(() => {
+    // Mark text as added to make number 3 black
+    setHasTextAdded(true);
+    // Close step 3 after text is added
+    setOpenSteps(prev => ({ ...prev, step3: false }));
+  }, []);
+
   // Handle pin selection callback from Canvas
   const handlePinSelect = useCallback((imgInstance) => {
     if (imgInstance && imgInstance.pinData) {
@@ -618,23 +628,10 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-0 sm:py-1 md:py-2 lg:py-4 relative bg-white overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden', overflowY: isMobile ? 'hidden' : 'auto', height: isMobile ? '100vh' : 'auto', maxHeight: isMobile ? '100vh' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
+    <section className={`min-h-screen bg-white relative ${isMobile ? 'overflow-hidden h-screen' : 'overflow-y-auto'}`} style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden'}}>
       {/* Text Input Modal - Mobile only */}
       {isMobile && mobileCurrentStep === 'text' && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100vw',
-            height: '100vh',
-            maxWidth: '100vw',
-            maxHeight: '100vh'
-          }}
-        >
+        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center p-4">
           <div 
             className="bg-white rounded-sm shadow-lg w-full max-w-sm p-6"
             style={{
@@ -643,7 +640,7 @@ const CreateYours = () => {
             }}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                 Add Text
               </h2>
               <button
@@ -672,7 +669,7 @@ const CreateYours = () => {
                   placeholder="e.g. Your name"
                   className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
                   style={{
-                    fontFamily: "'Poppins', sans-serif",
+                    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: '16px' // Prevent zoom on iOS
                   }}
                   maxLength={MAX_TEXT_LENGTH}
@@ -705,7 +702,7 @@ const CreateYours = () => {
                     }
                   }}
                   className="flex-1 px-4 py-3 text-sm font-medium uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded shadow-md"
-                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                 >
                   Add Text
                 </button>
@@ -715,7 +712,7 @@ const CreateYours = () => {
                     setMobileTextError('');
                   }}
                   className="px-4 py-3 text-sm font-medium uppercase tracking-wider text-gray-700 hover:text-gray-900 bg-white border-2 border-gray-300 hover:border-gray-400 transition-colors rounded shadow-sm"
-                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                 >
                   Clear
                 </button>
@@ -726,84 +723,48 @@ const CreateYours = () => {
       )}
       
       {/* Hide main content when text modal is open on mobile */}
-      <div className={isMobile && mobileCurrentStep === 'text' ? 'hidden' : ''}>
-      <div className={`lg:container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 relative z-10 ${isMobile ? 'pb-[40vh]' : 'pb-2 sm:pb-24'} ${isMobile ? 'min-h-screen' : 'h-screen md:h-auto'} flex flex-col ${isMobile ? 'overflow-hidden' : 'overflow-hidden'} ${isMobile ? 'pt-0' : 'pt-1 sm:pt-1.5 md:pt-2'}`} style={{width: '100%', maxWidth: '100%', overflowX: 'hidden', overflowY: isMobile ? 'auto' : 'auto', height: isMobile ? 'auto' : 'auto', maxHeight: isMobile ? 'none' : 'none', scrollbarWidth: isMobile ? 'none' : 'auto', msOverflowStyle: isMobile ? 'none' : 'auto'}}>
-        {/* Close Button - Mobile only */}
-        {isMobile && (
-          <button
-            onClick={() => navigate('/')}
-            className="absolute top-4 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 z-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
-            aria-label="Close and go back to home"
-          >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        )}
-        
-        {/* Header Section - Fixed at top, never overlaps */}
-        <div className={`text-center flex-shrink-0 ${isMobile ? 'mb-2 mt-6' : 'mb-4 mt-6'}`}>
-          <h1 className={`text-xl sm:text-2xl md:text-3xl font-light text-gray-900 ${isMobile ? 'mb-1' : 'mb-2'}`} 
-              style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
-            CREATE YOURS
-          </h1>
-          <div className={`w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto ${isMobile ? 'mb-1' : 'mb-2'}`}></div>
-          <p className="lg:block hidden text-xs text-gray-400 max-w-xl mx-auto font-light" 
-             style={{fontFamily: "'Poppins', sans-serif"}}>
-            Design your perfect passport case
-          </p>
-        </div>
-        
-        {/* MAIN SECTION - Canvas and Right Side */}
-        <div className={`flex flex-col md:flex-row ${isMobile ? 'gap-0' : 'gap-8 md:gap-12'} flex-1 min-h-0 ${isMobile ? '' : ''}`}>
-          
-          {/* LEFT - Design Canvas - Centered */}
-          <div className={`w-full md:w-1/2 flex flex-col items-center md:justify-start justify-center flex-1 ${isMobile ? 'overflow-x-hidden' : ''}`} id="canvas-container">
-
-            <div className="w-full max-w-full flex flex-col -mt-2 sm:-mt-1 overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto', height: isMobile ? 'auto' : '100%'}}>
-              <div className="flex-shrink-0 w-full overflow-hidden" style={{touchAction: isMobile ? 'none' : 'auto', height: isMobile ? 'auto' : '100%'}}>
-                <div className="w-full overflow-hidden" style={{aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : 'none', height: isMobile ? 'auto' : '100%', touchAction: isMobile ? 'none' : 'auto'}}>
-                  <Canvas
-                    selectedCaseType={selectedCaseType}
-                    selectedColor={selectedColor}
-                    onPinSelect={handlePinSelect}
-                    onPinRemove={handlePinRemove}
-                    onSaveImage={handleSaveImageFunction}
-                    products={Products}
-                  />
+      {!(isMobile && mobileCurrentStep === 'text') && (
+        <div className={`${isMobile ? 'pb-72' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8'} relative z-10`}>
+          {/* Mobile Layout */}
+          {isMobile ? (
+            <div className="flex flex-col h-full">
+              {/* Close Button - Mobile only */}
+              <button
+                onClick={() => navigate('/')}
+                className="fixed top-4 right-4 z-50 w-8 h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
+                aria-label="Close and go back to home"
+              >
+                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              
+              {/* Header Section - Compact on mobile */}
+              <div className="text-center pt-12 pb-3 px-4">
+                <h1 className="text-2xl font-light text-gray-900 mb-1" 
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+                  CREATE YOURS
+                </h1>
+                <div className="w-20 h-px bg-gray-200 mx-auto"></div>
+              </div>
+              
+              {/* Canvas Section - Prominent on mobile */}
+              <div className="flex-1 flex items-center justify-center px-4 py-2 min-h-0">
+                <div className="w-full max-w-xs flex flex-col items-center">
+                  <div className="w-full overflow-hidden" style={{touchAction: 'none'}}>
+                    <Canvas
+                      selectedCaseType={selectedCaseType}
+                      selectedColor={selectedColor}
+                      onPinSelect={handlePinSelect}
+                      onPinRemove={handlePinRemove}
+                      onSaveImage={handleSaveImageFunction}
+                      products={Products}
+                    />
+                  </div>
                 </div>
               </div>
               
-              {/* Action Buttons - Under canvas on big screens */}
-              {!isMobile && (
-                <div className="w-full flex flex-row gap-3 flex-shrink-0 mt-6">
-                  <ViewMoreImagesButton
-                    caseImages={caseImages}
-                    onOpenModal={() => {
-                      setShowImageModal(true);
-                      setSelectedModalImage(0);
-                    }}
-                  />
-                  
-                  <ItemDescriptionDropdown
-                    selectedCase={selectedCase}
-                    showDescriptionDropdown={showDescriptionDropdown}
-                    setShowDescriptionDropdown={setShowDescriptionDropdown}
-                  />
-                </div>
-              )}
-              
-            </div>
-            
-            {/* Save Your Design Button - Hidden for now */}
-            {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
-          </div>
-
-          {/* Right Side - Steps Section */}
-          <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2" id="right-side-container">
-            
-            {/* Mobile Step Content Overlay */}
-            {isMobile && (
+              {/* Mobile Step Content Overlay */}
               <MobileOverlay
                 mobileCurrentStep={mobileCurrentStep}
                 setMobileCurrentStep={setMobileCurrentStep}
@@ -820,16 +781,70 @@ const CreateYours = () => {
                 handlePinSelection={handlePinSelection}
                 Products={productsWithQuantities}
               />
-            )}
-            {/* Desktop Steps Section - Dropdown Style */}
-            {!isMobile && (
-              <div className="w-full space-y-2">
+            </div>
+          ) : (
+            /* Desktop Layout */
+            <>
+              {/* Header Section */}
+              <div className="text-center mb-6 md:mb-8">
+                <h1 className="text-3xl font-light text-gray-900 mb-2" 
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+                  CREATE YOURS
+                </h1>
+                <div className="w-24 h-px bg-gray-200 mx-auto mb-2"></div>
+                <p className="text-sm text-gray-400 max-w-xl mx-auto font-light" 
+                   style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  Design your perfect passport case
+                </p>
+              </div>
+              
+              {/* MAIN SECTION - Canvas and Right Side */}
+              <div className="flex flex-col lg:flex-row lg:gap-8 xl:gap-12">
+                
+                {/* LEFT - Design Canvas */}
+                <div className="w-full lg:w-1/2 flex flex-col items-center lg:justify-start">
+                  <div className="w-full max-w-lg flex flex-col items-center">
+                    <div className="w-full overflow-hidden" style={{touchAction: 'auto'}}>
+                      <Canvas
+                        selectedCaseType={selectedCaseType}
+                        selectedColor={selectedColor}
+                        onPinSelect={handlePinSelect}
+                        onPinRemove={handlePinRemove}
+                        onSaveImage={handleSaveImageFunction}
+                        products={Products}
+                      />
+                    </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="w-full flex flex-row gap-3 mt-6">
+                      <ViewMoreImagesButton
+                        caseImages={caseImages}
+                        onOpenModal={() => {
+                          setShowImageModal(true);
+                          setSelectedModalImage(0);
+                        }}
+                      />
+                      
+                      <ItemDescriptionDropdown
+                        selectedCase={selectedCase}
+                        showDescriptionDropdown={showDescriptionDropdown}
+                        setShowDescriptionDropdown={setShowDescriptionDropdown}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side - Steps Section */}
+                <div className="w-full lg:w-1/2 flex flex-col">
+              
+                  {/* Desktop Steps Section - Dropdown Style */}
+                  <div className="w-full space-y-2">
                 {/* Step 1: Case & Color */}
                 <div className="border border-gray-200 rounded-sm">
                   <button
                     onClick={() => toggleStep('step1')}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
@@ -874,7 +889,7 @@ const CreateYours = () => {
                   <button
                     onClick={() => toggleStep('step2')}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
@@ -919,10 +934,14 @@ const CreateYours = () => {
                   <button
                     onClick={() => toggleStep('step3')}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
+                        hasTextAdded 
+                          ? 'bg-gray-900 text-white' 
+                          : 'bg-gray-100 text-gray-400'
+                      }`}>
                         3
                       </div>
                       <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
@@ -942,22 +961,24 @@ const CreateYours = () => {
                   
                   {openSteps.step3 && (
                     <div className="px-4 pb-4 pt-2 border-t border-gray-100">
-                      <CustomTextSection />
+                      <CustomTextSection onTextAdded={handleTextAdded} />
                     </div>
                   )}
                 </div>
 
-              </div>
-            )}
+                  </div>
 
-            {/* Step 4: Review & Add to Cart - Always visible, not a dropdown */}
-            {!isMobile && (
+                  {/* Step 4: Review & Add to Cart - Always visible, not a dropdown */}
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-6 h-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-medium flex-shrink-0">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
+                    agreedToTerms 
+                      ? 'bg-gray-900 text-white' 
+                      : 'bg-gray-100 text-gray-400'
+                  }`}>
                     4
                   </div>
-                  <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                     Review & Add to Cart
                   </h3>
                 </div>
@@ -990,18 +1011,18 @@ const CreateYours = () => {
               />
                 </div>
               </div>
-            )}
-          </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
-
+        )}
+        
         {/* Fixed Bottom Section - Mobile only */}
         {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden" style={{maxHeight: '30vh'}}>
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg">
             {/* Choose Options Section */}
-            <div className="px-2 sm:px-3 pt-1.5 pb-1 border-b border-gray-100">
-              <p className="text-[10px] xs:text-xs text-gray-600 mb-1 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
-                Choose the options below:
-              </p>
+            <div className="px-3 pt-2.5 pb-2 border-b border-gray-100">
               <MobileStepButtons
                 mobileCurrentStep={mobileCurrentStep}
                 setMobileCurrentStep={setMobileCurrentStep}
@@ -1011,34 +1032,34 @@ const CreateYours = () => {
             </div>
             
             {/* Price Summary and Add to Cart */}
-            <div className="overflow-y-auto" style={{maxHeight: 'calc(35vh - 80px)'}}>
-              <div className="px-2 sm:px-3 py-1.5 sm:py-2">
-              <PriceSummary
-                totalPrice={totalPrice}
-                caseBasePrice={caseBasePrice}
-                groupedPinsList={groupedPinsList}
-                showPriceBreakdown={showPriceBreakdown}
-                setShowPriceBreakdown={setShowPriceBreakdown}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                selectedCase={selectedCase}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedPins={selectedPins}
-                selectedCaseImage={selectedCaseImage}
-                pinsPrice={pinsPrice}
-                onAddToCart={handleAddToCart}
-                onShowTerms={() => setShowTermsModal(true)}
-                agreedToTerms={agreedToTerms}
-                setAgreedToTerms={(value) => {
-                  setAgreedToTerms(value);
-                  if (value) {
-                    setShowTermsError(false);
-                  }
-                }}
-                showTermsError={showTermsError}
-                isMobile={true}
-              />
+            <div className="overflow-y-auto max-h-56">
+              <div className="px-3 py-2.5">
+                <PriceSummary
+                  totalPrice={totalPrice}
+                  caseBasePrice={caseBasePrice}
+                  groupedPinsList={groupedPinsList}
+                  showPriceBreakdown={showPriceBreakdown}
+                  setShowPriceBreakdown={setShowPriceBreakdown}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  selectedCase={selectedCase}
+                  selectedCaseType={selectedCaseType}
+                  selectedColor={selectedColor}
+                  selectedPins={selectedPins}
+                  selectedCaseImage={selectedCaseImage}
+                  pinsPrice={pinsPrice}
+                  onAddToCart={handleAddToCart}
+                  onShowTerms={() => setShowTermsModal(true)}
+                  agreedToTerms={agreedToTerms}
+                  setAgreedToTerms={(value) => {
+                    setAgreedToTerms(value);
+                    if (value) {
+                      setShowTermsError(false);
+                    }
+                  }}
+                  showTermsError={showTermsError}
+                  isMobile={true}
+                />
               </div>
             </div>
           </div>
@@ -1073,9 +1094,6 @@ const CreateYours = () => {
             }
           }}
         />
-
-      </div>
-      </div>
     </section>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ColorSelector from '../../../component/ColorSelector/index.jsx';
-import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../constants';
+import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../../data/constants.js';
 import { filterPinsByCategory } from '../filterHelpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -76,19 +76,21 @@ const MobileOverlay = ({
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4"
+      className={`fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 ${
+        mobileCurrentStep === 'charms' ? 'z-[60]' : 'z-50'
+      }`}
       onClick={() => setMobileCurrentStep(null)}
     >
       <div 
-        className={`bg-white rounded-lg p-5 w-full overflow-y-auto shadow-lg ${
+        className={`bg-white rounded-lg shadow-lg flex flex-col w-full max-w-sm ${
           mobileCurrentStep === 'charms' 
-            ? 'max-w-sm h-fit max-h-[90vh]' 
-            : 'max-w-sm max-h-[85vh]'
+            ? 'max-h-[90vh]' 
+            : 'max-h-[85vh] h-fit'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-center mb-5 pb-4 border-b border-gray-100">
-          <h2 className="text-base uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 flex-shrink-0">
+          <h2 className="text-sm uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
             {mobileCurrentStep === 'case' && 'Choose Case'}
             {mobileCurrentStep === 'color' && 'Choose Color'}
             {mobileCurrentStep === 'charms' && 'Choose Charms'}
@@ -104,8 +106,8 @@ const MobileOverlay = ({
           </button>
         </div>
         
-        {/* Step Content */}
-        <div className="space-y-4 pt-2">
+        {/* Step Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
           {mobileCurrentStep === 'case' && (
             <div>
               <div className="grid grid-cols-3 gap-3">
@@ -140,7 +142,7 @@ const MobileOverlay = ({
                             ? 'bg-gray-50'
                             : 'hover:bg-gray-50'
                         } ${soldOut ? 'opacity-40 cursor-not-allowed' : ''}`}
-                        style={{fontFamily: "'Poppins', sans-serif"}}
+                        style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                       >
                         {caseImage && (
                           <div className="relative flex items-center justify-center rounded" style={{ width: '5rem', height: '5rem', overflow: 'visible' }}>
@@ -163,7 +165,7 @@ const MobileOverlay = ({
                         )}
                         <span className={`text-xs text-center line-clamp-2 font-light ${
                           selectedCaseType === opt.value ? 'text-gray-900' : 'text-gray-600'
-                        }`} style={{fontFamily: "'Poppins', sans-serif"}}>{opt.label}</span>
+                        }`} style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{opt.label}</span>
                       </button>
                       {soldOut && (
                         <span className="text-[10px] text-gray-400 font-light">Sold Out</span>
@@ -186,10 +188,10 @@ const MobileOverlay = ({
           )}
           
           {mobileCurrentStep === 'charms' && selectedCaseType && selectedColor && (
-            <div>
+            <div className="space-y-3">
               {/* Category Selection */}
-              <div className="mb-4">
-                <div className="grid grid-cols-3 gap-2">
+              <div>
+                <div className="grid grid-cols-3 gap-1.5">
                   {CATEGORY_OPTIONS.map((cat) => {
                     // Get first pin image from each category as preview
                     const getPreviewImage = () => {
@@ -210,15 +212,15 @@ const MobileOverlay = ({
                       <button
                         key={cat.value || 'all'}
                         onClick={() => setSelectedCategory(cat.value)}
-                        className={`flex flex-col items-center p-2.5 rounded-lg transition-colors ${
+                        className={`flex flex-col items-center p-2 rounded-lg transition-colors ${
                           selectedCategory === cat.value
                             ? 'bg-gray-50'
                             : 'hover:bg-gray-50'
                         }`}
-                        style={{fontFamily: "'Poppins', sans-serif"}}
+                        style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                       >
                         {previewImage && (
-                          <div className="relative mb-2 flex items-center justify-center rounded overflow-visible" style={{ width: '4rem', height: '4rem' }}>
+                          <div className="relative mb-1.5 flex items-center justify-center rounded overflow-visible" style={{ width: '3.5rem', height: '3.5rem' }}>
                             <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
                               <img
                                 src={previewImage}
@@ -252,7 +254,7 @@ const MobileOverlay = ({
 
               {/* Filter Tabs - Dropdown on Mobile */}
               {selectedCategory && filterTabs.length > 0 && (
-                <div className="mb-4 relative z-20" ref={filterDropdownRef}>
+                <div className="relative z-20" ref={filterDropdownRef}>
                   <button
                     type="button"
                     onClick={(e) => {
@@ -291,7 +293,7 @@ const MobileOverlay = ({
                               ? 'bg-gray-50 text-gray-900 font-light' 
                               : 'text-gray-600 hover:bg-gray-50'
                           }`}
-                          style={{fontFamily: "'Poppins', sans-serif"}}
+                          style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                         >
                           {label}
                         </button>
@@ -304,9 +306,8 @@ const MobileOverlay = ({
               {/* Charms Grid */}
               {selectedCategory && (
                 <div>
-                  <div className="max-h-96 overflow-y-auto -mx-1 px-1">
-                    {filteredPinsForMobile.length > 0 ? (
-                      <div className="grid grid-cols-3 gap-3">
+                  {filteredPinsForMobile.length > 0 ? (
+                    <div className="grid grid-cols-3 gap-2">
                         {filteredPinsForMobile.map((pin, index) => {
                           const isSoldOut = pin.quantity !== undefined && pin.quantity === 0;
                           const isSelected = selectedPins.some((p) => p.pin && p.pin.src === pin.src);
@@ -322,13 +323,13 @@ const MobileOverlay = ({
                                   }
                                 }}
                                 disabled={isSoldOut}
-                                className={`p-2.5 flex flex-col items-center w-full rounded-lg transition-colors ${
+                                className={`p-2 flex flex-col items-center w-full rounded-lg transition-colors ${
                                   isSelected
                                     ? 'bg-gray-50'
                                     : 'hover:bg-gray-50'
                                 } ${isSoldOut ? 'opacity-40 cursor-not-allowed' : ''}`}
                               >
-                                <div className="relative flex items-center justify-center rounded" style={{ width: '5rem', height: '5rem', overflow: 'visible' }}>
+                                <div className="relative flex items-center justify-center rounded" style={{ width: '4rem', height: '4rem', overflow: 'visible' }}>
                                   <img
                                     src={pin.src}
                                     alt={pin.name}
@@ -337,32 +338,31 @@ const MobileOverlay = ({
                                     decoding="async"
                                   />
                                   {isSelected && !isSoldOut && (
-                                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
-                                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
+                                      <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                       </svg>
                                     </div>
                                   )}
                                 </div>
-                                <span className={`text-xs text-center line-clamp-2 mt-1.5 font-light ${
+                                <span className={`text-[10px] text-center line-clamp-2 mt-1 font-light ${
                                   isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'
-                                }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+                                }`} style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                                   {pin.name}
                                 </span>
                               </button>
                               {isSoldOut && (
-                                <span className="text-[10px] text-gray-400 font-light">Sold Out</span>
+                                <span className="text-[9px] text-gray-400 font-light">Sold Out</span>
                               )}
                             </div>
                           );
                         })}
-                      </div>
-                    ) : (
-                      <div className="text-center py-12 text-gray-400 text-sm font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
-                        No charms found
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-400 text-sm font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                      No charms found
+                    </div>
+                  )}
                 </div>
               )}
             </div>

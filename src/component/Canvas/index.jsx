@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as fabric from 'fabric';
+import CanvasControls from './components/CanvasControls';
+import CanvasBackground from './components/CanvasBackground';
 
 const Canvas = ({ 
   selectedCaseType, 
@@ -17,15 +19,10 @@ const Canvas = ({
   const caseBorderRectRef = useRef(null); // Red border around the case image
   const backgroundRectRef = useRef(null); // Background rectangle behind all objects
   const borderRectsRef = useRef(new Map()); // Store border rectangles for selected objects
-  const topLimitRef = useRef(null); // Top limit line
-  const rightLimitRef = useRef(null); // Right limit line
-  const bottomLimitRef = useRef(null); // Bottom limit line
-  const leftLimitRef = useRef(null); // Left limit line
   const [selectedPin, setSelectedPin] = useState(null);
   const [controlsPosition, setControlsPosition] = useState({ x: 0, y: 0 });
   const [showControls, setShowControls] = useState(false);
   const [caseImageUrl, setCaseImageUrl] = useState(null); // Store case image URL for background
-  const [showInvalidPositionAlert, setShowInvalidPositionAlert] = useState(false);
 
   // Load image function
   const loadImage = (src, isCase = false, pinWidth = 170, pinHeight = 170) => {
@@ -125,6 +122,25 @@ const Canvas = ({
     });
   };
 
+  // Bring all charms (pins) to the front - always keep them at front like controls
+  const bringAllCharmsToFront = useCallback(() => {
+    if (!fabricCanvas.current) return;
+    
+    const objects = fabricCanvas.current.getObjects();
+    const charms = objects.filter(obj => obj.pinData !== undefined);
+    
+    if (charms.length === 0) {
+      return;
+    }
+    
+    // Bring each charm to front
+    charms.forEach(charm => {
+      fabricCanvas.current.bringObjectToFront(charm);
+    });
+    
+    fabricCanvas.current.renderAll();
+  }, []);
+
   // Create case border rectangle
   const createCaseBorder = useCallback(() => {
     if (!fabricCanvas.current || !containerRef.current) return;
@@ -160,82 +176,16 @@ const Canvas = ({
     
     // Canvas dimension text removed - no longer showing canvas area
     
-    // Remove existing limit lines if they exist
-    if (topLimitRef.current) fabricCanvas.current.remove(topLimitRef.current);
-    if (rightLimitRef.current) fabricCanvas.current.remove(rightLimitRef.current);
-    if (bottomLimitRef.current) fabricCanvas.current.remove(bottomLimitRef.current);
-    if (leftLimitRef.current) fabricCanvas.current.remove(leftLimitRef.current);
-    // Create all 4 limit lines at 0px offset (canvas edges)
-    // Top limit line
-    const topLimitLine = new fabric.Line(
-      [0, 0, canvasWidth, 0],
-      {
-        stroke: 'red',
-        strokeWidth: 2,
-        strokeDashArray: [10, 5],
-        selectable: false,
-        evented: false,
-        visible: false,
-      }
-    );
-    topLimitRef.current = topLimitLine;
-    fabricCanvas.current.add(topLimitLine);
-    fabricCanvas.current.sendObjectToBack(topLimitLine);
-    
-    // Right limit line
-    const rightLimitLine = new fabric.Line(
-      [canvasWidth, 0, canvasWidth, canvasHeight],
-      {
-        stroke: 'red',
-        strokeWidth: 2,
-        strokeDashArray: [10, 5],
-        selectable: false,
-        evented: false,
-        visible: false,
-      }
-    );
-    rightLimitRef.current = rightLimitLine;
-    fabricCanvas.current.add(rightLimitLine);
-    fabricCanvas.current.sendObjectToBack(rightLimitLine);
-    
-    // Bottom limit line
-    const bottomLimitLine = new fabric.Line(
-      [0, canvasHeight, canvasWidth, canvasHeight],
-      {
-        stroke: 'red',
-        strokeWidth: 2,
-        strokeDashArray: [10, 5],
-        selectable: false,
-        evented: false,
-        visible: false,
-      }
-    );
-    bottomLimitRef.current = bottomLimitLine;
-    fabricCanvas.current.add(bottomLimitLine);
-    fabricCanvas.current.sendObjectToBack(bottomLimitLine);
-    
-    // Left limit line
-    const leftLimitLine = new fabric.Line(
-      [0, 0, 0, canvasHeight],
-      {
-        stroke: 'red',
-        strokeWidth: 2,
-        strokeDashArray: [10, 5],
-        selectable: false,
-        evented: false,
-        visible: false,
-      }
-    );
-    leftLimitRef.current = leftLimitLine;
-    fabricCanvas.current.add(leftLimitLine);
-    fabricCanvas.current.sendObjectToBack(leftLimitLine);
     
     if (backgroundRectRef.current) {
       fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
     }
     
+    // Always keep charms at front after creating border
+    bringAllCharmsToFront();
+    
     fabricCanvas.current.renderAll();
-  }, []);
+  }, [bringAllCharmsToFront]);
 
   // Create or update border rectangle for selected object
   const updateBorderRect = useCallback((obj) => {
@@ -286,8 +236,11 @@ const Canvas = ({
     // Bring the selected object to front so border appears below it
     fabricCanvas.current.bringObjectToFront(obj);
     
+    // Always keep charms at front
+    bringAllCharmsToFront();
+    
     fabricCanvas.current.renderAll();
-  }, []);
+  }, [bringAllCharmsToFront]);
 
   // Remove border rectangle for object
   const removeBorderRect = useCallback((obj) => {
@@ -319,20 +272,18 @@ const Canvas = ({
     const canvasOffsetX = canvasRect.left - containerRect.left;
     const canvasOffsetY = canvasRect.top - containerRect.top;
     
-    // Calculate desired position (just above the charm)
-    const desiredX = canvasOffsetX + rect.left + rect.width / 2;
-    // Higher offset on mobile, closer on desktop
+    // Calculate desired position (just below the charm)
+    const desiredX = canvasOffsetX + rect.left + rect.width / 3;
+    // Offset below the charm - more space on mobile, closer on desktop
     const isMobile = window.innerWidth < 768;
-    const verticalOffset = isMobile ? -50 : -14; // Higher on mobile
-    const desiredY = canvasOffsetY + rect.top + verticalOffset;
+    const verticalOffset = isMobile ? 50 : 46; // Positive offset to place below - increased for lower position
+    const desiredY = canvasOffsetY + rect.top + rect.height + verticalOffset;
     
-    // Clamp within container bounds
+    // Allow controls to be positioned outside container bounds
     const controlWidth = 70; // tighter controls
-    const controlHeight = 32;
-    const clampedX = Math.max(6, Math.min(desiredX - controlWidth / 2, containerRect.width - controlWidth - 6));
-    const clampedY = Math.max(6, Math.min(desiredY, containerRect.height - controlHeight - 6));
+    const centeredX = desiredX - controlWidth / 2;
     
-    setControlsPosition({ x: clampedX, y: clampedY });
+    setControlsPosition({ x: centeredX, y: desiredY });
   }, []);
 
 
@@ -342,7 +293,7 @@ const Canvas = ({
   
     // Fixed size for all screen sizes
     const canvasWidth = 450;
-    const canvasHeight = 450;
+    const canvasHeight = 400;
 
     const oldWidth = canvas.getWidth();
     const oldHeight = canvas.getHeight();
@@ -428,9 +379,7 @@ const Canvas = ({
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
       const obj = e.target;
-      if (!obj || !obj.getBoundingRect || obj.isCase || obj === caseBorderRectRef.current || 
-          obj === topLimitRef.current || obj === rightLimitRef.current || 
-          obj === bottomLimitRef.current || obj === leftLimitRef.current) return; // Skip case object, case border, and all limit elements
+      if (!obj || !obj.getBoundingRect || obj.isCase || obj === caseBorderRectRef.current) return; // Skip case object and case border
       
       // Get canvas bounds for constraint (case is now background image)
       if (!fabricCanvas.current) return;
@@ -481,45 +430,6 @@ const Canvas = ({
       // Hide red border around the case image (no longer showing it)
       if (caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
-      }
-      
-      // Check if object is a charm (pin) and if it's over any edge (0px offset)
-      const isPin = obj.pinData !== undefined;
-      if (isPin) {
-        // Check all 4 edges at 0px offset (canvas boundaries)
-        const isOverTop = objRect.top < 0;
-        const isOverRight = objRect.left + objRect.width > canvasWidth;
-        const isOverBottom = objRect.top + objRect.height > canvasHeight;
-        const isOverLeft = objRect.left < 0;
-        const isOverAnyEdge = isOverTop || isOverRight || isOverBottom || isOverLeft;
-        
-        // Show/hide limit lines based on which edge is crossed
-        if (topLimitRef.current) {
-          topLimitRef.current.set({ visible: isOverTop });
-        }
-        if (rightLimitRef.current) {
-          rightLimitRef.current.set({ visible: isOverRight });
-        }
-        if (bottomLimitRef.current) {
-          bottomLimitRef.current.set({ visible: isOverBottom });
-        }
-        if (leftLimitRef.current) {
-          leftLimitRef.current.set({ visible: isOverLeft });
-        }
-        
-        // Show invalid position alert if over any edge
-        setShowInvalidPositionAlert(isOverAnyEdge);
-        
-        if (isOverAnyEdge) {
-          fabricCanvas.current.renderAll();
-        }
-      } else {
-        // Hide all limits if not a pin
-        if (topLimitRef.current) topLimitRef.current.set({ visible: false });
-        if (rightLimitRef.current) rightLimitRef.current.set({ visible: false });
-        if (bottomLimitRef.current) bottomLimitRef.current.set({ visible: false });
-        if (leftLimitRef.current) leftLimitRef.current.set({ visible: false });
-        setShowInvalidPositionAlert(false);
       }
       
       // Keep object within case bounds
@@ -606,6 +516,8 @@ const Canvas = ({
         borderRect.setCoords();
         // Ensure border stays below object by bringing object to front
         fabricCanvas.current.bringObjectToFront(obj);
+        // Always keep charms at front
+        bringAllCharmsToFront();
       }
       
       // Update controls position during movement for the active object
@@ -623,14 +535,10 @@ const Canvas = ({
         caseBorderRectRef.current.set('visible', false);
       }
       
-      // Hide all limit lines when object movement is complete
-      if (topLimitRef.current) topLimitRef.current.set({ visible: false });
-      if (rightLimitRef.current) rightLimitRef.current.set({ visible: false });
-      if (bottomLimitRef.current) bottomLimitRef.current.set({ visible: false });
-      if (leftLimitRef.current) leftLimitRef.current.set({ visible: false });
-      setShowInvalidPositionAlert(false);
-      
       if (obj && !obj.isCase && obj !== caseBorderRectRef.current) {
+        // Always keep charms at front after modification
+        bringAllCharmsToFront();
+        
         fabricCanvas.current.renderAll();
       }
       
@@ -706,6 +614,7 @@ const Canvas = ({
         setSelectedPin(obj);
         setShowControls(true);
         updateControls(obj);
+        
         fabricCanvas.current.renderAll();
         // Do not notify parent here; handled when adding the pin
       }
@@ -746,6 +655,7 @@ const Canvas = ({
         setSelectedPin(obj);
         setShowControls(true);
         updateControls(obj);
+        
         fabricCanvas.current.renderAll();
         // Don't call onPinSelect here to avoid duplicate additions
       }
@@ -778,18 +688,13 @@ const Canvas = ({
         caseBorderRectRef.current.set('visible', false);
       }
       
-      // Hide all limit lines when selection is cleared
-      if (topLimitRef.current) topLimitRef.current.set({ visible: false });
-      if (rightLimitRef.current) rightLimitRef.current.set({ visible: false });
-      if (bottomLimitRef.current) bottomLimitRef.current.set({ visible: false });
-      if (leftLimitRef.current) leftLimitRef.current.set({ visible: false });
-      setShowInvalidPositionAlert(false);
-      
       // Remove all custom border rectangles when selection is cleared
       borderRectsRef.current.forEach((borderRect, obj) => {
         fabricCanvas.current.remove(borderRect);
         borderRectsRef.current.delete(obj);
       });
+      
+      
       fabricCanvas.current.renderAll();
       setSelectedPin(null);
       setShowControls(false);
@@ -823,7 +728,7 @@ const Canvas = ({
       }
       canvas?.dispose();
     };
-}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect, selectedCaseType, selectedColor, products, createCaseBorder, resizeCanvasToFitScreen]);
+}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect, selectedCaseType, selectedColor, products, createCaseBorder, resizeCanvasToFitScreen, bringAllCharmsToFront]);
 
   // Update controls position when selectedPin changes
   useEffect(() => {
@@ -875,6 +780,8 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(textInstance);
       // Create custom border rectangle
       updateBorderRect(textInstance);
+      // Always keep charms at front
+      bringAllCharmsToFront();
       fabricCanvas.current.renderAll();
 
       setSelectedPin(textInstance);
@@ -903,7 +810,7 @@ const Canvas = ({
         updateControls(textInstance);
       }
     },
-    [updateControls, updateBorderRect]
+    [updateControls, updateBorderRect, bringAllCharmsToFront]
   );
 
   // Update case image URL for background when case type or color changes
@@ -924,8 +831,7 @@ const Canvas = ({
       const objects = fabricCanvas.current.getObjects();
       objects.forEach(obj => {
         if (obj.isCase || obj === caseBorderRectRef.current ||
-            obj === topLimitRef.current || obj === rightLimitRef.current ||
-            obj === bottomLimitRef.current || obj === leftLimitRef.current) {
+            false) { // Removed limit refs check
           fabricCanvas.current.remove(obj);
         }
       });
@@ -936,20 +842,101 @@ const Canvas = ({
       borderRectsRef.current.clear();
       caseInstanceRef.current = null;
       caseBorderRectRef.current = null;
-      topLimitRef.current = null;
-      rightLimitRef.current = null;
-      bottomLimitRef.current = null;
-      leftLimitRef.current = null;
+
+      // Immediately bring charms to front
+      bringAllCharmsToFront();
+      
+      // Use requestAnimationFrame for immediate update
+      requestAnimationFrame(() => {
+        bringAllCharmsToFront();
+      });
 
       // Recreate case border after a short delay to ensure container is ready
       setTimeout(() => {
         if (fabricCanvas.current && containerRef.current) {
           createCaseBorder();
+          // Always keep charms at front after case border is created
+          bringAllCharmsToFront();
+          
+          // Call multiple times with delays to ensure charms stay at front
+          requestAnimationFrame(() => {
+            bringAllCharmsToFront();
+            setTimeout(() => {
+              bringAllCharmsToFront();
+              setTimeout(() => {
+                bringAllCharmsToFront();
+                setTimeout(() => {
+                  bringAllCharmsToFront();
+                }, 200);
+              }, 100);
+            }, 50);
+          });
         }
       }, 100);
     }
 
-  }, [selectedCaseType, selectedColor, products, createCaseBorder]);
+  }, [selectedCaseType, selectedColor, products, createCaseBorder, bringAllCharmsToFront]);
+
+  // Ensure charms stay at front when case image loads/changes
+  useEffect(() => {
+    if (!caseImageUrl || !fabricCanvas.current) return;
+
+    // Function to bring charms to front with multiple attempts
+    const ensureCharmsAtFront = () => {
+      if (fabricCanvas.current) {
+        bringAllCharmsToFront();
+        requestAnimationFrame(() => {
+          bringAllCharmsToFront();
+        });
+      }
+    };
+
+    // Wait for the image to load, then ensure charms are at front
+    const img = new Image();
+    img.onload = () => {
+      // Image has loaded, ensure charms are at front
+      ensureCharmsAtFront();
+      // Call multiple times with delays to ensure it sticks
+      setTimeout(() => {
+        ensureCharmsAtFront();
+        setTimeout(() => {
+          ensureCharmsAtFront();
+          setTimeout(() => {
+            ensureCharmsAtFront();
+          }, 200);
+        }, 100);
+      }, 50);
+    };
+    img.onerror = () => {
+      // Even if image fails to load, ensure charms are at front
+      ensureCharmsAtFront();
+    };
+    img.src = caseImageUrl;
+
+    // Also call immediately in case image is cached
+    ensureCharmsAtFront();
+    
+    // Call again after delays to handle any async rendering
+    const timeoutId1 = setTimeout(() => {
+      ensureCharmsAtFront();
+    }, 10);
+    const timeoutId2 = setTimeout(() => {
+      ensureCharmsAtFront();
+    }, 50);
+    const timeoutId3 = setTimeout(() => {
+      ensureCharmsAtFront();
+    }, 150);
+    const timeoutId4 = setTimeout(() => {
+      ensureCharmsAtFront();
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId1);
+      clearTimeout(timeoutId2);
+      clearTimeout(timeoutId3);
+      clearTimeout(timeoutId4);
+    };
+  }, [caseImageUrl, bringAllCharmsToFront]);
 
   // Handle pin selection from PinSelector
   const handlePinSelection = useCallback(async (pin) => {
@@ -986,6 +973,8 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(imgInstance);
       // Create custom border rectangle
       updateBorderRect(imgInstance);
+      // Always keep charms at front
+      bringAllCharmsToFront();
       fabricCanvas.current.renderAll();
       
       // Notify parent about pin addition exactly once per click
@@ -995,7 +984,7 @@ const Canvas = ({
     } catch (error) {
       console.error('Error loading pin:', error);
     }
-  }, [onPinSelect, updateBorderRect]);
+  }, [onPinSelect, updateBorderRect, bringAllCharmsToFront]);
 
   // Expose pin selection method globally
   useEffect(() => {
@@ -1113,104 +1102,57 @@ const Canvas = ({
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   
   return (
-    <div className="flex flex-col items-center justify-center overflow-visible w-[350px] mx-auto" style={{scrollbarWidth: 'none', msOverflowStyle: 'none', overflow: 'visible', touchAction: isMobile ? 'none' : 'auto', marginBottom: isMobile ? '20px' : '0'}}>
       <div 
-        ref={containerRef}
-        className="happy-card h-[480px] p-2 mt-0 sm:p-6 mb-2 relative flex items-center justify-center w-full overflow-visible  " 
+    className="flex flex-col items-center justify-center overflow-visible w-[350px] h-[400px]   mx-auto"
         style={{
-         
-          scrollbarWidth: 'none', 
-          msOverflowStyle: 'none', 
-          overflow: 'visible', 
-          touchAction: isMobile ? 'none' : 'auto',
-          aspectRatio: isMobile ? (window.innerWidth < 375 ? '1/1.1' : '1/1.2') : '1/1',
-          zIndex: isMobile ? 10 : 'auto',
-          marginBottom: isMobile ? '30px' : '0',
-        }}
-      >
-        {/* Background Image Div */}
-        <div
-          className="absolute inset-0 w-full h-full flex items-center justify-center mt-6"
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+      overflow: "visible",
+      touchAction: isMobile ? "none" : "auto",
+      
+    }}
+>
+<div
+    ref={containerRef}
+    className="happy-card h-[480px] p-2 mt-0 sm:p-6 mb-2 relative flex items-center justify-center w-full overflow-visible"
           style={{
-            backgroundImage: caseImageUrl ? `url(${caseImageUrl})` : 'none',
-            backgroundSize: '80%',
-            backgroundPosition: 'top',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: 'transparent',
-          }}
-        />
-        
-        {/* Fabric.js Canvas Overlay */}
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+      overflow: "visible",
+      touchAction: isMobile ? "none" : "auto",
+      aspectRatio: isMobile
+        ? window.innerWidth < 375
+          ? "1/1.1"
+          : "1/1.2"
+        : "1/1",
+      marginBottom: isMobile ? "30px" : "0",
+      position: "relative",
+      isolation: "isolate", // hard guarantees stacking wont break
+    }}
+  >
+    {/* Background Image — Always Behind */}
+    <CanvasBackground caseImageUrl={caseImageUrl} />
+
+    {/* Canvas — Always in Front */}
         <canvas 
           ref={canvasRef} 
-          className="relative z-10 max-w-full w-full bg-black "
+      className="absolute inset-0 w-full h-full"
           style={{ 
-            background: 'transparent',
-            maxWidth: '100%',
-            width: '100%',
-            height: '100%',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            overflow: 'visible',
-            touchAction: isMobile ? 'none' : 'auto',
-            display: 'block'
+        background: "transparent",
+        pointerEvents: "auto",
+        touchAction: isMobile ? "none" : "auto",
           }}
         />
         
         {/* Controls */}
-        {showControls && selectedPin && (
-          <div 
-            className="absolute z-[9999] flex items-center gap-1 bg-white bg-opacity-90 backdrop-blur-sm text-gray-800 rounded px-2 py-1 shadow-md border border-gray-200"
-            style={{
-              left: `${controlsPosition.x}px`,
-              top: `${controlsPosition.y}px`,
-              position: 'absolute',
-              pointerEvents: 'auto',
-              zIndex: 9999
-            }}
-          >
-            <button
-              onClick={handleRotateLeft}
-              className="w-6 h-6 mr-1 flex items-center justify-center text-gray-800 hover:text-gray-900 rounded transition-colors bg-transparent"
-              aria-label="Rotate Left"
-              title="Rotate Left"
-              style={{ color: '#1f2937' }}
-            >
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="currentColor" style={{ color: '#1f2937' }}><path d="M24 192l144 0c9.7 0 18.5-5.8 22.2-14.8s1.7-19.3-5.2-26.2l-46.7-46.7c75.3-58.6 184.3-53.3 253.5 15.9 75 75 75 196.5 0 271.5s-196.5 75-271.5 0c-10.2-10.2-19-21.3-26.4-33-9.5-14.9-29.3-19.3-44.2-9.8s-19.3 29.3-9.8 44.2C49.7 408.7 61.4 423.5 75 437 175 537 337 537 437 437S537 175 437 75C342.8-19.3 193.3-24.7 92.7 58.8L41 7C34.1 .2 23.8-1.9 14.8 1.8S0 14.3 0 24L0 168c0 13.3 10.7 24 24 24z"/></svg>
-            </button>
-            <button
-              onClick={handleRotateRight}
-              className="w-6 h-6 flex items-center justify-center text-gray-800 hover:text-gray-900 rounded transition-colors bg-transparent"
-              aria-label="Rotate Right"
-              title="Rotate Right"
-              style={{ color: '#1f2937' }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="20" height="20" fill="currentColor" style={{ color: '#1f2937' }}><path d="M488 192l-144 0c-9.7 0-18.5-5.8-22.2-14.8s-1.7-19.3 5.2-26.2l46.7-46.7c-75.3-58.6-184.3-53.3-253.5 15.9-75 75-75 196.5 0 271.5s196.5 75 271.5 0c8.2-8.2 15.5-16.9 21.9-26.1 10.1-14.5 30.1-18 44.6-7.9s18 30.1 7.9 44.6c-8.5 12.2-18.2 23.8-29.1 34.7-100 100-262.1 100-362 0S-25 175 75 75c94.3-94.3 243.7-99.6 344.3-16.2L471 7c6.9-6.9 17.2-8.9 26.2-5.2S512 14.3 512 24l0 144c0 13.3-10.7 24-24 24z"/>
-              </svg>
-            </button>
-            <button
-              onClick={handleDelete}
-              className="w-6 h-6 flex items-center justify-center text-lg text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
-              aria-label="Remove"
-            >
-              ×
-            </button>
-          </div>
-        )}
+    <CanvasControls
+      showControls={showControls && selectedPin}
+      controlsPosition={controlsPosition}
+      onRotateLeft={handleRotateLeft}
+      onRotateRight={handleRotateRight}
+      onDelete={handleDelete}
+    />
       </div>
-      
-      {/* Invalid Position Alert */}
-      {showInvalidPositionAlert && (
-        <div className="mt-4 w-full max-w-[450px] mx-auto">
-          <div 
-            className="px-4 py-3 rounded-md shadow-lg border-2  bg-red-500"
-          >
-            <p className="text-sm font-semibold text-center text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
-              Position is invalid, out of the edge limit
-            </p>
-          </div>
-        </div>
-      )}
       
     </div>
   );

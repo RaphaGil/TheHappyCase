@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Products from '../../products.json';
+import Products from '../../data/products.json';
 import { useCurrency } from '../../context/CurrencyContext';
 
 const Items = () => {
@@ -14,11 +14,11 @@ const Items = () => {
   };
 
   return (
-    <section className="bg-white relative items-center justify-center py-20 md:py-32 overflow-hidden">
+    <section className="bg-white relative items-center justify-center py-20 md:py-24 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
         {/* Header Section */}
-        <div className="text-center mb-16 md:mb-20">
-          <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+        <div className="text-center">
+          <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
             Our Cases
           </h2>
         </div>
@@ -59,9 +59,9 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
   return (
     <div className="group flex flex-col h-full">
       {/* Product Image */}
-      <div className="relative ">
+      <div className="relative mt-8">
         <div 
-          className="aspect-square overflow-hidden w-full max-w-2xl mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl transition-all duration-300 hover:border-gray-300 h-[350px] sm:h-[400px] md:h-[450px]  relative"
+          className="aspect-square overflow-hidden w-full max-w-2xl mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl transition-all duration-300 hover:border-gray-300 h-[250px] sm:h-[300px] md:h-[350px] relative"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -108,10 +108,10 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Product Info */}
       <div className="text-center flex flex-col flex-grow">
-        <h3 className="text-lg font-light text-gray-800 mb-2 mt-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <h3 className="text-lg font-light text-gray-800 mb-2 mt-4" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
           {displayName}
         </h3>
-        <p className="text-sm text-gray-700 mb-6 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <p className="text-sm text-gray-700 mb-6 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
           {formatPrice(item.basePrice || 0)}
         </p>
         
@@ -119,8 +119,8 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
         <div className="mt-auto">
           <Link
             to="/CreateYours"
-            className="inline-block text-xs uppercase tracking-wider text-gray-700 hover:text-gray-900 py-2.5 px-8 border border-gray-300 hover:border-gray-900 transition-all duration-300 font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="inline-block w-full py-3 text-sm uppercase tracking-wider transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white border-blue-600 hover:border-blue-700 text-center"
+            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
           >
             Personalize Now
           </Link>

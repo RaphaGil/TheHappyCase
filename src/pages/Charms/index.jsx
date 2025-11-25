@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import Products from '../../products.json';
+import Products from '../../data/products.json';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import GlueInfoModal from '../../component/GlueInfoModal';
@@ -370,173 +370,159 @@ const Charms = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-3xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl font-light text-gray-900 mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
           CHARMS
           </h1>
-          <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
-          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-3 sm:mb-4"></div>
+          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light px-4" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
             <Link to="/CreateYours" className="text-gray-900 hover:text-gray-700 underline transition-colors">Create</Link> your custom case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself.
           </p>
         </div>
 
-        {/* Charm Type Selection - Minimalist Tabs */}
-        <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
-          <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
-            {charmTypes.map((type) => (
-              <button
-                key={type.key}
-                onClick={() => handleCharmTypeChange(type.key)}
-                className={`px-3 py-1.5 text-sm uppercase tracking-wider transition-all duration-200  ${
-                  selectedCharmType === type.key
-                    ? 'border-b-2 border-blue-600 text-blue-700 bg-blue-50/50'
-                    : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50/30'
-                }`}
-                style={{fontFamily: "'Poppins', sans-serif"}}
-              >
-                {type.label}
-              </button>
-            ))}
+        {/* Filters Section - Organized Container */}
+        <div className="mb-8 border-b border-gray-100 pb-6">
+          {/* Charm Type Selection - Main Tabs */}
+          <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
+            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
+              {charmTypes.map((type) => (
+                <button
+                  key={type.key}
+                  onClick={() => handleCharmTypeChange(type.key)}
+                  className={`px-6 py-2.5 text-sm uppercase tracking-wider transition-all duration-200  ${
+                    selectedCharmType === type.key
+                      ? 'border-b-2 border-blue-600 text-blue-700 bg-blue-50/50'
+                      : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50/30'
+                  }`}
+                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                >
+                  {type.label}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Category Selection Tabs - Sub-filters */}
+          {(selectedCharmType === 'flags' || selectedCharmType === 'bronze' || selectedCharmType === 'colorful') && (
+            <div className="flex justify-center mb-6">
+              <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
+                {selectedCharmType === 'flags' && [
+                  { key: 'all', label: 'ALL' },
+                  { key: 'europe', label: 'EUROPE' },
+                  { key: 'americas', label: 'AMERICAS' },
+                  { key: 'africa', label: 'AFRICA' },
+                  { key: 'asia', label: 'ASIA' },
+                  { key: 'special', label: 'SPECIAL' }
+                ].map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setSelectedContinent(key);
+                      setFlagsCurrentPage(1);
+                    }}
+                    className={`px-3 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
+                      selectedContinent === key
+                        ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
+                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
+                    }`}
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  >
+                    {label}
+                  </button>
+                ))}
+                {selectedCharmType === 'bronze' && [
+                  { key: 'all', label: 'ALL' },
+                  { key: 'travel', label: 'TRAVEL' },
+                  { key: 'animals', label: 'ANIMALS' },
+                  { key: 'love', label: 'LOVE' },
+                  { key: 'nature', label: 'NATURE' },
+                  { key: 'symbols', label: 'SYMBOLS' }
+                ].map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setSelectedBronzeCategory(key);
+                      setBronzeCurrentPage(1);
+                    }}
+                    className={`px-3 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
+                      selectedBronzeCategory === key
+                        ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
+                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
+                    }`}
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  >
+                    {label}
+                  </button>
+                ))}
+                {selectedCharmType === 'colorful' && [
+                  { key: 'all', label: 'ALL' },
+                  { key: 'travel', label: 'TRAVEL' },
+                  { key: 'disney', label: 'DISNEY' },
+                  { key: 'drinks', label: 'DRINKS' },
+                  { key: 'inspiration', label: 'INSPIRATION' },
+                  { key: 'hearts', label: 'HEARTS' },
+                  { key: 'nature', label: 'NATURE' },
+                  { key: 'camera', label: 'CAMERA' }
+                ].map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setSelectedColorfulCategory(key);
+                      setColorfulCurrentPage(1);
+                    }}
+                    className={`px-3 py-2 text-xs uppercase tracking-wider transition-all duration-200 ${
+                      selectedColorfulCategory === key
+                        ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
+                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
+                    }`}
+                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Continent Selection Tabs - Only show for Flags */}
-        {selectedCharmType === 'flags' && (
-          <div className="flex justify-center mb-6">
-            <div className="flex gap-0.5 border-b  border-gray-200 flex-wrap justify-center">
-              {[
-                { key: 'all', label: 'ALL' },
-                { key: 'europe', label: 'EUROPE' },
-                { key: 'americas', label: 'AMERICAS' },
-                { key: 'africa', label: 'AFRICA' },
-                { key: 'asia', label: 'ASIA' },
-                { key: 'special', label: 'SPECIAL' }
-              ].map(({ key, label }) => (
-                <button
-                  key={key}
-                  onClick={() => {
-                    setSelectedContinent(key);
-                    setFlagsCurrentPage(1); // Reset to first page when continent changes
-                  }}
-                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
-                    selectedContinent === key
-                      ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
-                  }`}
-                  style={{fontFamily: "'Poppins', sans-serif"}}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Bronze Category Selection Tabs - Only show for Bronze Charms */}
-        {selectedCharmType === 'bronze' && (
-          <div className="flex justify-center mb-6">
-            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
-              {[
-                { key: 'all', label: 'ALL' },
-                { key: 'travel', label: 'TRAVEL' },
-                { key: 'animals', label: 'ANIMALS' },
-                { key: 'love', label: 'LOVE' },
-                { key: 'nature', label: 'NATURE' },
-                { key: 'symbols', label: 'SYMBOLS' }
-              ].map(({ key, label }) => (
-                <button
-                  key={key}
-                  onClick={() => {
-                    setSelectedBronzeCategory(key);
-                    setBronzeCurrentPage(1); // Reset to first page when category changes
-                  }}
-                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
-                    selectedBronzeCategory === key
-                      ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
-                  }`}
-                  style={{fontFamily: "'Poppins', sans-serif"}}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Colorful Category Selection Tabs - Only show for Colorful Charms */}
-        {selectedCharmType === 'colorful' && (
-          <div className="flex justify-center mb-6">
-            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
-              {[
-                { key: 'all', label: 'ALL' },
-                { key: 'travel', label: 'TRAVEL' },
-                { key: 'disney', label: 'DISNEY' },
-                { key: 'drinks', label: 'DRINKS' },
-                { key: 'inspiration', label: 'INSPIRATION' },
-                { key: 'hearts', label: 'HEARTS' },
-                { key: 'nature', label: 'NATURE' },
-                { key: 'camera', label: 'CAMERA' }
-              ].map(({ key, label }) => (
-                <button
-                  key={key}
-                  onClick={() => {
-                    setSelectedColorfulCategory(key);
-                    setColorfulCurrentPage(1); // Reset to first page when category changes
-                  }}
-                  className={`px-3 py-1.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
-                    selectedColorfulCategory === key
-                      ? 'border-b-2 border-blue-600 text-blue-700 font-semibold bg-blue-50/50'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50/30'
-                  }`}
-                  style={{fontFamily: "'Poppins', sans-serif"}}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Search Bar */}
-        <div className="mb-10">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search Bar */}
-            <div className="relative flex-1 max-w-md w-full"
-             >
+        {/* Search and Results Section - Organized Together */}
+        <div className="mb-8 space-y-4">
+          {/* Search Bar */}
+          <div className="flex justify-center">
+            <div className="relative w-full max-w-md">
               <input
                 type="text"
                 placeholder="Search charms..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pl-10 text-sm rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-                style={{fontFamily: "'Poppins', sans-serif"}}
+                className="w-full px-4 py-3 pl-10 text-sm rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light border border-gray-200"
+                style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
               />
               <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
               </svg>
             </div>
           </div>
-        </div>
 
-        {/* Results Count */}
-        <div className="mb-8 flex items-center justify-between text-sm text-gray-500">
-          <p style={{fontFamily: "'Poppins', sans-serif"}}>
-            {filteredCharms.length} {filteredCharms.length === 1 ? 'item' : 'items'}
-            {totalPages > 1 && (
-              <span className="ml-2">
-                (Page {currentPage} of {totalPages})
-              </span>
-            )}
-          </p>
+          {/* Results Count */}
+          <div className="flex items-center justify-center text-sm text-gray-500">
+            <p style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+              {filteredCharms.length} {filteredCharms.length === 1 ? 'item' : 'items'}
+              {totalPages > 1 && (
+                <span className="ml-2">
+                  (Page {currentPage} of {totalPages})
+                </span>
+              )}
+            </p>
+          </div>
         </div>
 
         {/* Charms Grid */}
         {filteredCharms.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-12 min-h-[600px]">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 mb-12 min-h-[400px] sm:min-h-[600px]">
               {displayedCharms.map((charm, index) => {
               const colorIndex = index % pastelColors.length;
               return (
@@ -548,9 +534,9 @@ const Charms = () => {
                     <img
                       src={charm.src}
                       alt={charm.name}
-                      className={`w-full h-full object-contain p-2 transition-opacity duration-200 group-hover:opacity-80 ${(charm.quantity !== undefined && charm.quantity === 0) ? 'opacity-50' : ''}`}
+                      className={`w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80 ${(charm.quantity !== undefined && charm.quantity === 0) ? 'opacity-50' : ''}`}
                       style={{
-                        transform: `scale(${charm.size !== undefined ? charm.size : 1.0})`
+                        transform: `scale(${charm.size !== undefined ? charm.size * 0.9 : 0.9})`
                       }}
                       onError={(e) => {
                         if (e.target) {
@@ -567,7 +553,7 @@ const Charms = () => {
                     {/* Sold Out Overlay */}
                     {(charm.quantity !== undefined && charm.quantity === 0) && (
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
-                        <span className="text-white text-lg font-medium uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
+                        <span className="text-white text-xl font-medium uppercase tracking-wider" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                           Sold Out
                         </span>
                       </div>
@@ -577,7 +563,7 @@ const Charms = () => {
                       <button
                         onClick={() => handleAddToCart(charm)}
                         className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10"
-                        style={{fontFamily: "'Poppins', sans-serif"}}
+                        style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                       >
                         {/* Bag Icon - Visible on mobile and desktop */}
                         <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -588,11 +574,11 @@ const Charms = () => {
                       </button>
                     )}
                   </div>
-                  <h3 className="text-sm text-gray-700 text-center mb-1 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <h3 className="text-sm text-gray-700 text-center mb-1 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                     {charm.name}
                   </h3>
                   <div className="text-center">
-                    <span className="text-sm text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    <span className="text-sm text-gray-900 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                       {formatPrice(getCharmPrice(charm))}
                     </span>
                   </div>
@@ -603,7 +589,7 @@ const Charms = () => {
             
             {/* Pagination Navigation - For all charm types */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-4 mb-12">
+              <div className="flex items-center justify-center gap-2 sm:gap-4 mb-8 sm:mb-12">
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1}
@@ -612,7 +598,7 @@ const Charms = () => {
                       ? 'border-gray-200 text-gray-300 cursor-not-allowed'
                       : 'border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-400'
                   }`}
-                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
@@ -620,7 +606,7 @@ const Charms = () => {
                   <span>Previous</span>
                 </button>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                       key={page}
@@ -630,7 +616,7 @@ const Charms = () => {
                           ? 'border-gray-900 bg-gray-50 text-gray-900 font-medium'
                           : 'border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-400'
                       }`}
-                      style={{fontFamily: "'Poppins', sans-serif"}}
+                      style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                     >
                       {page}
                     </button>
@@ -645,7 +631,7 @@ const Charms = () => {
                       ? 'border-gray-200 text-gray-300 cursor-not-allowed'
                       : 'border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-400'
                   }`}
-                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                 >
                   <span>Next</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -656,8 +642,8 @@ const Charms = () => {
             )}
           </>
         ) : (
-          <div className="py-16 text-center">
-            <p className="text-gray-400 mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="py-12 sm:py-16 text-center">
+            <p className="text-base text-gray-400 mb-4" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
               No charms found
             </p>
             <button
@@ -676,8 +662,8 @@ const Charms = () => {
                   setColorfulCurrentPage(1);
                 }
               }}
-              className="text-xs uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200"
-              style={{fontFamily: "'Poppins', sans-serif"}}
+              className="text-sm uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200"
+              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
             >
               Clear Filters
             </button>

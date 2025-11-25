@@ -92,20 +92,20 @@ function Hero() {
         <div className="flex flex-col  items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
           <h1 
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white"
-            style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
+            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
             Custom Your Own 
           </h1>
             <h1 
             className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4"
-            style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
+            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
             Passport Case
           </h1>
           <button 
             onClick={handleStartDesigning}
-            className="px-8 py-3 text-xs uppercase tracking-wider text-white border-2 border-white/80 hover:border-white bg-white/20 hover:bg-white/30 backdrop-blur-md transition-all duration-200 rounded-lg shadow-lg drop-shadow-lg w-fit"
-            style={{fontFamily: "'Poppins', sans-serif", textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'}}
+            className="px-8 py-3 text-sm uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 transition-all duration-200 shadow-lg w-fit"
+            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
           >
             Shop Now
           </button>

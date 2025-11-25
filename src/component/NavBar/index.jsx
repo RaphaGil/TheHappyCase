@@ -353,7 +353,7 @@ const NavBar = () => {
       </div>
 
       {/* Navbar */}
-      <nav className="flex bg-white border-b border-gray-100 justify-between items-center px-4 py-4 relative">
+      <nav className="flex bg-white border-b border-gray-100 justify-between items-center px-4 py-2 relative">
         {/* Left side - Hamburger menu and Logo (mobile) */}
         <div className="flex items-center gap-3 lg:flex-none">
           <button
@@ -390,13 +390,13 @@ const NavBar = () => {
               className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
               style={{ fontFamily: "'Fredoka One', cursive" }}
             >
-              <span className="text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
+              <span className="text-[7px] sm:text-[9px] md:text-[10px] lg:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
                 THE
               </span>
-              <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold leading-none text-blue-900 uppercase">
+              <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold leading-none text-blue-900 uppercase">
                 HAPPY
               </span>
-              <span className="text-end text-[8px] sm:text-[10px] md:text-xs lg:text-sm font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
+              <span className="text-end text-[7px] sm:text-[9px] md:text-[10px] lg:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
                 CASE
               </span>
             </div>
@@ -409,19 +409,19 @@ const NavBar = () => {
           style={{fontFamily: "'Poppins', sans-serif"}}
         >
           <li>
-            <Link to="/" className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 block transition-colors text-xs uppercase tracking-wider font-light text-gray-600">
+            <Link to="/" className="px-3 py-1.5 hover:text-gray-900 hover:bg-gray-50 block transition-colors text-xs uppercase tracking-wider font-light text-gray-600">
               Home
             </Link>
           </li>
           <li>
-            <Link to="/CreateYours" className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-xs uppercase tracking-wider text-gray-600">
+            <Link to="/CreateYours" className="px-3 py-1.5 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-xs uppercase tracking-wider text-gray-600">
               Create Yours
             </Link>
           </li>
           <li>
             <Link 
               to="/PassportCases" 
-              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
+              className="px-3 py-1.5 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
             >
               Passport Cases
             </Link>
@@ -429,17 +429,9 @@ const NavBar = () => {
           <li>
             <Link 
               to="/Charms" 
-              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
+              className="px-3 py-1.5 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
             >
               Charms
-            </Link>
-          </li>
-          <li>
-            <Link 
-              to="/canvas-test" 
-              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block text-gray-600"
-            >
-              Canvas Test
             </Link>
           </li>
         </ul>
@@ -472,7 +464,7 @@ const NavBar = () => {
       <ul
         className={`${
             isOpen
-            ? 'flex flex-col fixed left-0 top-[104px] w-full h-[calc(100vh-100px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
+            ? 'flex flex-col fixed left-0 top-[88px] w-full h-[calc(100vh-88px)] bg-white border-r border-gray-100 pt-6 pb-6 font-light space-y-1 z-50 overflow-y-auto shadow-lg'
               : 'hidden'
           }`}
         style={{fontFamily: "'Poppins', sans-serif"}}
@@ -506,16 +498,6 @@ const NavBar = () => {
               onClick={closeMenu}
             >
               Charms
-            </Link>
-          </li>
-          <li>
-            <Link 
-              to="/canvas-test" 
-              className="px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-xs uppercase tracking-wider block"
-              style={{color: isOpen ? '#6b7280' : '#6b7280'}}
-              onClick={closeMenu}
-            >
-              Canvas Test
             </Link>
           </li>
           {/* Design Ideas link hidden */}

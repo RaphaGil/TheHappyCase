@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../constants';
+import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../../../data/constants';
 
 const CustomTextSection = ({ onTextAdded }) => {
   const [customText, setCustomText] = useState('');
@@ -18,7 +18,7 @@ const CustomTextSection = ({ onTextAdded }) => {
       });
       setCustomTextAdded(true);
       setCustomTextError('');
-      // Notify parent that text was added
+      // Notify parent that text was added - make number 3 black
       if (onTextAdded) {
         onTextAdded();
       }
@@ -34,7 +34,7 @@ const CustomTextSection = ({ onTextAdded }) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
         <div>
           <input
             type="text"

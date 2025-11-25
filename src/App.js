@@ -4,31 +4,25 @@ import Hero from './component/Hero';
 import WhatWeDo from './component/WhatWeDo';
 import Items from './component/Items';
 // import Review from './component/Reviews';
-import Reviews from './component/Contact';
+import Reviews from './component/Review';
 import Footer from './component/Footer';
 import CartDrawer from './component/CartDrawer';
 
-import SmartCase from './pages/SmartCase';
-import FirstClassCase from './pages/FirstClassCase';
-import PremiumCase from './pages/PremiumCase';
 import CreateYours from './pages/CreateYours';
-import Pins from './pages/Pins';
 import DesignIdeas from './pages/DesignIdeas';
-import PassportCover from './pages/PassportCover';
 import CartPage from './pages/Cart';
 import Checkout from './component/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
-import Flags from './pages/Flags';
-import ColorfulCharms from './pages/ColorfulCharms';
-import BronzeCharms from './pages/BronzeCharms';
+import Flags from './component/Flags';
+import ColorfulCharms from './component/ColorfulCharms';
+import BronzeCharms from './component/BronzeCharms';
 import PassportCases from './pages/PassportCases';
 import Charms from './pages/Charms';
 import RefundPolicy from './pages/RefundPolicy';
 import ShippingPolicy from './pages/ShippingPolicy';
 import About from './pages/About';
-import AddText from './pages/AddText';
+import AddText from './component/AddText';
 import Dashboard from './pages/Dashboard';
-import CanvasTest from './pages/CanvasTest';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -59,13 +53,8 @@ function AppContent() {
                   <Reviews />
                 </>
               } />
-          <Route path="/SmartCase" element={<SmartCase />} />
-          <Route path="/FirstClassCase" element={<FirstClassCase />} />
-          <Route path="/PremiumCase" element={<PremiumCase />} />
           <Route path="/CreateYours" element={<CreateYours />} />
-          <Route path="/Pins" element={<Pins />} />
           <Route path="/DesignIdeas" element={<DesignIdeas />} />
-          <Route path="/PassportCover" element={<PassportCover />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
@@ -76,7 +65,6 @@ function AppContent() {
           <Route path="/Charms" element={<Charms />} />
           <Route path="/AddText" element={<AddText />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/canvas-test" element={<CanvasTest />} />
           <Route path="/returns" element={<RefundPolicy />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />

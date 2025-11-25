@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Products from '../../products.json';
+import Products from '../../data/products.json';
 
 const DesignIdeas = () => {
   const navigate = useNavigate();

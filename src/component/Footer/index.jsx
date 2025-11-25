@@ -64,12 +64,12 @@ function Footer() {
                 `}</style>
               </Link>
             </div>
-            <p className="text-gray-900 text-xs leading-relaxed font-light pt-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className="text-gray-900 text-sm leading-relaxed font-light pt-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
               Creating personalized passport cases that bring joy to your travels. 
               Made with love and attention to detail.
             </p>
             <div className="flex flex-col gap-3 pt-2">
-            <p className="text-sm text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>Follow us!</p>
+            <p className="text-sm text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Follow us!</p>
             <div className="flex gap-3">
               <a 
                 href="https://instagram.com/thehappycase.store" 
@@ -103,12 +103,12 @@ function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-3 pb-6 md:pb-0 ">
+          <div className="space-y-3  md:pb-0 ">
             {/* Mobile: Dropdown button */}
             <button
               onClick={() => setQuickLinksOpen(!quickLinksOpen)}
               className="md:hidden flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
-              style={{fontFamily: "'Poppins', sans-serif"}}
+              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
             >
               <span>Quick Links</span>
               <FontAwesomeIcon 
@@ -117,53 +117,53 @@ function Footer() {
               />
             </button>
             {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
               Quick Links
             </h4>
             {/* Mobile: Conditional content */}
             {quickLinksOpen && (
               <ul className="md:hidden space-y-3 pl-2">
                 <li>
-                  <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                    About 
                   </Link>
                 </li>
                 <li>
-                  <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                    Home
                   </a>
                 </li>
                 {/* <li>
-                  <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                     Design Ideas
                   </a>
                 </li> */}
                 <li>
-                  <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                     Create Yours
                   </a>
                 </li>
               </ul>
             )}
             {/* Desktop: Always visible content */}
-            <ul className="hidden md:block space-y-3 pl-2">
+            <ul className="hidden md:block pl-2">
               <li>
-                <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                  About 
                 </Link>
               </li>
               <li>
-                <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                  Home
                 </a>
               </li>
               {/* <li>
-                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                   Design Ideas
                 </a>
               </li> */}
               <li>
-                <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                   Create Yours
                 </a>
               </li>
@@ -176,7 +176,7 @@ function Footer() {
             <button
               onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
               className="md:hidden flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
-              style={{fontFamily: "'Poppins', sans-serif"}}
+              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
             >
               <span>Customer Service</span>
               <FontAwesomeIcon 
@@ -185,19 +185,19 @@ function Footer() {
               />
             </button>
             {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
               Customer Service
             </h4>
             {/* Mobile: Conditional content */}
             {customerServiceOpen && (
               <ul className="md:hidden space-y-3 pl-2">
                 <li>
-                  <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                     Shipping and Processing Times
                   </Link>
                 </li>
                 <li>
-                  <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                     Refund Policy
                   </Link>
                 </li>
@@ -206,12 +206,12 @@ function Footer() {
             {/* Desktop: Always visible content */}
             <ul className="hidden md:block space-y-3 pl-2">
               <li>
-                <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                   Shipping and Processing Times
                 </Link>
               </li>
               <li>
-                <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                   Refund Policy
                 </Link>
               </li>
@@ -257,7 +257,7 @@ function Footer() {
 
             {/* Copyright */}
             <div className="text-center md:text-right">
-              <p className="text-xs text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <p className="text-xs text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                 © {currentYear} The Happy Case. Made with love for all the travelers out there. All rights reserved.
               </p>
             </div>
