@@ -167,7 +167,7 @@ const Canvas = ({
       strokeWidth: strokeWidth,
       selectable: false,
       evented: false,
-      visible: false, // Hidden - blue edge line removed
+      visible: true, // Show canvas area border
     });
     
     caseBorderRectRef.current = caseBorderRect;
@@ -292,7 +292,7 @@ const Canvas = ({
     if (!canvas || !canvasRef.current || !containerRef.current) return;
   
     // Fixed size for all screen sizes
-    const canvasWidth = 450;
+    const canvasWidth = 350;
     const canvasHeight = 400;
 
     const oldWidth = canvas.getWidth();
@@ -351,7 +351,7 @@ const Canvas = ({
     if (!canvasRef.current || !containerRef.current) return;
   
     // Fixed size for all screen sizes
-    const canvasWidth = 450;
+    const canvasWidth = 350;
     const canvasHeight = 400;
 
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
@@ -1114,7 +1114,7 @@ const Canvas = ({
 >
 <div
     ref={containerRef}
-    className="happy-card h-[480px] p-2 mt-0 sm:p-6 mb-2 relative flex items-center justify-center w-full overflow-visible"
+    className="happy-card h-[480px] p-2  sm:p-6 mb-2 relative flex items-center justify-center w-full overflow-visible"
           style={{
       scrollbarWidth: "none",
       msOverflowStyle: "none",
@@ -1136,11 +1136,14 @@ const Canvas = ({
     {/* Canvas — Always in Front */}
         <canvas 
           ref={canvasRef} 
-      className="absolute inset-0 w-full h-full"
+      className="absolute w-[300px] h-[370px]"
           style={{ 
         background: "transparent",
         pointerEvents: "auto",
         touchAction: isMobile ? "none" : "auto",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
           }}
         />
         

@@ -44,7 +44,7 @@ const PromotionalBanner = () => {
         </div>
         
         {/* Right side - Currency Selector and Social Media */}
-        <div className="hidden md:flex items-center justify-end gap-2 md:gap-3">
+        <div className="hidden md:flex items-center justify-end gap-2 md:gap-6">
           <SocialMediaIcons />
           <CurrencySelector variant="desktop" />
         </div>

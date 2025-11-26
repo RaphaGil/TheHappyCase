@@ -6,7 +6,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
   const iconSize = isMobile ? 'text-sm' : 'text-md';
   const containerClass = isMobile 
     ? 'flex' 
-    : 'hidden md:flex items-center gap-2';
+    : 'hidden md:flex items-center gap-4';
 
   return (
     <div className={containerClass}>

@@ -631,16 +631,13 @@ const CreateYours = () => {
     <section className={`min-h-screen bg-white relative ${isMobile ? 'overflow-hidden h-screen' : 'overflow-y-auto'}`} style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden'}}>
       {/* Text Input Modal - Mobile only */}
       {isMobile && mobileCurrentStep === 'text' && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4">
           <div 
-            className="bg-white rounded-sm shadow-lg w-full max-w-sm p-6"
-            style={{
-              maxHeight: '90vh',
-              overflowY: 'auto'
-            }}
+            className="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-sm max-h-[85vh] h-fit"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 flex-shrink-0">
+              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
                 Add Text
               </h2>
               <button
@@ -649,15 +646,17 @@ const CreateYours = () => {
                   setMobileCustomText('');
                   setMobileTextError('');
                 }}
-                className="p-1 hover:bg-gray-50 transition-colors rounded"
+                className="p-1.5 hover:bg-gray-50 rounded transition-colors"
+                aria-label="Close modal"
               >
                 <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
             
-            <div className="space-y-4">
+            {/* Step Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
               <div>
                 <input
                   type="text"
