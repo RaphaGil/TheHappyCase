@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 // Defer slick carousel CSS - load asynchronously if needed
 // import 'slick-carousel/slick/slick.css'; 
 // import 'slick-carousel/slick/slick-theme.css';
-import videoSrc from '../../assets/videos/hero.mkv';
+import videoSrc from '../../assets/videos/hero.mp4';
 
 function Hero() {
   const videoRef = useRef(null);
