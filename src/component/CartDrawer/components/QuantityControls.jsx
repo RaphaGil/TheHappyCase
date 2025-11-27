@@ -9,7 +9,7 @@ const QuantityControls = ({ quantity, onDecrement, onIncrement }) => {
       >
         −
       </button>
-      <div className="px-2 py-0.5 text-xs text-gray-900 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+      <div className="px-2 py-0.5 text-xs text-gray-900 font-light font-inter">
         {quantity || 1}
       </div>
       <button 

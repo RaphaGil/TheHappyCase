@@ -10,9 +10,8 @@ const MobileMenu = ({ isOpen, onClose }) => {
 
   return (
     <ul
-      className="flex flex-col fixed left-0 top-0 w-[70%] bg-white border-r border-gray-100 font-light space-y-1 z-50 overflow-y-auto shadow-lg"
+      className="flex flex-col fixed left-0 top-0 w-[70%] bg-white border-r border-gray-100 font-light space-y-1 z-50 overflow-y-auto shadow-lg font-inter"
       style={{
-        fontFamily: "'Poppins', sans-serif",
         height: '100vh',
         maxHeight: '100vh',
         paddingTop: '0',
@@ -50,7 +49,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       {/* Social Media Icons - Mobile */}
       <li className="pt-4 border-t border-gray-100">
         <div className="px-4">
-          <h3 className="text-xs uppercase tracking-wider text-gray-500 mb-3 font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className="text-caption uppercase tracking-wider text-gray-500 mb-3 font-thin font-inter">
             Follow Us
           </h3>
           <SocialMediaIcons isMobile={true} />

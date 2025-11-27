@@ -124,6 +124,9 @@ h1.student-text, h2.student-text, h3.student-text, h4.student-text, h5.student-t
   font-family: 'Inter', sans-serif !important;
 }
 
+/* Create Yours page: match Choose Charms text font (Inter) for all text except the main title */
+
+
 /* Custom Utility Classes for Bright Blue & Yellow Design */
 .happy-gradient {
   background: linear-gradient(135deg, var(--bright-yellow) 0%, var(--bright-blue) 50%, var(--electric-blue) 100%);

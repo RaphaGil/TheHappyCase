@@ -20,8 +20,7 @@ function Footer() {
             <div className="flex items-center mb-2">
               <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
                 <div
-                  className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
-                  style={{ fontFamily: "'Fredoka One', cursive" }}
+                  className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-fredoka"
                 >
                   <span className="text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
                     THE
@@ -64,12 +63,12 @@ function Footer() {
                 `}</style>
               </Link>
             </div>
-            <p className="text-gray-900 text-sm leading-relaxed font-light pt-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+            <p className="text-gray-900 text-body-sm leading-relaxed font-light pt-2 font-inter">
               Creating personalized passport cases that bring joy to your travels. 
               Made with love and attention to detail.
             </p>
             <div className="flex flex-col gap-3 pt-2">
-            <p className="text-sm text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Follow us!</p>
+            <p className="text-body-sm text-gray-900 font-light font-inter">Follow us!</p>
             <div className="flex gap-3">
               <a 
                 href="https://instagram.com/thehappycase.store" 
@@ -107,8 +106,7 @@ function Footer() {
             {/* Mobile: Dropdown button */}
             <button
               onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-              className="md:hidden flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
-              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+              className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2 font-inter "
             >
               <span>Quick Links</span>
               <FontAwesomeIcon 
@@ -117,53 +115,53 @@ function Footer() {
               />
             </button>
             {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-light mb-2 font-inter ">
               Quick Links
             </h4>
             {/* Mobile: Conditional content */}
             {quickLinksOpen && (
-              <ul className="md:hidden space-y-3 pl-2">
+              <ul className="md:hidden space-y-3 ">
                 <li>
-                  <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <Link to="/about" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                    About 
                   </Link>
                 </li>
                 <li>
-                  <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <a href="/" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                    Home
                   </a>
                 </li>
                 {/* <li>
-                  <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <a href="/DesignIdeas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                     Design Ideas
                   </a>
                 </li> */}
                 <li>
-                  <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <a href="/CreateYours" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Create Yours
                   </a>
                 </li>
               </ul>
             )}
             {/* Desktop: Always visible content */}
-            <ul className="hidden md:block pl-2">
+            <ul className="hidden md:block ">
               <li>
-                <Link to="/about" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <Link to="/about" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                  About 
                 </Link>
               </li>
               <li>
-                <a href="/" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <a href="/" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                  Home
                 </a>
               </li>
               {/* <li>
-                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                   Design Ideas
                 </a>
               </li> */}
               <li>
-                <a href="/CreateYours" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <a href="/CreateYours" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Create Yours
                 </a>
               </li>
@@ -175,8 +173,7 @@ function Footer() {
             {/* Mobile: Dropdown button */}
             <button
               onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
-              className="md:hidden flex items-center justify-between w-full text-xs uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2"
-              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+              className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2 font-inter"
             >
               <span>Customer Service</span>
               <FontAwesomeIcon 
@@ -185,33 +182,33 @@ function Footer() {
               />
             </button>
             {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-xs uppercase tracking-wider text-gray-900 font-light mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-light mb-2 font-inter">
               Customer Service
             </h4>
             {/* Mobile: Conditional content */}
             {customerServiceOpen && (
-              <ul className="md:hidden space-y-3 pl-2">
+              <ul className="md:hidden space-y-3 ">
                 <li>
-                  <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <Link to="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Shipping and Processing Times
                   </Link>
                 </li>
                 <li>
-                  <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <Link to="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Refund Policy
                   </Link>
                 </li>
               </ul>
             )}
             {/* Desktop: Always visible content */}
-            <ul className="hidden md:block space-y-3 pl-2">
+            <ul className="hidden md:block space-y-3 ">
               <li>
-                <Link to="/shipping" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <Link to="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Shipping and Processing Times
                 </Link>
               </li>
               <li>
-                <Link to="/returns" className="text-xs text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <Link to="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Refund Policy
                 </Link>
               </li>
@@ -220,7 +217,7 @@ function Footer() {
 
           {/* Contact Info */}
           {/* <div className="space-y-4">
-            <h4 className="text-xl font-bold" style={{fontFamily: "'Fredoka One', cursive", color: '#1e3a8a'}}>
+            <h4 className="text-heading-sm font-bold font-fredoka" style={{color: '#1e3a8a'}}>
               Get In Touch
             </h4>
             <div className="space-y-3">
@@ -257,7 +254,7 @@ function Footer() {
 
             {/* Copyright */}
             <div className="text-center md:text-right">
-              <p className="text-xs text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+              <p className="text-caption text-gray-900 font-light font-inter">
                 © {currentYear} The Happy Case. Made with love for all the travelers out there. All rights reserved.
               </p>
             </div>

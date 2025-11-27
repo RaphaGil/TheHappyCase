@@ -1,7 +1,7 @@
 import React from 'react';
 import Products from '../../data/products.json';
 import CharmsPage from '../../pages/Charms/components/CharmsPage';
-import { filterFlags } from '../../pages/Charms/filterFunctions';
+import { filterFlags } from '../../data/filterFunctions';
 
 const Flags = () => {
   const flagPins = Products.pins.flags || [];

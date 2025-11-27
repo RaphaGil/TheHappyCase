@@ -6,7 +6,7 @@ const About = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 md:mb-16">
-          <h1 className="text-3xl md:text-4xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+          <h1 className="text-title md:text-title-lg font-light text-gray-900 mb-2 font-inter tracking-title">
             About Me
           </h1>
           <div className="w-16 h-px bg-gray-300 mx-auto mb-8"></div>
@@ -18,6 +18,7 @@ const About = () => {
                 src="/TheHappyCase/images/raphaela.jpg"
                 alt="Raphaela"
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
           </div>
@@ -25,7 +26,7 @@ const About = () => {
 
         {/* Content with Icons */}
         <div className="max-w-3xl mx-auto">
-          <div className="space-y-8 text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="space-y-8 text-gray-700 leading-relaxed font-inter">
             
             {/* First Paragraph with Dream Icon */}
             <div className="flex gap-4 items-start">
@@ -34,7 +35,7 @@ const About = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
               </div>
-              <p className="text-base md:text-lg font-light flex-1">
+              <p className="text-body md:text-body-lg font-light flex-1">
                 As a dreamer, travel lover, and creative soul, I started making passport cases because I wanted something that could travel the world with me — in style and keeping my documents safe. I loved the idea of protecting my most important papers with designs that actually tell my story… and apparently everyone around me loved it too!
               </p>
             </div>
@@ -46,7 +47,7 @@ const About = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
                 </svg>
               </div>
-              <p className="text-base md:text-lg font-light flex-1">
+              <p className="text-body md:text-body-lg font-light flex-1">
                 What began as a little personal project quickly turned into birthday gifts for friends — and before I knew it, I had opened an Etsy shop.
               </p>
             </div>
@@ -58,7 +59,7 @@ const About = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p className="text-base md:text-lg font-light flex-1">
+              <p className="text-body md:text-body-lg font-light flex-1">
                 And now here I am, dreaming of the day when people everywhere will carry these cases on their adventures. Nothing makes me happier than knowing I'm part of someone's journey, even in a small way.
               </p>
             </div>
@@ -71,7 +72,7 @@ const About = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <p className="text-base md:text-lg font-light flex-1">
+              <p className="text-body md:text-body-lg font-light flex-1">
                 I'm originally from Brazil and have been living in the UK for a few years now. A fun twist? I'm also a Frontend Developer — yep, I built this website myself!
               </p>
             </div>

@@ -137,8 +137,8 @@ const PassportCases = () => {
     return (
       <div className="min-h-screen bg-white py-8 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-light text-gray-900 mb-4" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Loading...</h1>
-          <p className="text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Please wait while we load the passport cases.</p>
+          <h1 className="text-2xl font-light text-gray-900 mb-4 font-inter">Loading...</h1>
+          <p className="text-gray-500 font-inter">Please wait while we load the passport cases.</p>
         </div>
       </div>
     );
@@ -247,7 +247,7 @@ const PassportCases = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-light text-gray-900 mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+          <h1 className="text-title font-light text-gray-900 mb-2 font-inter tracking-title">
             PASSPORT CASES
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-4"></div>
@@ -266,8 +266,7 @@ const PassportCases = () => {
                     selectedCaseType === caseItem.type
                       ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
                       : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
-                  } ${isSoldOut ? 'opacity-60' : ''}`}
-                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  } ${isSoldOut ? 'opacity-60' : ''} font-inter`}
                 >
                   <span className="flex items-center gap-2">
                     {getCaseDisplayName(caseItem.type)}
@@ -287,7 +286,7 @@ const PassportCases = () => {
           {/* Left Side - Image Gallery */}
           <div className="">
             <div className="text-center mb-6">
-              {/* <h2 className="text-2xl font-light text-gray-900 mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+              {/* <h2 className="text-2xl font-light text-gray-900 mb-2 font-inter">
                 {selectedCase.name}
               </h2> */}
             </div>
@@ -299,6 +298,7 @@ const PassportCases = () => {
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
                   className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50' : ''}`}
+                  loading="lazy"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     if (e.target.nextSibling) {
@@ -308,13 +308,13 @@ const PassportCases = () => {
                 />
                 <div className="hidden w-full h-[300px] lg:h-[400px] xl:h-[500px] items-center justify-center text-gray-400 bg-gray-50">
                   <div className="text-center">
-                    <p className="text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Image not available</p>
+                    <p className="text-gray-500 font-inter">Image not available</p>
                   </div>
                 </div>
                 {/* Sold Out Overlay */}
                 {isSelectedColorSoldOut() && (
                   <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
-                    <span className="text-white text-2xl font-medium uppercase tracking-wider" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                    <span className="text-white text-2xl font-medium uppercase tracking-wider font-inter">
                       Sold Out
                     </span>
                   </div>
@@ -340,6 +340,7 @@ const PassportCases = () => {
                       src={image}
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain"
+                      loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         if (e.target.nextSibling) {
@@ -361,7 +362,7 @@ const PassportCases = () => {
             
             {/* Color Selection */}
             <div className="border-b border-gray-100 pb-4 sm:pb-6 mt-3">
-              <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-3 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Colours Available</h3>
+              <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-3 font-medium font-inter">Colours Available</h3>
               <div className="grid grid-cols-11 sm:grid-cols-7 md:grid-cols-8 gap-0.5 sm:gap-1.5 md:gap-2">
                 {selectedCase.colors.map((colorOption, index) => {
                   const isColorSoldOut = colorOption.quantity !== undefined && colorOption.quantity === 0;
@@ -392,8 +393,7 @@ const PassportCases = () => {
               <div className="border-b border-gray-100 pb-8">
                 <button
                   onClick={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
-                  className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors"
-                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors font-inter"
                 >
                   <span>Specifications</span>
                   <FontAwesomeIcon 
@@ -405,68 +405,68 @@ const PassportCases = () => {
                   <div className="flex flex-col gap-3 mt-4">
                     {selectedCase.specifications.dimensions && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Dimensions</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.dimensions}</span>
+                        <span className="text-sm text-gray-500 font-inter">Dimensions</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.dimensions}</span>
                       </div>
                     )}
                     {selectedCase.specifications.weight && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Weight</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.weight}</span>
+                        <span className="text-sm text-gray-500 font-inter">Weight</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.weight}</span>
                       </div>
                     )}
                     {selectedCase.specifications.material && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Material</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.material}</span>
+                        <span className="text-sm text-gray-500 font-inter">Material</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.material}</span>
                       </div>
                     )}
                     {selectedCase.specifications.closure && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Closure</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.closure}</span>
+                        <span className="text-sm text-gray-500 font-inter">Closure</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.closure}</span>
                       </div>
                     )}
                     {selectedCase.specifications.cardSlots && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Card Slots</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.cardSlots}</span>
+                        <span className="text-sm text-gray-500 font-inter">Card Slots</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.cardSlots}</span>
                       </div>
                     )}
                     {selectedCase.specifications.interior && (
                       <div className="flex justify-between items-start py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Interior</span>
-                        <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.interior}</span>
+                        <span className="text-sm text-gray-500 font-inter">Interior</span>
+                        <span className="text-sm text-gray-900 text-right font-inter">{selectedCase.specifications.interior}</span>
                       </div>
                     )}
                     {selectedCase.specifications.rfid && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>RFID Protection</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.rfid}</span>
+                        <span className="text-sm text-gray-500 font-inter">RFID Protection</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.rfid}</span>
                       </div>
                     )}
                     {selectedCase.specifications.features && (
                       <div className="flex justify-between items-start py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Features</span>
-                        <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.features}</span>
+                        <span className="text-sm text-gray-500 font-inter">Features</span>
+                        <span className="text-sm text-gray-900 text-right font-inter">{selectedCase.specifications.features}</span>
                       </div>
                     )}
                     {selectedCase.specifications.passportCapacity && (
                       <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Capacity</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.passportCapacity}</span>
+                        <span className="text-sm text-gray-500 font-inter">Capacity</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.passportCapacity}</span>
                       </div>
                     )}
                     {selectedCase.specifications.care && (
                       <div className="flex justify-between items-start py-2 border-b border-gray-50">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Care Instructions</span>
-                        <span className="text-sm text-gray-900 text-right" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.care}</span>
+                        <span className="text-sm text-gray-500 font-inter">Care Instructions</span>
+                        <span className="text-sm text-gray-900 text-right font-inter">{selectedCase.specifications.care}</span>
                       </div>
                     )}
                     {selectedCase.specifications.warranty && (
                       <div className="flex justify-between items-center py-2">
-                        <span className="text-sm text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Warranty</span>
-                        <span className="text-sm text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{selectedCase.specifications.warranty}</span>
+                        <span className="text-sm text-gray-500 font-inter">Warranty</span>
+                        <span className="text-sm text-gray-900 font-inter">{selectedCase.specifications.warranty}</span>
                       </div>
                     )}
                   </div>
@@ -477,7 +477,7 @@ const PassportCases = () => {
             {/* Price and CTA */}
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-light text-gray-900" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>£{selectedCase.basePrice.toFixed(2)}</span>
+                <span className="text-2xl font-light text-gray-900 font-inter">£{selectedCase.basePrice.toFixed(2)}</span>
               </div>
               <div className="flex flex-col gap-3">
                 <AddToCartBtn
@@ -496,17 +496,16 @@ const PassportCases = () => {
                   }}
                   disabled={isSelectedColorSoldOut()}
                   onAdd={handleAddToCart}
-                  className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
+                  className="bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200"
                 />
                 <button
                   onClick={() => {
                     // Navigate to CreateYours with selected case and color
                     navigate(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
                   }}
-                  className="w-full py-3 text-sm uppercase tracking-wider transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white border-blue-600 hover:border-blue-700"
-                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
                 >
-                  Customize This Case
+                  PERSONALIZE
                 </button>
               </div>
             </div>

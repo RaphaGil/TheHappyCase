@@ -14,7 +14,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white">
-          <h3 className="text-lg font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className="text-lg font-medium text-gray-900 font-inter">
             Terms of Use - Create Yours
           </h3>
           <button
@@ -31,10 +31,10 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
         {/* Modal Content */}
         <div className="p-6 space-y-6">
           <div>
-            <h4 className="text-base font-semibold text-gray-900 mb-3" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h4 className="text-base font-semibold text-gray-900 mb-3 font-inter">
               User Responsibility
             </h4>
-            <p className="text-sm text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className="text-sm text-gray-700 leading-relaxed font-inter">
               It is the user's responsibility to create and design the passport case using our interactive creator. 
               Please ensure that your design meets your requirements and preferences before placing your order. 
               We are not responsible for any design choices made by the user through the creator tool.
@@ -42,10 +42,10 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
           </div>
 
           <div>
-            <h4 className="text-base font-semibold text-gray-900 mb-3" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h4 className="text-base font-semibold text-gray-900 mb-3 font-inter">
               Handmade Items - Natural Variations
             </h4>
-            <p className="text-sm text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className="text-sm text-gray-700 leading-relaxed font-inter">
               All our passport cases are handmade with care and attention to detail. As each item is individually crafted, 
               there may be natural variations in color, texture, and appearance. These variations are not defects but rather 
               characteristics of handmade products that make each piece unique. Please note that the final product may vary 
@@ -54,7 +54,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
           </div>
 
           <div className="bg-gray-50 border-l-4 border-gray-400 p-4 rounded">
-            <p className="text-sm text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className="text-sm text-gray-700 leading-relaxed font-inter">
               By using our "Create Yours" tool and placing an order, you acknowledge that you have read, understood, 
               and agree to these terms of use.
             </p>
@@ -65,8 +65,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
         <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-gray-200 text-gray-700 text-sm uppercase tracking-wider hover:bg-gray-300 transition-colors"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="px-6 py-2 text-sm uppercase tracking-wider font-inter bg-btn-secondary hover:bg-btn-secondary-hover text-btn-secondary-text border border-btn-secondary-border hover:border-btn-secondary-hover transition-all duration-200"
           >
             Close
           </button>
@@ -78,8 +77,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
                 onClose();
               }
             }}
-            className="px-6 py-2 bg-gray-900 text-white text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="px-6 py-2 text-sm uppercase tracking-wider font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
           >
             I Agree
           </button>

@@ -102,7 +102,7 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
                 )}
               </div>
               {isSelected && colorName && (
-                <span className="text-xs text-gray-700 font-medium mt-2 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <span className="text-xs text-gray-700 font-medium mt-2 text-center font-inter">
                   {colorName}
                 </span>
               )}

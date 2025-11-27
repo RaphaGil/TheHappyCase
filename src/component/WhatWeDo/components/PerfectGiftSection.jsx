@@ -8,19 +8,12 @@ const PerfectGiftSection = ({ image }) => {
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
           <div className="text-center">
             <h2 
-              className="text-4xl font-light text-gray-900 mb-6" 
-              style={{
-                fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", 
-                letterSpacing: '0.05em'
-              }}
+              className="text-subtitle-lg font-light text-gray-900 mb-6 font-inter tracking-title"
             >
               The Perfect Gift for Every Moment
             </h2>
             <p 
-              className="text-xl text-gray-700 leading-relaxed font-light" 
-              style={{
-                fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-              }}
+              className="text-body-lg text-gray-700 leading-relaxed font-light font-inter"
             >
               Created with love for birthdays, weddings, and for all the travelers who carry their stories around the world.
             </p>
@@ -35,6 +28,7 @@ const PerfectGiftSection = ({ image }) => {
             src={image}
             className="w-full h-full object-contain"
             alt="Perfect Gift"
+            loading="lazy"
           />
         </div>
       </div>

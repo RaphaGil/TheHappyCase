@@ -17,8 +17,8 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
           }}
           className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
             mobileCurrentStep === 'case'
-              ? 'bg-gray-900 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
+              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >
@@ -30,7 +30,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
           />
           <span className={`text-[10px] uppercase tracking-wide font-medium ${
             mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
-          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          }`} className="font-inter">
             Case
           </span>
         </button>
@@ -49,8 +49,8 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             !selectedCaseType
               ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'color'
-              ? 'bg-gray-900 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
+              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >
@@ -70,7 +70,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
               : mobileCurrentStep === 'color'
               ? 'text-white'
               : 'text-gray-700'
-          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          }`} className="font-inter">
             Color
           </span>
         </button>
@@ -89,8 +89,8 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             !selectedCaseType || !selectedColor
               ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'charms'
-              ? 'bg-gray-900 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
+              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >
@@ -110,7 +110,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
               : mobileCurrentStep === 'charms'
               ? 'text-white'
               : 'text-gray-700'
-          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          }`} className="font-inter">
             Charms
           </span>
         </button>
@@ -133,8 +133,8 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
           }}
           className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
             mobileCurrentStep === 'text'
-              ? 'bg-gray-900 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
+              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
           style={{ WebkitTapHighlightColor: 'transparent' }}
         >
@@ -146,7 +146,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
           />
           <span className={`text-[10px] uppercase tracking-wide font-medium ${
             mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
-          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          }`} className="font-inter">
             Text
           </span>
         </button>

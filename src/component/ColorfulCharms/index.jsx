@@ -1,7 +1,7 @@
 import React from 'react';
 import Products from '../../data/products.json';
 import CharmsPage from '../../pages/Charms/components/CharmsPage';
-import { filterColorfulCharms } from '../../pages/Charms/filterFunctions';
+import { filterColorfulCharms } from '../../data/filterFunctions';
 
 const ColorfulCharms = () => {
   const colorfulPins = Products.pins.colorful;

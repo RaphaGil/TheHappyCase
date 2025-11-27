@@ -18,7 +18,7 @@ const Items = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
         {/* Header Section */}
         <div className="text-center">
-          <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+          <h2 className="text-title md:text-title-lg font-light text-gray-900 mb-3 font-inter tracking-title">
             Our Cases
           </h2>
         </div>
@@ -71,6 +71,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
             alt={displayName}
             className={`w-full h-full object-contain transition-opacity duration-300 ${isHovered && hoverImage ? 'opacity-0' : 'opacity-100'}`}
             style={{ display: isHovered && hoverImage ? 'none' : 'block' }}
+            loading="lazy"
           />
           
           {/* Hover image - with zoom out effect (appears further away) */}
@@ -80,6 +81,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
               alt={`${displayName} - Inside view`}
               className={`absolute inset-0 w-full h-full object-contain transition-all duration-300 ${isHovered ? 'opacity-100 scale-90' : 'opacity-0 scale-100'}`}
               style={{ display: isHovered ? 'block' : 'none' }}
+              loading="lazy"
             />
           )}
         </div>
@@ -108,10 +110,10 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Product Info */}
       <div className="text-center flex flex-col flex-grow">
-        <h3 className="text-lg font-light text-gray-800 mb-2 mt-4" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+        <h3 className="text-heading-sm font-light text-gray-800 mb-2 mt-4 font-inter">
           {displayName}
         </h3>
-        <p className="text-sm text-gray-700 mb-6 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+        <p className="text-body-sm text-gray-700 mb-6 font-light font-inter">
           {formatPrice(item.basePrice || 0)}
         </p>
         
@@ -119,10 +121,9 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
         <div className="mt-auto">
           <Link
             to="/CreateYours"
-            className="inline-block w-full py-3 text-sm uppercase tracking-wider transition-all duration-200 bg-blue-600 hover:bg-blue-700 text-white border-blue-600 hover:border-blue-700 text-center"
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+            className="inline-block w-full py-3 text-md uppercase tracking-wider text-center font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
           >
-            Personalize Now
+           PERSONALIZE
           </Link>
         </div>
       </div>

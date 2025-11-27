@@ -8,7 +8,7 @@ const InvalidPositionAlert = ({ show }) => {
       <div 
         className="px-4 py-3 rounded-md shadow-lg border-2 bg-red-500"
       >
-        <p className="text-sm font-semibold text-center text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
+        <p className="text-sm font-semibold text-center text-white font-inter">
           Position is invalid, out of the edge limit
         </p>
       </div>

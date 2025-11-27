@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'slick-carousel/slick/slick.css'; 
-import 'slick-carousel/slick/slick-theme.css';
-import videoSrc from '../../assets/videos/hero.mp4';
+// Defer slick carousel CSS - load asynchronously if needed
+// import 'slick-carousel/slick/slick.css'; 
+// import 'slick-carousel/slick/slick-theme.css';
+import videoSrc from '../../assets/videos/hero.mkv';
 
 function Hero() {
   const videoRef = useRef(null);
@@ -50,9 +51,10 @@ function Hero() {
           ref={videoRef}
           autoPlay
           muted
-          loop
           playsInline
-          preload="auto"
+          loop
+          preload="metadata"
+          loading="lazy"
           className="w-full h-full object-cover"
           onLoadStart={() => console.log('🎥 Video loading started')}
           onCanPlay={() => {
@@ -80,6 +82,7 @@ function Hero() {
           }}
         >
           <source src={videoSrc} type="video/mp4" />
+          <source src="/video.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
@@ -91,21 +94,20 @@ function Hero() {
       <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
         <div className="flex flex-col  items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
           <h1 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white"
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
+            className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white font-inter tracking-title"
+            style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
             Custom Your Own 
           </h1>
             <h1 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white mb-4"
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em', textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
+            className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white mb-4 font-inter tracking-title"
+            style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
             Passport Case
           </h1>
           <button 
             onClick={handleStartDesigning}
-            className="px-8 py-3 text-sm uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 transition-all duration-200 shadow-lg w-fit"
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+            className="px-8 py-3 text-sm uppercase tracking-wider shadow-lg w-fit font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
           >
             Shop Now
           </button>

@@ -177,11 +177,11 @@ const DesignIdeas = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+          <h1 className="text-3xl md:text-4xl font-light text-gray-900 mb-2 font-inter tracking-title">
             Design Ideas
           </h1>
           <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
-          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light font-inter">
             Get inspired by our curated design collections. Mix and match to create your perfect personalized passport case!
           </p>
         </div>
@@ -203,7 +203,7 @@ const DesignIdeas = () => {
                   ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
                   : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
               }`}
-              style={{fontFamily: "'Poppins', sans-serif"}}
+              className="font-inter"
             >
               {category.label}
             </button>
@@ -229,6 +229,7 @@ const DesignIdeas = () => {
                       src={idea.caseImage}
                       alt={idea.title}
                       className="w-full h-full object-contain"
+                      loading="lazy"
                       onError={(e) => {
                         if (e.target) {
                           e.target.style.display = 'none';
@@ -257,6 +258,7 @@ const DesignIdeas = () => {
                             src={pin.src}
                             alt={pin.name}
                             className="w-full h-full object-contain"
+                            loading="lazy"
                             onError={(e) => {
                               if (e.target) {
                                 e.target.style.display = 'none';
@@ -272,10 +274,10 @@ const DesignIdeas = () => {
 
               {/* Idea Info */}
               <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-lg font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <h3 className="text-lg font-light text-gray-900 mb-2 font-inter">
                   {idea.title}
                 </h3>
-                <p className="text-sm text-gray-500 mb-4 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <p className="text-sm text-gray-500 mb-4 font-light font-inter">
                   {idea.description}
                 </p>
 
@@ -305,7 +307,7 @@ const DesignIdeas = () => {
                     );
                   })}
                   {idea.pins.length > 3 && (
-                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs font-light text-gray-600 border border-gray-200" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-xs font-light text-gray-600 border border-gray-200 font-inter">
                       +{idea.pins.length - 3}
                     </div>
                   )}
@@ -313,8 +315,7 @@ const DesignIdeas = () => {
 
                 {/* CTA Button */}
                 <button
-                  className="w-full px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 mt-auto"
-                  style={{fontFamily: "'Poppins', sans-serif"}}
+                  className="w-full px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 mt-auto font-inter"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleCreateDesign(idea);
@@ -330,17 +331,16 @@ const DesignIdeas = () => {
 
         {/* Call to Action */}
         <div className="border border-gray-100 p-8 md:p-12 text-center bg-white mt-8">
-          <h2 className="text-2xl md:text-3xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif", letterSpacing: '0.05em'}}>
+          <h2 className="text-2xl md:text-3xl font-light text-gray-900 mb-2 font-inter tracking-title">
             Ready to Create Your Own?
           </h2>
           <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
-          <p className="text-sm text-gray-500 mb-6 font-light max-w-2xl mx-auto" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <p className="text-sm text-gray-500 mb-6 font-light max-w-2xl mx-auto font-inter">
             Start designing your custom passport case with our interactive creator!
           </p>
           <button
             onClick={() => navigate('/CreateYours')}
-            className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-inter"
           >
             Start Creating Now
           </button>

@@ -628,7 +628,12 @@ const CreateYours = () => {
 
 
   return (
-    <section className={`min-h-screen bg-white relative ${isMobile ? 'overflow-hidden h-screen' : 'overflow-y-auto'}`} style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden'}}>
+    <section
+      className={`create-yours-page min-h-screen bg-white relative ${
+        isMobile ? "overflow-hidden h-screen" : "overflow-y-auto"
+      }`}
+      style={{ width: "100vw", maxWidth: "100vw", overflowX: "hidden" }}
+    >
       {/* Text Input Modal - Mobile only */}
       {isMobile && mobileCurrentStep === 'text' && (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4">
@@ -637,7 +642,7 @@ const CreateYours = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 flex-shrink-0">
-              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+              <h2 className="text-sm uppercase tracking-wider text-gray-900 font-light font-inter">
                 Add Text
               </h2>
               <button
@@ -666,9 +671,8 @@ const CreateYours = () => {
                     setMobileTextError('');
                   }}
                   placeholder="e.g. Your name"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
                   style={{
-                    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
                     fontSize: '16px' // Prevent zoom on iOS
                   }}
                   maxLength={MAX_TEXT_LENGTH}
@@ -700,8 +704,7 @@ const CreateYours = () => {
                       setMobileTextError('Canvas is still loading. Please try again in a moment.');
                     }
                   }}
-                  className="flex-1 px-4 py-3 text-sm font-medium uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors rounded shadow-md"
-                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  className="flex-1 px-4 py-3 text-sm font-medium uppercase tracking-wider rounded shadow-md font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
                 >
                   Add Text
                 </button>
@@ -710,8 +713,7 @@ const CreateYours = () => {
                     setMobileCustomText('');
                     setMobileTextError('');
                   }}
-                  className="px-4 py-3 text-sm font-medium uppercase tracking-wider text-gray-700 hover:text-gray-900 bg-white border-2 border-gray-300 hover:border-gray-400 transition-colors rounded shadow-sm"
-                  style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                  className="px-4 py-3 text-sm font-medium uppercase tracking-wider text-gray-700 hover:text-gray-900 bg-white border-2 border-gray-300 hover:border-gray-400 transition-colors rounded shadow-sm font-inter"
                 >
                   Clear
                 </button>
@@ -740,8 +742,7 @@ const CreateYours = () => {
               
               {/* Header Section - Compact on mobile */}
               <div className="text-center pt-12 pb-3 px-4">
-                <h1 className="text-2xl font-light text-gray-900 mb-1" 
-                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+                <h1 className="text-2xl font-light text-gray-900 mb-1 font-inter tracking-title">
                   CREATE YOURS
                 </h1>
                 <div className="w-20 h-px bg-gray-200 mx-auto"></div>
@@ -786,13 +787,11 @@ const CreateYours = () => {
             <>
               {/* Header Section */}
               <div className="text-center mb-6 md:mb-8">
-                <h1 className="text-3xl font-light text-gray-900 mb-2" 
-                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+                <h1 className="text-title font-light text-gray-900 mb-2 font-inter tracking-title">
                   CREATE YOURS
                 </h1>
                 <div className="w-24 h-px bg-gray-200 mx-auto mb-2"></div>
-                <p className="text-sm text-gray-400 max-w-xl mx-auto font-light" 
-                   style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                <p className="text-body-sm text-gray-400 max-w-xl mx-auto font-light font-inter">
                   Design your perfect passport case
                 </p>
               </div>
@@ -842,14 +841,13 @@ const CreateYours = () => {
                 <div className="border border-gray-200 rounded-sm">
                   <button
                     onClick={() => toggleStep('step1')}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
                         1
                       </div>
-                      <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
+                      <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium">
                         Choose Case & Color
               </h3>
                     </div>
@@ -887,14 +885,13 @@ const CreateYours = () => {
                 <div className="border border-gray-200 rounded-sm">
                   <button
                     onClick={() => toggleStep('step2')}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
                         2
                       </div>
-                      <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
+                      <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium">
                         Add Charms
                         {selectedPins.length > 0 && (
                           <span className="ml-2 text-gray-400 font-normal normal-case">({selectedPins.length} selected)</span>
@@ -932,8 +929,7 @@ const CreateYours = () => {
                 <div className="border border-gray-200 rounded-sm">
                   <button
                     onClick={() => toggleStep('step3')}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors"
-                    style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
@@ -943,7 +939,7 @@ const CreateYours = () => {
                       }`}>
                         3
                       </div>
-                      <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium">
+                      <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium">
                         Add Text
                         <span className="ml-2 text-gray-400 font-normal normal-case">(optional)</span>
                       </h3>
@@ -977,7 +973,7 @@ const CreateYours = () => {
                   }`}>
                     4
                   </div>
-                  <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                  <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium font-inter">
                     Review & Add to Cart
                   </h3>
                 </div>

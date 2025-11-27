@@ -223,8 +223,7 @@ const CheckoutForm = () => {
         <button
           type="submit"
           disabled={!stripe || !elements || loading || !paymentElementReady}
-          className="w-full py-3 text-xs uppercase tracking-wider bg-gray-900 hover:bg-gray-800 text-white transition-all duration-200 font-light disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{fontFamily: "'Poppins', sans-serif"}}
+          className="w-full py-3 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
         >
           {loading ? 'Processing...' : 'Complete Payment'}
         </button>
@@ -242,7 +241,7 @@ const CheckoutForm = () => {
 
         {/* Order Summary */}
         <aside className="hidden lg:block border border-gray-200 bg-white p-6 w-full lg:w-1/2 lg:sticky lg:top-20 mt-4 lg:mt-0">
-          <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-6 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-6 font-light font-inter">
             Order Summary
           </h3>
           <OrderSummary

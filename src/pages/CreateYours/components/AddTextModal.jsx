@@ -164,7 +164,7 @@ const AddTextModal = ({
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h3 className="text-sm font-medium text-gray-900 uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className="text-caption font-medium text-gray-900 uppercase tracking-wider font-inter">
             4. Add Text
           </h3>
           <button
@@ -221,11 +221,11 @@ const AddTextModal = ({
                 // The useEffect will handle cleanup when modal closes
               }}
               placeholder="e.g. Your name"
-              className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
-              style={{fontFamily: "'Poppins', sans-serif", touchAction: 'manipulation'}}
+              className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+              style={{touchAction: 'manipulation'}}
               maxLength={40}
             />
-            <p className="mt-1 text-xs text-gray-500" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className="mt-1 text-caption text-gray-500 font-inter">
               Up to {MAX_TEXT_LENGTH} characters. Double-click the text on the case to edit or move it.
             </p>
           </div>
@@ -244,15 +244,13 @@ const AddTextModal = ({
           <div className="flex flex-row gap-2">
             <button
               onClick={handleAddText}
-              className="flex-1 px-4 py-2 text-xs uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800"
-              style={{fontFamily: "'Poppins', sans-serif"}}
+              className="flex-1 px-4 py-2 text-xs uppercase tracking-wider font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
             >
               Add Text
             </button>
             <button
               onClick={handleClear}
-              className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400"
-              style={{fontFamily: "'Poppins', sans-serif"}}
+              className="px-4 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 font-inter"
             >
               Clear
             </button>

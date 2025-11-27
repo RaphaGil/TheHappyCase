@@ -43,7 +43,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPrevious, onNext 
                 ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
                 : 'border-b-2 border-transparent text-gray-400 hover:text-gray-700 hover:border-gray-300'
             }`}
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+            className="font-inter"
             aria-label={`Go to page ${page}`}
           >
             {page}

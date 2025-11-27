@@ -391,13 +391,15 @@
         "name": "Be a Good Human",
         "src": "/TheHappyCase/images/ColorfulPins/beagoodhuman.png",
         "price": 2,
-        "size": 0.45
+        "size": 0.45,
+        "subCategory": "inspiration"
       },
       {
         "name": "Airplane",
         "src": "/TheHappyCase/images/ColorfulPins/airplane.png",
         "price": 2,
-        "size": 0.50
+        "size": 0.50,
+        "subCategory": "travel"
       },
       {
         "name": "Heart Globe",
@@ -409,7 +411,8 @@
         "name": "Dream Big",
         "src": "/TheHappyCase/images/ColorfulPins/dreambig.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "inspiration"
       },
       {
         "name": "Paw",
@@ -421,13 +424,15 @@
         "name": "Colorful Camera",
         "src": "/TheHappyCase/images/ColorfulPins/camera.png",
         "price": 2,
-        "size": 0.35
+        "size": 0.35,
+        "subCategory": "camera"
       },
       {
         "name": "Be Kind",
         "src": "/TheHappyCase/images/ColorfulPins/bekind.png",
         "price": 2,
-        "size": 0.4
+        "size": 0.4,
+        "subCategory": "inspiration"
       },
       {
         "name": "Football",
@@ -439,86 +444,100 @@
         "name": "Ticket to Happiness",
         "src": "/TheHappyCase/images/ColorfulPins/tickettohappiness.png",
         "price": 2,
-        "size": 0.55
+        "size": 0.55,
+        "subCategory": "inspiration"
       },
       {
         "name": "Be Happy",
         "src": "/TheHappyCase/images/ColorfulPins/behappy.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "inspiration"
       },
       {
         "name": "Lucky Leaf",
         "src": "/TheHappyCase/images/ColorfulPins/luckyleafcharm.png",
         "price": 2,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "nature"
       },
       {
         "name": "Beer",
         "src": "/TheHappyCase/images/ColorfulPins/beer.png",
         "price": 2,
-        "size": 0.35
+        "size": 0.35,
+        "subCategory": "drinks"
       },
       {
         "name": "Bottle of Wine",
         "src": "/TheHappyCase/images/ColorfulPins/bottleofwine.png",
         "price": 2,
-        "size": 0.6
+        "size": 0.6,
+        "subCategory": "drinks"
       },
       {
         "name": "Heart Notification",
         "src": "/TheHappyCase/images/ColorfulPins/heartnotification.png",
         "price": 2,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "hearts"
       },
       {
         "name": "Small Boarding Pass",
         "src": "/TheHappyCase/images/ColorfulPins/smallboardingpass.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "travel"
       },
       {
         "name": "Little Heart",
         "src": "/TheHappyCase/images/ColorfulPins/littleheart.png",
         "price": 2,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "hearts"
       },
       {
         "name": "Disney",
         "src": "/TheHappyCase/images/ColorfulPins/disney.png",
         "price": 2,
-        "size": 0.45
+        "size": 0.45,
+        "subCategory": "disney"
       },
       {
         "name": "Pluto",
         "src": "/TheHappyCase/images/ColorfulPins/pluto.png",
         "price": 2,
-        "size": 0.65
+        "size": 0.65,
+        "subCategory": "disney"
       },
       {
         "name": "Round Minnnie",
         "src": "/TheHappyCase/images/ColorfulPins/roundminnie.png",
         "price": 2,
-        "size": 0.65
+        "size": 0.65,
+        "subCategory": "disney"
       },
       {
         "name": "Round Mickey",
         "src": "/TheHappyCase/images/ColorfulPins/roundmickey.png",
         "price": 2,
-        "size": 0.65
+        "size": 0.65,
+        "subCategory": "disney"
       },
      
       {
         "name": "Guufy",
         "src": "/TheHappyCase/images/ColorfulPins/guufy.png",
         "price": 2,
-        "size": 0.7
+        "size": 0.7,
+        "subCategory": "disney"
       },
       {
         "name": "Map",
         "src": "/TheHappyCase/images/ColorfulPins/map.png",
         "price": 2,
-        "size": 0.55
+        "size": 0.55,
+        "subCategory": "travel"
       },
       {
         "name": "London Phone",
@@ -530,25 +549,29 @@
         "name": "Adventure Awaits Ticket",
         "src": "/TheHappyCase/images/ColorfulPins/adventureawaits.png",
         "price": 2,
-        "size": 0.55
+        "size": 0.55,
+        "subCategory": "travel"
       },
       {
         "name": "Passport",
         "src": "/TheHappyCase/images/ColorfulPins/passport.png",
         "price": 2,
-        "size": 0.45
+        "size": 0.45,
+        "subCategory": "travel"
       },
       {
         "name": "Coffee",
         "src": "/TheHappyCase/images/ColorfulPins/coffee.png",
         "price": 2,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "drinks"
       },
       {
         "name": "Coconut Tree",
         "src": "/TheHappyCase/images/ColorfulPins/coconuttree.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "nature"
       },
       {
         "name": "Wave",
@@ -560,61 +583,71 @@
         "name": "Suitcase",
         "src": "/TheHappyCase/images/ColorfulPins/orangeluggage.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "travel"
       },
       {
         "name": "Black Camera",
         "src": "/TheHappyCase/images/ColorfulPins/blackcamera.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "camera"
       },
       {
         "name": "Pink Camera",
         "src": "/TheHappyCase/images/ColorfulPins/pinkcamera.png",
         "price": 2,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "camera"
       },
       {
         "name": "Daisy Duck",
         "src": "/TheHappyCase/images/ColorfulPins/daisyduck.png",
         "price": 2,
-        "size": 0.6
+        "size": 0.6,
+        "subCategory": "disney"
       },
       {
         "name": "Duck",
         "src": "/TheHappyCase/images/ColorfulPins/duck.png",
         "price": 2,
-        "size": 0.6
+        "size": 0.6,
+        "subCategory": "disney"
       },
       {
         "name": "Minnie",
         "src": "/TheHappyCase/images/ColorfulPins/minnie.png",
         "price": 2,
-        "size": 0.6
+        "size": 0.6,
+        "subCategory": "disney"
       },
       {
         "name": "Mickey Mouse",
         "src": "/TheHappyCase/images/ColorfulPins/mickey.png",
         "price": 2,
-        "size": 0.7
+        "size": 0.7,
+        "subCategory": "disney"
       },
       {
         "name": "Combi",
         "src": "/TheHappyCase/images/ColorfulPins/combi.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "travel"
       },
       {
         "name": "Wine",
         "src": "/TheHappyCase/images/ColorfulPins/wineglass.png",
         "price": 2,
-        "size": 0.25
+        "size": 0.25,
+        "subCategory": "drinks"
       },
       {
         "name": "Vacation",
         "src": "/TheHappyCase/images/ColorfulPins/vacation.png",
         "price": 2,
-        "size": 0.6
+        "size": 0.6,
+        "subCategory": "travel"
       }
     ],
     "bronze": [
@@ -622,67 +655,78 @@
         "name": "Airplane",
         "src": "/TheHappyCase/images/BronzePins/airplane.png",
         "price": 1,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "travel"
       },
       {
         "name": "Cardinal Points",
         "src": "/TheHappyCase/images/BronzePins/cardinalpoints.png",
         "price": 1,
-        "size": 0.45
+        "size": 0.45,
+        "subCategory": "symbols"
       },
       {
         "name": "Camera",
         "src": "/TheHappyCase/images/BronzePins/camera.png",
         "price": 1,
-        "size": 0.4
+        "size": 0.4,
+        "subCategory": "symbols"
       },
       {
         "name": "Globe",
         "src": "/TheHappyCase/images/BronzePins/globe.png",
         "price": 1,
-        "size": 0.4
+        "size": 0.4,
+        "subCategory": "travel"
       },
       {
         "name": "Passport",
         "src": "/TheHappyCase/images/BronzePins/passport.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "travel"
       },
       {
         "name": "NYC Taxi",
         "src": "/TheHappyCase/images/BronzePins/nyctaxi.png",
         "price": 1,
-        "size": 0.7
+        "size": 0.7,
+        "subCategory": "travel"
       },
       {
         "name": "Liberty Statue",
         "src": "/TheHappyCase/images/BronzePins/libertystatue.png",
         "price": 1,
-        "size": 0.7
+        "size": 0.7,
+        "subCategory": "travel"
       },
       {
         "name": "Luggage",
         "src": "/TheHappyCase/images/BronzePins/luggage.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "travel"
       },
       {
         "name": "London Bus",
         "src": "/TheHappyCase/images/BronzePins/london.png",
         "price": 1,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "travel"
       },
       {
         "name": "Lucky Leaf",
         "src": "/TheHappyCase/images/BronzePins/luckyleaf.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "nature"
       },
       {
         "name": "Little Heart",
         "src": "/TheHappyCase/images/BronzePins/littleheart.png",
         "price": 1,
-        "size": 0.2
+        "size": 0.2,
+        "subCategory": "love"
       },
       {
         "name": "Eiffel Towel",
@@ -694,43 +738,50 @@
         "name": "Kangaroo",
         "src": "/TheHappyCase/images/BronzePins/kangaroo.png",
         "price": 1,
-        "size": 0.7
+        "size": 0.7,
+        "subCategory": "animals"
       },
       {
         "name": "Koala",
         "src": "/TheHappyCase/images/BronzePins/koala.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "animals"
       },
       {
         "name": "Hamsa Hand",
         "src": "/TheHappyCase/images/BronzePins/hamsahand.png",
         "price": 1,
-        "size": 0.35
+        "size": 0.35,
+        "subCategory": "symbols"
       },
       {
         "name": "Thailand",
         "src": "/TheHappyCase/images/BronzePins/thailand.png",
         "price": 1,
-        "size": 0.7
+        "size": 0.7,
+        "subCategory": "symbols"
       },
       {
         "name": "Mummy",
         "src": "/TheHappyCase/images/BronzePins/mummy.png",
         "price": 1,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "symbols"
       },
       {
         "name": "Llama",
         "src": "/TheHappyCase/images/BronzePins/llama.png",
         "price": 1,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "animals"
       },
       {
         "name": "India",
         "src": "/TheHappyCase/images/BronzePins/india.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "symbols"
       },
       {
         "name": "Pyramid",
@@ -748,13 +799,15 @@
         "name": "Maple Leaf",
         "src": "/TheHappyCase/images/BronzePins/mapleleaf.png",
         "price": 1,
-        "size": 0.4
+        "size": 0.4,
+        "subCategory": "nature"
       },
       {
         "name": "Love",
         "src": "/TheHappyCase/images/BronzePins/love.png",
         "price": 1,
-        "size": 0.6
+        "size": 0.6,
+        "subCategory": "love"
       },
       {
         "name": "Airplane War",
@@ -766,25 +819,29 @@
         "name": "Enjoy the Journey",
         "src": "/TheHappyCase/images/BronzePins/enjoythejourney.png",
         "price": 1,
-        "size": 0.8
+        "size": 0.8,
+        "subCategory": "symbols"
       },
       {
         "name": "Heart",
         "src": "/TheHappyCase/images/BronzePins/heart.png",
         "price": 1,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "love"
       },
       {
         "name": "I love Jesus",
         "src": "/TheHappyCase/images/BronzePins/ilovejesus.png",
         "price": 1,
-        "size": 0.4
+        "size": 0.4,
+        "subCategory": "love"
       },
       {
         "name": "Butterfly",
         "src": "/TheHappyCase/images/BronzePins/butterfly.png",
         "price": 1,
-        "size": 0.5
+        "size": 0.5,
+        "subCategory": "nature"
       },
       {
         "name": "Squirrel",
@@ -796,31 +853,36 @@
         "name": "Canada",
         "src": "/TheHappyCase/images/BronzePins/canada.png",
         "price": 1,
-        "size": 0.4
+        "size": 0.4,
+        "subCategory": "symbols"
       },
       {
         "name": "Flipflop",
         "src": "/TheHappyCase/images/BronzePins/flipflop.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "nature"
       },
       {
         "name": "Paw",
         "src": "/TheHappyCase/images/BronzePins/paw.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "animals"
       },
       {
         "name": "PawDog",
         "src": "/TheHappyCase/images/BronzePins/pawheart.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "animals"
       },
       {
         "name": "I love my dog",
         "src": "/TheHappyCase/images/BronzePins/ilovemydog.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "animals"
       },
       {
         "name": "Money",
@@ -832,7 +894,8 @@
         "name": "Dog Bone",
         "src": "/TheHappyCase/images/BronzePins/dogbone.png",
         "price": 1,
-        "size": 0.3
+        "size": 0.3,
+        "subCategory": "animals"
       }
     ]
   }

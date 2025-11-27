@@ -17,6 +17,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
           src={charm.src}
           alt={charm.name}
           className="w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80"
+          loading="lazy"
           style={{
             transform: `scale(${charm.size !== undefined ? charm.size * 0.9 : 0.9})`
           }}
@@ -44,8 +45,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
               e.stopPropagation();
               onAddToCart(charm);
             }}
-            className="absolute bottom-0 left-0 right-0 py-2 text-gray-900 border-t border-gray-200 bg-white transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50"
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+            className="absolute bottom-0 left-0 right-0 py-2 text-gray-900 border-t border-gray-200 bg-white transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 font-inter"
           >
             <svg className="w-4 h-4 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -54,13 +54,11 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
           </button>
         )}
       </div>
-      <h3 className="text-sm text-gray-700 text-center mb-1 font-light" 
-          style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+      <h3 className="text-sm text-gray-700 text-center mb-1 font-light font-inter">
         {charm.name}
       </h3>
       <div className="text-center">
-        <span className="text-sm text-gray-900 font-medium" 
-              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+        <span className="text-sm text-gray-900 font-medium font-inter">
           {formatPrice(charm.price || 2.0)}
         </span>
       </div>

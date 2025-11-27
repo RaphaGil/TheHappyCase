@@ -25,7 +25,7 @@ const CategoryTabs = ({ categories, selectedCategory, onCategoryChange, inline =
                 ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
                 : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
             }`}
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+            className="font-inter"
           >
             {label}
           </button>

@@ -760,7 +760,7 @@ const Canvas = ({
         originY: 'center',
         fontSize: Number(options.fontSize) || 36,
         fill: options.fill || '#CD7F32', // Old bronze color
-        fontFamily: options.fontFamily || "'Poppins', sans-serif",
+        fontFamily: options.fontFamily || "'Inter', sans-serif",
         textAlign: 'center',
         lineHeight: 1.2,
         borderColor: 'transparent',

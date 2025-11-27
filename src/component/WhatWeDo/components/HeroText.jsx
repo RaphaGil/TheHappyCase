@@ -5,11 +5,7 @@ const HeroText = ({ pinHighlights }) => {
   return (
     <div className="text-center mb-16 md:mb-20">
       <h1 
-        className="text-4xl font-light text-gray-900 mb-6" 
-        style={{
-          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", 
-          letterSpacing: '0.05em'
-        }}
+        className="text-title font-light text-gray-900 mb-6 font-inter tracking-title"
       >
         <span className="block">Design Your</span>
         <span className="block">

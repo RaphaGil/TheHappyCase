@@ -142,15 +142,14 @@ const AddText = () => {
         <div className="mb-8">
           <button
             onClick={handleBack}
-            className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+            className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors font-inter"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back
           </button>
-          <h1 className="text-2xl font-light text-gray-900 mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", letterSpacing: '0.05em'}}>
+          <h1 className="text-subtitle font-light text-gray-900 mb-2 font-inter tracking-title">
             Add Text
           </h1>
           <div className="w-16 h-px bg-gray-300"></div>
@@ -159,7 +158,7 @@ const AddText = () => {
         {/* Content */}
         <div className="space-y-6">
           <div>
-            <label className="block text-sm text-gray-700 mb-2" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+            <label className="block text-sm text-gray-700 mb-2 font-inter">
               Enter your text
             </label>
             <input
@@ -170,12 +169,11 @@ const AddText = () => {
                 setCustomTextError('');
               }}
               placeholder="e.g. Your name"
-              className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-base"
-              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+              className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-base font-inter"
               maxLength={MAX_TEXT_LENGTH}
               autoFocus
             />
-            <p className="mt-2 text-xs text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+            <p className="mt-2 text-caption text-gray-500 font-inter">
               Up to {MAX_TEXT_LENGTH} characters. Double-click the text on the case to edit or move it.
             </p>
           </div>
@@ -189,8 +187,7 @@ const AddText = () => {
           <div className="flex flex-row gap-3">
             <button
               onClick={handleAddText}
-              className="flex-1 px-6 py-3 text-sm uppercase tracking-wider text-white bg-gray-900 hover:bg-gray-800 transition-colors"
-              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+              className="flex-1 px-6 py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
             >
               Add Text
             </button>
@@ -199,8 +196,7 @@ const AddText = () => {
                 setCustomText('');
                 setCustomTextError('');
               }}
-              className="px-6 py-3 text-sm uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-colors"
-              style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+              className="px-6 py-3 text-sm uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-colors font-inter"
             >
               Clear
             </button>

@@ -14,8 +14,7 @@ const TrustFeatureCard = ({ feature, index, pastelColors, iconColors }) => {
 
       {/* Title */}
       <h3 
-        className="text-xs uppercase tracking-wider font-light text-gray-700 leading-tight"
-        style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+        className="text-xs uppercase tracking-wider font-light text-gray-700 leading-tight font-inter"
       >
         {feature.title}
       </h3>

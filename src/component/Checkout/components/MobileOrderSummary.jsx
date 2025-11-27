@@ -21,8 +21,7 @@ const MobileOrderSummary = ({
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between px-4 py-3 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-light"
-          style={{fontFamily: "'Poppins', sans-serif"}}
+          className="w-full flex items-center justify-between px-4 py-3 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-light font-inter"
           aria-expanded={isOpen}
           aria-controls="mobile-order-summary"
         >

@@ -12,19 +12,19 @@ const RefundPolicy = () => {
 
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="bg-white rounded-lg  p-8 md:p-12">
-          <h1 
-            className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center"
-            style={{fontFamily: "'Fredoka One', cursive", color: '#1e3a8a'}}
-          >
+            <h1 
+             className="text-title md:text-title-lg font-bold text-gray-800 mb-8 text-center font-fredoka"
+              style={{color: '#1e3a8a'}}
+            >
             Refund Policy
           </h1>
           
           <div className="prose prose-lg max-w-none">
             <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8 rounded">
-              <p className="text-gray-700 text-lg leading-relaxed mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
-                <strong>No returns or refunds.</strong> We only offer returns/refunds if there has been a fault on our end. This is due to our stock being made-to-order.
-              </p>
-              <p className="text-gray-700 text-lg leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+               <p className="text-gray-700 text-body-lg leading-relaxed mb-4 font-inter">
+                  <strong>No returns or refunds.</strong> We only offer returns/refunds if there has been a fault on our end. This is due to our stock being made-to-order.
+                </p>
+               <p className="text-gray-700 text-body-lg leading-relaxed font-inter">
                 Thanks for understanding!
               </p>
             </div>

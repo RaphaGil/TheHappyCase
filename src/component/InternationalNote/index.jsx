@@ -29,11 +29,11 @@ const InternationalNote = ({
       <div className={`${bgColor} border ${borderColor} rounded-lg p-4`}>
         <div className="flex items-start gap-3">
           <div className={`${iconColor} text-xl flex-shrink-0`}>⚠️</div>
-          <div className="flex-1">
-            <h3 className={`text-sm font-semibold ${titleColor} mb-1`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="flex-1 font-inter">
+            <h3 className={`text-sm font-semibold ${titleColor} mb-1`}>
               {title}
             </h3>
-            <p className={`text-xs ${textColor} font-light leading-relaxed`} style={{fontFamily: "'Poppins', sans-serif"}}>
+            <p className={`text-xs ${textColor} font-light leading-relaxed`} className="font-inter">
               {message}
             </p>
           </div>

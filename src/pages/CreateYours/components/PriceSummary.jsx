@@ -29,14 +29,13 @@ const PriceSummary = ({
   return (
       <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
         <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-2' : 'mb-4'}`}>
-          <h3 className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-900 font-medium`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-900 font-medium font-inter`}>
             Subtotal: {formatPrice(totalPrice)}
           </h3>
         
         <button
           onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-          className={`${isMobile ? 'text-[10px]' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200`} 
-          style={{fontFamily: "'Poppins', sans-serif"}}
+          className={`${isMobile ? 'text-[10px]' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter`}
         >
           {showPriceBreakdown ? 'Hide' : 'Details'}
         </button>
@@ -45,14 +44,14 @@ const PriceSummary = ({
       {/* Price Breakdown Dropdown */}
       {showPriceBreakdown && (
         <div className={`space-y-1 ${isMobile ? 'text-[10px] mb-2 pt-2' : 'text-xs mb-4 pt-4'} text-gray-600 border-t border-gray-100`}>
-          <div className="flex justify-between">
-            <span style={{fontFamily: "'Poppins', sans-serif"}}>Case:</span>
-            <span style={{fontFamily: "'Poppins', sans-serif"}}>{formatPrice(caseBasePrice)}</span>
+          <div className="flex justify-between font-inter">
+            <span>Case:</span>
+            <span className="font-inter">{formatPrice(caseBasePrice)}</span>
           </div>
           {groupedPinsList.map((pin, index) => (
-            <div key={index} className="flex justify-between">
-              <span style={{fontFamily: "'Poppins', sans-serif"}}>{pin.name}{pin.count > 1 ? ` (x${pin.count})` : ''}:</span>
-              <span style={{fontFamily: "'Poppins', sans-serif"}}>{formatPrice(pin.price * pin.count)}</span>
+            <div key={index} className="flex justify-between font-inter">
+              <span>{pin.name}{pin.count > 1 ? ` (x${pin.count})` : ''}:</span>
+              <span className="font-inter">{formatPrice(pin.price * pin.count)}</span>
             </div>
           ))}
         </div>
@@ -68,7 +67,7 @@ const PriceSummary = ({
             className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
           />
           {/* Mobile: Simplified text */}
-          <span className="text-[10px] md:text-xs text-gray-700 leading-relaxed md:hidden" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-[10px] md:text-xs text-gray-700 leading-relaxed md:hidden font-inter">
             <button
               type="button"
               onClick={onShowTerms}
@@ -78,7 +77,7 @@ const PriceSummary = ({
             </button>
           </span>
           {/* Desktop: Full text */}
-          <span className="hidden md:block text-sm text-gray-700 leading-relaxed" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="hidden md:block text-sm text-gray-700 leading-relaxed font-inter">
             I agree to the{' '}
             <button
               type="button"
@@ -92,7 +91,7 @@ const PriceSummary = ({
         </label>
         {/* Error message when trying to add to cart without accepting terms */}
         {showTermsError && (
-          <div className="mt-2 text-[10px] md:text-xs text-red-600" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="mt-2 text-[10px] md:text-xs text-red-600 font-inter">
             You must accept the terms to add items to cart.
           </div>
         )}
@@ -109,7 +108,7 @@ const PriceSummary = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
             </svg>
           </button>
-          <span className={`${isMobile ? 'text-xs min-w-[1.5rem]' : 'text-sm min-w-[2rem]'} font-medium text-gray-900 text-center`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className={`${isMobile ? 'text-xs min-w-[1.5rem]' : 'text-sm min-w-[2rem]'} font-medium text-gray-900 text-center font-inter`}>
             {quantity}
           </span>
           <button
@@ -144,13 +143,13 @@ const PriceSummary = ({
               quantity: quantity
             }}
             onAdd={onAddToCart}
-            className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700 cursor-pointer"
+            className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2 text-xs md:py-2.5 md:text-sm"
             disabled={false}
           />
         </div>
       </div>
       {!isMobile && (
-        <p className="text-xs text-gray-500 text-center mt-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <p className="text-xs text-gray-500 text-center mt-4 font-inter">
           <Link to="/shipping" className="text-gray-600 hover:text-gray-900 underline">Shipping</Link> calculated at checkout.
         </p>
       )}

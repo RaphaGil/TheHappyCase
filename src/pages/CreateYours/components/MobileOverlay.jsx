@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import ColorSelector from '../../../component/ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../../data/constants.js';
-import { filterPinsByCategory } from '../filterHelpers';
+import { filterPinsByCategory } from '../../../data/filterHelpers.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -90,7 +90,7 @@ const MobileOverlay = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 flex-shrink-0">
-          <h2 className="text-sm uppercase tracking-wider text-gray-900 font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+          <h2 className="text-caption uppercase tracking-wider text-gray-900 font-light font-inter">
             {mobileCurrentStep === 'case' && 'Choose Case'}
             {mobileCurrentStep === 'color' && 'Choose Color'}
             {mobileCurrentStep === 'charms' && 'Choose Charms'}
@@ -141,8 +141,7 @@ const MobileOverlay = ({
                           selectedCaseType === opt.value
                             ? 'bg-gray-50'
                             : 'hover:bg-gray-50'
-                        } ${soldOut ? 'opacity-40 cursor-not-allowed' : ''}`}
-                        style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                        } ${soldOut ? 'opacity-40 cursor-not-allowed' : ''} font-inter`}
                       >
                         {caseImage && (
                           <div className="relative flex items-center justify-center rounded" style={{ width: '5rem', height: '5rem', overflow: 'visible' }}>
@@ -150,6 +149,7 @@ const MobileOverlay = ({
                               src={caseImage}
                               alt={opt.label}
                               className={`max-w-full max-h-full object-contain ${soldOut ? 'opacity-50' : ''}`}
+                              loading="lazy"
                               onError={(e) => {
                                 e.target.style.display = 'none';
                               }}
@@ -165,7 +165,7 @@ const MobileOverlay = ({
                         )}
                         <span className={`text-xs text-center line-clamp-2 font-light ${
                           selectedCaseType === opt.value ? 'text-gray-900' : 'text-gray-600'
-                        }`} style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>{opt.label}</span>
+                        } font-inter`}>{opt.label}</span>
                       </button>
                       {soldOut && (
                         <span className="text-[10px] text-gray-400 font-light">Sold Out</span>
@@ -216,8 +216,7 @@ const MobileOverlay = ({
                           selectedCategory === cat.value
                             ? 'bg-gray-50'
                             : 'hover:bg-gray-50'
-                        }`}
-                        style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                        } font-inter`}
                       >
                         {previewImage && (
                           <div className="relative mb-1.5 flex items-center justify-center rounded overflow-visible" style={{ width: '3.5rem', height: '3.5rem' }}>
@@ -262,8 +261,7 @@ const MobileOverlay = ({
                       e.stopPropagation();
                       setIsFilterDropdownOpen(prev => !prev);
                     }}
-                    className="w-full px-4 py-2.5 text-xs uppercase tracking-wider text-left flex items-center justify-between bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors font-light"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
+                    className="w-full px-4 py-2.5 text-xs uppercase tracking-wider text-left flex items-center justify-between rounded-lg font-light font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
                   >
                     <span className="text-gray-900">
                       {selectedFilterTab ? selectedFilterTab.label : 'All'}
@@ -292,8 +290,7 @@ const MobileOverlay = ({
                             mobileSubCategory === key 
                               ? 'bg-gray-50 text-gray-900 font-light' 
                               : 'text-gray-600 hover:bg-gray-50'
-                          }`}
-                          style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
+                          } font-inter`}
                         >
                           {label}
                         </button>
@@ -347,7 +344,7 @@ const MobileOverlay = ({
                                 </div>
                                 <span className={`text-[10px] text-center line-clamp-2 mt-1 font-light ${
                                   isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'
-                                }`} style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                                } font-inter`}>
                                   {pin.name}
                                 </span>
                               </button>
@@ -359,7 +356,7 @@ const MobileOverlay = ({
                         })}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-400 text-sm font-light" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+                    <div className="text-center py-8 text-gray-400 text-sm font-light font-inter">
                       No charms found
                     </div>
                   )}

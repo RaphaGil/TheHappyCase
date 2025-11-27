@@ -22,8 +22,7 @@ const CartItem = ({
         <div className="flex justify-end items-end mb-2">
           <button 
             onClick={() => onRemove(index)} 
-            className="text-xs text-gray-500 hover:text-gray-900 uppercase tracking-wider font-light transition-colors" 
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="text-xs text-gray-500 hover:text-gray-900 uppercase tracking-wider font-light transition-colors font-inter"
           >
             Remove
           </button>

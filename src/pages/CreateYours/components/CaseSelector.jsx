@@ -40,12 +40,11 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle }
                 role="option"
                 aria-selected={selectedCaseType === opt.value}
                 disabled={soldOut}
-                className={`p-3 cursor-pointer transition-all duration-200 flex flex-col items-center gap-2 w-full ${
+                className={`p-3 cursor-pointer transition-all duration-200 flex flex-col items-center gap-2 w-full font-inter ${
                   selectedCaseType === opt.value 
                     ? 'bg-gray-50 text-gray-900 font-medium ' 
                     : 'text-gray-700 hover:bg-gray-50 hover:border-gray-300'
                 } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
-                style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}
                 onClick={() => {
                   if (!soldOut) {
                     onSelect(opt.value);
@@ -62,6 +61,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle }
                       src={caseImage}
                       alt={opt.label}
                       className={`w-full h-full object-contain p-2 ${soldOut ? 'opacity-50' : ''}`}
+                      loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
                       }}
@@ -75,7 +75,9 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle }
                     )}
                   </div>
                 )}
-                <span className="text-xs text-center">{opt.label}</span>
+                <span className="text-xs md:text-sm text-center font-medium">
+                  {opt.label}
+                </span>
               </button>
               {soldOut && (
                 <span className="text-[10px] text-red-600 font-medium">Sold Out</span>

@@ -14,7 +14,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 flex-shrink-0">
-          <h3 className="text-xs sm:text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>
+          <h3 className="text-xs sm:text-sm uppercase tracking-wider text-gray-900 font-medium font-inter">
             {selectedCase.name}
           </h3>
           <button
@@ -37,6 +37,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                 src={caseImages[selectedModalImage]}
                 alt={`${selectedCase.name} - View ${selectedModalImage + 1}`}
                 className="max-w-full max-h-full object-contain"
+                loading="lazy"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   if (e.target.nextSibling) {
@@ -45,7 +46,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                 }}
               />
               <div className="hidden w-full h-full items-center justify-center text-gray-400">
-                <p className="text-gray-500" style={{fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"}}>Image not available</p>
+                <p className="text-gray-500 font-inter">Image not available</p>
               </div>
             </div>
           </div>
@@ -69,6 +70,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                       src={image}
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain p-1"
+                      loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         if (e.target.nextSibling) {

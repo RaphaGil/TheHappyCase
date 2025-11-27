@@ -1,7 +1,7 @@
 import React from 'react';
 import Products from '../../data/products.json';
 import CharmsPage from '../../pages/Charms/components/CharmsPage';
-import { filterBronzeCharms } from '../../pages/Charms/filterFunctions';
+import { filterBronzeCharms } from '../../data/filterFunctions';
 
 const BronzeCharms = () => {
   const bronzePins = Products.pins.bronze;

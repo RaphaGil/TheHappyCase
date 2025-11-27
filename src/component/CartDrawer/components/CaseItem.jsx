@@ -43,6 +43,7 @@ const CaseItem = ({
                 src={basePreview}
                 alt="Case preview"
                 className="w-20 h-22 object-contain rounded"
+                loading="lazy"
               />
             ) : item.color ? (
               <div
@@ -55,18 +56,18 @@ const CaseItem = ({
               </div>
             )}
             <div className="flex flex-col">
-              <span className="text-sm font-light text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <span className="text-sm font-light text-gray-900 font-inter">
                 {item.caseName || item.name || 'Passport Case'}
               </span>
               {item.color && (
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-xs text-gray-500 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>Color:</span>
+                  <span className="text-xs text-gray-500 font-light font-inter">Color:</span>
                   <div className="w-3 h-3 rounded-full border border-gray-300" style={{backgroundColor: item.color}}></div>
                 </div>
               )}
             </div>
           </div>
-          <span className="text-sm font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-sm font-medium text-gray-900 font-inter">
             {formatPrice(base)}
           </span>
         </div>
@@ -82,15 +83,16 @@ const CaseItem = ({
                   src={groupedPin.src}
                   alt={groupedPin.name}
                   className="w-16 h-16 object-contain"
+                  loading="lazy"
                 />
               ) : (
                 <div className="w-8 h-8 rounded bg-gray-200" />
               )}
-              <span className="text-sm font-light text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <span className="text-sm font-light text-gray-900 font-inter">
                 {groupedPin.name} (x{groupedPin.quantity})
               </span>
             </div>
-            <span className="text-sm font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <span className="text-sm font-medium text-gray-900 font-inter">
               {formatPrice((groupedPin.price || 0) * groupedPin.quantity)}
             </span>
           </div>
@@ -105,7 +107,7 @@ const CaseItem = ({
           onIncrement={() => onIncrement(item.id)}
         />
         <div className="text-right">
-          <div className="text-sm font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="text-sm font-medium text-gray-900 font-inter">
             {formatPrice(unit * qty)}
           </div>
         </div>

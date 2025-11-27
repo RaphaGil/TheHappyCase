@@ -79,7 +79,7 @@ const Reviews = () => {
   const totalSlides = Math.ceil(reviews.length / reviewsPerSlide);
 
   return (
-    <div className="bg-white py-20 md:py-28 lg:py-32 relative overflow-hidden">
+    <div className="bg-yellow-100 py-20 md:py-28 lg:py-32 relative overflow-hidden">
       <div className="max-full relative z-10 px-4 sm:px-6 lg:px-8">
         <ReviewHeader />
 

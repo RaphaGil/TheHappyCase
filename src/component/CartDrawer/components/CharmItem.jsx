@@ -25,6 +25,7 @@ const CharmItem = ({
               src={item.image}
               alt={item.name}
               className="w-20 h-20 object-contain rounded"
+              loading="lazy"
             />
           ) : (
             <div className="w-20 h-20 rounded bg-gray-50 border border-gray-200 flex items-center justify-center">
@@ -32,15 +33,15 @@ const CharmItem = ({
             </div>
           )}
           <div className="flex flex-col">
-            <span className="text-sm font-light text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <span className="text-sm font-light text-gray-900 font-inter">
               {item.name}
             </span>
-            <span className="text-xs text-gray-500 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <span className="text-xs text-gray-500 font-light font-inter">
               {item.category ? `${item.category.charAt(0).toUpperCase() + item.category.slice(1)} Charm` : 'Charm'}
             </span>
           </div>
         </div>
-        <span className="text-sm font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <span className="text-sm font-medium text-gray-900 font-inter">
           {formatPrice(item.price || item.totalPrice || 0)}
         </span>
       </div>
@@ -53,7 +54,7 @@ const CharmItem = ({
           onIncrement={() => onIncrement(item.id)}
         />
         <div className="text-right">
-          <div className="text-sm font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <div className="text-sm font-medium text-gray-900 font-inter">
             {formatPrice((item.price || item.totalPrice || 0) * (item.quantity || 1))}
           </div>
         </div>

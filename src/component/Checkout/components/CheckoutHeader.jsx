@@ -7,8 +7,7 @@ const CheckoutHeader = ({ cartIconSrc }) => {
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 lg:px-6 py-5">
         <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
           <div
-            className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900"
-            style={{ fontFamily: "'Fredoka One', cursive" }}
+            className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-fredoka"
           >
             <span className="text-[10px] md:text-xs font-bold leading-tight tracking-[0.35em] text-blue-900 uppercase">
               THE
@@ -66,7 +65,7 @@ const CheckoutHeader = ({ cartIconSrc }) => {
           className="relative flex items-center justify-center p-2 rounded-full 0 hover:border-gray-400 transition"
           aria-label="View cart"
         >
-          <img src={cartIconSrc} alt="Cart" className="h-6 w-6" />
+          <img src={cartIconSrc} alt="Cart" className="h-6 w-6" loading="lazy" />
         </Link>
       </div>
     </div>

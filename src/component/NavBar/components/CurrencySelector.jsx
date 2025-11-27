@@ -53,8 +53,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
             e.stopPropagation();
             toggleCurrencyDropdown();
           }}
-          className={`w-full text-left hover:text-gray-900 font-light transition-all duration-200 flex items-center justify-between text-xs uppercase tracking-wider ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
-          style={{fontFamily: "'Poppins', sans-serif", color: '#6b7280'}}
+          className={`w-full text-left hover:text-gray-900 font-light transition-all duration-200 flex items-center justify-between text-xs uppercase tracking-wider font-inter ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
+          style={{color: '#6b7280'}}
         >
           <span>{getCurrencyDisplayWithFlag()}</span>
           <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
@@ -68,8 +68,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                   e.stopPropagation();
                   handleCurrencySelect(curr.code);
                 }}
-                className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${currency === curr.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
-                style={{fontFamily: "'Poppins', sans-serif", color: currency === curr.code ? '#111827' : '#374151'}}
+                className={`w-full text-left px-8 py-2.5 text-xs transition-colors font-inter ${currency === curr.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                style={{color: currency === curr.code ? '#111827' : '#374151'}}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -88,8 +88,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                   e.stopPropagation();
                   setShowEuropeanCountries(!showEuropeanCountries);
                 }}
-                className={`w-full text-left px-8 py-2.5 text-xs transition-colors ${isEuropeanCurrency ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
-                style={{fontFamily: "'Poppins', sans-serif", color: isEuropeanCurrency ? '#111827' : '#374151'}}
+                className={`w-full text-left px-8 py-2.5 text-xs transition-colors font-inter ${isEuropeanCurrency ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                style={{color: isEuropeanCurrency ? '#111827' : '#374151'}}
               >
                 <div className="flex items-center justify-between flex-1">
                   <span className="text-xs text-gray-500">Other European Countries</span>
@@ -105,8 +105,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                         e.stopPropagation();
                         handleCurrencySelect(country.code);
                       }}
-                      className={`w-full text-left px-4 py-2 text-xs transition-colors ${currency === country.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
-                      style={{fontFamily: "'Poppins', sans-serif", color: currency === country.code ? '#111827' : '#374151'}}
+                      className={`w-full text-left px-4 py-2 text-xs transition-colors font-inter ${currency === country.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                      style={{color: currency === country.code ? '#111827' : '#374151'}}
                     >
                       <div className="flex items-center gap-2">
                         <span>{country.flag}</span>
@@ -132,9 +132,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
           e.stopPropagation();
           toggleCurrencyDropdown();
         }}
-        className="px-2 md:px-3 py-1 text-gray-700 hover:text-gray-900 focus:outline-none transition-colors flex items-center text-[12px] md:text-xs"
+        className="px-2 md:px-3 py-1 text-gray-700 hover:text-gray-900 focus:outline-none transition-colors flex items-center text-[12px] md:text-xs font-inter"
         aria-label="Select currency"
-        style={{fontFamily: "'Poppins', sans-serif"}}
       >
         <span className="mr-1 whitespace-nowrap">{getCurrencyDisplayWithFlag()}</span>
         <FontAwesomeIcon icon={faChevronDown} className={`text-[6px] md:text-xs transition-transform ml-1 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
@@ -148,8 +147,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                 e.stopPropagation();
                 handleCurrencySelect(curr.code);
               }}
-              className={`w-full text-left px-4 py-2 text-xs transition-colors ${currency === curr.code ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
-              style={{fontFamily: "'Poppins', sans-serif", color: currency === curr.code ? '#111827' : '#6b7280'}}
+              className={`w-full text-left px-4 py-2 text-xs transition-colors font-inter ${currency === curr.code ? 'bg-gray-50' : 'hover:bg-gray-50'}`}
+              style={{color: currency === curr.code ? '#111827' : '#6b7280'}}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -168,8 +167,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                 e.stopPropagation();
                 setShowEuropeanCountries(!showEuropeanCountries);
               }}
-              className={`w-full text-left px-4 py-2 text-xs transition-colors ${isEuropeanCurrency ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-              style={{fontFamily: "'Poppins', sans-serif", color: isEuropeanCurrency ? '#111827' : '#6b7280'}}
+              className={`w-full text-left px-4 py-2 text-xs transition-colors font-inter ${isEuropeanCurrency ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
+              style={{color: isEuropeanCurrency ? '#111827' : '#6b7280'}}
             >
               <div className="flex items-center justify-between flex-1">
                 <span className="text-xs text-gray-500">Other European Countries</span>
@@ -185,8 +184,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                       e.stopPropagation();
                       handleCurrencySelect(country.code);
                     }}
-                    className={`w-full text-left px-3 py-1.5 text-xs transition-colors ${currency === country.code ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-                    style={{fontFamily: "'Poppins', sans-serif", color: currency === country.code ? '#111827' : '#6b7280'}}
+                    className={`w-full text-left px-3 py-1.5 text-xs transition-colors font-inter ${currency === country.code ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
+                    style={{color: currency === country.code ? '#111827' : '#6b7280'}}
                   >
                     <div className="flex items-center gap-2">
                       <span>{country.flag}</span>

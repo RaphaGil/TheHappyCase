@@ -3,13 +3,13 @@ import React from 'react';
 const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
   return (
     <div className="space-y-4">
-      <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-4 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+      <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-4 font-light font-inter">
         Delivery
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
             Full Name *
           </label>
           <input
@@ -18,13 +18,12 @@ const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
             value={customerInfo.name}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light font-inter"
           />
         </div>
         
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
             Email *
           </label>
           <input
@@ -33,14 +32,13 @@ const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
             value={customerInfo.email}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light font-inter"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
           Address Line 1 *
         </label>
         <input
@@ -49,13 +47,12 @@ const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
           value={customerInfo.address.line1}
           onChange={onInputChange}
           required
-          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-          style={{fontFamily: "'Poppins', sans-serif"}}
+          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light font-inter"
         />
       </div>
 
       <div>
-        <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+        <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
           Address Line 2
         </label>
         <input
@@ -63,14 +60,13 @@ const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
           name="address.line2"
           value={customerInfo.address.line2}
           onChange={onInputChange}
-          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-          style={{fontFamily: "'Poppins', sans-serif"}}
+          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light font-inter"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
             City *
           </label>
           <input
@@ -79,13 +75,12 @@ const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
             value={customerInfo.address.city}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light font-inter"
           />
         </div>
         
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
             Postal Code *
           </label>
           <input
@@ -94,21 +89,19 @@ const CustomerInfoForm = ({ customerInfo, onInputChange }) => {
             value={customerInfo.address.postal_code}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light font-inter"
           />
         </div>
         
         <div>
-          <label className="block text-xs text-gray-500 mb-1.5 font-light" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <label className="block text-xs text-gray-500 mb-1.5 font-light font-inter">
             Country *
           </label>
           <select
             name="address.country"
             value={customerInfo.address.country}
             onChange={onInputChange}
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 font-light font-inter"
           >
             <option value="GB">United Kingdom</option>
             <option value="US">United States</option>

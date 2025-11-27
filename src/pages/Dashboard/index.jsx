@@ -113,11 +113,11 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-light text-gray-900 mb-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h1 className="text-3xl font-light text-gray-900 mb-2 font-inter">
             Inventory Dashboard
           </h1>
           <div className="w-24 h-px bg-gray-300"></div>
-          <p className="mt-4 text-sm text-gray-600" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <p className="mt-4 text-sm text-gray-600 font-inter">
             Manage quantities for passport cases and charms. Set quantity to 0 to show "Sold Out".
           </p>
         </div>
@@ -129,9 +129,9 @@ const Dashboard = () => {
             className={`px-6 py-2 text-sm uppercase tracking-wider transition-colors ${
               saved
                 ? 'bg-green-600 text-white'
-                : 'bg-gray-900 text-white hover:bg-gray-800'
+                : 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200'
             }`}
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="font-inter"
           >
             {saved ? '✓ Saved' : 'Save Changes'}
           </button>
@@ -139,14 +139,14 @@ const Dashboard = () => {
 
         {/* Passport Cases Section */}
         <div className="bg-white rounded-sm shadow-sm border border-gray-200 mb-8 p-6">
-          <h2 className="text-xl font-light text-gray-900 mb-6" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h2 className="text-xl font-light text-gray-900 mb-6 font-inter">
             Passport Cases
           </h2>
           <div className="space-y-8">
             {products.cases.map((caseItem, index) => (
               <div key={index} className="border border-gray-200 rounded-sm p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <h3 className="text-lg font-medium text-gray-900 font-inter">
                     {caseItem.name}
                   </h3>
                   {caseItem.quantity === 0 && (
@@ -156,7 +156,7 @@ const Dashboard = () => {
                 
                 {/* Case-level quantity (optional) */}
                 <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                  <label className="text-sm text-gray-600 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <label className="text-sm text-gray-600 font-medium font-inter">
                     Overall Quantity:
                   </label>
                   <input
@@ -164,14 +164,13 @@ const Dashboard = () => {
                     min="0"
                     value={caseItem.quantity || ''}
                     onChange={(e) => updateQuantity('case', index, null, e.target.value)}
-                    className="w-20 px-2 py-1 border border-gray-300 rounded-sm text-sm focus:outline-none focus:border-gray-400"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
+                    className="w-20 px-2 py-1 border border-gray-300 rounded-sm text-sm focus:outline-none focus:border-gray-400 font-inter"
                   />
                 </div>
                 
                 {/* Color quantities */}
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-3" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3 font-inter">
                     Color Quantities:
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -188,8 +187,7 @@ const Dashboard = () => {
                             min="0"
                             value={colorItem.quantity !== undefined ? colorItem.quantity : ''}
                             onChange={(e) => updateQuantity('case', index, null, e.target.value, colorIndex)}
-                            className="w-full px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400 text-center"
-                            style={{fontFamily: "'Poppins', sans-serif"}}
+                            className="w-full px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400 text-center font-inter"
                           />
                         </div>
                         {colorItem.quantity === 0 && (
@@ -206,20 +204,20 @@ const Dashboard = () => {
 
         {/* Charms Section */}
         <div className="bg-white rounded-sm shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-light text-gray-900 mb-6" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h2 className="text-xl font-light text-gray-900 mb-6 font-inter">
             Charms
           </h2>
 
           {/* Flags */}
           <div className="mb-8">
-            <h3 className="text-lg font-light text-gray-800 mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h3 className="text-lg font-light text-gray-800 mb-4 font-inter">
               Flags
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {products.pins.flags.map((charm, index) => (
                 <div key={index} className="border border-gray-200 rounded-sm p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-700 truncate" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    <span className="text-xs text-gray-700 truncate font-inter">
                       {charm.name}
                     </span>
                     {charm.quantity === 0 && (
@@ -232,8 +230,7 @@ const Dashboard = () => {
                       min="0"
                       value={charm.quantity || ''}
                       onChange={(e) => updateQuantity('charm', index, 'flags', e.target.value)}
-                      className="w-16 px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400"
-                      style={{fontFamily: "'Poppins', sans-serif"}}
+                      className="w-16 px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400 font-inter"
                     />
                   </div>
                 </div>
@@ -243,14 +240,14 @@ const Dashboard = () => {
 
           {/* Colorful Charms */}
           <div className="mb-8">
-            <h3 className="text-lg font-light text-gray-800 mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h3 className="text-lg font-light text-gray-800 mb-4 font-inter">
               Colorful Charms
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {products.pins.colorful.map((charm, index) => (
                 <div key={index} className="border border-gray-200 rounded-sm p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-700 truncate" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    <span className="text-xs text-gray-700 truncate font-inter">
                       {charm.name}
                     </span>
                     {charm.quantity === 0 && (
@@ -263,8 +260,7 @@ const Dashboard = () => {
                       min="0"
                       value={charm.quantity || ''}
                       onChange={(e) => updateQuantity('charm', index, 'colorful', e.target.value)}
-                      className="w-16 px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400"
-                      style={{fontFamily: "'Poppins', sans-serif"}}
+                      className="w-16 px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400 font-inter"
                     />
                   </div>
                 </div>
@@ -274,14 +270,14 @@ const Dashboard = () => {
 
           {/* Bronze Charms */}
           <div>
-            <h3 className="text-lg font-light text-gray-800 mb-4" style={{fontFamily: "'Poppins', sans-serif"}}>
+            <h3 className="text-lg font-light text-gray-800 mb-4 font-inter">
               Bronze Charms
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {products.pins.bronze.map((charm, index) => (
                 <div key={index} className="border border-gray-200 rounded-sm p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-700 truncate" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    <span className="text-xs text-gray-700 truncate font-inter">
                       {charm.name}
                     </span>
                     {charm.quantity === 0 && (
@@ -294,8 +290,7 @@ const Dashboard = () => {
                       min="0"
                       value={charm.quantity || ''}
                       onChange={(e) => updateQuantity('charm', index, 'bronze', e.target.value)}
-                      className="w-16 px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400"
-                      style={{fontFamily: "'Poppins', sans-serif"}}
+                      className="w-16 px-2 py-1 border border-gray-300 rounded-sm text-xs focus:outline-none focus:border-gray-400 font-inter"
                     />
                   </div>
                 </div>

@@ -36,8 +36,7 @@ const PromotionalBanner = () => {
         <div className="flex-1 flex items-center justify-center">
           <div 
             key={currentBannerIndex}
-            className="text-xs font-light"
-            style={{fontFamily: "'Poppins', sans-serif"}}
+            className="text-xs font-light font-inter"
           >
             {bannerMessages[currentBannerIndex]}
           </div>
