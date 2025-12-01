@@ -732,7 +732,7 @@ const CreateYours = () => {
               {/* Close Button - Mobile only */}
               <button
                 onClick={() => navigate('/')}
-                className="fixed top-4 right-4 z-50 w-10 h-10 flex items-center justify-center   "
+                className="fixed top-2 right-2 z-50 w-12 h-12 flex items-center justify-center   "
                 aria-label="Close and go back to home"
               >
                 <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

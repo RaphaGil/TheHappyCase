@@ -4,7 +4,7 @@ const InvalidPositionAlert = ({ show }) => {
   if (!show) return null;
 
   return (
-    <div className="-mt-20 sm:-mt-4 w-full max-w-[450px] mx-auto z-50">
+    <div className="-mt-20 sm:-mt-4 w-full max-w-[450px] mx-auto">
       <div 
         className="px-4 py-3 rounded-md shadow-lg border-2 bg-red-500"
       >

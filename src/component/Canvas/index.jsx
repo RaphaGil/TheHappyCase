@@ -122,24 +122,6 @@ const Canvas = ({
     });
   };
 
-  // Bring all charms (pins) to the front - always keep them at front like controls
-  const bringAllCharmsToFront = useCallback(() => {
-    if (!fabricCanvas.current) return;
-    
-    const objects = fabricCanvas.current.getObjects();
-    const charms = objects.filter(obj => obj.pinData !== undefined);
-    
-    if (charms.length === 0) {
-      return;
-    }
-    
-    // Bring each charm to front
-    charms.forEach(charm => {
-      fabricCanvas.current.bringObjectToFront(charm);
-    });
-    
-    fabricCanvas.current.renderAll();
-  }, []);
 
   // Create case border rectangle
   const createCaseBorder = useCallback(() => {
@@ -181,11 +163,8 @@ const Canvas = ({
       fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
     }
     
-    // Always keep charms at front after creating border
-    bringAllCharmsToFront();
-    
     fabricCanvas.current.renderAll();
-  }, [bringAllCharmsToFront]);
+  }, []);
 
   // Create or update border rectangle for selected object
   const updateBorderRect = useCallback((obj) => {
@@ -233,14 +212,9 @@ const Canvas = ({
     if (caseBorderRectRef.current) {
       fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
     }
-    // Bring the selected object to front so border appears below it
-    fabricCanvas.current.bringObjectToFront(obj);
-    
-    // Always keep charms at front
-    bringAllCharmsToFront();
     
     fabricCanvas.current.renderAll();
-  }, [bringAllCharmsToFront]);
+  }, []);
 
   // Remove border rectangle for object
   const removeBorderRect = useCallback((obj) => {
@@ -514,10 +488,6 @@ const Canvas = ({
           height: boundingRect.height - (inset * 2),
         });
         borderRect.setCoords();
-        // Ensure border stays below object by bringing object to front
-        fabricCanvas.current.bringObjectToFront(obj);
-        // Always keep charms at front
-        bringAllCharmsToFront();
       }
       
       // Update controls position during movement for the active object
@@ -536,9 +506,6 @@ const Canvas = ({
       }
       
       if (obj && !obj.isCase && obj !== caseBorderRectRef.current) {
-        // Always keep charms at front after modification
-        bringAllCharmsToFront();
-        
         fabricCanvas.current.renderAll();
       }
       
@@ -728,7 +695,7 @@ const Canvas = ({
       }
       canvas?.dispose();
     };
-}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect, selectedCaseType, selectedColor, products, createCaseBorder, resizeCanvasToFitScreen, bringAllCharmsToFront]);
+}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect, selectedCaseType, selectedColor, products, createCaseBorder, resizeCanvasToFitScreen]);
 
   // Update controls position when selectedPin changes
   useEffect(() => {
@@ -780,8 +747,6 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(textInstance);
       // Create custom border rectangle
       updateBorderRect(textInstance);
-      // Always keep charms at front
-      bringAllCharmsToFront();
       fabricCanvas.current.renderAll();
 
       setSelectedPin(textInstance);
@@ -810,7 +775,7 @@ const Canvas = ({
         updateControls(textInstance);
       }
     },
-    [updateControls, updateBorderRect, bringAllCharmsToFront]
+    [updateControls, updateBorderRect]
   );
 
   // Update case image URL for background when case type or color changes
@@ -843,100 +808,31 @@ const Canvas = ({
       caseInstanceRef.current = null;
       caseBorderRectRef.current = null;
 
-      // Immediately bring charms to front
-      bringAllCharmsToFront();
-      
-      // Use requestAnimationFrame for immediate update
-      requestAnimationFrame(() => {
-        bringAllCharmsToFront();
-      });
 
       // Recreate case border after a short delay to ensure container is ready
       setTimeout(() => {
         if (fabricCanvas.current && containerRef.current) {
           createCaseBorder();
-          // Always keep charms at front after case border is created
-          bringAllCharmsToFront();
-          
-          // Call multiple times with delays to ensure charms stay at front
-          requestAnimationFrame(() => {
-            bringAllCharmsToFront();
-            setTimeout(() => {
-              bringAllCharmsToFront();
-              setTimeout(() => {
-                bringAllCharmsToFront();
-                setTimeout(() => {
-                  bringAllCharmsToFront();
-                }, 200);
-              }, 100);
-            }, 50);
-          });
         }
       }, 100);
     }
 
-  }, [selectedCaseType, selectedColor, products, createCaseBorder, bringAllCharmsToFront]);
+  }, [selectedCaseType, selectedColor, products, createCaseBorder]);
 
   // Ensure charms stay at front when case image loads/changes
   useEffect(() => {
     if (!caseImageUrl || !fabricCanvas.current) return;
 
-    // Function to bring charms to front with multiple attempts
-    const ensureCharmsAtFront = () => {
-      if (fabricCanvas.current) {
-        bringAllCharmsToFront();
-        requestAnimationFrame(() => {
-          bringAllCharmsToFront();
-        });
-      }
-    };
-
-    // Wait for the image to load, then ensure charms are at front
+    // Wait for the image to load
     const img = new Image();
     img.onload = () => {
-      // Image has loaded, ensure charms are at front
-      ensureCharmsAtFront();
-      // Call multiple times with delays to ensure it sticks
-      setTimeout(() => {
-        ensureCharmsAtFront();
-        setTimeout(() => {
-          ensureCharmsAtFront();
-          setTimeout(() => {
-            ensureCharmsAtFront();
-          }, 200);
-        }, 100);
-      }, 50);
+      // Image has loaded
     };
     img.onerror = () => {
-      // Even if image fails to load, ensure charms are at front
-      ensureCharmsAtFront();
+      // Image failed to load
     };
     img.src = caseImageUrl;
-
-    // Also call immediately in case image is cached
-    ensureCharmsAtFront();
-    
-    // Call again after delays to handle any async rendering
-    const timeoutId1 = setTimeout(() => {
-      ensureCharmsAtFront();
-    }, 10);
-    const timeoutId2 = setTimeout(() => {
-      ensureCharmsAtFront();
-    }, 50);
-    const timeoutId3 = setTimeout(() => {
-      ensureCharmsAtFront();
-    }, 150);
-    const timeoutId4 = setTimeout(() => {
-      ensureCharmsAtFront();
-    }, 300);
-
-    return () => {
-      clearTimeout(timeoutId1);
-      clearTimeout(timeoutId2);
-      clearTimeout(timeoutId3);
-      clearTimeout(timeoutId4);
-    };
-  }, [caseImageUrl, bringAllCharmsToFront]);
+  }, [caseImageUrl]);
 
   // Handle pin selection from PinSelector
   const handlePinSelection = useCallback(async (pin) => {
@@ -973,8 +869,6 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(imgInstance);
       // Create custom border rectangle
       updateBorderRect(imgInstance);
-      // Always keep charms at front
-      bringAllCharmsToFront();
       fabricCanvas.current.renderAll();
       
       // Notify parent about pin addition exactly once per click
@@ -984,7 +878,7 @@ const Canvas = ({
     } catch (error) {
       console.error('Error loading pin:', error);
     }
-  }, [onPinSelect, updateBorderRect, bringAllCharmsToFront]);
+  }, [onPinSelect, updateBorderRect]);
 
   // Expose pin selection method globally
   useEffect(() => {
@@ -1127,7 +1021,6 @@ const Canvas = ({
         : "1/1",
       marginBottom: isMobile ? "30px" : "0",
       position: "relative",
-      isolation: "isolate", // hard guarantees stacking wont break
     }}
   >
     {/* Background Image — Always Behind */}
