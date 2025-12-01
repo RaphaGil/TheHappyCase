@@ -107,7 +107,7 @@ const MobileOverlay = ({
         </div>
         
         {/* Step Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 ">
           {mobileCurrentStep === 'case' && (
             <div>
               <div className="grid grid-cols-3 gap-3">
@@ -133,7 +133,7 @@ const MobileOverlay = ({
                   const soldOut = isCaseSoldOut();
                   
                   return (
-                    <div key={opt.value} className="flex flex-col items-center gap-2">
+                    <div key={opt.value} className="flex flex-col items-center gap-2 ">
                       <button
                         onClick={() => !soldOut && handleCaseTypeSelection(opt.value)}
                         disabled={soldOut}

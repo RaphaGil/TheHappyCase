@@ -1,48 +1,43 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 
+// Components
 import Canvas from "../../component/Canvas/index.jsx";
 import ColorSelector from "../../component/ColorSelector/index.jsx";
 import PinSelector from "../../component/PinSelector";
-import Products from "../../data/products.json";
-import { useCart } from "../../context/CartContext";
-
-// Components
-import MobileStepButtons from "./components/MobileStepButtons";
+import ImageModal from "../../component/ImageModal";
 import ViewMoreImagesButton from "./components/ViewMoreImagesButton";
 import ItemDescriptionDropdown from "./components/ItemDescriptionDropdown";
-import ImageModal from "../../component/ImageModal";
-// import SaveDesignButton from "./components/SaveDesignButton";
-import MobileOverlay from "./components/MobileOverlay";
 import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
 import CaseSelector from "./components/CaseSelector";
 import TermsOfUseModal from "./components/TermsOfUseModal";
+import CreateYoursMobile from "./components/createyoursmobile";
+
+// Data & Context
+import Products from "../../data/products.json";
+import { useCart } from "../../context/CartContext";
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from "../../data/constants.js";
 
-
 const CreateYours = () => {
+  // ==========================================
+  // HOOKS & ROUTING
+  // ==========================================
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [pins, setPins] = useState([]);
-  const [mobileSubCategory, setMobileSubCategory] = useState('all');
-  const textAddedRef = useRef(false);
-  const lastTextRef = useRef(null);
-  const [mobileCustomText, setMobileCustomText] = useState('');
-  const [mobileTextError, setMobileTextError] = useState('');
-  
-  // Initialize default case and color from URL params or defaults
+  const { addToCart } = useCart();
+
+  // ==========================================
+  // STATE - Case & Color Selection
+  // ==========================================
   const getDefaultCaseAndColor = () => {
     const caseParam = searchParams.get('case');
     const colorParam = searchParams.get('color');
     
-    // If URL params exist, use them
     if (caseParam) {
       const caseFromParam = Products.cases.find(c => c.type === caseParam);
       if (caseFromParam) {
-        // If color param exists and is valid for this case, use it
         if (colorParam) {
           const colorData = caseFromParam.colors.find(c => c.color === colorParam);
           if (colorData) {
@@ -53,7 +48,6 @@ const CreateYours = () => {
             };
           }
         }
-        // Otherwise use first color of the case
         if (caseFromParam.colors && caseFromParam.colors.length > 0) {
           return {
             caseType: caseFromParam.type,
@@ -64,7 +58,6 @@ const CreateYours = () => {
       }
     }
     
-    // Fallback to default
     if (Products.cases.length > 0) {
       const defaultCase = Products.cases.find(c => c.type === "economy") || Products.cases[0];
       if (defaultCase && defaultCase.colors.length > 0) {
@@ -82,205 +75,61 @@ const CreateYours = () => {
   const [selectedCaseType, setSelectedCaseType] = useState(defaultValues.caseType);
   const [selectedColor, setSelectedColor] = useState(defaultValues.color);
   const [selectedCaseImage, setSelectedCaseImage] = useState(defaultValues.image);
+
+  // ==========================================
+  // STATE - Pins & Customization
+  // ==========================================
   const [selectedPins, setSelectedPins] = useState([]);
-  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
-  const [saveImageFunction, setSaveImageFunction] = useState(null);
-  const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
-  const [closePinSelectorDropdown, setClosePinSelectorDropdown] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [pins, setPins] = useState([]);
+  const [mobileSubCategory, setMobileSubCategory] = useState('all');
+  const [hasTextAdded, setHasTextAdded] = useState(false);
+
+  // ==========================================
+  // STATE - Mobile UI
+  // ==========================================
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [mobileCurrentStep, setMobileCurrentStep] = useState(null); // null = showing passport case, 'case' = case selection, 'color' = color selection, 'charms' = charms selection
-  const [quantity, setQuantity] = useState(1);
+  const [mobileCurrentStep, setMobileCurrentStep] = useState(null);
+  const [mobileCustomText, setMobileCustomText] = useState('');
+  const [mobileTextError, setMobileTextError] = useState('');
+  const bottomSectionRef = useRef(null);
+
+  // ==========================================
+  // STATE - Desktop UI
+  // ==========================================
+  const [openSteps, setOpenSteps] = useState({
+    step1: true,
+    step2: false,
+    step3: false
+  });
+  const [closePinSelectorDropdown, setClosePinSelectorDropdown] = useState(0);
+
+  // ==========================================
+  // STATE - Modals & UI
+  // ==========================================
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedModalImage, setSelectedModalImage] = useState(0);
   const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
-  const [hasTextAdded, setHasTextAdded] = useState(false);
-  const caseDropdownRef = useRef(null);
-  const { addToCart } = useCart();
-  
-  // Desktop step dropdown states
-  const [openSteps, setOpenSteps] = useState({
-    step1: true, // Case & Color - open by default
-    step2: false, // Charms
-    step3: false // Text
-    // Step 4 (Review & Add to Cart) is always visible, not a dropdown
-  });
-  
-  const toggleStep = (step) => {
-    setOpenSteps(prev => {
-      const newState = !prev[step];
-      // If opening this step, close all other steps
-      if (newState) {
-        return {
-          step1: step === 'step1',
-          step2: step === 'step2',
-          step3: step === 'step3'
-        };
-      } else {
-        // If closing, just toggle this step
-        return {
-          ...prev,
-          [step]: false
-        };
-      }
-    });
-    // Also close any open dropdowns when toggling steps
-    setIsCaseDropdownOpen(false);
-    setClosePinSelectorDropdown(prev => prev + 1);
-  };
+  const [pendingAddToCart, setPendingAddToCart] = useState(false);
 
-  // Update case and color when URL params change
-  useEffect(() => {
-    const caseParam = searchParams.get('case');
-    const colorParam = searchParams.get('color');
-    
-    if (caseParam) {
-      const caseFromParam = Products.cases.find(c => c.type === caseParam);
-      if (caseFromParam) {
-        setSelectedCaseType(caseFromParam.type);
-        
-        // If color param exists and is valid for this case, use it
-        if (colorParam) {
-          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
-          if (colorData) {
-            setSelectedColor(colorData.color);
-            setSelectedCaseImage(colorData.image);
-            return;
-          }
-        }
-        
-        // Otherwise use first color of the case
-        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
-          const firstColor = caseFromParam.colors[0];
-          setSelectedColor(firstColor.color);
-          setSelectedCaseImage(firstColor.image);
-        }
-      }
-    }
-  }, [searchParams]);
+  // ==========================================
+  // STATE - Cart & Pricing
+  // ==========================================
+  const [quantity, setQuantity] = useState(1);
+  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
 
-  // Handle case type selection
-  const handleCaseTypeSelection = (caseType) => {
-    setSelectedCaseType(caseType);
-    const selectedCase = Products.cases.find(c => c.type === caseType);
-    if (selectedCase && selectedCase.colors.length > 0) {
-      const firstColor = selectedCase.colors[0];
-      setSelectedColor(firstColor.color);
-      setSelectedCaseImage(firstColor.image);
-    }
-    // Close mobile step after selection
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
-    // Close canvas controls if open
-    if (typeof window !== 'undefined' && window.closeCanvasControls) {
-      window.closeCanvasControls();
-    }
-  };
+  // ==========================================
+  // REFS
+  // ==========================================
+  const textAddedRef = useRef(false);
+  const lastTextRef = useRef(null);
 
-  // Handle color selection
-  const handleColorSelection = (color, image) => {
-    setSelectedColor(color);
-    setSelectedCaseImage(image);
-    // Close mobile step after selection
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
-    // Close canvas controls if open
-    if (typeof window !== 'undefined' && window.closeCanvasControls) {
-      window.closeCanvasControls();
-    }
-  };
-
-  // Handle pin selection from PinSelector
-  const handlePinSelection = useCallback((pin) => {
-    // This will be handled by the Canvas component
-    if (window.addPinToCanvas) {
-      window.addPinToCanvas(pin);
-    }
-    
-    // Close mobile overlay after pin selection
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
-    
-    // Scroll to the canvas area to show the passport case with the new charm
-    setTimeout(() => {
-      const canvasElement = document.querySelector('.happy-card');
-      if (canvasElement) {
-        canvasElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
-        });
-      }
-    }, 100); // Small delay to ensure the charm is added first
-  }, [isMobile]);
-
-  // Handle navigation from other pages
-  useEffect(() => {
-    if (location.state?.selectedPin) {
-      const selectedPin = location.state.selectedPin;
-      setTimeout(() => {
-        if (window.addPinToCanvas) {
-          window.addPinToCanvas(selectedPin);
-        }
-      }, 1000);
-      
-      // Clear the navigation state
-      window.history.replaceState({}, document.title);
-    }
-    
-    // Handle text addition from AddText page
-    if (location.state?.addText && location.state?.text) {
-      const textToAdd = location.state.text;
-      
-      // Prevent duplicate additions - check if this is the same text we just added
-      if (textAddedRef.current && lastTextRef.current === textToAdd) {
-        // Already added this text, skip and clear state
-        window.history.replaceState({}, document.title);
-        return;
-      }
-      
-      // Mark as processing immediately to prevent duplicate calls
-      textAddedRef.current = true;
-      lastTextRef.current = textToAdd;
-      
-      // Clear the navigation state immediately to prevent re-triggering
-      window.history.replaceState({}, document.title);
-      
-      // Wait longer to ensure charms are restored first, then add text
-      setTimeout(() => {
-        if (window.addTextToCanvas) {
-          window.addTextToCanvas(textToAdd, {
-            fill: CUSTOM_TEXT_COLOR,
-            fontSize: CUSTOM_TEXT_SIZE,
-          });
-          // Save state after adding text
-          if (window.saveCanvasState) {
-            setTimeout(() => {
-              window.saveCanvasState();
-            }, 500);
-          }
-        }
-        // Reset after a delay to allow for new text additions
-        setTimeout(() => {
-          textAddedRef.current = false;
-          lastTextRef.current = null;
-        }, 2000);
-      }, 1500); // Wait 1.5 seconds to ensure restoration completes
-    } else {
-      // Reset if no text in state
-      if (!location.state?.addText) {
-        textAddedRef.current = false;
-        lastTextRef.current = null;
-      }
-    }
-  }, [location.state]);
-
-  // Helper function to get products with quantities from localStorage
+  // ==========================================
+  // HELPER FUNCTIONS
+  // ==========================================
   const getProductsWithQuantities = () => {
     const savedQuantities = localStorage.getItem('productQuantities');
     if (!savedQuantities) return Products;
@@ -289,7 +138,6 @@ const CreateYours = () => {
       const quantities = JSON.parse(savedQuantities);
       const mergedProducts = { ...Products };
       
-      // Merge case quantities and color quantities
       if (quantities.cases) {
         mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
           const updatedCase = {
@@ -297,7 +145,6 @@ const CreateYours = () => {
             quantity: quantities.cases[index] !== undefined ? quantities.cases[index] : caseItem.quantity
           };
           
-          // Merge color quantities if they exist
           if (quantities.caseColors && quantities.caseColors[index]) {
             updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
               ...colorItem,
@@ -311,7 +158,6 @@ const CreateYours = () => {
         });
       }
       
-      // Merge charm quantities
       if (quantities.pins) {
         ['flags', 'colorful', 'bronze'].forEach(category => {
           if (quantities.pins[category]) {
@@ -330,153 +176,49 @@ const CreateYours = () => {
     }
   };
 
-  // Memoize productsWithQuantities to prevent infinite loops
-  const productsWithQuantities = useMemo(() => getProductsWithQuantities(), []);
-
-  // Reset subcategory when category changes
-  useEffect(() => {
-    if (selectedCategory) {
-      setMobileSubCategory('all');
-    }
-  }, [selectedCategory]);
-
-  // When category changes, update pins from productsWithQuantities
-  useEffect(() => {
-    if (selectedCategory) {
-      if (selectedCategory === 'flags') {
-        const flagPins = productsWithQuantities.pins.flags || [];
-        setPins(flagPins);
-      } else {
-        setPins(productsWithQuantities.pins[selectedCategory] || []);
-      }
-    }
-  }, [selectedCategory, productsWithQuantities]);
-
-  // Prevent horizontal and vertical scrolling on mobile, maintain page size, hide scrollbar
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    
-    if (isMobile) {
-      // Set body and html overflow constraints - prevent both horizontal and vertical scrolling on mobile
-      document.body.style.overflowX = 'hidden';
-      document.body.style.overflowY = 'hidden';
-      document.body.style.width = '100%';
-      document.body.style.maxWidth = '100vw';
-      document.body.style.height = '100vh';
-      document.body.style.maxHeight = '100vh';
-      // Hide scrollbar
-      document.body.style.scrollbarWidth = 'none'; // Firefox
-      document.body.style.msOverflowStyle = 'none'; // IE and Edge
-      document.documentElement.style.overflowX = 'hidden';
-      document.documentElement.style.overflowY = 'hidden';
-      document.documentElement.style.width = '100%';
-      document.documentElement.style.maxWidth = '100vw';
-      document.documentElement.style.height = '100vh';
-      document.documentElement.style.maxHeight = '100vh';
-      // Hide scrollbar
-      document.documentElement.style.scrollbarWidth = 'none'; // Firefox
-      document.documentElement.style.msOverflowStyle = 'none'; // IE and Edge
-    } else {
-      // Desktop: only prevent horizontal scrolling
-      document.body.style.overflowX = 'hidden';
-      document.body.style.width = '100%';
-      document.body.style.maxWidth = '100vw';
-      document.documentElement.style.overflowX = 'hidden';
-      document.documentElement.style.width = '100%';
-      document.documentElement.style.maxWidth = '100vw';
-    }
-    
-    return () => {
-      // Cleanup on unmount
-      document.body.style.overflowX = '';
-      document.body.style.overflowY = '';
-      document.body.style.width = '';
-      document.body.style.maxWidth = '';
-      document.body.style.height = '';
-      document.body.style.maxHeight = '';
-      document.body.style.scrollbarWidth = '';
-      document.body.style.msOverflowStyle = '';
-      document.documentElement.style.overflowX = '';
-      document.documentElement.style.overflowY = '';
-      document.documentElement.style.width = '';
-      document.documentElement.style.maxWidth = '';
-      document.documentElement.style.height = '';
-      document.documentElement.style.maxHeight = '';
-      document.documentElement.style.scrollbarWidth = '';
-      document.documentElement.style.msOverflowStyle = '';
-    };
-  }, []);
-
-
-  // Update color when case type changes
-  useEffect(() => {
-    if (Products.cases.length > 0) {
-      const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
-      if (defaultCase && defaultCase.colors.length > 0) {
-        const defaultColor = defaultCase.colors[0];
-        // Always update when case type changes to ensure correct color is shown
-        setSelectedColor(defaultColor.color);
-        setSelectedCaseImage(defaultColor.image);
-      }
-    }
-  }, [selectedCaseType]); // Run when selectedCaseType changes
-
-  // Calculate total price
-  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
-  const caseBasePrice = selectedCase?.basePrice || 0;
-  
-  // Get images for the selected case and color
-  const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
-  
-  // Get detail images from SmartCase folder
   const getCaseImages = () => {
-    // Get the main color image
+    const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+    const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
     const colorImage = selectedColorData?.image || selectedCase?.images?.[0] || '';
     
-    // Build images array from SmartCase folder
     const smartCaseImages = [];
-    
-    // Add the main color image
     if (colorImage) {
       smartCaseImages.push(colorImage);
     }
     
-    // Add detail images based on case type
     let detailImages = [];
-    
     if (selectedCaseType === 'economy') {
       detailImages = [
-      '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
-    ];
+        '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
+        '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
+        '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
+      ];
     } else if (selectedCaseType === 'business') {
-      detailImages = [
-        '/TheHappyCase/images/BusinessClassCase/businessclass.png'
-      ];
+      detailImages = ['/TheHappyCase/images/BusinessClassCase/businessclass.png'];
     } else if (selectedCaseType === 'firstclass') {
-      detailImages = [
-        '/TheHappyCase/images/FirstClassCase/firstclass.jpg'
-      
-      ];
+      detailImages = ['/TheHappyCase/images/FirstClassCase/firstclass.jpg'];
     }
     
-    // Add detail images if they exist
     detailImages.forEach(img => {
       if (img) {
         smartCaseImages.push(img);
       }
     });
     
-    // If we have at least one image, return them; otherwise return empty array
     return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [colorImage] : []);
   };
-  
+
+  // ==========================================
+  // COMPUTED VALUES
+  // ==========================================
+  const productsWithQuantities = useMemo(() => getProductsWithQuantities(), []);
+  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+  const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
   const caseImages = getCaseImages();
+  const caseBasePrice = selectedCase?.basePrice || 0;
   const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
   const totalPrice = ((caseBasePrice + pinsPrice) * quantity).toFixed(2);
-
-  // Group pins for price breakdown display
+  
   const groupedPins = selectedPins.reduce((acc, { pin }) => {
     if (!pin) return acc;
     const key = `${pin.src}|${pin.name}|${pin.price}`;
@@ -488,30 +230,78 @@ const CreateYours = () => {
   }, {});
   const groupedPinsList = Object.values(groupedPins);
 
-  // Handle add to cart
-  const handleAddToCart = () => {
-    // Check if terms are agreed
-    if (!agreedToTerms) {
-      // Show error message only
-      setShowTermsError(true);
-      setPendingAddToCart(true);
-      return;
+  // ==========================================
+  // EVENT HANDLERS - Case & Color
+  // ==========================================
+  const handleCaseTypeSelection = (caseType) => {
+    setSelectedCaseType(caseType);
+    const selectedCase = Products.cases.find(c => c.type === caseType);
+    if (selectedCase && selectedCase.colors.length > 0) {
+      const firstColor = selectedCase.colors[0];
+      setSelectedColor(firstColor.color);
+      setSelectedCaseImage(firstColor.image);
     }
-    
-    // Clear any error message and proceed with adding to cart
-    setShowTermsError(false);
-    executeAddToCart();
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    }
+    if (typeof window !== 'undefined' && window.closeCanvasControls) {
+      window.closeCanvasControls();
+    }
   };
 
-  // Execute the actual add to cart action
+  const handleColorSelection = (color, image) => {
+    setSelectedColor(color);
+    setSelectedCaseImage(image);
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    }
+    if (typeof window !== 'undefined' && window.closeCanvasControls) {
+      window.closeCanvasControls();
+    }
+  };
+
+  // ==========================================
+  // EVENT HANDLERS - Pins
+  // ==========================================
+  const handlePinSelect = useCallback((imgInstance) => {
+    if (imgInstance && imgInstance.pinData) {
+      setSelectedPins(prev => [...prev, { imgInstance, pin: imgInstance.pinData }]);
+    }
+  }, []);
+
+  const handlePinRemove = useCallback((removedPin) => {
+    setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
+  }, []);
+
+  const handlePinSelection = useCallback((pin) => {
+    if (window.addPinToCanvas) {
+      window.addPinToCanvas(pin);
+    }
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    }
+    setTimeout(() => {
+      const canvasElement = document.querySelector('.happy-card');
+      if (canvasElement) {
+        canvasElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
+    }, 100);
+  }, [isMobile]);
+
+  // ==========================================
+  // EVENT HANDLERS - Cart
+  // ==========================================
   const executeAddToCart = () => {
-    // Capture composed design image from canvas if available
     let designImage = null;
     try {
       if (window.getDesignImageDataURL) {
         designImage = window.getDesignImageDataURL();
       }
     } catch {}
+    
     const product = {
       id: `custom-${Date.now()}`,
       name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
@@ -519,126 +309,199 @@ const CreateYours = () => {
       caseName: selectedCase?.name || 'Custom Case',
       color: selectedColor,
       pins: selectedPins.map(({ pin }) => pin),
-      pinsDetails: selectedPins.map(({ pin }) => pin), // Add this for cart display
+      pinsDetails: selectedPins.map(({ pin }) => pin),
       basePrice: caseBasePrice,
       casePrice: caseBasePrice,
       pinsPrice: pinsPrice,
       totalPrice: parseFloat(totalPrice),
-      price: parseFloat(totalPrice), // Keep for compatibility
+      price: parseFloat(totalPrice),
       image: selectedCaseImage,
-      caseImage: selectedCaseImage, // Add this for cart display
+      caseImage: selectedCaseImage,
       designImage,
       customDesign: true,
       quantity: quantity
     };
     
-    // Add to cart with quantity
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
   };
 
-  // Handle text added - make number 3 black
+  const handleAddToCart = () => {
+    if (!agreedToTerms) {
+      setShowTermsError(true);
+      setPendingAddToCart(true);
+      return;
+    }
+    setShowTermsError(false);
+    executeAddToCart();
+  };
+
+  // ==========================================
+  // EVENT HANDLERS - UI
+  // ==========================================
+  const toggleStep = (step) => {
+    setOpenSteps(prev => {
+      const newState = !prev[step];
+      if (newState) {
+        return {
+          step1: step === 'step1',
+          step2: step === 'step2',
+          step3: step === 'step3'
+        };
+      } else {
+        return {
+          ...prev,
+          [step]: false
+        };
+      }
+    });
+    setClosePinSelectorDropdown(prev => prev + 1);
+  };
+
   const handleTextAdded = useCallback(() => {
-    // Mark text as added to make number 3 black
     setHasTextAdded(true);
-    // Close step 3 after text is added
     setOpenSteps(prev => ({ ...prev, step3: false }));
   }, []);
 
-  // Handle pin selection callback from Canvas
-  const handlePinSelect = useCallback((imgInstance) => {
-    if (imgInstance && imgInstance.pinData) {
-      console.log('handlePinSelect called for:', imgInstance.pinData.name); // Debug log
-      setSelectedPins(prev => {
-        console.log('Current selectedPins count:', prev.length); // Debug log
+  const handleSaveImageFunction = useCallback(() => {
+    // Canvas save function handler
+  }, []);
 
-        // Always allow adding multiple instances of the same charm
-        console.log('Adding pin instance to selectedPins'); // Debug log
-        return [...prev, { imgInstance, pin: imgInstance.pinData }];
-      });
+  // ==========================================
+  // EFFECTS - URL Params & Navigation
+  // ==========================================
+  useEffect(() => {
+    const caseParam = searchParams.get('case');
+    const colorParam = searchParams.get('color');
+    
+    if (caseParam) {
+      const caseFromParam = Products.cases.find(c => c.type === caseParam);
+      if (caseFromParam) {
+        setSelectedCaseType(caseFromParam.type);
+        
+        if (colorParam) {
+          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
+          if (colorData) {
+            setSelectedColor(colorData.color);
+            setSelectedCaseImage(colorData.image);
+            return;
+          }
+        }
+        
+        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
+          const firstColor = caseFromParam.colors[0];
+          setSelectedColor(firstColor.color);
+          setSelectedCaseImage(firstColor.image);
+        }
+      }
     }
-  }, []);
+  }, [searchParams]);
 
-  // Handle pin removal callback from Canvas
-  const handlePinRemove = useCallback((removedPin) => {
-    setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
-  }, []);
+  useEffect(() => {
+    if (location.state?.selectedPin) {
+      const selectedPin = location.state.selectedPin;
+      setTimeout(() => {
+        if (window.addPinToCanvas) {
+          window.addPinToCanvas(selectedPin);
+        }
+      }, 1000);
+      window.history.replaceState({}, document.title);
+    }
+    
+    if (location.state?.addText && location.state?.text) {
+      const textToAdd = location.state.text;
+      
+      if (textAddedRef.current && lastTextRef.current === textToAdd) {
+        window.history.replaceState({}, document.title);
+        return;
+      }
+      
+      textAddedRef.current = true;
+      lastTextRef.current = textToAdd;
+      window.history.replaceState({}, document.title);
+      
+      setTimeout(() => {
+        if (window.addTextToCanvas) {
+          window.addTextToCanvas(textToAdd, {
+            fill: CUSTOM_TEXT_COLOR,
+            fontSize: CUSTOM_TEXT_SIZE,
+          });
+          if (window.saveCanvasState) {
+            setTimeout(() => {
+              window.saveCanvasState();
+            }, 500);
+          }
+        }
+        setTimeout(() => {
+          textAddedRef.current = false;
+          lastTextRef.current = null;
+        }, 2000);
+      }, 1500);
+    } else {
+      if (!location.state?.addText) {
+        textAddedRef.current = false;
+        lastTextRef.current = null;
+      }
+    }
+  }, [location.state]);
 
-  // Handle save image function from Canvas
-  const handleSaveImageFunction = useCallback((saveFunction) => {
-    setSaveImageFunction(() => saveFunction);
-  }, []);
+  // ==========================================
+  // EFFECTS - Case Type & Color Updates
+  // ==========================================
+  useEffect(() => {
+    if (Products.cases.length > 0) {
+      const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
+      if (defaultCase && defaultCase.colors.length > 0) {
+        const defaultColor = defaultCase.colors[0];
+        setSelectedColor(defaultColor.color);
+        setSelectedCaseImage(defaultColor.image);
+      }
+    }
+  }, [selectedCaseType]);
 
-  // Track screen size changes
+  // ==========================================
+  // EFFECTS - Pins & Categories
+  // ==========================================
+  useEffect(() => {
+    if (selectedCategory) {
+      setMobileSubCategory('all');
+    }
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      if (selectedCategory === 'flags') {
+        const flagPins = productsWithQuantities.pins.flags || [];
+        setPins(flagPins);
+      } else {
+        setPins(productsWithQuantities.pins[selectedCategory] || []);
+      }
+    }
+  }, [selectedCategory, productsWithQuantities]);
+
+  // ==========================================
+  // EFFECTS - Mobile UI
+  // ==========================================
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const onDocClick = (e) => {
-      if (caseDropdownRef.current && !caseDropdownRef.current.contains(e.target)) {
-        setIsCaseDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
-  }, []);
-
-  // Prevent viewport changes when text modal opens on mobile
-  useEffect(() => {
-    if (isMobile && mobileCurrentStep === 'text') {
-      // Lock viewport to prevent zoom and movement
-      const viewport = document.querySelector('meta[name="viewport"]');
-      const originalContent = viewport ? viewport.getAttribute('content') : '';
-      
-      if (viewport) {
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-      }
-      
-      // Prevent body scroll
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-      
-      return () => {
-        // Restore viewport
-        if (viewport) {
-          viewport.setAttribute('content', originalContent);
-        }
-        
-        // Restore body scroll
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        window.scrollTo(0, scrollY);
-      };
-    }
-  }, [isMobile, mobileCurrentStep]);
-
-
+ 
   return (
     <section
-      className={`create-yours-page min-h-screen bg-white relative ${
-        isMobile ? "overflow-hidden h-screen" : "overflow-y-auto"
-      }`}
-      style={{ width: "100vw", maxWidth: "100vw", overflowX: "hidden" }}
+      className={`create-yours-page relative`}
     >
       {/* Text Input Modal - Mobile only */}
       {isMobile && mobileCurrentStep === 'text' && (
         <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4">
           <div 
-            className="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-sm max-h-[85vh] h-fit"
+            className="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-sm"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center px-4 py-3 flex-shrink-0">
@@ -660,7 +523,6 @@ const CreateYours = () => {
               </button>
             </div>
             
-            {/* Step Content - Scrollable */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
               <div>
                 <input
@@ -672,9 +534,7 @@ const CreateYours = () => {
                   }}
                   placeholder="e.g. Your name"
                   className="w-full px-3 py-2 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
-                  style={{
-                    fontSize: '16px' // Prevent zoom on iOS
-                  }}
+                  style={{ fontSize: '16px' }}
                   maxLength={MAX_TEXT_LENGTH}
                   autoFocus
                 />
@@ -723,85 +583,72 @@ const CreateYours = () => {
         </div>
       )}
       
-      {/* Hide main content when text modal is open on mobile */}
+      {/* Main Content */}
       {!(isMobile && mobileCurrentStep === 'text') && (
-        <div className={`${isMobile ? 'pb-40' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8'} relative z-10`}>
+        <div 
+          className={`${isMobile ? 'flex flex-col' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 lg:py-8'} relative z-10 `}
+
+        >
           {/* Mobile Layout */}
           {isMobile ? (
-            <div className="flex flex-col h-full">
-              {/* Close Button - Mobile only */}
-              <button
-                onClick={() => navigate('/')}
-                className="fixed top-2 right-2 z-50 w-12 h-12 flex items-center justify-center   "
-                aria-label="Close and go back to home"
-              >
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              
-              {/* Header Section - Compact on mobile */}
-              <div className="text-center pt-12 pb-3 px-4">
-                <h1 className="text-title font-light text-gray-900 mb-1 tracking-title">
-                  CREATE YOURS
-                </h1>
-                <div className="w-20 h-px bg-gray-200 mx-auto"></div>
-              </div>
-              
-              {/* Canvas Section - Prominent on mobile */}
-              <div className="flex-1 flex items-center justify-center px-4 pb-1 min-h-0">
-                <div className="w-full max-w-xs flex flex-col items-center">
-                  <div className="w-full overflow-hidden" style={{touchAction: 'none'}}>
-                    <Canvas
-                      selectedCaseType={selectedCaseType}
-                      selectedColor={selectedColor}
-                      onPinSelect={handlePinSelect}
-                      onPinRemove={handlePinRemove}
-                      onSaveImage={handleSaveImageFunction}
-                      products={Products}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Mobile Step Content Overlay */}
-              <MobileOverlay
-                mobileCurrentStep={mobileCurrentStep}
-                setMobileCurrentStep={setMobileCurrentStep}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                mobileSubCategory={mobileSubCategory}
-                setMobileSubCategory={setMobileSubCategory}
-                pins={pins}
-                selectedPins={selectedPins}
-                handleCaseTypeSelection={handleCaseTypeSelection}
-                handleColorSelection={handleColorSelection}
-                handlePinSelection={handlePinSelection}
-                Products={productsWithQuantities}
-              />
-            </div>
+            <CreateYoursMobile
+              selectedCaseType={selectedCaseType}
+              selectedColor={selectedColor}
+              mobileCurrentStep={mobileCurrentStep}
+              setMobileCurrentStep={setMobileCurrentStep}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              mobileSubCategory={mobileSubCategory}
+              setMobileSubCategory={setMobileSubCategory}
+              pins={pins}
+              selectedPins={selectedPins}
+              handleCaseTypeSelection={handleCaseTypeSelection}
+              handleColorSelection={handleColorSelection}
+              handlePinSelection={handlePinSelection}
+              handlePinSelect={handlePinSelect}
+              handlePinRemove={handlePinRemove}
+              handleSaveImageFunction={handleSaveImageFunction}
+              productsWithQuantities={productsWithQuantities}
+              Products={Products}
+              totalPrice={totalPrice}
+              caseBasePrice={caseBasePrice}
+              groupedPinsList={groupedPinsList}
+              showPriceBreakdown={showPriceBreakdown}
+              setShowPriceBreakdown={setShowPriceBreakdown}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              selectedCase={selectedCase}
+              selectedCaseImage={selectedCaseImage}
+              pinsPrice={pinsPrice}
+              handleAddToCart={handleAddToCart}
+              showTermsModal={showTermsModal}
+              setShowTermsModal={setShowTermsModal}
+              agreedToTerms={agreedToTerms}
+              setAgreedToTerms={setAgreedToTerms}
+              showTermsError={showTermsError}
+              setShowTermsError={setShowTermsError}
+              bottomSectionRef={bottomSectionRef}
+            />
           ) : (
             /* Desktop Layout */
             <>
               {/* Header Section */}
-              <div className="text-center mb-6 md:mb-8">
-                <h1 className="text-title font-light text-gray-900 mb-2 font-inter tracking-title">
+              <div className="text-center mb-4 sm:mb-6 md:mb-8">
+                <h1 className="text-title sm:text-title-lg font-light text-gray-900 mb-2 sm:mb-3 font-inter tracking-title">
                   CREATE YOURS
                 </h1>
-                <div className="w-24 h-px bg-gray-200 mx-auto mb-2"></div>
-                <p className="text-body-sm text-gray-400 max-w-xl mx-auto font-light font-inter">
+                <div className="w-20 sm:w-24 h-px bg-gray-200 mx-auto mb-2 sm:mb-3"></div>
+                <p className="text-sm sm:text-body-sm text-gray-400 max-w-xl mx-auto px-4 sm:px-0 font-light font-inter">
                   Design your perfect passport case
                 </p>
               </div>
               
               {/* MAIN SECTION - Canvas and Right Side */}
-              <div className="flex flex-col lg:flex-row lg:gap-8 xl:gap-12">
+              <div className="flex flex-col md:flex-row md:gap-6 lg:gap-8 xl:gap-12">
                 
                 {/* LEFT - Design Canvas */}
-                <div className="w-full lg:w-1/2 flex flex-col items-center lg:justify-start">
-                  <div className="w-full max-w-lg flex flex-col items-center">
+                <div className="w-full md:w-1/2 flex flex-col items-center md:justify-start mb-6 md:mb-0">
+                  <div className="w-full max-w-md sm:max-w-lg flex flex-col items-center">
                     <div className="w-full overflow-hidden" style={{touchAction: 'auto'}}>
                       <Canvas
                         selectedCaseType={selectedCaseType}
@@ -814,7 +661,7 @@ const CreateYours = () => {
                     </div>
                     
                     {/* Action Buttons */}
-                    <div className="w-full flex flex-row gap-3 mt-6">
+                    <div className="w-full flex flex-row gap-2 sm:gap-3 mt-4 sm:mt-6">
                       <ViewMoreImagesButton
                         caseImages={caseImages}
                         onOpenModal={() => {
@@ -833,262 +680,212 @@ const CreateYours = () => {
                 </div>
 
                 {/* Right Side - Steps Section */}
-                <div className="w-full lg:w-1/2 flex flex-col">
+                <div className="w-full md:w-1/2 flex flex-col">
               
                   {/* Desktop Steps Section - Dropdown Style */}
-                  <div className="w-full space-y-2">
-                {/* Step 1: Case & Color */}
-                <div className="rounded-sm">
-                  <button
-                    onClick={() => toggleStep('step1')}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-xs font-medium flex-shrink-0">
-                        1
-                      </div>
-                      <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium">
-                        Choose Case & Color
-              </h3>
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openSteps.step1 ? 'rotate-180' : ''}`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  
-                  {openSteps.step1 && (
-                    <div className="px-4 pb-4 pt-2 space-y-6 border-t border-gray-100">
-              <CaseSelector
-                selectedCaseType={selectedCaseType}
-                onSelect={handleCaseTypeSelection}
-                Products={productsWithQuantities}
-                onDropdownToggle={() => setClosePinSelectorDropdown(prev => prev + 1)}
-              />
-              
-              {selectedColor && (
-                  <ColorSelector
-                    colors={selectedCase?.colors || []}
-                    selectedColor={selectedColor}
-                    onSelect={handleColorSelection}
-                  />
+                  <div className="w-full space-y-2 sm:space-y-3">
+                    {/* Step 1: Case & Color */}
+                    <div className="rounded-sm border border-gray-100 sm:border-0">
+                      <button
+                        onClick={() => toggleStep('step1')}
+                        className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 transition-colors font-inter"
+                      >
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-900 text-white flex items-center justify-center text-[10px] sm:text-xs font-medium flex-shrink-0">
+                            1
+                          </div>
+                          <h3 className="text-xs sm:text-caption uppercase tracking-wider text-gray-900 font-medium">
+                            Choose Case & Color
+                          </h3>
+                        </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400 transition-transform duration-200 ${openSteps.step1 ? 'rotate-180' : ''}`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      
+                      {openSteps.step1 && (
+                        <div className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2 space-y-4 sm:space-y-6 border-t border-gray-100">
+                          <CaseSelector
+                            selectedCaseType={selectedCaseType}
+                            onSelect={handleCaseTypeSelection}
+                            Products={productsWithQuantities}
+                            onDropdownToggle={() => setClosePinSelectorDropdown(prev => prev + 1)}
+                          />
+                          
+                          {selectedColor && (
+                            <ColorSelector
+                              colors={selectedCase?.colors || []}
+                              selectedColor={selectedColor}
+                              onSelect={handleColorSelection}
+                            />
+                          )}
+                        </div>
                       )}
-                </div>
-              )}
-            </div>
+                    </div>
 
-                {/* Step 2: Charms */}
-                <div className="rounded-sm">
-                  <button
-                    onClick={() => toggleStep('step2')}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                        2
-                      </div>
-                      <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium">
-                        Add Charms
-                        {selectedPins.length > 0 && (
-                          <span className="ml-2 text-gray-400 font-normal normal-case">({selectedPins.length} selected)</span>
-                        )}
-              </h3>
+                    {/* Step 2: Charms */}
+                    <div className="rounded-sm border border-gray-100 sm:border-0">
+                      <button
+                        onClick={() => toggleStep('step2')}
+                        className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 transition-colors font-inter"
+                      >
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-medium flex-shrink-0 ${selectedPins.length > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                            2
+                          </div>
+                          <h3 className="text-xs sm:text-caption uppercase tracking-wider text-gray-900 font-medium">
+                            Add Charms
+                            {selectedPins.length > 0 && (
+                              <span className="ml-1 sm:ml-2 text-gray-400 font-normal normal-case text-[10px] sm:text-xs">({selectedPins.length} selected)</span>
+                            )}
+                          </h3>
+                        </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400 transition-transform duration-200 ${openSteps.step2 ? 'rotate-180' : ''}`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      
+                      {openSteps.step2 && (
+                        <div className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2 border-t border-gray-100">
+                          <PinSelector
+                            pins={pins}
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                            selectedPins={selectedPins}
+                            onSelect={handlePinSelection}
+                            onRemove={handlePinRemove}
+                            onDropdownToggle={() => setClosePinSelectorDropdown(prev => prev + 1)}
+                            closeOtherDropdowns={closePinSelectorDropdown}
+                            Products={productsWithQuantities}
+                          />
+                        </div>
+                      )}
                     </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openSteps.step2 ? 'rotate-180' : ''}`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  
-                  {openSteps.step2 && (
-                    <div className="px-4 pb-4 pt-2 border-t border-gray-100">
-                <PinSelector
-                  pins={pins}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  selectedPins={selectedPins}
-                  onSelect={handlePinSelection}
-                  onRemove={handlePinRemove}
-                  onDropdownToggle={() => setIsCaseDropdownOpen(false)}
-                  closeOtherDropdowns={closePinSelectorDropdown}
-                  Products={productsWithQuantities}
-                />
-              </div>
-                  )}
-            </div>
-            
-                {/* Step 3: Text */}
-                <div className="rounded-sm">
-                  <button
-                    onClick={() => toggleStep('step3')}
-                    className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
-                        hasTextAdded 
-                          ? 'bg-gray-900 text-white' 
-                          : 'bg-gray-100 text-gray-400'
-                      }`}>
-                        3
-                      </div>
-                      <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium">
-                        Add Text
-                        <span className="ml-2 text-gray-400 font-normal normal-case">(optional)</span>
-                      </h3>
+                    
+                    {/* Step 3: Text */}
+                    <div className="rounded-sm border border-gray-100 sm:border-0">
+                      <button
+                        onClick={() => toggleStep('step3')}
+                        className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 transition-colors font-inter"
+                      >
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-medium flex-shrink-0 ${
+                            hasTextAdded 
+                              ? 'bg-gray-900 text-white' 
+                              : 'bg-gray-100 text-gray-400'
+                          }`}>
+                            3
+                          </div>
+                          <h3 className="text-xs sm:text-caption uppercase tracking-wider text-gray-900 font-medium">
+                            Add Text
+                            <span className="ml-1 sm:ml-2 text-gray-400 font-normal normal-case text-[10px] sm:text-xs">(optional)</span>
+                          </h3>
+                        </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className={`h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-400 transition-transform duration-200 ${openSteps.step3 ? 'rotate-180' : ''}`}
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      
+                      {openSteps.step3 && (
+                        <div className="px-3 sm:px-4 pb-3 sm:pb-4 pt-2 border-t border-gray-100">
+                          <CustomTextSection onTextAdded={handleTextAdded} />
+                        </div>
+                      )}
                     </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openSteps.step3 ? 'rotate-180' : ''}`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  
-                  {openSteps.step3 && (
-                    <div className="px-4 pb-4 pt-2 border-t border-gray-100">
-                      <CustomTextSection onTextAdded={handleTextAdded} />
-                    </div>
-                  )}
-                </div>
-
                   </div>
 
                   {/* Step 4: Review & Add to Cart - Always visible, not a dropdown */}
-              <div className="mt-8 pt-8 border-t border-gray-200">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
-                    agreedToTerms 
-                      ? 'bg-gray-900 text-white' 
-                      : 'bg-gray-100 text-gray-400'
-                  }`}>
-                    4
+                  <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-200">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                      <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-medium flex-shrink-0 ${
+                        agreedToTerms 
+                          ? 'bg-gray-900 text-white' 
+                          : 'bg-gray-100 text-gray-400'
+                      }`}>
+                        4
+                      </div>
+                      <h3 className="text-xs sm:text-caption uppercase tracking-wider text-gray-900 font-medium font-inter">
+                        Review & Add to Cart
+                      </h3>
+                    </div>
+                    
+                    <div className="pl-9">
+                      <PriceSummary
+                        totalPrice={totalPrice}
+                        caseBasePrice={caseBasePrice}
+                        groupedPinsList={groupedPinsList}
+                        showPriceBreakdown={showPriceBreakdown}
+                        setShowPriceBreakdown={setShowPriceBreakdown}
+                        quantity={quantity}
+                        setQuantity={setQuantity}
+                        selectedCase={selectedCase}
+                        selectedCaseType={selectedCaseType}
+                        selectedColor={selectedColor}
+                        selectedPins={selectedPins}
+                        selectedCaseImage={selectedCaseImage}
+                        pinsPrice={pinsPrice}
+                        onAddToCart={handleAddToCart}
+                        onShowTerms={() => setShowTermsModal(true)}
+                        agreedToTerms={agreedToTerms}
+                        setAgreedToTerms={(value) => {
+                          setAgreedToTerms(value);
+                          if (value) {
+                            setShowTermsError(false);
+                          }
+                        }}
+                        showTermsError={showTermsError}
+                      />
+                    </div>
                   </div>
-                  <h3 className="text-caption uppercase tracking-wider text-gray-900 font-medium font-inter">
-                    Review & Add to Cart
-                  </h3>
-                </div>
-                
-                <div className="pl-9">
-              <PriceSummary
-                totalPrice={totalPrice}
-                caseBasePrice={caseBasePrice}
-                groupedPinsList={groupedPinsList}
-                showPriceBreakdown={showPriceBreakdown}
-                setShowPriceBreakdown={setShowPriceBreakdown}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                selectedCase={selectedCase}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedPins={selectedPins}
-                selectedCaseImage={selectedCaseImage}
-                pinsPrice={pinsPrice}
-                onAddToCart={handleAddToCart}
-                onShowTerms={() => setShowTermsModal(true)}
-                agreedToTerms={agreedToTerms}
-                setAgreedToTerms={(value) => {
-                  setAgreedToTerms(value);
-                  if (value) {
-                    setShowTermsError(false);
-                  }
-                }}
-                showTermsError={showTermsError}
-              />
-                </div>
-              </div>
                 </div>
               </div>
             </>
           )}
         </div>
-        )}
-        
-        {/* Fixed Bottom Section - Mobile only */}
-        {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white shadow-lg">
-            {/* Choose Options Section */}
-            <div className="px-3 pt-2.5 pb-2 border-b border-gray-100">
-              <MobileStepButtons
-                mobileCurrentStep={mobileCurrentStep}
-                setMobileCurrentStep={setMobileCurrentStep}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-              />
-            </div>
-            
-            {/* Price Summary and Add to Cart */}
-            <div className="overflow-y-auto max-h-56">
-              <div className="px-3 py-2.5">
-                <PriceSummary
-                  totalPrice={totalPrice}
-                  caseBasePrice={caseBasePrice}
-                  groupedPinsList={groupedPinsList}
-                  showPriceBreakdown={showPriceBreakdown}
-                  setShowPriceBreakdown={setShowPriceBreakdown}
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                  selectedCase={selectedCase}
-                  selectedCaseType={selectedCaseType}
-                  selectedColor={selectedColor}
-                  selectedPins={selectedPins}
-                  selectedCaseImage={selectedCaseImage}
-                  pinsPrice={pinsPrice}
-                  onAddToCart={handleAddToCart}
-                  onShowTerms={() => setShowTermsModal(true)}
-                  agreedToTerms={agreedToTerms}
-                  setAgreedToTerms={(value) => {
-                    setAgreedToTerms(value);
-                    if (value) {
-                      setShowTermsError(false);
-                    }
-                  }}
-                  showTermsError={showTermsError}
-                  isMobile={true}
-                />
-              </div>
-            </div>
-          </div>
-        )}
+      )}
 
-        {/* Image Modal */}
-        <ImageModal
-          show={showImageModal}
-          selectedCase={selectedCase}
-          selectedColorData={selectedColorData}
-          caseImages={caseImages}
-          selectedModalImage={selectedModalImage}
-          setSelectedModalImage={setSelectedModalImage}
-          onClose={() => setShowImageModal(false)}
-        />
+      {/* Modals */}
+      <ImageModal
+        show={showImageModal}
+        selectedCase={selectedCase}
+        selectedColorData={selectedColorData}
+        caseImages={caseImages}
+        selectedModalImage={selectedModalImage}
+        setSelectedModalImage={setSelectedModalImage}
+        onClose={() => setShowImageModal(false)}
+      />
 
-        {/* Terms of Use Modal */}
-        <TermsOfUseModal
-          show={showTermsModal}
-          onClose={() => {
-            setShowTermsModal(false);
+      <TermsOfUseModal
+        show={showTermsModal}
+        onClose={() => {
+          setShowTermsModal(false);
+          setPendingAddToCart(false);
+        }}
+        onAgree={() => {
+          setAgreedToTerms(true);
+          setShowTermsError(false);
+          setShowTermsModal(false);
+          if (pendingAddToCart) {
             setPendingAddToCart(false);
-          }}
-          onAgree={() => {
-            setAgreedToTerms(true);
-            setShowTermsError(false);
-            setShowTermsModal(false);
-            // If there was a pending add to cart, execute it
-            if (pendingAddToCart) {
-              setPendingAddToCart(false);
-              executeAddToCart();
-            }
-          }}
-        />
+            executeAddToCart();
+          }
+        }}
+      />
     </section>
   );
 };

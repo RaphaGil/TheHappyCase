@@ -997,29 +997,22 @@ const Canvas = ({
   
   return (
       <div 
-    className="flex flex-col items-center justify-center overflow-visible w-[350px] h-[400px]   mx-auto"
+    className="flex flex-col items-center justify-center overflow-visible w-[350px]  mx-auto "
         style={{
       scrollbarWidth: "none",
       msOverflowStyle: "none",
       overflow: "visible",
-      touchAction: isMobile ? "none" : "auto",
-      
+
     }}
 >
 <div
     ref={containerRef}
-    className="happy-card h-[480px] p-2  sm:p-6  mb-2 relative flex items-center justify-center w-full overflow-visible"
+    className="happy-card h-[380px]  mb-2 relative flex items-center justify-center w-full overflow-visible"
           style={{
       scrollbarWidth: "none",
       msOverflowStyle: "none",
       overflow: "visible",
       touchAction: isMobile ? "none" : "auto",
-      aspectRatio: isMobile
-        ? window.innerWidth < 375
-          ? "1/1.1"
-          : "1/1.2"
-        : "1/1",
-      marginBottom: isMobile ? "40px" : "0",
       position: "relative",
     }}
   >
@@ -1029,11 +1022,11 @@ const Canvas = ({
     {/* Canvas — Always in Front */}
         <canvas 
           ref={canvasRef} 
-      className="absolute w-[300px] h-[370px]"
+      className="absolute bg-black"
           style={{ 
         background: "transparent",
         pointerEvents: "auto",
-        touchAction: isMobile ? "none" : "auto",
+      
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",

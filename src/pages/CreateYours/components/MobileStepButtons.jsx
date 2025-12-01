@@ -4,7 +4,7 @@ import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid
 
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
   return (
-    <div className="mb-0 flex justify-center">
+    <div className="mb-4 flex justify-center ">
       <div className="grid grid-cols-4 gap-2 sm:gap-4">
         {/* Choose Case Button */}
         <button

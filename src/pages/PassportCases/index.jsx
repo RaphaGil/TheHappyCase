@@ -247,7 +247,7 @@ const PassportCases = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-title font-light text-gray-900 mb-2 font-inter tracking-title">
+          <h1 className="text-title sm:text-title-lg font-light text-gray-900 mb-2 font-inter tracking-title">
             PASSPORT CASES
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-4"></div>
