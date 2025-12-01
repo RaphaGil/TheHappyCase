@@ -725,7 +725,7 @@ const CreateYours = () => {
       
       {/* Hide main content when text modal is open on mobile */}
       {!(isMobile && mobileCurrentStep === 'text') && (
-        <div className={`${isMobile ? 'pb-48' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8'} relative z-10`}>
+        <div className={`${isMobile ? 'pb-40' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8'} relative z-10`}>
           {/* Mobile Layout */}
           {isMobile ? (
             <div className="flex flex-col h-full">
@@ -749,7 +749,7 @@ const CreateYours = () => {
               </div>
               
               {/* Canvas Section - Prominent on mobile */}
-              <div className="flex-1 flex items-center justify-center px-4 py-2 min-h-0">
+              <div className="flex-1 flex items-center justify-center px-4 pb-1 min-h-0">
                 <div className="w-full max-w-xs flex flex-col items-center">
                   <div className="w-full overflow-hidden" style={{touchAction: 'none'}}>
                     <Canvas

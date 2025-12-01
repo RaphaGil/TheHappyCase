@@ -1008,7 +1008,7 @@ const Canvas = ({
 >
 <div
     ref={containerRef}
-    className="happy-card h-[480px] p-2  sm:p-6 mb-2 relative flex items-center justify-center w-full overflow-visible"
+    className="happy-card h-[480px] p-2  sm:p-6  mb-2 relative flex items-center justify-center w-full overflow-visible"
           style={{
       scrollbarWidth: "none",
       msOverflowStyle: "none",
@@ -1019,7 +1019,7 @@ const Canvas = ({
           ? "1/1.1"
           : "1/1.2"
         : "1/1",
-      marginBottom: isMobile ? "30px" : "0",
+      marginBottom: isMobile ? "40px" : "0",
       position: "relative",
     }}
   >
