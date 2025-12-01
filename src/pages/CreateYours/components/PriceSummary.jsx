@@ -143,7 +143,7 @@ const PriceSummary = ({
               quantity: quantity
             }}
             onAdd={onAddToCart}
-            className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2 text-xs md:py-2.5 md:text-sm"
+            className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-1.5 text-[10px] sm:py-2 sm:text-xs md:py-2.5 md:text-sm"
             disabled={false}
           />
         </div>

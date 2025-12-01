@@ -97,7 +97,10 @@ const CategorySelector = ({
                   alt={opt.label}
                   className="max-w-full max-h-full object-contain p-1"
                   loading="lazy"
+                  fetchPriority="low"
                   decoding="async"
+                  width="64"
+                  height="64"
                 />
               </div>
               {isActive && (
@@ -196,6 +199,10 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick }) => (
             isSoldOut ? "opacity-50" : ""
           }`}
           loading="lazy"
+          fetchPriority="low"
+          decoding="async"
+          width="80"
+          height="80"
         />
       </div>
       {isSelected && !isSoldOut && (

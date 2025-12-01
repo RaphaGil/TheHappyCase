@@ -163,11 +163,11 @@ const Canvas = ({
       width: canvasWidth - strokeWidth,
       height: canvasHeight - strokeWidth,
       fill: 'transparent',
-      stroke: 'blue',
+      stroke: 'transparent',
       strokeWidth: strokeWidth,
       selectable: false,
       evented: false,
-      visible: true, // Show canvas area border
+      visible: false, // Hide canvas area border
     });
     
     caseBorderRectRef.current = caseBorderRect;

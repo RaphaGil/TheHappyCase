@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AnimatedTitle from '../AnimatedTitle';
 // Defer slick carousel CSS - load asynchronously if needed
 // import 'slick-carousel/slick/slick.css'; 
 // import 'slick-carousel/slick/slick-theme.css';
@@ -8,10 +9,20 @@ import videoSrc from '../../assets/videos/hero.mp4';
 function Hero() {
   const videoRef = useRef(null);
   const navigate = useNavigate();
+  const [buttonVisible, setButtonVisible] = useState(false);
   
   const handleStartDesigning = () => {
     navigate('/CreateYours');
   };
+  
+  useEffect(() => {
+    // Start fade-in after title animations complete
+    // Last title delay (300ms) + animation duration (1200ms) + small buffer (200ms) = 1700ms
+    const timer = setTimeout(() => {
+      setButtonVisible(true);
+    }, 1700);
+    return () => clearTimeout(timer);
+  }, []);
   // Force video to play when component mounts
   useEffect(() => {
     const video = videoRef.current;
@@ -43,7 +54,7 @@ function Hero() {
 
 
   return (
-    <section className="w-full h-[70vh] md:h-[80vh] relative overflow-hidden">
+    <section className="w-full h-[90vh] md:h-[80vh] relative overflow-hidden">
       {/* Video Banner Background */}
       <div className="absolute inset-0 w-full h-full">
         
@@ -53,8 +64,7 @@ function Hero() {
           muted
           playsInline
           loop
-          preload="metadata"
-          loading="lazy"
+          preload="auto"
           className="w-full h-full object-cover"
           onLoadStart={() => console.log('🎥 Video loading started')}
           onCanPlay={() => {
@@ -92,22 +102,30 @@ function Hero() {
 
       {/* Text and Shop Now Button - Overlay on Video */}
       <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
-        <div className="flex flex-col  items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
+        <div className="flex flex-col items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
           <h1 
             className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white font-inter tracking-title"
             style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
-            Custom Your Own 
+            <AnimatedTitle delay={100}>
+              Custom Your Own 
+            </AnimatedTitle>
           </h1>
-            <h1 
+          <h1 
             className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white mb-4 font-inter tracking-title"
             style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
-            Passport Case
+            <AnimatedTitle delay={300}>
+              Passport Case
+            </AnimatedTitle>
           </h1>
           <button 
             onClick={handleStartDesigning}
-            className="px-8 py-3 text-sm uppercase tracking-wider shadow-lg w-fit font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+            className={`px-8 py-3 text-sm uppercase tracking-wider shadow-lg w-fit font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out ${
+              buttonVisible 
+                ? 'opacity-100' 
+                : 'opacity-0'
+            }`}
           >
             Shop Now
           </button>

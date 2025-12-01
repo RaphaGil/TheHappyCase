@@ -23,9 +23,19 @@ const PinHighlightRotator = ({ pinHighlights }) => {
     setPinHighlightVisible(true);
   }, [pinHighlights.length]);
 
+  // Define colors for each highlight
+  const getColorClass = (index) => {
+    const colors = [
+      'text-blue-600',      // Colorful Pins - blue
+      'text-amber-700',     // Bronze Pins - bronze/amber
+      'text-green-600',     // Flags - green
+    ];
+    return colors[index % colors.length] || 'text-gray-900';
+  };
+
   return (
     <span
-      className={`block transition-opacity duration-300 italic ${
+      className={`block transition-opacity duration-300 italic ${getColorClass(pinHighlightIndex)} ${
         pinHighlightVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >

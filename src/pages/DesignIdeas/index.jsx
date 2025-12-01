@@ -230,6 +230,10 @@ const DesignIdeas = () => {
                       alt={idea.title}
                       className="w-full h-full object-contain"
                       loading="lazy"
+                      fetchPriority="low"
+                      decoding="async"
+                      width="300"
+                      height="400"
                       onError={(e) => {
                         if (e.target) {
                           e.target.style.display = 'none';
@@ -259,6 +263,10 @@ const DesignIdeas = () => {
                             alt={pin.name}
                             className="w-full h-full object-contain"
                             loading="lazy"
+                            fetchPriority="low"
+                            decoding="async"
+                            width="48"
+                            height="48"
                             onError={(e) => {
                               if (e.target) {
                                 e.target.style.display = 'none';

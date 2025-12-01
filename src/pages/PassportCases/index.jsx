@@ -298,7 +298,11 @@ const PassportCases = () => {
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
                   className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50' : ''}`}
-                  loading="lazy"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  width="500"
+                  height="500"
                   onError={(e) => {
                     e.target.style.display = 'none';
                     if (e.target.nextSibling) {
@@ -341,6 +345,10 @@ const PassportCases = () => {
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain"
                       loading="lazy"
+                      fetchPriority="low"
+                      decoding="async"
+                      width="80"
+                      height="80"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         if (e.target.nextSibling) {

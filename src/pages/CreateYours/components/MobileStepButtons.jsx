@@ -5,7 +5,7 @@ import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
   return (
     <div className="mb-0 flex justify-center">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-2 sm:gap-4">
         {/* Choose Case Button */}
         <button
           onClick={() => {
@@ -15,22 +15,28 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             }
             setMobileCurrentStep('case');
           }}
-          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
+          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
             mobileCurrentStep === 'case'
               ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
               : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
-          style={{ WebkitTapHighlightColor: 'transparent' }}
+          style={{ 
+            WebkitTapHighlightColor: 'transparent',
+            width: '64px',
+            height: '64px',
+            padding: '10px'
+          }}
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
-            className={`text-lg mb-1.5 ${
+            className={`text-md sm:text-lg ${
               mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
             }`}
+            style={{ marginBottom: '6px' }}
           />
-          <span className={`text-[10px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
             mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
-          }`} className="font-inter">
+          }`}>
             Case
           </span>
         </button>
@@ -45,32 +51,38 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             setMobileCurrentStep('color');
           }}
           disabled={!selectedCaseType}
-          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
+          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
             !selectedCaseType
               ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'color'
               ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
               : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
-          style={{ WebkitTapHighlightColor: 'transparent' }}
+          style={{ 
+            WebkitTapHighlightColor: 'transparent',
+            width: '64px',
+            height: '64px',
+            padding: '10px'
+          }}
         >
           <FontAwesomeIcon 
             icon={faPalette} 
-            className={`text-lg mb-1.5 ${
+            className={`text-md sm:text-lg ${
               !selectedCaseType
                 ? 'text-gray-400'
                 : mobileCurrentStep === 'color'
                 ? 'text-white'
                 : 'text-gray-700'
             }`}
+            style={{ marginBottom: '6px' }}
           />
-          <span className={`text-[10px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
             !selectedCaseType
               ? 'text-gray-400'
               : mobileCurrentStep === 'color'
               ? 'text-white'
               : 'text-gray-700'
-          }`} className="font-inter">
+          }`}>
             Color
           </span>
         </button>
@@ -85,32 +97,38 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             setMobileCurrentStep('charms');
           }}
           disabled={!selectedCaseType || !selectedColor}
-          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
+          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
             !selectedCaseType || !selectedColor
               ? 'bg-gray-100 opacity-50 cursor-not-allowed'
               : mobileCurrentStep === 'charms'
               ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
               : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
-          style={{ WebkitTapHighlightColor: 'transparent' }}
+          style={{ 
+            WebkitTapHighlightColor: 'transparent',
+            width: '64px',
+            height: '64px',
+            padding: '10px'
+          }}
         >
           <FontAwesomeIcon 
             icon={faPlane} 
-            className={`text-lg mb-1.5 ${
+            className={`text-md sm:text-lg ${
               !selectedCaseType || !selectedColor
                 ? 'text-gray-400'
                 : mobileCurrentStep === 'charms'
                 ? 'text-white'
                 : 'text-gray-700'
             }`}
+            style={{ marginBottom: '6px' }}
           />
-          <span className={`text-[10px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
             !selectedCaseType || !selectedColor
               ? 'text-gray-400'
               : mobileCurrentStep === 'charms'
               ? 'text-white'
               : 'text-gray-700'
-          }`} className="font-inter">
+          }`}>
             Charms
           </span>
         </button>
@@ -131,22 +149,28 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
               setMobileCurrentStep('text');
             }
           }}
-          className={`w-16 rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center py-3 ${
+          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
             mobileCurrentStep === 'text'
               ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
               : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
           }`}
-          style={{ WebkitTapHighlightColor: 'transparent' }}
+          style={{ 
+            WebkitTapHighlightColor: 'transparent',
+            width: '64px',
+            height: '64px',
+            padding: '10px'
+          }}
         >
           <FontAwesomeIcon 
             icon={faFont} 
-            className={`text-lg mb-1.5 ${
+            className={`text-md sm:text-lg ${
               mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
             }`}
+            style={{ marginBottom: '6px' }}
           />
-          <span className={`text-[10px] uppercase tracking-wide font-medium ${
+          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
             mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
-          }`} className="font-inter">
+          }`}>
             Text
           </span>
         </button>

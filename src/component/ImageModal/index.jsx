@@ -38,6 +38,8 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                 alt={`${selectedCase.name} - View ${selectedModalImage + 1}`}
                 className="max-w-full max-h-full object-contain"
                 loading="lazy"
+                fetchPriority="low"
+                decoding="async"
                 onError={(e) => {
                   e.target.style.display = 'none';
                   if (e.target.nextSibling) {
@@ -71,6 +73,10 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain p-1"
                       loading="lazy"
+                      fetchPriority="low"
+                      decoding="async"
+                      width="80"
+                      height="80"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         if (e.target.nextSibling) {

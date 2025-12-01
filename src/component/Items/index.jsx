@@ -71,7 +71,11 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
             alt={displayName}
             className={`w-full h-full object-contain transition-opacity duration-300 ${isHovered && hoverImage ? 'opacity-0' : 'opacity-100'}`}
             style={{ display: isHovered && hoverImage ? 'none' : 'block' }}
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            width="400"
+            height="400"
           />
           
           {/* Hover image - with zoom out effect (appears further away) */}
@@ -82,6 +86,10 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
               className={`absolute inset-0 w-full h-full object-contain transition-all duration-300 ${isHovered ? 'opacity-100 scale-90' : 'opacity-0 scale-100'}`}
               style={{ display: isHovered ? 'block' : 'none' }}
               loading="lazy"
+              fetchPriority="low"
+              decoding="async"
+              width="400"
+              height="400"
             />
           )}
         </div>

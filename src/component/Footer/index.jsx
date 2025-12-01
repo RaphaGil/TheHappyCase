@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import AnimatedTitle from '../AnimatedTitle';
+import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
   const [customerServiceOpen, setCustomerServiceOpen] = useState(false);
+  const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
 
   return (
-    <footer className="bg-white border-t border-gray-100">
+    <footer ref={sectionRef} className="bg-white border-t border-gray-100">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
@@ -108,7 +111,11 @@ function Footer() {
               onClick={() => setQuickLinksOpen(!quickLinksOpen)}
               className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2 font-inter "
             >
-              <span>Quick Links</span>
+              {sectionVisible && (
+                <AnimatedTitle delay={100}>
+                  Quick Links
+                </AnimatedTitle>
+              )}
               <FontAwesomeIcon 
                 icon={quickLinksOpen ? faChevronUp : faChevronDown} 
                 className="text-xs ml-2"
@@ -116,7 +123,11 @@ function Footer() {
             </button>
             {/* Desktop: Static heading */}
             <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-light mb-2 font-inter ">
-              Quick Links
+              {sectionVisible && (
+                <AnimatedTitle delay={100}>
+                  Quick Links
+                </AnimatedTitle>
+              )}
             </h4>
             {/* Mobile: Conditional content */}
             {quickLinksOpen && (
@@ -175,7 +186,11 @@ function Footer() {
               onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
               className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2 font-inter"
             >
-              <span>Customer Service</span>
+              {sectionVisible && (
+                <AnimatedTitle delay={200}>
+                  Customer Service
+                </AnimatedTitle>
+              )}
               <FontAwesomeIcon 
                 icon={customerServiceOpen ? faChevronUp : faChevronDown} 
                 className="text-xs ml-2"
@@ -183,7 +198,11 @@ function Footer() {
             </button>
             {/* Desktop: Static heading */}
             <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-light mb-2 font-inter">
-              Customer Service
+              {sectionVisible && (
+                <AnimatedTitle delay={200}>
+                  Customer Service
+                </AnimatedTitle>
+              )}
             </h4>
             {/* Mobile: Conditional content */}
             {customerServiceOpen && (

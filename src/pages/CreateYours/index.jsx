@@ -641,7 +641,7 @@ const CreateYours = () => {
             className="bg-white rounded-lg shadow-lg flex flex-col w-full max-w-sm max-h-[85vh] h-fit"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 flex-shrink-0">
+            <div className="flex justify-between items-center px-4 py-3 flex-shrink-0">
               <h2 className="text-sm uppercase tracking-wider text-gray-900 font-light font-inter">
                 Add Text
               </h2>
@@ -671,7 +671,7 @@ const CreateYours = () => {
                     setMobileTextError('');
                   }}
                   placeholder="e.g. Your name"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+                  className="w-full px-3 py-2 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
                   style={{
                     fontSize: '16px' // Prevent zoom on iOS
                   }}
@@ -725,14 +725,14 @@ const CreateYours = () => {
       
       {/* Hide main content when text modal is open on mobile */}
       {!(isMobile && mobileCurrentStep === 'text') && (
-        <div className={`${isMobile ? 'pb-72' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8'} relative z-10`}>
+        <div className={`${isMobile ? 'pb-48' : 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8'} relative z-10`}>
           {/* Mobile Layout */}
           {isMobile ? (
             <div className="flex flex-col h-full">
               {/* Close Button - Mobile only */}
               <button
                 onClick={() => navigate('/')}
-                className="fixed top-4 right-4 z-50 w-8 h-8 flex items-center justify-center bg-white rounded-full hover:bg-gray-100 transition-colors shadow-md"
+                className="fixed top-8 right-4 z-50 w-9 h-9 flex items-center justify-center   "
                 aria-label="Close and go back to home"
               >
                 <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -838,7 +838,7 @@ const CreateYours = () => {
                   {/* Desktop Steps Section - Dropdown Style */}
                   <div className="w-full space-y-2">
                 {/* Step 1: Case & Color */}
-                <div className="border border-gray-200 rounded-sm">
+                <div className="rounded-sm">
                   <button
                     onClick={() => toggleStep('step1')}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
@@ -882,7 +882,7 @@ const CreateYours = () => {
             </div>
 
                 {/* Step 2: Charms */}
-                <div className="border border-gray-200 rounded-sm">
+                <div className="rounded-sm">
                   <button
                     onClick={() => toggleStep('step2')}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
@@ -926,7 +926,7 @@ const CreateYours = () => {
             </div>
             
                 {/* Step 3: Text */}
-                <div className="border border-gray-200 rounded-sm">
+                <div className="rounded-sm">
                   <button
                     onClick={() => toggleStep('step3')}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors font-inter"
@@ -1015,7 +1015,7 @@ const CreateYours = () => {
         
         {/* Fixed Bottom Section - Mobile only */}
         {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg">
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white shadow-lg">
             {/* Choose Options Section */}
             <div className="px-3 pt-2.5 pb-2 border-b border-gray-100">
               <MobileStepButtons

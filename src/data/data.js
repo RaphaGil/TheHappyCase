@@ -5,7 +5,7 @@ export const pinHighlights = [
   ' Flags',
 ];
 
-// Design ideas images - all 6 images
+// Design ideas images - all 8 images
 export const designIdeasImages = [
   '/TheHappyCase/images/designideas/designidea.png',
   '/TheHappyCase/images/designideas/designidea1.png',
@@ -13,6 +13,8 @@ export const designIdeasImages = [
   '/TheHappyCase/images/designideas/designidea3.png',
   '/TheHappyCase/images/designideas/designidea4.png',
   '/TheHappyCase/images/designideas/designidea5.png',
+  '/TheHappyCase/images/designideas/designidea6.png',
+  '/TheHappyCase/images/designideas/designidea7.png',
 ];
 
 // Text overlays for each image (currently commented out but kept for future use)

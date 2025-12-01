@@ -13,6 +13,10 @@ const CharmLineItem = ({ item, formatPrice }) => (
             alt={item.name || "Charm"}
             className="w-24 h-24 object-contain"
             loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            width="96"
+            height="96"
           />
         ) : item.pin?.src ? (
           <img
@@ -20,6 +24,10 @@ const CharmLineItem = ({ item, formatPrice }) => (
             alt={item.pin.name || "Charm"}
             className="w-24 h-24 object-contain"
             loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            width="96"
+            height="96"
           />
         ) : (
           <div className="w-24 h-24 rounded bg-gray-50 border border-gray-200 flex items-center justify-center">
@@ -59,12 +67,22 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
               src={item.designImage}
               alt="Your Design"
               className="w-24 h-18 object-contain"
+              loading="lazy"
+              fetchPriority="low"
+              decoding="async"
+              width="96"
+              height="72"
             />
           ) : item.caseImage || item.image ? (
             <img
               src={item.caseImage || item.image}
               alt="Case"
               className="w-24 h-18 object-contain"
+              loading="lazy"
+              fetchPriority="low"
+              decoding="async"
+              width="96"
+              height="72"
             />
           ) : (
             <div
@@ -101,6 +119,10 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
               alt={pin.name}
               className="w-24 h-24 object-contain"
               loading="lazy"
+              fetchPriority="low"
+              decoding="async"
+              width="96"
+              height="96"
             />
             <div className="text-xs font-light text-gray-900 line-clamp-1 mb-1 font-inter">
               <div>
@@ -130,6 +152,10 @@ const StandaloneCase = ({ item, formatPrice }) => (
             alt="Your Design"
             className="w-24 h-18 object-contain"
             loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            width="96"
+            height="72"
           />
         ) : item.caseImage || item.image ? (
           <img
@@ -137,6 +163,10 @@ const StandaloneCase = ({ item, formatPrice }) => (
             alt={item.caseName || item.name || "Case"}
             className="w-24 h-18 object-contain"
             loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            width="96"
+            height="72"
           />
         ) : (
           <div
