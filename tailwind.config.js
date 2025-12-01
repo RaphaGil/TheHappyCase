@@ -127,6 +127,27 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities, theme }) {
+      const newUtilities = {
+        '.text-title': {
+          'font-family': theme('fontFamily.fredoka'),
+        },
+        '.text-title-lg': {
+          'font-family': theme('fontFamily.fredoka'),
+        },
+        '.text-title-xl': {
+          'font-family': theme('fontFamily.fredoka'),
+        },
+        '.text-subtitle': {
+          'font-family': theme('fontFamily.fredoka'),
+        },
+        '.text-subtitle-lg': {
+          'font-family': theme('fontFamily.fredoka'),
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart } from '../../context/CartContext';
@@ -41,7 +41,7 @@ const EUROPEAN_VAT_RATE = 0.2;
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-  const { cart, getTotalPrice, clearCart } = useCart();
+  const { cart, getTotalPrice, clearCart, incrementItemQty, decrementItemQty, removeFromCart } = useCart();
   const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -199,6 +199,9 @@ const CheckoutForm = () => {
         shippingLabel={shippingLabel}
         showInternationalNote={showInternationalNote}
         onShowShippingInfo={() => setShowShippingInfo(true)}
+        onIncrement={incrementItemQty}
+        onDecrement={decrementItemQty}
+        onRemove={removeFromCart}
       />
  
       <div className="flex flex-col lg:flex-row  w-full">
@@ -240,7 +243,7 @@ const CheckoutForm = () => {
         </form>
 
         {/* Order Summary */}
-        <aside className="hidden lg:block border border-gray-200 bg-white p-6 w-full lg:w-1/2 lg:sticky lg:top-20 mt-4 lg:mt-0">
+        <aside className="hidden lg:block border border-gray-200 bg-yellow-50 p-6 w-full lg:w-1/2 lg:sticky lg:top-20 mt-4 lg:mt-0">
           <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-6 font-light font-inter">
             Order Summary
           </h3>
@@ -254,6 +257,9 @@ const CheckoutForm = () => {
             totalWithShipping={totalWithShipping}
             showInternationalNote={showInternationalNote}
             onShowShippingInfo={() => setShowShippingInfo(true)}
+            onIncrement={incrementItemQty}
+            onDecrement={decrementItemQty}
+            onRemove={removeFromCart}
           />
         </aside>
         
@@ -261,6 +267,41 @@ const CheckoutForm = () => {
           isOpen={showShippingInfo}
           onClose={() => setShowShippingInfo(false)}
         />
+      </div>
+      
+      {/* Footer Links */}
+      <div className="w-full border-t border-gray-200 mt-8 pt-6 pb-6">
+        <div className="max-w-6xl mx-auto px-4 lg:px-6">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs text-gray-600 font-light font-inter">
+            <Link 
+              to="/returns" 
+              className="hover:text-gray-900 transition-colors underline"
+            >
+              Refund Policy
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link 
+              to="/shipping" 
+              className="hover:text-gray-900 transition-colors underline"
+            >
+              Shipping
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link 
+              to="/returns" 
+              className="hover:text-gray-900 transition-colors underline"
+            >
+              Cancellations
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link 
+              to="/about" 
+              className="hover:text-gray-900 transition-colors underline"
+            >
+              Contact
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

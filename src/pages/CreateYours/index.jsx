@@ -732,7 +732,7 @@ const CreateYours = () => {
               {/* Close Button - Mobile only */}
               <button
                 onClick={() => navigate('/')}
-                className="fixed top-8 right-4 z-50 w-9 h-9 flex items-center justify-center   "
+                className="fixed top-4 right-4 z-50 w-10 h-10 flex items-center justify-center   "
                 aria-label="Close and go back to home"
               >
                 <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -742,7 +742,7 @@ const CreateYours = () => {
               
               {/* Header Section - Compact on mobile */}
               <div className="text-center pt-12 pb-3 px-4">
-                <h1 className="text-2xl font-light text-gray-900 mb-1 font-inter tracking-title">
+                <h1 className="text-title font-light text-gray-900 mb-1 tracking-title">
                   CREATE YOURS
                 </h1>
                 <div className="w-20 h-px bg-gray-200 mx-auto"></div>

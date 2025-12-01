@@ -1,5 +1,5 @@
 import React from 'react';
-import Footer from '../../component/Footer';
+
 import NavBar from '../../component/NavBar';
 import { useLocation } from 'react-router-dom';
 
@@ -31,7 +31,7 @@ const RefundPolicy = () => {
           </div>
         </div>
       </div>
-      <Footer />
+
     </div>
   );
 };

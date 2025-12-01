@@ -13,7 +13,10 @@ const MobileOrderSummary = ({
   shippingCost,
   shippingLabel,
   showInternationalNote,
-  onShowShippingInfo
+  onShowShippingInfo,
+  onIncrement,
+  onDecrement,
+  onRemove
 }) => {
   return (
     <>
@@ -44,7 +47,7 @@ const MobileOrderSummary = ({
       
       {isOpen && (
         <div id="mobile-order-summary" className="lg:hidden px-6 pb-4">
-          <div className="mt-2 border border-gray-200 bg-white p-4">
+          <div className="mt-2 border border-gray-200 bg-yellow-50 p-4">
             <OrderSummary
               cart={cart}
               formatPrice={formatPrice}
@@ -55,6 +58,9 @@ const MobileOrderSummary = ({
               totalWithShipping={totalWithShipping}
               showInternationalNote={showInternationalNote}
               onShowShippingInfo={onShowShippingInfo}
+              onIncrement={onIncrement}
+              onDecrement={onDecrement}
+              onRemove={onRemove}
             />
           </div>
         </div>

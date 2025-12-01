@@ -373,7 +373,7 @@ const Charms = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-3xl font-light text-gray-900 mb-2 font-inter tracking-title">
+          <h1 className="text-subtitle font-light text-gray-900 mb-2 tracking-title">
           CHARMS
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-3 sm:mb-4"></div>
@@ -406,7 +406,7 @@ const Charms = () => {
           {/* Category Selection Tabs - Sub-filters */}
           {(selectedCharmType === 'flags' || selectedCharmType === 'bronze' || selectedCharmType === 'colorful') && (
             <div className="flex justify-center mb-6">
-              <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
+              <div className="flex gap-0.5  flex-wrap justify-center">
                 {selectedCharmType === 'flags' && [
                   { key: 'all', label: 'ALL' },
                   { key: 'europe', label: 'EUROPE' },

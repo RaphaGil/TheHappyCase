@@ -1,6 +1,8 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const OrderSummaryItem = ({ item, index, formatPrice }) => {
+const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, onRemove }) => {
   // Handle standalone charm items
   if (item.type === 'charm') {
     const charm = item.pin || item;
@@ -33,8 +35,17 @@ const OrderSummaryItem = ({ item, index, formatPrice }) => {
               {qty}
             </span>
           </div>
-          <div className="flex-1">
-            <h4 className="text-sm font-medium text-gray-900 font-inter">
+          <div className="flex-1 relative">
+            {/* Delete icon - top right corner */}
+            <button
+              onClick={() => onRemove && onRemove(index)}
+              className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center bg-red-50 hover:bg-red-100 rounded-full text-red-600 hover:text-red-700 transition-colors z-10"
+              aria-label="Remove item"
+              title="Remove item"
+            >
+              <FontAwesomeIcon icon={faTrash} className="text-[10px]" />
+            </button>
+            <h4 className="text-sm font-medium text-gray-900 font-inter pr-6">
               {item.name || charm?.name || "Charm"}
             </h4>
             <p className="text-xs text-gray-500 mt-1 font-inter">
@@ -46,9 +57,30 @@ const OrderSummaryItem = ({ item, index, formatPrice }) => {
               <span className="text-sm text-gray-600 font-inter">
                 {formatPrice(charmPrice)} {qty > 1 ? `× ${qty}` : ''}
               </span>
-              <span className="text-sm font-medium text-gray-900 font-inter">
-                {formatPrice(total)}
-              </span>
+              <div className="flex flex-col items-end">
+                <span className="text-sm font-medium text-gray-900 font-inter">
+                  {formatPrice(total)}
+                </span>
+                {/* - and + buttons under price */}
+                <div className="mt-1 flex items-center gap-1">
+                  <button
+                    onClick={() => onDecrement && onDecrement(item.id || index)}
+                    className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded text-gray-700 hover:text-gray-900 transition-colors"
+                    aria-label="Decrease quantity"
+                    title="Decrease quantity"
+                  >
+                    <FontAwesomeIcon icon={faMinus} className="text-[10px]" />
+                  </button>
+                  <button
+                    onClick={() => onIncrement && onIncrement(item.id || index)}
+                    className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded text-gray-700 hover:text-gray-900 transition-colors"
+                    aria-label="Increase quantity"
+                    title="Increase quantity"
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -85,9 +117,18 @@ const OrderSummaryItem = ({ item, index, formatPrice }) => {
             {item.quantity || 1}
           </span>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 relative">
+          {/* Delete icon - top right corner */}
+          <button
+            onClick={() => onRemove && onRemove(index)}
+            className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center bg-red-50 hover:bg-red-100 rounded-full text-red-600 hover:text-red-700 transition-colors z-10"
+            aria-label="Remove item"
+            title="Remove item"
+          >
+            <FontAwesomeIcon icon={faTrash} className="text-[10px]" />
+          </button>
           <div className="flex items-start justify-between">
-            <div>
+            <div className="flex-1 pr-6">
               <div className="text-sm font-light text-gray-900 font-inter">{item.caseName}</div>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-xs text-gray-500 font-light font-inter">Color:</span>
@@ -98,7 +139,28 @@ const OrderSummaryItem = ({ item, index, formatPrice }) => {
                 />
               </div>
             </div>
-            <span className="text-sm font-medium text-gray-900 font-inter">{formatPrice(base)}</span>
+            <div className="flex flex-col items-end">
+              <span className="text-sm font-medium text-gray-900 font-inter">{formatPrice(base)}</span>
+              {/* - and + buttons under price */}
+              <div className="mt-1 flex items-center gap-1">
+                <button
+                  onClick={() => onDecrement && onDecrement(item.id || index)}
+                  className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded text-gray-700 hover:text-gray-900 transition-colors"
+                  aria-label="Decrease quantity"
+                  title="Decrease quantity"
+                >
+                  <FontAwesomeIcon icon={faMinus} className="text-[10px]" />
+                </button>
+                <button
+                  onClick={() => onIncrement && onIncrement(item.id || index)}
+                  className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded text-gray-700 hover:text-gray-900 transition-colors"
+                  aria-label="Increase quantity"
+                  title="Increase quantity"
+                >
+                  <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -121,7 +183,28 @@ const OrderSummaryItem = ({ item, index, formatPrice }) => {
           </div>
           <div className="flex justify-between pt-3 border-t border-gray-100 mt-3">
             <div className="text-sm font-light text-gray-700 font-inter">Item total:</div>
-            <div className="text-sm font-medium text-gray-900 font-inter">{formatPrice(total)}</div>
+            <div className="flex flex-col items-end">
+              <div className="text-sm font-medium text-gray-900 font-inter">{formatPrice(total)}</div>
+              {/* - and + buttons under total price */}
+              <div className="mt-1 flex items-center gap-1">
+                <button
+                  onClick={() => onDecrement && onDecrement(item.id || index)}
+                  className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded text-gray-700 hover:text-gray-900 transition-colors"
+                  aria-label="Decrease quantity"
+                  title="Decrease quantity"
+                >
+                  <FontAwesomeIcon icon={faMinus} className="text-[10px]" />
+                </button>
+                <button
+                  onClick={() => onIncrement && onIncrement(item.id || index)}
+                  className="w-5 h-5 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded text-gray-700 hover:text-gray-900 transition-colors"
+                  aria-label="Increase quantity"
+                  title="Increase quantity"
+                >
+                  <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

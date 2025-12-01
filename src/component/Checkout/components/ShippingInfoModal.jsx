@@ -25,12 +25,20 @@ const ShippingInfoModal = ({ isOpen, onClose }) => {
         <p className="text-xs text-gray-500 font-light font-inter">
           We dispatch orders within 2 - 3 business days. Shipping costs depend on your delivery country.
         </p>
+        <p className="text-xs text-gray-500 font-light font-inter">
+          Including Ireland, Europe, Asia, North America, South America, Canada, Australia and New Zealand. Shipping charges are calculated at the checkout depending on location and parcel size.
+        </p>
         <ul className="text-xs text-gray-600 space-y-2 font-light font-inter font-medium">
           <li><span>UK:</span> 3-4 business days</li>
           <li><span className="font-medium font-medium">Europe:</span> 5-10 business days</li>
           <li><span>USA & Canada:</span> 7-14 business days</li>
           <li><span className="font-medium">Rest of World:</span> 10-21 business days</li>
         </ul>
+        <div className="pt-2 border-t border-gray-100">
+          <p className="text-xs text-gray-500 font-light font-inter leading-relaxed">
+            Orders delivered outside of the UK may be subject to import duties and taxes. These are levied when the delivery reaches its specific destination, and you will be responsible for the payment of any such duties and taxes. For more information, please contact your local customs office.
+          </p>
+        </div>
         <div className="flex justify-end">
           <Link
             to="/shipping"

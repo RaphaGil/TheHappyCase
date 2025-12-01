@@ -12,7 +12,10 @@ const OrderSummary = ({
   shippingLabel, 
   totalWithShipping, 
   showInternationalNote,
-  onShowShippingInfo 
+  onShowShippingInfo,
+  onIncrement,
+  onDecrement,
+  onRemove
 }) => {
   return (
     <div>
@@ -22,6 +25,9 @@ const OrderSummary = ({
           item={item}
           index={index}
           formatPrice={formatPrice}
+          onIncrement={onIncrement}
+          onDecrement={onDecrement}
+          onRemove={onRemove}
         />
       ))}
       
