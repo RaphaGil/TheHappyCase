@@ -383,7 +383,7 @@ const Charms = () => {
         </div>
 
         {/* Filters Section - Organized Container */}
-        <div className="mb-8 border-b border-gray-100 pb-6">
+        <div className="pb-6">
           {/* Charm Type Selection - Main Tabs */}
           <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
             <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
