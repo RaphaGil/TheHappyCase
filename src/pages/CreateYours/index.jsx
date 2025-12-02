@@ -430,7 +430,7 @@ const CreateYours = () => {
                       backgroundImage: `url(${selectedCaseImage})`,
                       zIndex: 0,
                       pointerEvents: 'none',
-                      backgroundSize: '75%',
+                      backgroundSize: '70%',
                       backgroundPosition: 'center 55%',
                     }}
                     key={`case-bg-${selectedCaseType}-${selectedColor}`}
@@ -634,7 +634,7 @@ const CreateYours = () => {
 
         {/* Fixed Mobile Step Buttons - Above Price Summary */}
         {isMobile && (
-          <div className="fixed left-0 right-0 z-50 bg-white  md:hidden w-full" style={{bottom: '120px'}}>
+          <div className="fixed left-0 right-0 z-0 bg-white  md:hidden w-full " style={{bottom: '120px'}}>
             <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3">
               <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-gray-400 mb-2 xs:mb-2.5 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
