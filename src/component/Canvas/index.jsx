@@ -694,8 +694,8 @@ const Canvas = ({
   }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage]);
 
   return (
-    <div className="w-full h-full flex flex-col items-top">
-      <div className="w-full h-full relative flex item-top justify-center">
+    <div className="w-full h-full flex flex-col items-top ">
+      <div className="w-full h-full relative flex item-top justify-center ">
         <canvas 
           ref={canvasRef} 
           className="w-full h-full"

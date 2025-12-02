@@ -404,7 +404,7 @@ const CreateYours = () => {
         
         {/* Header Section - Fixed at top, never overlaps */}
         <div className="text-center mb-2 xs:mb-3 sm:mb-4 md:mb-6 flex-shrink-0">
-          <h1 className="text-title text-gray-900 tracking-title mt-4 xs:mt-5 sm:mt-6 md:mt-0">
+          <h1 className="text-xl xs:text-2xl sm:text-title text-gray-900 tracking-title mt-4 xs:mt-5 sm:mt-6 md:mt-0">
             CREATE YOURS
           </h1>
           <div className="w-12 xs:w-14 sm:w-16 h-px bg-gray-300 mx-auto mb-1 xs:mb-1.5 md:mb-4"></div>
@@ -451,7 +451,7 @@ const CreateYours = () => {
               
               {/* Mobile Step Buttons - Between case image and cart */}
               {isMobile && (
-                <div className="mt-8 xs:mt-14 sm:mt-5 w-full flex-shrink-0">
+                <div className="mt-2 sm:mt-5 w-full flex-shrink-0">
                   <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-gray-400 mb-2 xs:mb-2.5 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
                     Choose the options below:
                   </p>
