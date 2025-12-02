@@ -421,7 +421,7 @@ const CreateYours = () => {
           <div className="w-full lg:w-1/2 flex flex-col items-start xs:items-center xs:justify-center flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-2 sm:py-3 md:py-0">
 
             <div className="w-full flex flex-col items-center">
-              <div className="flex-shrink-0 w-[400px] h-[400px] relative mt-0 sm:mt-auto lg:mt-4" style={{isolation: 'isolate'}}>
+              <div className="flex-shrink-0 w-[300px] h-[350px] relative mt-0 sm:mt-auto lg:mt-4" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
                   <div 
@@ -430,7 +430,7 @@ const CreateYours = () => {
                       backgroundImage: `url(${selectedCaseImage})`,
                       zIndex: 0,
                       pointerEvents: 'none',
-                      backgroundSize: '260px',
+                      backgroundSize: '270px',
                       backgroundPosition: 'center 45%',
                     }}
                     key={`case-bg-${selectedCaseType}-${selectedColor}`}
