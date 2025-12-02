@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import ColorSelector from '../../../component/ColorSelector/index.jsx';
-import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../../data/constants.js';
-import { filterPinsByCategory } from '../../../data/filterHelpers.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../../data/constants';
+import { filterPinsByCategory } from '../../../data/filterHelpers';
 
 const MobileOverlay = ({
   mobileCurrentStep,
@@ -21,48 +19,11 @@ const MobileOverlay = ({
   handlePinSelection,
   Products
 }) => {
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const filterDropdownRef = useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Close dropdown when clicking outside (only when dropdown is open)
-  useEffect(() => {
-    if (!isFilterDropdownOpen) return;
+  if (!mobileCurrentStep) return null;
 
-    const handleClickOutside = (event) => {
-      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
-        setIsFilterDropdownOpen(false);
-      }
-    };
-
-    // Use setTimeout to avoid immediate closure
-    const timeoutId = setTimeout(() => {
-      document.addEventListener('mousedown', handleClickOutside);
-    }, 10);
-
-    return () => {
-      clearTimeout(timeoutId);
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isFilterDropdownOpen]);
-
-  // Filter pins by subcategory - recalculate when pins, selectedCategory, or mobileSubCategory changes
-  // Must be before early return to follow React hooks rules
-  const filteredPinsForMobile = useMemo(() => {
-    if (!mobileCurrentStep || mobileCurrentStep === 'text') return [];
-    if (!pins || pins.length === 0) return [];
-    if (!selectedCategory) return pins;
-    
-    // If 'all' is selected, return all pins for the category
-    if (mobileSubCategory === 'all') {
-      return pins;
-    }
-    
-    // Otherwise, filter by subcategory
-    return filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
-  }, [pins, selectedCategory, mobileSubCategory, mobileCurrentStep]);
-
-  // Don't show overlay for 'text' step - it's handled inline in the bottom section
-  if (!mobileCurrentStep || mobileCurrentStep === 'text') return null;
+  const filteredPinsForMobile = filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
 
   const getFilterTabs = () => {
     if (selectedCategory === 'flags') return FLAGS_FILTER_TABS;
@@ -72,105 +33,86 @@ const MobileOverlay = ({
   };
 
   const filterTabs = getFilterTabs();
-  const selectedFilterTab = filterTabs.find(tab => tab.key === mobileSubCategory);
+  const selectedFilterLabel = filterTabs.find(tab => tab.key === mobileSubCategory)?.label || 'ALL';
 
   return (
-    <div 
-      className={`fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 ${
-        mobileCurrentStep === 'charms' ? 'z-[60]' : 'z-50'
-      }`}
-      onClick={() => setMobileCurrentStep(null)}
-    >
-      <div 
-        className={`bg-white rounded-lg shadow-lg flex flex-col w-full max-w-sm ${
-          mobileCurrentStep === 'charms' 
-            ? 'max-h-[90vh]' 
-            : 'max-h-[85vh] h-fit'
-        }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 flex-shrink-0">
-          <h2 className="text-caption uppercase tracking-wider text-gray-900 font-light font-inter">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 md:p-6">
+      <div className={`bg-white rounded-sm p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 w-full overflow-y-auto border border-gray-200 ${
+        mobileCurrentStep === 'charms' 
+          ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg h-fit' 
+          : mobileCurrentStep === 'case'
+          ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
+          : 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
+      }`}>
+        <div className="flex justify-between items-center mb-4 xs:mb-5 sm:mb-6 md:mb-8 border-b border-gray-100 pb-3 xs:pb-4 md:pb-5">
+          <h2 className="text-xs xs:text-sm md:text-base lg:text-lg uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
             {mobileCurrentStep === 'case' && 'Choose Case'}
             {mobileCurrentStep === 'color' && 'Choose Color'}
             {mobileCurrentStep === 'charms' && 'Choose Charms'}
           </h2>
           <button
             onClick={() => setMobileCurrentStep(null)}
-            className="p-1.5 hover:bg-gray-50 rounded transition-colors"
-            aria-label="Close modal"
+            className="p-0.5 xs:p-1 hover:bg-gray-50 transition-colors"
           >
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-4 h-4 xs:w-5 xs:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
         
-        {/* Step Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 ">
+        {/* Step Content */}
+        <div className="space-y-3 xs:space-y-4 md:space-y-5">
           {mobileCurrentStep === 'case' && (
-            <div>
-              <div className="grid grid-cols-3 gap-3">
+            <div className="w-full">
+              <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3 md:gap-5 lg:gap-6 xl:gap-8">
                 {CASE_OPTIONS.map((opt) => {
-                  const caseData = Products.cases.find(c => c.type === opt.value);
-                  const caseImage = caseData && caseData.colors && caseData.colors.length > 0 
-                    ? caseData.colors[0].image 
-                    : null;
-                  const isCaseSoldOut = () => {
-                    if (!caseData) return false;
-                    // Check case-level quantity
-                    if (caseData.quantity !== undefined && caseData.quantity === 0) {
-                      return true;
+                  // Get case image from Products or use fallback
+                  const getCaseImage = () => {
+                    if (Products && Products.cases) {
+                      const caseData = Products.cases.find(c => c.type === opt.value);
+                      if (caseData && caseData.colors && caseData.colors.length > 0) {
+                        return caseData.colors[0].image;
+                      }
                     }
-                    // Check if all colors are sold out
-                    if (caseData.colors && caseData.colors.length > 0) {
-                      return caseData.colors.every(color => 
-                        color.quantity !== undefined && color.quantity === 0
-                      );
-                    }
-                    return false;
+                    return opt.image || null;
                   };
-                  const soldOut = isCaseSoldOut();
+                  const caseImage = getCaseImage();
                   
                   return (
-                    <div key={opt.value} className="flex flex-col items-center gap-2 ">
-                      <button
-                        onClick={() => !soldOut && handleCaseTypeSelection(opt.value)}
-                        disabled={soldOut}
-                        className={`p-2.5 flex flex-col items-center gap-2 w-full rounded-lg transition-colors ${
-                          selectedCaseType === opt.value
-                            ? 'bg-gray-50'
-                            : 'hover:bg-gray-50'
-                        } ${soldOut ? 'opacity-40 cursor-not-allowed' : ''} font-inter`}
-                      >
-                        {caseImage && (
-                          <div className="relative flex items-center justify-center rounded" style={{ width: '5rem', height: '5rem', overflow: 'visible' }}>
-                            <img
-                              src={caseImage}
-                              alt={opt.label}
-                              className={`max-w-full max-h-full object-contain ${soldOut ? 'opacity-50' : ''}`}
-                              loading="lazy"
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                              }}
-                            />
-                            {selectedCaseType === opt.value && !soldOut && (
-                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
-                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        <span className={`text-xs text-center line-clamp-2 font-light ${
-                          selectedCaseType === opt.value ? 'text-gray-900' : 'text-gray-600'
-                        } font-inter`}>{opt.label}</span>
-                      </button>
-                      {soldOut && (
-                        <span className="text-[10px] text-gray-400 font-light">Sold Out</span>
+                    <button
+                      key={opt.value}
+                      onClick={() => handleCaseTypeSelection(opt.value)}
+                      className={`p-1.5 xs:p-2 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-1 xs:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 ${
+                        selectedCaseType === opt.value
+                          ? ' text-gray-900'
+                          : ' hover:border-gray-300'
+                      }`}
+                      style={{fontFamily: "'Poppins', sans-serif"}}
+                    >
+                      {caseImage && (
+                        <div className="relative w-full aspect-square overflow-hidden rounded-md">
+                          <img
+                            src={caseImage}
+                            alt={opt.label}
+                            className="w-full h-full object-contain p-0.5 xs:p-1 sm:p-1.5 md:p-3 lg:p-4 xl:p-5"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                          {selectedCaseType === opt.value && (
+                            <div className="absolute top-0.5 right-0.5 xs:top-1 xs:right-1 sm:top-1.5 sm:right-1.5 md:top-2 md:right-2 lg:top-3 lg:right-3 xl:top-4 xl:right-4 w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 bg-gray-900 rounded-full flex items-center justify-center shadow-md">
+                              <svg className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
                       )}
-                    </div>
+                      <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2">
+                        {opt.label}
+                      </span>
+                    </button>
                   );
                 })}
               </div>
@@ -188,114 +130,90 @@ const MobileOverlay = ({
           )}
           
           {mobileCurrentStep === 'charms' && selectedCaseType && selectedColor && (
-            <div className="space-y-3">
+            <div>
               {/* Category Selection */}
-              <div>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {CATEGORY_OPTIONS.map((cat) => {
-                    // Get first pin image from each category as preview
-                    const getPreviewImage = () => {
-                      if (cat.value === 'bronze' && Products.pins.bronze && Products.pins.bronze.length > 0) {
-                        return Products.pins.bronze[0].src;
-                      }
-                      if (cat.value === 'colorful' && Products.pins.colorful && Products.pins.colorful.length > 0) {
-                        return Products.pins.colorful[0].src;
-                      }
-                      if (cat.value === 'flags' && Products.pins.flags && Products.pins.flags.length > 0) {
-                        return Products.pins.flags[0].src;
-                      }
-                      return null;
-                    };
-                    const previewImage = getPreviewImage();
-                    
-                    return (
-                      <button
-                        key={cat.value || 'all'}
-                        onClick={() => setSelectedCategory(cat.value)}
-                        className={`flex flex-col items-center p-2 rounded-lg transition-colors ${
-                          selectedCategory === cat.value
-                            ? 'bg-gray-50'
-                            : 'hover:bg-gray-50'
-                        } font-inter`}
-                      >
-                        {previewImage && (
-                          <div className="relative mb-1.5 flex items-center justify-center rounded overflow-visible" style={{ width: '3.5rem', height: '3.5rem' }}>
-                            <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
-                              <img
-                                src={previewImage}
-                                alt={cat.label}
-                                className="max-w-full max-h-full object-contain p-1"
-                                loading="lazy"
-                                decoding="async"
-                              />
-                            </div>
-                            {selectedCategory === cat.value && (
-                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
-                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        <span className={`text-xs text-center font-light ${
-                          selectedCategory === cat.value
-                            ? 'text-gray-900'
-                            : 'text-gray-600'
+              <div className="mb-3 xs:mb-4">
+                <div className="grid grid-cols-3 gap-1.5 xs:gap-2">
+                  {CATEGORY_OPTIONS.map((cat) => (
+                    <button
+                      key={cat.value || 'all'}
+                      onClick={() => setSelectedCategory(cat.value)}
+                      className={`p-1.5 xs:p-2 text-[10px] xs:text-xs text-center transition-all duration-200 flex flex-col items-center gap-1.5 xs:gap-2 relative`}
+                      style={{fontFamily: "'Poppins', sans-serif"}}
+                    >
+                      {cat.image && (
+                        <div className={`w-16 h-16 xs:w-20 xs:h-20 flex-shrink-0 rounded flex items-center justify-center overflow-hidden relative ${
+                          selectedCategory === cat.value ? 'bg-gray-100' : 'bg-white'
                         }`}>
-                          {cat.label}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <img
+                            src={cat.image}
+                            alt={cat.label}
+                            className="w-full h-full object-contain"
+                          />
+                          {selectedCategory === cat.value && (
+                            <div className="absolute top-0 right-0 bg-gray-900 text-white w-4 h-4 xs:w-5 xs:h-5 flex items-center justify-center rounded-full shadow-md">
+                              <svg className="w-2.5 h-2.5 xs:w-3 xs:h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      <span className="font-medium text-[9px] xs:text-[10px]">{cat.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Filter Tabs - Dropdown on Mobile */}
+              {/* Filter Dropdown */}
               {selectedCategory && filterTabs.length > 0 && (
-                <div className="relative z-20" ref={filterDropdownRef}>
+                <div className="mb-3 xs:mb-4 relative">
                   <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsFilterDropdownOpen(prev => !prev);
-                    }}
-                    className="w-full px-4 py-2.5 text-xs uppercase tracking-wider text-left flex items-center justify-between rounded-lg font-light font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="w-full flex items-center justify-between px-3 xs:px-4 py-2 xs:py-2.5 bg-gray-100 border border-gray-300 rounded-md text-left transition-all duration-200 hover:bg-gray-200 hover:border-gray-400"
+                    style={{fontFamily: "'Poppins', sans-serif"}}
                   >
-                    <span className="text-gray-900">
-                      {selectedFilterTab ? selectedFilterTab.label : 'All'}
+                    <span className="text-xs xs:text-sm font-medium text-gray-900 uppercase tracking-wider">
+                      {selectedFilterLabel}
                     </span>
-                    <FontAwesomeIcon 
-                      icon={faChevronDown} 
-                      className={`text-xs text-gray-400 transition-transform duration-200 ${isFilterDropdownOpen ? 'rotate-180' : ''}`} 
-                    />
-                  </button>
-                  {isFilterDropdownOpen && (
-                    <div 
-                      className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] max-h-48 overflow-y-auto"
-                      onClick={(e) => e.stopPropagation()}
+                    <svg 
+                      className={`w-4 h-4 xs:w-5 xs:h-5 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
                     >
-                      {filterTabs.map(({ key, label }) => (
-                        <button
-                          key={key}
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setMobileSubCategory(key);
-                            setIsFilterDropdownOpen(false);
-                          }}
-                          className={`w-full px-4 py-2.5 text-xs uppercase tracking-wider text-left transition-colors border-b border-gray-50 last:border-b-0 ${
-                            mobileSubCategory === key 
-                              ? 'bg-gray-50 text-gray-900 font-light' 
-                              : 'text-gray-600 hover:bg-gray-50'
-                          } font-inter`}
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {isDropdownOpen && (
+                    <>
+                      {/* Backdrop to close dropdown */}
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setIsDropdownOpen(false)}
+                      />
+                      {/* Dropdown Menu */}
+                      <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        {filterTabs.map(({ key, label }) => (
+                          <button
+                            key={key}
+                            onClick={() => {
+                              setMobileSubCategory(key);
+                              setIsDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3 xs:px-4 py-2 xs:py-2.5 text-xs xs:text-sm uppercase tracking-wider transition-all duration-200 ${
+                              mobileSubCategory === key
+                                ? 'bg-gray-100 text-gray-900 font-medium'
+                                : 'text-gray-700 hover:bg-gray-50'
+                            }`}
+                            style={{fontFamily: "'Poppins', sans-serif"}}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
               )}
@@ -303,63 +221,55 @@ const MobileOverlay = ({
               {/* Charms Grid */}
               {selectedCategory && (
                 <div>
-                  {filteredPinsForMobile.length > 0 ? (
-                    <div className="grid grid-cols-3 gap-2">
-                        {filteredPinsForMobile.map((pin, index) => {
-                          const isSoldOut = pin.quantity !== undefined && pin.quantity === 0;
-                          const isSelected = selectedPins.some((p) => p.pin && p.pin.src === pin.src);
-                          // Use src as key since it's unique for each pin (even if names are the same)
-                          const uniqueKey = pin.src ? `${pin.src}-${index}` : `${pin.name}-${index}`;
-                          return (
-                            <div key={uniqueKey} className="flex flex-col items-center gap-2">
-                              <button
-                                onClick={() => {
-                                  if (!isSoldOut) {
-                                    // Ensure we pass the correct pin object
-                                    handlePinSelection({ ...pin });
-                                  }
-                                }}
-                                disabled={isSoldOut}
-                                className={`p-2 flex flex-col items-center w-full rounded-lg transition-colors ${
-                                  isSelected
-                                    ? 'bg-gray-50'
-                                    : 'hover:bg-gray-50'
-                                } ${isSoldOut ? 'opacity-40 cursor-not-allowed' : ''}`}
-                              >
-                                <div className="relative flex items-center justify-center rounded" style={{ width: '4rem', height: '4rem', overflow: 'visible' }}>
-                                  <img
-                                    src={pin.src}
-                                    alt={pin.name}
-                                    className={`max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`}
-                                    loading="lazy"
-                                    decoding="async"
-                                  />
-                                  {isSelected && !isSoldOut && (
-                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm">
-                                      <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                      </svg>
-                                    </div>
-                                  )}
+                
+                  <div className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
+                    <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
+                      {filteredPinsForMobile.map((pin) => {
+                        const isSelected = selectedPins.some((p) => p.pin === pin);
+                        // Get size label based on pin.size from products.json
+                        const getSizeLabel = (size) => {
+                          if (!size) return '';
+                          if (size <= 0.3) return 'XS';
+                          if (size <= 0.45) return 'S';
+                          if (size <= 0.6) return 'M';
+                          if (size <= 0.75) return 'L';
+                          return 'XL';
+                        };
+                        const sizeLabel = getSizeLabel(pin.size);
+                        
+                        return (
+                          <button
+                            key={pin.name}
+                            onClick={() => handlePinSelection(pin)}
+                            className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center`}
+                          >
+                            <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
+                              <img
+                                src={pin.src}
+                                alt={pin.name}
+                                className="max-w-full max-h-full object-contain"
+                              />
+                              {isSelected && (
+                                <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 xs:w-6 xs:h-6 flex items-center justify-center text-[10px] xs:text-xs rounded-full shadow-md z-10">
+                                  <svg className="w-3 h-3 xs:w-4 xs:h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
                                 </div>
-                                <span className={`text-[10px] text-center line-clamp-2 mt-1 font-light ${
-                                  isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'
-                                } font-inter`}>
-                                  {pin.name}
-                                </span>
-                              </button>
-                              {isSoldOut && (
-                                <span className="text-[9px] text-gray-400 font-light">Sold Out</span>
+                              )}
+                              {sizeLabel && (
+                                <div className="absolute top-0 left-0 bg-gray-100 text-gray-700 text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded-full z-10 border border-gray-300">
+                                  {sizeLabel}
+                                </div>
                               )}
                             </div>
-                          );
-                        })}
+                            <span className="text-[9px] xs:text-[10px] sm:text-xs text-center text-gray-700 line-clamp-2 mt-0.5 xs:mt-1" style={{fontFamily: "'Poppins', sans-serif"}}>
+                              {pin.name}
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-400 text-sm font-light font-inter">
-                      No charms found
-                    </div>
-                  )}
+                  </div>
                 </div>
               )}
             </div>
@@ -371,3 +281,5 @@ const MobileOverlay = ({
 };
 
 export default MobileOverlay;
+
+

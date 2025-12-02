@@ -2,176 +2,89 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid-svg-icons';
 
-const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
+const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor, onOpenAddText }) => {
   return (
-    <div className="mb-4 flex justify-center ">
-      <div className="grid grid-cols-4 gap-2 sm:gap-4">
+    <div className="mb-0">
+      <div className="grid grid-cols-4 gap-2 xs:gap-2.5 sm:gap-3">
         {/* Choose Case Button */}
         <button
-          onClick={() => {
-            // Close canvas controls if open
-            if (typeof window !== 'undefined' && window.closeCanvasControls) {
-              window.closeCanvasControls();
-            }
-            setMobileCurrentStep('case');
-          }}
-          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
+          onClick={() => setMobileCurrentStep('case')}
+          className={`aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation rounded-md  ${
             mobileCurrentStep === 'case'
-              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
-              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
+              ? 'bg-gray-100 text-gray-900 border border-gray-300'
+              : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
           }`}
-          style={{ 
-            WebkitTapHighlightColor: 'transparent',
-            width: '64px',
-            height: '64px',
-            padding: '10px'
-          }}
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
-            className={`text-md sm:text-lg ${
-              mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
-            }`}
-            style={{ marginBottom: '6px' }}
+            className="text-sm xs:text-base sm:text-lg mb-1 text-gray-700"
           />
-          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
-            mobileCurrentStep === 'case' ? 'text-white' : 'text-gray-700'
-          }`}>
+          <span className="text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight text-gray-700" style={{fontFamily: "'Poppins', sans-serif"}}>
             Case
           </span>
         </button>
 
         {/* Choose Color Button */}
         <button
-          onClick={() => {
-            // Close canvas controls if open
-            if (typeof window !== 'undefined' && window.closeCanvasControls) {
-              window.closeCanvasControls();
-            }
-            setMobileCurrentStep('color');
-          }}
+          onClick={() => setMobileCurrentStep('color')}
           disabled={!selectedCaseType}
-          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
+          className={`aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation rounded-md  ${
             !selectedCaseType
-              ? 'bg-gray-100 opacity-50 cursor-not-allowed'
+              ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : mobileCurrentStep === 'color'
-              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
-              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
+              ? 'bg-gray-100 text-gray-900 border border-gray-300'
+              : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
           }`}
-          style={{ 
-            WebkitTapHighlightColor: 'transparent',
-            width: '64px',
-            height: '64px',
-            padding: '10px'
-          }}
         >
           <FontAwesomeIcon 
             icon={faPalette} 
-            className={`text-md sm:text-lg ${
-              !selectedCaseType
-                ? 'text-gray-400'
-                : mobileCurrentStep === 'color'
-                ? 'text-white'
-                : 'text-gray-700'
+            className={`text-sm xs:text-base sm:text-lg mb-1 ${
+              !selectedCaseType ? 'text-gray-400' : 'text-gray-700'
             }`}
-            style={{ marginBottom: '6px' }}
           />
-          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
-            !selectedCaseType
-              ? 'text-gray-400'
-              : mobileCurrentStep === 'color'
-              ? 'text-white'
-              : 'text-gray-700'
-          }`}>
+          <span className={`text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight ${
+            !selectedCaseType ? 'text-gray-400' : 'text-gray-700'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Color
           </span>
         </button>
 
         {/* Choose Charms Button */}
         <button
-          onClick={() => {
-            // Close canvas controls if open
-            if (typeof window !== 'undefined' && window.closeCanvasControls) {
-              window.closeCanvasControls();
-            }
-            setMobileCurrentStep('charms');
-          }}
+          onClick={() => setMobileCurrentStep('charms')}
           disabled={!selectedCaseType || !selectedColor}
-          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
+          className={`aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation rounded-md ${
             !selectedCaseType || !selectedColor
-              ? 'bg-gray-100 opacity-50 cursor-not-allowed'
+              ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : mobileCurrentStep === 'charms'
-              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
-              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
+              ? 'bg-gray-100 text-gray-900 border border-gray-300'
+              : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
           }`}
-          style={{ 
-            WebkitTapHighlightColor: 'transparent',
-            width: '64px',
-            height: '64px',
-            padding: '10px'
-          }}
         >
           <FontAwesomeIcon 
             icon={faPlane} 
-            className={`text-md sm:text-lg ${
-              !selectedCaseType || !selectedColor
-                ? 'text-gray-400'
-                : mobileCurrentStep === 'charms'
-                ? 'text-white'
-                : 'text-gray-700'
+            className={`text-sm xs:text-base sm:text-lg mb-1 ${
+              !selectedCaseType || !selectedColor ? 'text-gray-400' : 'text-gray-700'
             }`}
-            style={{ marginBottom: '6px' }}
           />
-          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
-            !selectedCaseType || !selectedColor
-              ? 'text-gray-400'
-              : mobileCurrentStep === 'charms'
-              ? 'text-white'
-              : 'text-gray-700'
-          }`}>
+          <span className={`text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight ${
+            !selectedCaseType || !selectedColor ? 'text-gray-400' : 'text-gray-700'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Charms
           </span>
         </button>
         
         {/* Add Text Button */}
         <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // Close canvas controls if open
-            if (typeof window !== 'undefined' && window.closeCanvasControls) {
-              window.closeCanvasControls();
-            }
-            if (mobileCurrentStep === 'text') {
-              setMobileCurrentStep(null); // Close text input, don't open case selection
-            } else {
-              setMobileCurrentStep('text');
-            }
-          }}
-          className={`rounded-sm transition-all duration-200 touch-manipulation flex flex-col items-center justify-center ${
-            mobileCurrentStep === 'text'
-              ? 'bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover'
-              : 'bg-btn-secondary-light hover:bg-btn-secondary-light-hover text-btn-secondary-light-text border border-btn-secondary-light-border hover:border-btn-secondary-light-hover'
-          }`}
-          style={{ 
-            WebkitTapHighlightColor: 'transparent',
-            width: '64px',
-            height: '64px',
-            padding: '10px'
-          }}
+          onClick={onOpenAddText}
+          className="aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 transition-all duration-200 touch-manipulation rounded-md"
         >
           <FontAwesomeIcon 
             icon={faFont} 
-            className={`text-md sm:text-lg ${
-              mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
-            }`}
-            style={{ marginBottom: '6px' }}
+            className="text-sm xs:text-base sm:text-lg mb-1 text-gray-700"
           />
-          <span className={`text-[10px] sm:text-[10px] uppercase tracking-wide font-medium font-inter ${
-            mobileCurrentStep === 'text' ? 'text-white' : 'text-gray-700'
-          }`}>
-            Text
+          <span className="text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight text-gray-700" style={{fontFamily: "'Poppins', sans-serif"}}>
+            Add Text
           </span>
         </button>
       </div>

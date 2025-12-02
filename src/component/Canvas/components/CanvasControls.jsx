@@ -11,7 +11,7 @@ const CanvasControls = ({
 
   return (
     <div
-      className="absolute flex items-center gap-0.5 bg-white bg-opacity-50 text-gray-800 rounded-sm px-1.5 py-0.5 "
+      className="absolute flex items-center gap-0.5 bg-white bg-opacity-50 text-gray-800 rounded-sm px-1.5 py-0.5 z-[60] "
       style={{
         left: `${controlsPosition.x}px`,
         top: `${controlsPosition.y}px`,
@@ -59,15 +59,15 @@ const CanvasControls = ({
 
       <button
         onClick={onDelete}
-        className="w-5 h-5 flex items-center justify-center text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
+        className="w-6 h-6 flex items-center justify-center text-red-600 hover:text-red-700 hover:bg-red-50 rounded transition-colors"
         aria-label="Remove"
         title="Delete"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 384 512"
-          width="16"
-          height="22"
+          width="24"
+          height="24"
           fill="currentColor"
           style={{ color: "#dc2626" }}
         >

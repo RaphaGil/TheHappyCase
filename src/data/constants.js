@@ -5,16 +5,40 @@ export const MAX_TEXT_LENGTH = 15;
 
 // Case options
 export const CASE_OPTIONS = [
-  { value: 'economy', label: 'Economy - £8.00' },
-  { value: 'business', label: 'Business - £12.00' },
-  { value: 'firstclass', label: 'First Class - £12.00' },
+  { 
+    value: 'economy', 
+    label: 'Economy - £8.00',
+    image: '/TheHappyCase/images/SmartCase/economycaselightpink.png'
+  },
+  { 
+    value: 'business', 
+    label: 'Business - £12.00',
+    image: '/TheHappyCase/images/BusinessClassCase/businessclasscasegray.png'
+  },
+  { 
+    value: 'firstclass', 
+    label: 'First Class - £12.00',
+    image: '/TheHappyCase/images/FirstClassCase/firstclasscasebrown.png'
+  },
 ];
 
 // Category options
 export const CATEGORY_OPTIONS = [
-  { value: 'bronze', label: 'Bronze - £1.00' },
-  { value: 'colorful', label: 'Colorful - £2.00' },
-  { value: 'flags', label: 'Flags - £2.00' },
+  { 
+    value: 'bronze', 
+    label: 'Bronze - £1.00',
+    image: '/TheHappyCase/images/BronzePins/airplane.png'
+  },
+  { 
+    value: 'colorful', 
+    label: 'Colorful - £2.00',
+    image: '/TheHappyCase/images/ColorfulPins/beagoodhuman.png'
+  },
+  { 
+    value: 'flags', 
+    label: 'Flags - £2.00',
+    image: '/TheHappyCase/images/Flags/albania.png'
+  },
 ];
 
 // Filter tabs for different categories

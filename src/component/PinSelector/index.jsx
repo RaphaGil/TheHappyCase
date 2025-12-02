@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
 
 // -----------------------------
 // Helpers
@@ -97,10 +98,7 @@ const CategorySelector = ({
                   alt={opt.label}
                   className="max-w-full max-h-full object-contain p-1"
                   loading="lazy"
-                  fetchPriority="low"
                   decoding="async"
-                  width="64"
-                  height="64"
                 />
               </div>
               {isActive && (
@@ -183,42 +181,57 @@ const SubCategoryTabs = ({
   );
 };
 
-const PinCard = ({ pin, isSelected, isSoldOut, onClick }) => (
-  <div
-    className={`flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 p-2 sm:p-3 h-full transition-colors group touch-manipulation ${
-      isSoldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-    }`}
-    onClick={onClick}
-  >
-    <div className="relative" style={{ overflow: "visible" }}>
-      <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
-        <img
-          src={pin.src}
-          alt={pin.name}
-          className={`w-full h-full object-contain transition-all duration-200 rounded ${
-            isSoldOut ? "opacity-50" : ""
-          }`}
-          loading="lazy"
-          fetchPriority="low"
-          decoding="async"
-          width="80"
-          height="80"
-        />
-      </div>
-      {isSelected && !isSoldOut && (
-        <div className="absolute -top-1 -right-1 bg-black text-white w-6 h-6 flex items-center justify-center text-xs rounded-full z-10 shadow-md">
-          ✓
+const PinCard = ({ pin, isSelected, isSoldOut, onClick }) => {
+  // Get size label based on pin.size from products.json
+  const getSizeLabel = (size) => {
+    if (!size) return '';
+    if (size <= 0.3) return 'XS';
+    if (size <= 0.45) return 'S';
+    if (size <= 0.6) return 'M';
+    if (size <= 0.75) return 'L';
+    return 'XL';
+  };
+
+  const sizeLabel = getSizeLabel(pin.size);
+
+  return (
+    <div
+      className={`flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 p-2 sm:p-3 h-full transition-colors group touch-manipulation ${
+        isSoldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+      }`}
+      onClick={onClick}
+    >
+      <div className="relative" style={{ overflow: "visible" }}>
+        <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
+          <img
+            src={pin.src}
+            alt={pin.name}
+            className={`w-full h-full object-contain transition-all duration-200 rounded ${
+              isSoldOut ? "opacity-50" : ""
+            }`}
+            loading="lazy"
+          />
         </div>
+        {isSelected && !isSoldOut && (
+          <div className="absolute -top-1 -right-1 bg-black text-white w-6 h-6 flex items-center justify-center text-xs rounded-full z-10 shadow-md">
+            ✓
+          </div>
+        )}
+        {sizeLabel && (
+          <div className="absolute -top-1 -left-1 bg-gray-100 text-gray-700 text-[8px] font-medium px-1.5 py-0.5 rounded-full z-10 border border-gray-300">
+            {sizeLabel}
+          </div>
+        )}
+      </div>
+      <span className="text-xs text-center text-gray-700 transition-colors line-clamp-2 font-inter">
+        {pin.name}
+      </span>
+      {isSoldOut && (
+        <span className="text-[9px] text-red-600 font-medium">Sold Out</span>
       )}
     </div>
-    <span className="text-xs text-center text-gray-700 transition-colors line-clamp-2 font-inter">
-      {pin.name}
-    </span>
-    {isSoldOut && (
-      <span className="text-[9px] text-red-600 font-medium">Sold Out</span>
-    )}
-  </div>
-);
+  );
+};
 
 const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove }) => (
   <div className="max-h-80 sm:max-h-96 overflow-y-auto p-2">
@@ -278,28 +291,37 @@ const PinSelector = ({
 
   // Get preview image for each category
   const getPreviewImage = (categoryValue) => {
-    if (!Products || !Products.pins) return null;
-    if (
-      categoryValue === "bronze" &&
-      Products.pins.bronze &&
-      Products.pins.bronze.length > 0
-    ) {
-      return Products.pins.bronze[0].src;
+    // First try to get from Products.pins
+    if (Products && Products.pins) {
+      if (
+        categoryValue === "bronze" &&
+        Products.pins.bronze &&
+        Products.pins.bronze.length > 0
+      ) {
+        return Products.pins.bronze[0].src;
+      }
+      if (
+        categoryValue === "colorful" &&
+        Products.pins.colorful &&
+        Products.pins.colorful.length > 0
+      ) {
+        return Products.pins.colorful[0].src;
+      }
+      if (
+        categoryValue === "flags" &&
+        Products.pins.flags &&
+        Products.pins.flags.length > 0
+      ) {
+        return Products.pins.flags[0].src;
+      }
     }
-    if (
-      categoryValue === "colorful" &&
-      Products.pins.colorful &&
-      Products.pins.colorful.length > 0
-    ) {
-      return Products.pins.colorful[0].src;
+    
+    // Fallback to predefined images from constants
+    const categoryOption = CATEGORY_OPTIONS_WITH_IMAGES.find(opt => opt.value === categoryValue);
+    if (categoryOption && categoryOption.image) {
+      return categoryOption.image;
     }
-    if (
-      categoryValue === "flags" &&
-      Products.pins.flags &&
-      Products.pins.flags.length > 0
-    ) {
-      return Products.pins.flags[0].src;
-    }
+    
     return null;
   };
 

@@ -71,8 +71,8 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
   const selectedColorName = selectedColorData ? getColorName(selectedColorData.image) : '';
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-3">
+    <div className="overflow-visible">
+      <div className="flex flex-wrap gap-3 overflow-visible justify-center justify-center ">
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
@@ -81,10 +81,10 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
           return (
             <div
               key={color}
-              className={`transition-all duration-200 flex flex-col items-center ${isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              className={`transition-all duration-200 flex flex-col items-center overflow-visible ${isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               onClick={() => !isSoldOut && onSelect(color, image)}
             >
-              <div className="relative">
+              <div className="relative overflow-visible">
                 <div
                   className={`w-10 h-10 rounded-full border-2 transition-all duration-200 ${
                     isSelected
@@ -94,7 +94,7 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
                   style={{ backgroundColor: color }}
                 />
                 {isSelected && !isSoldOut && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center">
+                  <div className="absolute top-0 right-0 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center z-10">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>

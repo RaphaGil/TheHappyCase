@@ -28,14 +28,14 @@ const PriceSummary = ({
 
   return (
       <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
-        <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-2' : 'mb-4'}`}>
-          <h3 className={`${isMobile ? 'text-sm' : 'text-base'} text-gray-900 font-medium font-inter`}>
+        <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-1.5 xs:mb-2' : 'mb-4'}`}>
+          <h3 className={`${isMobile ? 'text-sm xs:text-base sm:text-lg' : 'text-base'} text-gray-900 font-medium font-inter`}>
             Subtotal: {formatPrice(totalPrice)}
           </h3>
         
         <button
           onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-          className={`${isMobile ? 'text-[10px]' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter`}
+          className={`${isMobile ? 'text-xs xs:text-sm' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter`}
         >
           {showPriceBreakdown ? 'Hide' : 'Details'}
         </button>
@@ -43,7 +43,7 @@ const PriceSummary = ({
       
       {/* Price Breakdown Dropdown */}
       {showPriceBreakdown && (
-        <div className={`space-y-1 ${isMobile ? 'text-[10px] mb-2 pt-2' : 'text-xs mb-4 pt-4'} text-gray-600 border-t border-gray-100`}>
+        <div className={`space-y-1 ${isMobile ? 'text-xs xs:text-sm mb-1.5 xs:mb-2 pt-1.5 xs:pt-2' : 'text-xs mb-4 pt-4'} text-gray-600 border-t border-gray-100`}>
           <div className="flex justify-between font-inter">
             <span>Case:</span>
             <span className="font-inter">{formatPrice(caseBasePrice)}</span>
@@ -58,16 +58,16 @@ const PriceSummary = ({
       )}
       
       {/* Terms Agreement Checkbox */}
-      <div className={`${isMobile ? 'mt-2 mb-2' : 'mt-4 mb-4'}`}>
-        <label className="flex items-start gap-2 cursor-pointer">
+      <div className={`${isMobile ? 'mt-1.5 xs:mt-2 mb-1.5 xs:mb-2' : 'mt-4 mb-4'}`}>
+        <label className="flex items-start gap-1.5 xs:gap-2 cursor-pointer">
           <input
             type="checkbox"
             checked={agreedToTerms}
             onChange={(e) => setAgreedToTerms(e.target.checked)}
-            className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
+            className="mt-0.5 w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
           />
           {/* Mobile: Simplified text */}
-          <span className="text-[10px] md:text-xs text-gray-700 leading-relaxed md:hidden font-inter">
+          <span className="text-xs xs:text-sm text-gray-700 leading-relaxed md:hidden font-inter">
             <button
               type="button"
               onClick={onShowTerms}
@@ -91,32 +91,32 @@ const PriceSummary = ({
         </label>
         {/* Error message when trying to add to cart without accepting terms */}
         {showTermsError && (
-          <div className="mt-2 text-[10px] md:text-xs text-red-600 font-inter">
+          <div className="mt-1.5 xs:mt-2 text-xs xs:text-sm text-red-600 font-inter">
             You must accept the terms to add items to cart.
           </div>
         )}
       </div>
 
-      <div className={`${isMobile ? 'mt-2' : 'mt-4'} flex flex-row gap-2`}>
+      <div className={`${isMobile ? 'mt-1.5 xs:mt-2' : 'mt-4'} flex flex-row gap-1.5 xs:gap-2`}>
         <div className={`flex items-center border border-gray-200 rounded-sm ${isMobile ? 'p-0.5' : 'p-1'}`}>
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
+            className={`${isMobile ? 'w-4 h-4 xs:w-5 xs:h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
             aria-label="Decrease quantity"
           > 
-            <svg className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`${isMobile ? 'w-2.5 h-2.5 xs:w-3 xs:h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
             </svg>
           </button>
-          <span className={`${isMobile ? 'text-xs min-w-[1.5rem]' : 'text-sm min-w-[2rem]'} font-medium text-gray-900 text-center font-inter`}>
+          <span className={`${isMobile ? 'text-xs xs:text-sm min-w-[1.25rem] xs:min-w-[1.5rem]' : 'text-sm min-w-[2rem]'} font-medium text-gray-900 text-center font-inter`}>
             {quantity}
           </span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className={`${isMobile ? 'w-5 h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
+            className={`${isMobile ? 'w-4 h-4 xs:w-5 xs:h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
             aria-label="Increase quantity"
           >
-            <svg className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`${isMobile ? 'w-2.5 h-2.5 xs:w-3 xs:h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
             </svg>
           </button>
@@ -143,7 +143,7 @@ const PriceSummary = ({
               quantity: quantity
             }}
             onAdd={onAddToCart}
-            className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-1.5 text-[10px] sm:py-2 sm:text-xs md:py-2.5 md:text-sm"
+            className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-1.5 xs:py-2 text-xs xs:text-sm sm:py-2.5 sm:text-base md:py-2.5 md:text-sm"
             disabled={false}
           />
         </div>
