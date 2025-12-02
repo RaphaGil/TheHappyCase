@@ -9,7 +9,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         {/* Choose Case Button */}
         <button
           onClick={() => setMobileCurrentStep('case')}
-          className={`aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation rounded-md  ${
+          className={`aspect-square h-[65px]  flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation rounded-md  ${
             mobileCurrentStep === 'case'
               ? 'bg-gray-100 text-gray-900 border border-gray-300'
               : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'

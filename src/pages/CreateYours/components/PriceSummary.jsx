@@ -27,7 +27,7 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-      <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
+      <div className={`${isMobile ? 'pt-0 mt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
         <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-1.5 xs:mb-2' : 'mb-4'}`}>
           <h3 className={`${isMobile ? 'text-sm xs:text-base sm:text-lg' : 'text-base'} text-gray-900 font-medium font-inter flex-shrink-0`}>
             Subtotal: {formatPrice(totalPrice)}

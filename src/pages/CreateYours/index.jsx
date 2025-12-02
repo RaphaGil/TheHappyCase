@@ -403,8 +403,8 @@ const CreateYours = () => {
         )}
         
         {/* Header Section - Fixed at top, never overlaps */}
-        <div className="text-center mb-2 xs:mb-3 sm:mb-4 md:mb-6 flex-shrink-0">
-          <h1 className="text-title text-gray-900 tracking-title mt-4 xs:mt-5 sm:mt-6 md:mt-0">
+        <div className="text-center mb-1 xs:mb-1.5 sm:mb-2 md:mb-6 flex-shrink-0">
+          <h1 className="text-title text-gray-900 tracking-title mt-2 xs:mt-3 sm:mt-4 md:mt-0">
             CREATE YOURS
           </h1>
           <div className="w-12 xs:w-14 sm:w-16 h-px bg-gray-300 mx-auto mb-1 xs:mb-1.5 md:mb-4"></div>
@@ -418,10 +418,10 @@ const CreateYours = () => {
         <div className="flex flex-col lg:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-6 lg:gap-12 flex-1 overflow-hidden">
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center  s:justify-center flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-2 xs:py-3 sm:py-4 md:py-0 ">
+          <div className="w-full lg:w-1/2 flex flex-col items-start xs:items-center xs:justify-center flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-2 sm:py-3 md:py-0">git 
 
-            <div className="w-full flex flex-col items-center ">
-              <div className="flex-shrink-0 w-[400px] h-[400px] relative mt-0 md:mt-2 lg:mt-4" style={{isolation: 'isolate'}}>
+            <div className="w-full flex flex-col items-center">
+              <div className="flex-shrink-0 w-[400px] h-[400px] relative mt-0 sm:mt-auto lg:mt-4" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
                   <div 
@@ -450,7 +450,7 @@ const CreateYours = () => {
               </div>
               
               {/* Action Buttons - Bottom - Hidden on mobile */}
-              <div className="mt-4 md:mt-6 hidden md:flex flex-row gap-2 xs:gap-2.5 sm:gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px]">
+              <div className="mt-4 mb-4 hidden md:flex flex-row gap-2 xs:gap-2.5 sm:gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px]">
                 <ViewMoreImagesButton
                   caseImages={caseImages}
                   onOpenModal={() => {
@@ -634,8 +634,8 @@ const CreateYours = () => {
 
         {/* Fixed Mobile Step Buttons - Above Price Summary */}
         {isMobile && (
-          <div className="fixed left-0 right-0 z-0 bg-white  md:hidden w-full " style={{bottom: '120px'}}>
-            <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3">
+          <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: '120px'}}>
+            <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 mb-0 pb-0">
               <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-gray-400 mb-2 xs:mb-2.5 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
               </p>
