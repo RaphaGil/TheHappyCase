@@ -90,11 +90,12 @@ const Canvas = ({
         const imgInstance = new fabric.Image(imgElement, {
           left,
           top,
-          originX: 'center',
-          originY: 'center',
+          originX: 'right',
+          originY: 'bottom',
           scaleX,
           scaleY,
           selectable: !isCase,
+          evented: !isCase,
           hasControls: isCase,
           lockScalingX: isCase,
           lockScalingY: isCase,
@@ -103,8 +104,23 @@ const Canvas = ({
           cornerSize: isCase ? 0 : 8,
           transparentCorners: false,
           hasBorders: false,
+          perPixelTargetFind: false, // Make entire bounding box selectable, including center area
+          objectCaching: false, // Disable caching to ensure proper hit detection
           isCase
         });
+  
+        // Override containsPoint for pins to check bounding box instead of pixel-perfect
+        if (!isCase) {
+          imgInstance.containsPoint = function(point) {
+            const boundingRect = this.getBoundingRect();
+            return (
+              point.x >= boundingRect.left &&
+              point.x <= boundingRect.left + boundingRect.width &&
+              point.y >= boundingRect.top &&
+              point.y <= boundingRect.top + boundingRect.height
+            );
+          };
+        }
   
         if (isCase) {
           // Case images are now handled as CSS background, so we don't add them to canvas
@@ -113,7 +129,25 @@ const Canvas = ({
           return;
         } else {
           // For non-case images (pins), add them to canvas
+          // Ensure perPixelTargetFind is set before adding
+          imgInstance.set({
+            perPixelTargetFind: false, // Make entire bounding box selectable
+            evented: true,
+            selectable: true,
+            objectCaching: false, // Disable caching
+          });
+          imgInstance.setCoords(); // Force coordinate update
           fabricCanvas.current.add(imgInstance);
+          
+          // Ensure background stays at the back
+          if (backgroundRectRef.current) {
+            fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+          }
+          if (caseBorderRectRef.current) {
+            fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+          }
+          
+          fabricCanvas.current.renderAll(); // Force render
           resolve(imgInstance);
         }
       };
@@ -154,6 +188,29 @@ const Canvas = ({
     
     caseBorderRectRef.current = caseBorderRect;
     fabricCanvas.current.add(caseBorderRect);
+    fabricCanvas.current.sendObjectToBack(caseBorderRect);
+    
+    // Ensure all charms and text stay in front after border is created
+    const objects = fabricCanvas.current.getObjects();
+    // First, bring pins to front
+    objects.forEach(obj => {
+      if (!obj.isCase && obj !== caseBorderRect && obj !== backgroundRectRef.current) {
+        if (obj.type === 'image') {
+          fabricCanvas.current.bringObjectToFront(obj);
+        }
+      }
+    });
+    // Then bring text objects to the very front (last = on top)
+    objects.forEach(obj => {
+      if ((obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') && !obj.isCase) {
+        fabricCanvas.current.bringObjectToFront(obj);
+      }
+    });
+    
+    // Ensure background stays at the back
+    if (backgroundRectRef.current) {
+      fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+    }
     fabricCanvas.current.sendObjectToBack(caseBorderRect);
     
     // Canvas dimension text removed - no longer showing canvas area
@@ -230,6 +287,18 @@ const Canvas = ({
   // Update controls position
   const updateControls = useCallback((obj) => {
     if (!obj || !fabricCanvas.current) return;
+    
+    // Bring the selected pin to the front when controls are shown
+    if (!obj.isCase && obj !== caseBorderRectRef.current && obj !== backgroundRectRef.current) {
+      fabricCanvas.current.bringObjectToFront(obj);
+      // Ensure background stays at the back
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
+    }
     
     const rect = obj.getBoundingRect(true);
     const canvas = fabricCanvas.current;
@@ -331,8 +400,32 @@ const Canvas = ({
     fabricCanvas.current = new fabric.Canvas(canvasRef.current, {
       width: canvasWidth,
       height: canvasHeight,
-      backgroundColor: 'transparent' // Transparent so background image shows through
+      backgroundColor: 'transparent', // Transparent so background image shows through
+      perPixelTargetFind: false, // Make entire bounding boxes selectable by default
     });
+    
+    // Override findTarget to ensure entire bounding box is selectable for pins
+    const originalFindTarget = fabricCanvas.current.findTarget.bind(fabricCanvas.current);
+    fabricCanvas.current.findTarget = function(e, skipTarget) {
+      const target = originalFindTarget(e, skipTarget);
+      if (target && target.isCase) {
+        return null; // Don't select case
+      }
+      if (target && target.type === 'image' && !target.isCase) {
+        // For pins, always return the target if click is within bounding box
+        const pointer = fabricCanvas.current.getPointer(e);
+        const boundingRect = target.getBoundingRect();
+        if (
+          pointer.x >= boundingRect.left &&
+          pointer.x <= boundingRect.left + boundingRect.width &&
+          pointer.y >= boundingRect.top &&
+          pointer.y <= boundingRect.top + boundingRect.height
+        ) {
+          return target;
+        }
+      }
+      return target;
+    };
     
     // Create background rectangle
     const backgroundRect = new fabric.Rect({
@@ -350,9 +443,71 @@ const Canvas = ({
     fabricCanvas.current.add(backgroundRect);
     fabricCanvas.current.sendObjectToBack(backgroundRect);
 
+    // Ensure all pins have entire area selectable when objects are added
+    fabricCanvas.current.on('object:added', (e) => {
+      const obj = e.target;
+      
+      // Always keep background at the back when objects are added
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
+      
+      if (obj && !obj.isCase && obj.type === 'image') {
+        obj.set({
+          perPixelTargetFind: false, // Make entire bounding box selectable
+          evented: true,
+          selectable: true,
+        });
+        obj.setCoords();
+        // Bring pin to front when added
+        fabricCanvas.current.bringObjectToFront(obj);
+        fabricCanvas.current.renderAll();
+      } else if (obj && !obj.isCase && (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text')) {
+        // Bring text to front when added
+        fabricCanvas.current.bringObjectToFront(obj);
+        fabricCanvas.current.renderAll();
+      } else if ((obj && obj.type === 'rect' && !obj.selectable && !obj.evented) || obj === caseBorderRectRef.current || obj === backgroundRectRef.current) {
+        // When border or background rectangle is added, bring ALL charms and text to front
+        const allObjects = fabricCanvas.current.getObjects();
+        // First, bring pins to front
+        allObjects.forEach(existingObj => {
+          if (!existingObj.isCase && existingObj !== caseBorderRectRef.current && existingObj !== backgroundRectRef.current && existingObj !== obj) {
+            if (existingObj.type === 'image') {
+              fabricCanvas.current.bringObjectToFront(existingObj);
+            }
+          }
+        });
+        // Then bring text objects to the very front (last = on top)
+        allObjects.forEach(existingObj => {
+          if ((existingObj.type === 'textbox' || existingObj.type === 'text' || existingObj.type === 'i-text') && !existingObj.isCase && existingObj !== obj) {
+            fabricCanvas.current.bringObjectToFront(existingObj);
+          }
+        });
+        // Ensure background stays at the back
+        if (backgroundRectRef.current) {
+          fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+        }
+        if (caseBorderRectRef.current) {
+          fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+        }
+        fabricCanvas.current.renderAll();
+      }
+    });
+
     // Object moving constraints
     fabricCanvas.current.on('object:moving', (e) => {
       const obj = e.target;
+      // Always keep background at the back during movement
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
+      
       if (!obj || !obj.getBoundingRect || obj.isCase || obj === caseBorderRectRef.current) return; // Skip case object and case border
       
       // Get canvas bounds for constraint (case is now background image)
@@ -501,6 +656,14 @@ const Canvas = ({
     fabricCanvas.current.on('object:modified', (e) => {
       const obj = e.target;
       
+      // Always keep background at the back after modification
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
+      
       if (caseBorderRectRef.current && obj && !obj.isCase && obj !== caseBorderRectRef.current) {
         caseBorderRectRef.current.set('visible', false);
       }
@@ -528,7 +691,11 @@ const Canvas = ({
           obj.set({
             hasBorders: false,
             borderColor: 'transparent',
+            perPixelTargetFind: false, // Ensure entire area is selectable
+            evented: true,
+            selectable: true,
           });
+          obj.setCoords();
         }
         
         // Update custom border if object is active
@@ -541,6 +708,36 @@ const Canvas = ({
         const activeObj = fabricCanvas.current.getActiveObject();
         if (activeObj === obj) {
           updateControls(obj);
+        }
+      }
+    });
+
+    // Mouse hover events to show selectable area
+    fabricCanvas.current.on('mouse:over', (e) => {
+      const obj = e.target;
+      if (obj && !obj.isCase && obj.type === 'image') {
+        // Show border on hover to indicate selectable area
+        obj.set({
+          hasBorders: true,
+          borderColor: '#3B82F6', // Blue border on hover
+          borderScaleFactor: 1,
+        });
+        fabricCanvas.current.renderAll();
+      }
+    });
+
+    fabricCanvas.current.on('mouse:out', (e) => {
+      const obj = e.target;
+      if (obj && !obj.isCase && obj.type === 'image') {
+        // Hide border on mouse out if not selected
+        const isSelected = fabricCanvas.current.getActiveObject() === obj;
+        if (!isSelected) {
+          obj.set({
+            hasBorders: false,
+            borderColor: 'transparent', 
+       
+          });
+          fabricCanvas.current.renderAll();
         }
       }
     });
@@ -574,7 +771,11 @@ const Canvas = ({
           obj.set({
             hasBorders: false,
             borderColor: 'transparent',
+            perPixelTargetFind: false, // Ensure entire area is selectable
+            evented: true,
+            selectable: true,
           });
+          obj.setCoords();
         }
         // Create custom border rectangle
         updateBorderRect(obj);
@@ -613,8 +814,12 @@ const Canvas = ({
           });
         } else if (obj.type === 'image') {
           obj.set({
-            hasBorders: false,
-            borderColor: 'transparent',
+            hasBorders: true, // Show borders when selected
+            borderColor: '#111827', // Dark gray border when selected
+            borderScaleFactor: 1,
+            perPixelTargetFind: false,
+            evented: true,
+            selectable: true,
           });
         }
         // Update custom border rectangle
@@ -661,6 +866,15 @@ const Canvas = ({
         borderRectsRef.current.delete(obj);
       });
       
+      // Hide borders on all pins when selection is cleared
+      fabricCanvas.current.getObjects().forEach((obj) => {
+        if (obj && !obj.isCase && obj.type === 'image') {
+          obj.set({
+            hasBorders: false,
+            borderColor: 'transparent',
+          });
+        }
+      });
       
       fabricCanvas.current.renderAll();
       setSelectedPin(null);
@@ -744,6 +958,18 @@ const Canvas = ({
       });
 
       fabricCanvas.current.add(textInstance);
+      
+      // Bring text to the front immediately
+      fabricCanvas.current.bringObjectToFront(textInstance);
+      
+      // Ensure background stays at the back
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
+      
       fabricCanvas.current.setActiveObject(textInstance);
       // Create custom border rectangle
       updateBorderRect(textInstance);
@@ -809,10 +1035,65 @@ const Canvas = ({
       caseBorderRectRef.current = null;
 
 
+      // Immediately bring all charms to front before recreating border
+      const objectsBeforeBorder = fabricCanvas.current.getObjects();
+      objectsBeforeBorder.forEach(obj => {
+        if (!obj.isCase && obj !== caseBorderRectRef.current && obj !== backgroundRectRef.current) {
+          if (obj.type === 'image') {
+            fabricCanvas.current.bringObjectToFront(obj);
+          } else if (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') {
+            fabricCanvas.current.bringObjectToFront(obj);
+          }
+        }
+      });
+      
       // Recreate case border after a short delay to ensure container is ready
       setTimeout(() => {
         if (fabricCanvas.current && containerRef.current) {
+          // Check if any pin is currently selected before recreating border
+          const activeObject = fabricCanvas.current.getActiveObject();
+          const hasSelectedPin = activeObject && !activeObject.isCase && activeObject !== caseBorderRectRef.current && activeObject !== backgroundRectRef.current;
+          
           createCaseBorder();
+          
+          // Use requestAnimationFrame to ensure border is fully added before reordering
+          requestAnimationFrame(() => {
+            // Bring all pins (charms) and text to the front again after border is created
+            const objects = fabricCanvas.current.getObjects();
+            // First, bring pins to front
+            objects.forEach(obj => {
+              if (!obj.isCase && obj !== caseBorderRectRef.current && obj !== backgroundRectRef.current) {
+                if (obj.type === 'image') {
+                  fabricCanvas.current.bringObjectToFront(obj);
+                }
+              }
+            });
+            // Then bring text objects to the very front (last = on top)
+            objects.forEach(obj => {
+              if ((obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') && !obj.isCase) {
+                fabricCanvas.current.bringObjectToFront(obj);
+              }
+            });
+            
+            // Ensure background stays at the back (especially if a pin is selected)
+            if (backgroundRectRef.current) {
+              fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+            }
+            if (caseBorderRectRef.current) {
+              fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+            }
+            
+            // Final render to ensure everything is in correct order
+            fabricCanvas.current.renderAll();
+            
+            // If a pin was selected, restore its selection state after render
+            if (hasSelectedPin && activeObject) {
+              requestAnimationFrame(() => {
+                fabricCanvas.current.setActiveObject(activeObject);
+                fabricCanvas.current.renderAll();
+              });
+            }
+          });
         }
       }, 100);
     }
@@ -826,7 +1107,42 @@ const Canvas = ({
     // Wait for the image to load
     const img = new Image();
     img.onload = () => {
-      // Image has loaded
+      // Check if any pin is currently selected
+      const activeObject = fabricCanvas.current.getActiveObject();
+      const hasSelectedPin = activeObject && !activeObject.isCase && activeObject !== caseBorderRectRef.current && activeObject !== backgroundRectRef.current;
+      
+      // Image has loaded - bring all pins and text to front
+      const objects = fabricCanvas.current.getObjects();
+      // First, bring pins to front
+      objects.forEach(obj => {
+        if (!obj.isCase && obj !== caseBorderRectRef.current && obj !== backgroundRectRef.current) {
+          if (obj.type === 'image') {
+            fabricCanvas.current.bringObjectToFront(obj);
+          }
+        }
+      });
+      // Then bring text objects to the very front (last = on top)
+      objects.forEach(obj => {
+        if ((obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') && !obj.isCase) {
+          fabricCanvas.current.bringObjectToFront(obj);
+        }
+      });
+      
+      // Ensure background stays at the back (especially if a pin is selected)
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
+      
+      // If a pin was selected, restore its selection state
+      if (hasSelectedPin && activeObject) {
+        fabricCanvas.current.setActiveObject(activeObject);
+        fabricCanvas.current.renderAll();
+      } else {
+        fabricCanvas.current.renderAll();
+      }
     };
     img.onerror = () => {
       // Image failed to load
@@ -860,11 +1176,25 @@ const Canvas = ({
       // Store pin data
       imgInstance.pinData = pin;
       
-      // Remove default borders
+      // Remove default borders and ensure entire area is selectable
       imgInstance.set({
         hasBorders: false,
         borderColor: 'transparent',
+        perPixelTargetFind: false, // Make entire bounding box selectable, including center area
+        evented: true,
+        selectable: true,
       });
+      
+      // Force update coordinates and ensure settings are applied
+      imgInstance.setCoords();
+      
+      // Ensure background stays at the back
+      if (backgroundRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(backgroundRectRef.current);
+      }
+      if (caseBorderRectRef.current) {
+        fabricCanvas.current.sendObjectToBack(caseBorderRectRef.current);
+      }
       
       fabricCanvas.current.setActiveObject(imgInstance);
       // Create custom border rectangle

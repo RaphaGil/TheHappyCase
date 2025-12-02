@@ -11,7 +11,7 @@ const CanvasControls = ({
 
   return (
     <div
-      className="absolute flex items-center gap-0.5 bg-opacity-90 backdrop-blur-sm text-gray-800 rounded-sm px-1.5 py-0.5 shadow-md border border-gray-200"
+      className="absolute flex items-center gap-0.5 bg-white bg-opacity-50 text-gray-800 rounded-sm px-1.5 py-0.5 "
       style={{
         left: `${controlsPosition.x}px`,
         top: `${controlsPosition.y}px`,
@@ -21,7 +21,7 @@ const CanvasControls = ({
     >
       <button
         onClick={onRotateLeft}
-        className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-gray-900 rounded transition-colors bg-transparent"
+        className="w-5 h-5 flex items-center justify-center text-gray-800 hover:text-gray-900 rounded "
         aria-label="Rotate Left"
         title="Rotate Left"
         style={{ color: "#1f2937" }}
@@ -67,7 +67,7 @@ const CanvasControls = ({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 384 512"
           width="16"
-          height="16"
+          height="22"
           fill="currentColor"
           style={{ color: "#dc2626" }}
         >
