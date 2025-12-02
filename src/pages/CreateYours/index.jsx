@@ -388,7 +388,7 @@ const CreateYours = () => {
 
   return (
     <section className="min-h-screen py-1 md:py-12 relative overflow-hidden bg-white">
-      <div className={`lg:container mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 mt-4 ${isMobile ? 'pb-20 xs:pb-24 sm:pb-28' : 'pb-2 sm:pb-24'} h-screen md:h-auto flex flex-col overflow-hidden`}>
+      <div className={`lg:container mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 mt-4 ${isMobile ? 'pb-40 xs:pb-44 sm:pb-48' : 'pb-2 sm:pb-24'} h-screen md:h-auto flex flex-col overflow-hidden`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
@@ -448,22 +448,6 @@ const CreateYours = () => {
                   />
                 </div>
               </div>
-              
-              {/* Mobile Step Buttons - Between case image and cart */}
-              {isMobile && (
-                <div className="mt-2 sm:mt-5 w-full flex-shrink-0">
-                  <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-gray-400 mb-2 xs:mb-2.5 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
-                    Choose the options below:
-                  </p>
-                  <MobileStepButtons
-                    mobileCurrentStep={mobileCurrentStep}
-                    setMobileCurrentStep={setMobileCurrentStep}
-                    selectedCaseType={selectedCaseType}
-                    selectedColor={selectedColor}
-                    onOpenAddText={() => setShowAddTextModal(true)}
-                  />
-                </div>
-              )}
               
               {/* Action Buttons - Bottom - Hidden on mobile */}
               <div className="mt-4 md:mt-6 hidden md:flex flex-row gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px]">
@@ -648,9 +632,27 @@ const CreateYours = () => {
           </div>
         </div>
 
+        {/* Fixed Mobile Step Buttons - Above Price Summary */}
+        {isMobile && (
+          <div className="fixed left-0 right-0 z-50 bg-white  md:hidden w-full" style={{bottom: '120px'}}>
+            <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3">
+              <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-gray-400 mb-2 xs:mb-2.5 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
+                Choose the options below:
+              </p>
+              <MobileStepButtons
+                mobileCurrentStep={mobileCurrentStep}
+                setMobileCurrentStep={setMobileCurrentStep}
+                selectedCaseType={selectedCaseType}
+                selectedColor={selectedColor}
+                onOpenAddText={() => setShowAddTextModal(true)}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Fixed Price Summary - Mobile only */}
         {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] xs:max-h-[45vh] overflow-y-auto safe-area-inset-bottom w-full">
+          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] xs:max-h-[45vh] overflow-y-auto w-full safe-area-inset-bottom" style={{paddingBottom: 'env(safe-area-inset-bottom)'}}>
             <div className="px-2 xs:px-2.5 sm:px-3 py-1.5 xs:py-2 sm:py-2.5">
               <PriceSummary
                 totalPrice={totalPrice}

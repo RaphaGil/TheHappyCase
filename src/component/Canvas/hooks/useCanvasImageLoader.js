@@ -110,27 +110,8 @@ export const useCanvasImageLoader = (fabricCanvas, caseInstanceRef, boundaryRect
             fabricCanvas.current.add(boundaryRect);
             fabricCanvas.current.sendObjectToBack(boundaryRect);
             
-            // Create red border around the case image itself
-            const borderWidth = (selectedCaseType === 'business' || selectedCaseType === 'firstclass') ? 5 : 3;
-            const caseBorderRect = new fabric.Rect({
-              left: caseRect.left,
-              top: caseRect.top,
-              width: caseRect.width,
-              height: caseRect.height,
-              originX: 'left',
-              originY: 'top',
-              fill: 'transparent',
-              stroke: '#ef4444',
-              strokeWidth: borderWidth,
-              selectable: false,
-              evented: false,
-              visible: false,
-              excludeFromExport: true,
-            });
-            
-            caseBorderRectRef.current = caseBorderRect;
-            fabricCanvas.current.add(caseBorderRect);
-            fabricCanvas.current.sendObjectToBack(caseBorderRect);
+            // Don't create case border rectangle - user doesn't want to see border when selecting case
+            caseBorderRectRef.current = null;
             
             fabricCanvas.current.renderAll();
           }, 100);

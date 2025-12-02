@@ -131,25 +131,9 @@ const Canvas = ({
             fabricCanvas.current.add(boundaryRect);
             fabricCanvas.current.sendObjectToBack(boundaryRect);
             
-            // Create red border around the case image itself (shown when charm is at edge)
-            // Make border wider for business and first class cases
-            const borderWidth = (selectedCaseType === 'business' || selectedCaseType === 'firstclass') ? 5 : 3;
-            const caseBorderRect = new fabric.Rect({
-              left: rect.left,
-              top: rect.top,
-              width: rect.width,
-              height: rect.height,
-              fill: 'transparent',
-              stroke: 'red',
-              strokeWidth: borderWidth,
-              selectable: false,
-              evented: false,
-              visible: false, // Hidden by default, shown when charm is at edge
-            });
+            // Don't create case border rectangle - user doesn't want to see border when selecting case
+            caseBorderRectRef.current = null;
             
-            caseBorderRectRef.current = caseBorderRect;
-            fabricCanvas.current.add(caseBorderRect);
-            fabricCanvas.current.sendObjectToBack(caseBorderRect);
             fabricCanvas.current.sendObjectToBack(imgInstance);
             
             fabricCanvas.current.renderAll();

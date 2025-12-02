@@ -29,17 +29,17 @@ const PriceSummary = ({
   return (
       <div className={`${isMobile ? 'pt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
         <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-1.5 xs:mb-2' : 'mb-4'}`}>
-          <h3 className={`${isMobile ? 'text-sm xs:text-base sm:text-lg' : 'text-base'} text-gray-900 font-medium font-inter`}>
+          <h3 className={`${isMobile ? 'text-sm xs:text-base sm:text-lg' : 'text-base'} text-gray-900 font-medium font-inter flex-shrink-0`}>
             Subtotal: {formatPrice(totalPrice)}
           </h3>
         
-        <button
-          onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-          className={`${isMobile ? 'text-xs xs:text-sm' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter`}
-        >
-          {showPriceBreakdown ? 'Hide' : 'Details'}
-        </button>
-      </div>
+          <button
+            onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
+            className={`${isMobile ? 'text-xs xs:text-sm' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter flex-shrink-0 whitespace-nowrap`}
+          >
+            {showPriceBreakdown ? 'Hide' : 'Details'}
+          </button>
+        </div>
       
       {/* Price Breakdown Dropdown */}
       {showPriceBreakdown && (
