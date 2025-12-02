@@ -387,8 +387,8 @@ const CreateYours = () => {
 
 
   return (
-    <section className="min-h-screen py-1 md:py-12 relative overflow-hidden bg-white">
-      <div className={`lg:container mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 mt-4 ${isMobile ? 'pb-40 xs:pb-44 sm:pb-48' : 'pb-2 sm:pb-24'} h-screen md:h-auto flex flex-col overflow-hidden`}>
+    <section className={`w-full py-1 md:py-12 bg-white ${isMobile ? 'h-screen fixed inset-0 overflow-hidden' : 'min-h-screen'}`}>
+      <div className={`lg:container mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 mt-4 ${isMobile ? 'pb-40 xs:pb-44 sm:pb-48 h-full flex flex-col overflow-hidden' : 'pb-2 sm:pb-24 flex flex-col'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
@@ -404,7 +404,7 @@ const CreateYours = () => {
         
         {/* Header Section - Fixed at top, never overlaps */}
         <div className="text-center mb-2 xs:mb-3 sm:mb-4 md:mb-6 flex-shrink-0">
-          <h1 className="text-xl xs:text-2xl sm:text-title text-gray-900 tracking-title mt-4 xs:mt-5 sm:mt-6 md:mt-0">
+          <h1 className="text-title text-gray-900 tracking-title mt-4 xs:mt-5 sm:mt-6 md:mt-0">
             CREATE YOURS
           </h1>
           <div className="w-12 xs:w-14 sm:w-16 h-px bg-gray-300 mx-auto mb-1 xs:mb-1.5 md:mb-4"></div>
@@ -415,13 +415,13 @@ const CreateYours = () => {
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className="flex flex-col lg:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-6 lg:gap-12 flex-1  overflow-hidden ">
+        <div className="flex flex-col lg:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-6 lg:gap-12 flex-1 overflow-hidden">
           
           {/* LEFT - Design Canvas - Centered */}
           <div className="w-full lg:w-1/2 flex flex-col items-center flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-2 xs:py-3 sm:py-4 md:py-0 ">
 
-            <div className="w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px] flex flex-col">
-              <div className="flex-shrink-0 w-full relative mt-4 md:mt-6 lg:mt-8" style={{aspectRatio: '1', isolation: 'isolate'}}>
+            <div className="w-full flex flex-col items-center">
+              <div className="flex-shrink-0 w-[400px] h-[400px] relative mt-0 md:mt-2 lg:mt-4" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
                   <div 
@@ -430,14 +430,14 @@ const CreateYours = () => {
                       backgroundImage: `url(${selectedCaseImage})`,
                       zIndex: 0,
                       pointerEvents: 'none',
-                      backgroundSize: '70%',
-                      backgroundPosition: 'center 55%',
+                      backgroundSize: '310px',
+                      backgroundPosition: 'center 45%',
                     }}
                     key={`case-bg-${selectedCaseType}-${selectedColor}`}
                   />
                 )}
                 {/* Canvas Overlay - Always on top */}
-                <div className="w-full h-full absolute inset-0" style={{zIndex: 10, pointerEvents: 'auto'}}>
+                <div className="w-full h-full absolute inset-0 " style={{zIndex: 10, pointerEvents: 'auto', width: '350px', height: '400px'}}>
                   <Canvas
                     selectedCaseType={selectedCaseType}
                     selectedColor={selectedColor}
@@ -450,7 +450,7 @@ const CreateYours = () => {
               </div>
               
               {/* Action Buttons - Bottom - Hidden on mobile */}
-              <div className="mt-4 md:mt-6 hidden md:flex flex-row gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px]">
+              <div className="mt-4 md:mt-6 hidden md:flex flex-row gap-2 xs:gap-2.5 sm:gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px]">
                 <ViewMoreImagesButton
                   caseImages={caseImages}
                   onOpenModal={() => {

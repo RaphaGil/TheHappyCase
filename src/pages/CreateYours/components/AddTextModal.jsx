@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../../../data/constants';
 
 const AddTextModal = ({ 
@@ -11,6 +11,24 @@ const AddTextModal = ({
   customTextAdded, 
   setCustomTextAdded 
 }) => {
+  // Prevent page scroll when modal is open
+  useEffect(() => {
+    if (show) {
+      // Prevent body scroll
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      
+      return () => {
+        // Restore body scroll when modal closes
+        document.body.style.overflow = originalStyle;
+        document.body.style.position = '';
+        document.body.style.width = '';
+      };
+    }
+  }, [show]);
+
   if (!show) return null;
 
   const handleAddText = () => {
@@ -76,6 +94,13 @@ const AddTextModal = ({
                 setCustomText(e.target.value);
                 setCustomTextError('');
                 setCustomTextAdded(false);
+              }}
+              onFocus={(e) => {
+                // Prevent page scroll on input focus (mobile)
+                e.preventDefault();
+                setTimeout(() => {
+                  e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
               }}
               placeholder="e.g. Your name"
               className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm"
