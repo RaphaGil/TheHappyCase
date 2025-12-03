@@ -20,6 +20,7 @@ const Canvas = ({
   const boundaryRectRef = useRef(null);
   const caseBorderRectRef = useRef(null);
   const borderRectsRef = useRef(new Map());
+  const boundaryRectTimeoutRef = useRef(null);
   const [selectedPin, setSelectedPin] = useState(null);
   
   // Use hooks for organized functionality
@@ -91,20 +92,53 @@ const Canvas = ({
         });
   
         if (isCase) {
+          // Clear any pending boundary rect timeout to prevent duplicates
+          if (boundaryRectTimeoutRef.current) {
+            clearTimeout(boundaryRectTimeoutRef.current);
+            boundaryRectTimeoutRef.current = null;
+          }
+          
+          // Remove ALL existing boundary rects before creating new one (by checking properties)
+          const allObjects = fabricCanvas.current.getObjects();
+          allObjects.forEach(obj => {
+            if (obj && obj.type === 'rect') {
+              const isBoundary = obj.isBoundaryRect === true || 
+                (Array.isArray(obj.strokeDashArray) && 
+                 ((obj.strokeDashArray[0] === 4 && obj.strokeDashArray[1] === 4) || 
+                  (obj.strokeDashArray[0] === 3 && obj.strokeDashArray[1] === 3)) &&
+                 (!obj.fill || obj.fill === 'transparent') &&
+                 obj.selectable === false &&
+                 obj.evented === false);
+              
+              if (isBoundary) {
+                fabricCanvas.current.remove(obj);
+              }
+            }
+          });
+          
+          boundaryRectRef.current = null;
+          
+          // Remove existing case border if any
+          if (caseBorderRectRef.current) {
+            fabricCanvas.current.remove(caseBorderRectRef.current);
+            caseBorderRectRef.current = null;
+          }
+          
           imgInstance.set('evented', false);
           caseInstanceRef.current = imgInstance;
           fabricCanvas.current.add(imgInstance);
           fabricCanvas.current.sendObjectToBack(imgInstance);
           
           // Create red boundary rectangle after case is loaded
-          setTimeout(() => {
-            if (boundaryRectRef.current) {
-              fabricCanvas.current.remove(boundaryRectRef.current);
+          boundaryRectTimeoutRef.current = setTimeout(() => {
+            // Double-check that we still have the same case instance
+            if (caseInstanceRef.current !== imgInstance) {
+              return; // Case has changed, don't create boundary
             }
             
-            // Remove existing case border if any
-            if (caseBorderRectRef.current) {
-              fabricCanvas.current.remove(caseBorderRectRef.current);
+            // Remove any existing boundary rect (safety check)
+            if (boundaryRectRef.current) {
+              fabricCanvas.current.remove(boundaryRectRef.current);
             }
             
             const rect = imgInstance.getBoundingRect();
@@ -125,6 +159,7 @@ const Canvas = ({
               selectable: false,
               evented: false,
               visible: false, // Hidden by default, shown only when moving objects
+              isBoundaryRect: true, // Custom property to identify boundary rects
             });
             
             boundaryRectRef.current = boundaryRect;
@@ -137,6 +172,7 @@ const Canvas = ({
             fabricCanvas.current.sendObjectToBack(imgInstance);
             
             fabricCanvas.current.renderAll();
+            boundaryRectTimeoutRef.current = null;
           }, 100);
         } else {
           fabricCanvas.current.add(imgInstance);
@@ -464,9 +500,17 @@ const Canvas = ({
     // Store refs in variables for cleanup
     const borderRects = borderRectsRef.current;
     const canvas = fabricCanvas.current;
+    const timeoutRef = boundaryRectTimeoutRef;
     
     return () => {
       window.removeEventListener('resize', handleResize);
+      
+      // Clear any pending boundary rect timeout
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+      
       // Clean up border rectangles
       if (canvas && borderRects) {
         borderRects.forEach((borderRect) => {
@@ -544,15 +588,44 @@ const Canvas = ({
   useEffect(() => {
     if (!fabricCanvas.current) return;
 
+    // Clear any pending boundary rect timeout to prevent duplicates
+    if (boundaryRectTimeoutRef.current) {
+      clearTimeout(boundaryRectTimeoutRef.current);
+      boundaryRectTimeoutRef.current = null;
+    }
+
     // Remove any existing case objects, boundary, and case border
     // IMPORTANT: Do NOT remove charms/pins - only remove case-related objects
     const objects = fabricCanvas.current.getObjects();
+    
+    // Helper function to identify boundary rects by their properties
+    const isBoundaryRect = (obj) => {
+      if (!obj || obj.type !== 'rect') return false;
+      // Check for custom property first (most reliable)
+      if (obj.isBoundaryRect === true) return true;
+      // Fallback: check for boundary rect properties: dashed stroke, transparent fill, not selectable
+      const strokeDashArray = obj.strokeDashArray;
+      const hasDashedStroke = Array.isArray(strokeDashArray) && 
+        ((strokeDashArray[0] === 4 && strokeDashArray[1] === 4) || 
+         (strokeDashArray[0] === 3 && strokeDashArray[1] === 3));
+      const isTransparentFill = !obj.fill || obj.fill === 'transparent';
+      const isNotSelectable = obj.selectable === false;
+      const isNotEvented = obj.evented === false;
+      
+      return hasDashedStroke && isTransparentFill && isNotSelectable && isNotEvented;
+    };
+    
     objects.forEach(obj => {
-      // Only remove case objects, not charms (charms don't have isCase property)
-      if (obj.isCase || obj === boundaryRectRef.current || obj === caseBorderRectRef.current) {
+      // Remove case objects
+      if (obj.isCase) {
+        fabricCanvas.current.remove(obj);
+      }
+      // Remove boundary rects by checking properties (more reliable than ref comparison)
+      else if (isBoundaryRect(obj) || obj === boundaryRectRef.current || obj === caseBorderRectRef.current) {
         fabricCanvas.current.remove(obj);
       }
     });
+    
     // Clear all border rectangles (these are visual indicators, not charms)
     borderRectsRef.current.forEach((borderRect) => {
       fabricCanvas.current.remove(borderRect);
@@ -564,8 +637,9 @@ const Canvas = ({
 
     // Ensure all charms/pins stay on top and visible
     // Bring all non-case objects (charms/pins/text) to front
-    objects.forEach(obj => {
-      if (!obj.isCase && obj !== boundaryRectRef.current && obj !== caseBorderRectRef.current) {
+    const remainingObjects = fabricCanvas.current.getObjects();
+    remainingObjects.forEach(obj => {
+      if (!obj.isCase && !isBoundaryRect(obj)) {
         fabricCanvas.current.bringObjectToFront(obj);
       }
     });
@@ -678,11 +752,11 @@ const Canvas = ({
   }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage]);
 
   return (
-    <div className="w-full h-full flex flex-col items-top ">
-      <div className="w-full h-full relative flex item-top justify-center ">
+    <div className="w-full h-full flex flex-col  sm:items-center ">
+      <div className="w-full h-full relative flex item-top justify-center  ">
         <canvas 
           ref={canvasRef} 
-          className="w-full h-full"
+          className="w-full h-screen "
           style={{ 
             background: 'transparent',
             width: '100%',

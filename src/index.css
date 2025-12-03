@@ -431,6 +431,13 @@ h1.student-text, h2.student-text, h3.student-text, h4.student-text, h5.student-t
   background: linear-gradient(135deg, var(--electric-blue) 0%, var(--bright-yellow) 100%);
 }
 
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 /* Line clamp utility */
 .line-clamp-2 {
   display: -webkit-box;

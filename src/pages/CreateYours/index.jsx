@@ -415,13 +415,13 @@ const CreateYours = () => {
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className="flex flex-col lg:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-6 lg:gap-12 flex-1 overflow-hidden">
+        <div className="flex flex-col lg:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-6 lg:gap-12 flex-1 overflow-hidden lg:items-start">
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className="w-full lg:w-1/2 flex flex-col items-start xs:items-center xs:justify-center flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-2 sm:py-3 md:py-0">
+          <div className="w-full lg:w-1/2 flex flex-col flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-2 sm:py-3 md:py-0">
 
-            <div className="w-full flex flex-col items-center">
-              <div className="flex-shrink-0 w-[300px] h-[350px] relative mt-0 sm:mt-auto lg:mt-4" style={{isolation: 'isolate'}}>
+            <div className="w-full h-full flex flex-col justify-start xs:justify-center items-center">
+              <div className="w-[300px] h-[350px] md:h-[350px] relative mt-0 md:mt-auto lg:mt-4" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
                   <div 
@@ -437,7 +437,7 @@ const CreateYours = () => {
                   />
                 )}
                 {/* Canvas Overlay - Always on top */}
-                <div className="w-full h-full absolute inset-0 " style={{zIndex: 10, pointerEvents: 'auto', width: '350px', height: '400px'}}>
+                <div className="w-full h-full absolute inset-0 " style={{zIndex: 10, pointerEvents: 'auto', width: '100%', height: '100%'}}>
                   <Canvas
                     selectedCaseType={selectedCaseType}
                     selectedColor={selectedColor}
@@ -472,7 +472,13 @@ const CreateYours = () => {
           </div>
 
           {/* Right Side - Charms Selection */}
-          <div className="w-full lg:w-1/2 flex flex-col space-y-4 sm:space-y-6 order-1 lg:order-2">
+          <div 
+            className="w-full lg:w-1/2 flex flex-col space-y-4 sm:space-y-6 order-1 lg:order-2 lg:max-h-[calc(100vh-200px)] lg:overflow-y-auto hide-scrollbar"
+            style={{
+              scrollbarWidth: 'none', /* Firefox */
+              msOverflowStyle: 'none', /* IE and Edge */
+            }}
+          >
             
             {/* Mobile Step Content Overlay */}
             {isMobile && (
@@ -499,7 +505,7 @@ const CreateYours = () => {
                 onClick={() => setIsCaseDropdownOpen(!isCaseDropdownOpen)}
                 className="w-full flex items-center justify-between mb-4"
               >
-                <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
                   1. Choose Case
                 </h3>
                 <svg 
@@ -541,7 +547,7 @@ const CreateYours = () => {
                 onClick={() => setIsCharmsDropdownOpen(!isCharmsDropdownOpen)}
                 className="w-full flex items-center justify-between mb-4"
               >
-                <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
                   3. Choose Charms
                 </h3>
                 <svg 
@@ -575,7 +581,7 @@ const CreateYours = () => {
                   onClick={() => setIsAddTextDropdownOpen(!isAddTextDropdownOpen)}
                   className="w-full flex items-center justify-between mb-4"
                 >
-                  <h3 className="text-xs uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                  <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
                     4. Add Text
                   </h3>
                   <svg 
