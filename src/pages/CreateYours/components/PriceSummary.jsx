@@ -28,18 +28,141 @@ const PriceSummary = ({
 
   return (
       <div className={`${isMobile ? 'pt-0 mt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
-        <div className={`flex flex-row justify-between items-center gap-2 ${isMobile ? 'mb-1.5 xs:mb-2' : 'mb-4'}`}>
-          <h3 className={`${isMobile ? 'text-sm xs:text-base sm:text-lg' : 'text-base'} text-gray-900 font-medium font-inter flex-shrink-0`}>
-            Subtotal: {formatPrice(totalPrice)}
-          </h3>
-        
-          <button
-            onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-            className={`${isMobile ? 'text-xs xs:text-sm' : 'text-xs'} uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter flex-shrink-0 whitespace-nowrap`}
-          >
-            {showPriceBreakdown ? 'Hide' : 'Details'}
-          </button>
-        </div>
+        {/* Mobile: Price and buttons in same row with improved UX */}
+        {isMobile ? (
+          <div className="flex items-center justify-between gap-3 xs:gap-4 mb-2 xs:mb-2.5">
+            {/* Price Section - Left */}
+            <div className="flex flex-col flex-shrink-0">
+              <h3 className={`text-xs xs:text-sm text-gray-500 font-medium font-inter mb-0.5`}>
+                Subtotal
+              </h3>
+              <h3 className={`text-lg xs:text-xl sm:text-2xl text-gray-900 font-semibold font-inter leading-tight`}>
+                {formatPrice(totalPrice)}
+              </h3>
+            </div>
+            
+            {/* Controls Section - Right */}
+            <div className="flex flex-row gap-2 xs:gap-2.5 items-center flex-shrink-0">
+              {/* Quantity Selector */}
+              <div className={`flex items-center border-2 border-gray-300 rounded-lg bg-white shadow-sm`}>
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className={`w-8 h-8 xs:w-9 xs:h-9 flex items-center justify-center text-gray-700 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all duration-150 rounded-l-lg touch-manipulation`}
+                  aria-label="Decrease quantity"
+                  disabled={quantity <= 1}
+                > 
+                  <svg className={`w-4 h-4 xs:w-5 xs:h-5`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
+                  </svg>
+                </button>
+                <span className={`text-sm xs:text-base min-w-[2rem] xs:min-w-[2.5rem] font-semibold text-gray-900 text-center font-inter px-1 xs:px-2`}>
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className={`w-8 h-8 xs:w-9 xs:h-9 flex items-center justify-center text-gray-700 hover:text-gray-900 hover:bg-gray-50 active:bg-gray-100 transition-all duration-150 rounded-r-lg touch-manipulation`}
+                  aria-label="Increase quantity"
+                >
+                  <svg className={`w-4 h-4 xs:w-5 xs:h-5`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
+             
+              {/* Add to Cart Button */}
+              <div className="flex-shrink-0 min-w-[110px] xs:min-w-[130px]">
+                <AddToCartBtn 
+                  product={{
+                    id: `custom-${Date.now()}`,
+                    name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
+                    caseType: selectedCaseType,
+                    caseName: selectedCase?.name || 'Custom Case',
+                    color: selectedColor,
+                    pins: selectedPins.map(({ pin }) => pin),
+                    pinsDetails: selectedPins.map(({ pin }) => pin),
+                    basePrice: caseBasePrice,
+                    casePrice: caseBasePrice,
+                    pinsPrice: pinsPrice,
+                    totalPrice: parseFloat(totalPrice),
+                    price: parseFloat(totalPrice),
+                    image: selectedCaseImage,
+                    caseImage: selectedCaseImage,
+                    customDesign: true,
+                    quantity: quantity
+                  }}
+                  onAdd={onAddToCart}
+                  className="cursor-pointer bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 py-2 xs:py-2.5 text-xs xs:text-sm font-semibold rounded-lg shadow-sm hover:shadow-md active:scale-[0.98] touch-manipulation whitespace-nowrap"
+                  disabled={false}
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Desktop: Price on top */}
+            <div className={`flex flex-col mb-4`}>
+              <h3 className={`text-base text-gray-500 font-medium font-inter flex-shrink-0`}>
+                Subtotal: 
+              </h3>
+              <h3 className={`text-base text-gray-900 font-medium font-inter flex-shrink-0`}>
+                {formatPrice(totalPrice)}
+              </h3>
+            </div>
+
+            {/* Desktop: Buttons below */}
+            <div className={`mt-4 flex flex-row gap-1.5 xs:gap-2`}>
+              <div className={`flex items-center border border-gray-200 rounded-sm p-1`}>
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className={`w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
+                  aria-label="Decrease quantity"
+                > 
+                  <svg className={`w-4 h-4`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
+                  </svg>
+                </button>
+                <span className={`text-sm min-w-[2rem] font-medium text-gray-900 text-center font-inter`}>
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className={`w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
+                  aria-label="Increase quantity"
+                >
+                  <svg className={`w-4 h-4`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
+             
+              <div className="flex-1">
+                <AddToCartBtn 
+                  product={{
+                    id: `custom-${Date.now()}`,
+                    name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
+                    caseType: selectedCaseType,
+                    caseName: selectedCase?.name || 'Custom Case',
+                    color: selectedColor,
+                    pins: selectedPins.map(({ pin }) => pin),
+                    pinsDetails: selectedPins.map(({ pin }) => pin),
+                    basePrice: caseBasePrice,
+                    casePrice: caseBasePrice,
+                    pinsPrice: pinsPrice,
+                    totalPrice: parseFloat(totalPrice),
+                    price: parseFloat(totalPrice),
+                    image: selectedCaseImage,
+                    caseImage: selectedCaseImage,
+                    customDesign: true,
+                    quantity: quantity
+                  }}
+                  onAdd={onAddToCart}
+                  className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 text-sm"
+                  disabled={false}
+                />
+              </div>
+            </div>
+          </>
+        )}
       
       {/* Price Breakdown Dropdown */}
       {showPriceBreakdown && (
@@ -95,58 +218,6 @@ const PriceSummary = ({
             You must accept the terms to add items to cart.
           </div>
         )}
-      </div>
-
-      <div className={`${isMobile ? 'mt-1.5 xs:mt-2' : 'mt-4'} flex flex-row gap-1.5 xs:gap-2`}>
-        <div className={`flex items-center border border-gray-200 rounded-sm ${isMobile ? 'p-0.5' : 'p-1'}`}>
-          <button
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className={`${isMobile ? 'w-4 h-4 xs:w-5 xs:h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
-            aria-label="Decrease quantity"
-          > 
-            <svg className={`${isMobile ? 'w-2.5 h-2.5 xs:w-3 xs:h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
-            </svg>
-          </button>
-          <span className={`${isMobile ? 'text-xs xs:text-sm min-w-[1.25rem] xs:min-w-[1.5rem]' : 'text-sm min-w-[2rem]'} font-medium text-gray-900 text-center font-inter`}>
-            {quantity}
-          </span>
-          <button
-            onClick={() => setQuantity(quantity + 1)}
-            className={`${isMobile ? 'w-4 h-4 xs:w-5 xs:h-5' : 'w-6 h-6'} flex items-center justify-center text-gray-600 hover:text-gray-900 transition-all duration-200`}
-            aria-label="Increase quantity"
-          >
-            <svg className={`${isMobile ? 'w-2.5 h-2.5 xs:w-3 xs:h-3' : 'w-4 h-4'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-        </div>
-       
-        <div className="flex-1">
-          <AddToCartBtn 
-            product={{
-              id: `custom-${Date.now()}`,
-              name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
-              caseType: selectedCaseType,
-              caseName: selectedCase?.name || 'Custom Case',
-              color: selectedColor,
-              pins: selectedPins.map(({ pin }) => pin),
-              pinsDetails: selectedPins.map(({ pin }) => pin),
-              basePrice: caseBasePrice,
-              casePrice: caseBasePrice,
-              pinsPrice: pinsPrice,
-              totalPrice: parseFloat(totalPrice),
-              price: parseFloat(totalPrice),
-              image: selectedCaseImage,
-              caseImage: selectedCaseImage,
-              customDesign: true,
-              quantity: quantity
-            }}
-            onAdd={onAddToCart}
-            className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-1.5 xs:py-2 text-xs xs:text-sm sm:py-2.5 sm:text-base md:py-2.5 md:text-sm"
-            disabled={false}
-          />
-        </div>
       </div>
       {!isMobile && (
         <p className="text-xs text-gray-500 text-center mt-4 font-inter">
