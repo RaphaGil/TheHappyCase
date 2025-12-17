@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ColorSelector from '../../../component/ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../../data/constants';
 import { filterPinsByCategory } from '../../../data/filterHelpers';
+import { getMaxAvailableQuantity } from '../../../utils/inventory';
 
 const MobileOverlay = ({
   mobileCurrentStep,
@@ -17,7 +18,8 @@ const MobileOverlay = ({
   handleCaseTypeSelection,
   handleColorSelection,
   handlePinSelection,
-  Products
+  Products,
+  cart
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -64,7 +66,7 @@ const MobileOverlay = ({
         <div className="space-y-3 xs:space-y-4 md:space-y-5">
           {mobileCurrentStep === 'case' && (
             <div className="w-full">
-              <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3 md:gap-5 lg:gap-6 xl:gap-8">
+              <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:gap-3 md:gap-5 lg:gap-6 xl:gap-8">
                 {CASE_OPTIONS.map((opt) => {
                   // Get case image from Products or use fallback
                   const getCaseImage = () => {
@@ -82,7 +84,7 @@ const MobileOverlay = ({
                     <button
                       key={opt.value}
                       onClick={() => handleCaseTypeSelection(opt.value)}
-                      className={`p-1.5 xs:p-2 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-1 xs:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 ${
+                      className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 ${
                         selectedCaseType === opt.value
                           ? ' text-gray-900'
                           : ' hover:border-gray-300'
@@ -94,7 +96,7 @@ const MobileOverlay = ({
                           <img
                             src={caseImage}
                             alt={opt.label}
-                            className="w-full h-full object-contain p-0.5 xs:p-1 sm:p-1.5 md:p-3 lg:p-4 xl:p-5"
+                            className="w-full h-full object-contain p-0 xs:p-0.5 sm:p-1.5 md:p-3 lg:p-4 xl:p-5"
                             loading="lazy"
                             onError={(e) => {
                               e.target.style.display = 'none';
@@ -109,7 +111,7 @@ const MobileOverlay = ({
                           )}
                         </div>
                       )}
-                      <span className="text-[9px] xs:text-[10px] sm:text-xs md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2">
+                      <span className="text-[9px] xs:text-[11px] sm:text-xs md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2">
                         {opt.label}
                       </span>
                     </button>
@@ -237,19 +239,91 @@ const MobileOverlay = ({
                         };
                         const sizeLabel = getSizeLabel(pin.size);
                         
+                        // Check if charm is sold out
+                        const checkCharmSoldOut = () => {
+                          const charmCategory = pin.category || selectedCategory || 'colorful';
+                          const charmName = pin.name || pin.src || '';
+                          
+                          const product = {
+                            type: 'charm',
+                            category: charmCategory,
+                            pin: pin,
+                            name: charmName
+                          };
+                          
+                          const maxAvailable = getMaxAvailableQuantity(product, cart || []);
+                          
+                          // If no inventory limit, not sold out
+                          if (maxAvailable === null) {
+                            return false;
+                          }
+                          
+                          // Count standalone charms already in cart
+                          let standaloneCharmsInCart = 0;
+                          (cart || []).forEach(cartItem => {
+                            if (cartItem.type === 'charm') {
+                              const cartPin = cartItem.pin || cartItem;
+                              const cartPinName = cartPin.name || cartPin.src;
+                              const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+                              if ((cartPinName === charmName || cartPinName === pin.src) && 
+                                  cartPinCategory === charmCategory) {
+                                standaloneCharmsInCart += (cartItem.quantity || 1);
+                              }
+                            }
+                          });
+                          
+                          // Count how many of this charm are in custom designs already in cart
+                          let charmCountInCustomDesigns = 0;
+                          (cart || []).forEach(cartItem => {
+                            if (cartItem.pins && Array.isArray(cartItem.pins)) {
+                              cartItem.pins.forEach(cartPin => {
+                                const cartPinName = cartPin.name || cartPin.src;
+                                const cartPinCategory = cartPin.category || charmCategory;
+                                if ((cartPinName === charmName || cartPinName === pin.src) && 
+                                    cartPinCategory === charmCategory) {
+                                  charmCountInCustomDesigns += (cartItem.quantity || 1);
+                                }
+                              });
+                            }
+                          });
+                          
+                          // Count how many of this charm are already selected in the current design
+                          const charmCountInDesign = selectedPins.filter(p => {
+                            const pPin = p.pin || p;
+                            const pPinName = pPin.name || pPin.src;
+                            const pPinCategory = pPin.category || charmCategory;
+                            return (pPinName === charmName || pPinName === pin.src) && 
+                                   pPinCategory === charmCategory;
+                          }).length;
+                          
+                          // Calculate total inventory: maxAvailable + standalone charms in cart
+                          const totalInventory = maxAvailable + standaloneCharmsInCart;
+                          
+                          // Calculate total usage: standalone + in custom designs + in current design
+                          const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign;
+                          
+                          // Sold out if maxAvailable is 0 or total usage equals or exceeds total inventory
+                          return maxAvailable === 0 || totalUsage >= totalInventory;
+                        };
+                        
+                        const isSoldOut = checkCharmSoldOut();
+                        
                         return (
                           <button
                             key={pin.name}
-                            onClick={() => handlePinSelection(pin)}
-                            className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center`}
+                            onClick={() => !isSoldOut && handlePinSelection(pin)}
+                            disabled={isSoldOut}
+                            className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center ${
+                              isSoldOut ? 'opacity-50 cursor-not-allowed' : ''
+                            }`}
                           >
                             <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
                               <img
                                 src={pin.src}
                                 alt={pin.name}
-                                className="max-w-full max-h-full object-contain"
+                                className={`max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`}
                               />
-                              {isSelected && (
+                              {isSelected && !isSoldOut && (
                                 <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 xs:w-6 xs:h-6 flex items-center justify-center text-[10px] xs:text-xs rounded-full shadow-md z-10">
                                   <svg className="w-3 h-3 xs:w-4 xs:h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -262,9 +336,14 @@ const MobileOverlay = ({
                                 </div>
                               )}
                             </div>
-                            <span className="text-[9px] xs:text-[10px] sm:text-xs text-center text-gray-700 line-clamp-2 mt-0.5 xs:mt-1" style={{fontFamily: "'Poppins', sans-serif"}}>
+                            <span className={`text-[9px] xs:text-[10px] sm:text-xs text-center line-clamp-2 mt-0.5 xs:mt-1 ${
+                              isSoldOut ? 'text-gray-500' : 'text-gray-700'
+                            }`} style={{fontFamily: "'Poppins', sans-serif"}}>
                               {pin.name}
                             </span>
+                            {isSoldOut && (
+                              <span className="text-[8px] xs:text-[9px] text-red-600 font-medium mt-0.5">Sold Out</span>
+                            )}
                           </button>
                         );
                       })}

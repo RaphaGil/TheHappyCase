@@ -14,7 +14,7 @@ const ShippingInfoModal = ({ isOpen, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-900 transition-colors"
+            className="text-gray-400 hover:text-gray-900 transition-colors font-inter"
             aria-label="Close delivery information"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

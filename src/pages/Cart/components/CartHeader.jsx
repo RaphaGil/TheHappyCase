@@ -12,11 +12,11 @@ const CartHeader = ({ totalItems, onBack }) => (
       Continue Shopping
     </button>
 
-    <div className="text-center mb-8">
-      <h1 className="text-3xl md:text-4xl font-light text-gray-900 mb-2 font-inter tracking-title">
-        Your Cart ({totalItems})
+    <div className="text-center mb-12">
+      <h1 className="text-title text-gray-900 tracking-title mb-2 font-inter">
+       YOUR CART ({totalItems})
       </h1>
-      <div className="w-16 h-px bg-gray-300 mx-auto" />
+      <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-4" />
     </div>
   </div>
 );

@@ -393,8 +393,8 @@ const Charms = () => {
                   onClick={() => handleCharmTypeChange(type.key)}
                   className={`px-6 py-2.5 text-sm uppercase tracking-wider transition-all duration-200  ${
                     selectedCharmType === type.key
-                      ? 'border-b-2 border-blue-600 text-blue-700 bg-blue-50/50'
-                      : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-blue-300 hover:bg-blue-50/30'
+                      ? 'border-b-2 border-blue-700 text-white bg-blue-600'
+                      : 'border-b-2 border-transparent text-white hover:text-white hover:border-blue-300 hover:bg-blue-500 bg-blue-400'
                   } font-inter`}
                 >
                   {type.label}
@@ -484,10 +484,10 @@ const Charms = () => {
         </div>
 
         {/* Search and Results Section - Organized Together */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 flex items-center justify-between gap-4">
           {/* Search Bar */}
-          <div className="flex justify-center">
-            <div className="relative w-full max-w-md">
+          <div className="flex-1 max-w-md">
+            <div className="relative">
               <input
                 type="text"
                 placeholder="Search charms..."
@@ -502,7 +502,7 @@ const Charms = () => {
           </div>
 
           {/* Results Count */}
-          <div className="flex items-center justify-center text-sm text-gray-500 font-inter">
+          <div className="flex items-center text-sm text-gray-500 font-inter whitespace-nowrap">
             <p>
               {filteredCharms.length} {filteredCharms.length === 1 ? 'item' : 'items'}
               {totalPages > 1 && (
@@ -560,8 +560,8 @@ const Charms = () => {
                         onClick={() => handleAddToCart(charm)}
                         className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10 font-inter"
                       >
-                        {/* Bag Icon - Visible on mobile and desktop */}
-                        <svg className="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {/* Bag Icon - Visible on mobile only, hidden on md screens and up */}
+                        <svg className="w-5 h-5 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                         {/* Button Text - Visible on desktop only */}

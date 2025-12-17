@@ -19,7 +19,7 @@ const NoteSection = ({
     <>
       {/* Note Dropdown */}
       {isOpen && (
-        <div className="mt-3 pt-3 border-t border-gray-100">
+        <div className="mt-3 pt-3 ">
           <div className="text-xs text-gray-500 mb-2 font-light font-inter">
             Add a note for this item:
           </div>

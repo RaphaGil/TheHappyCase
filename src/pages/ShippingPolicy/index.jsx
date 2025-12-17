@@ -61,7 +61,7 @@ const ShippingPolicy = () => {
           </div>
         </div>
       </div>
-      <Footer />
+ 
     </div>
   );
 };

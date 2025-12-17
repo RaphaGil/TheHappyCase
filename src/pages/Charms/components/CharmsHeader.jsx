@@ -3,7 +3,7 @@ import React from 'react';
 const CharmsHeader = ({ title, description }) => {
   return (
     <div className="text-center mb-12">
-      <h1 className="text-title md:text-title-lg font-light text-gray-900 mb-2 font-inter tracking-title">
+      <h1 className="text-title text-gray-900 tracking-title mb-2 font-inter">
         {title}
       </h1>
       <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>

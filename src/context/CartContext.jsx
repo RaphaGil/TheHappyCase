@@ -1,15 +1,47 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { getMaxAvailableQuantity } from '../utils/inventory';
+import { areItemsIdentical } from '../utils/cartHelpers';
 
 const CartContext = createContext();
 
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':
-      return {
-        ...state,
-        items: [...state.items, { ...action.payload, id: Date.now(), quantity: 1 }],
-        isDrawerOpen: true,
-      };
+      const newItem = { ...action.payload, id: action.payload.id || Date.now(), quantity: action.payload.quantity || 1 };
+      const existingItemIndex = state.items.findIndex(item => areItemsIdentical(item, newItem));
+      
+      if (existingItemIndex !== -1) {
+        // Item already exists, increment its quantity
+        const existingItem = state.items[existingItemIndex];
+        const maxAvailable = getMaxAvailableQuantity(existingItem, state.items);
+        const currentQty = existingItem.quantity || 1;
+        const newQty = currentQty + (newItem.quantity || 1);
+        
+        // Check if we can add the requested quantity
+        // maxAvailable represents how many MORE can be added total
+        const requestedQty = newItem.quantity || 1;
+        if (maxAvailable !== null && requestedQty > maxAvailable) {
+          // Can't add requested quantity, return state unchanged (components will show modal)
+          return state;
+        }
+        
+        return {
+          ...state,
+          items: state.items.map((item, index) =>
+            index === existingItemIndex
+              ? { ...item, quantity: newQty }
+              : item
+          ),
+          isDrawerOpen: true,
+        };
+      } else {
+        // New item, add it to cart
+        return {
+          ...state,
+          items: [...state.items, { ...newItem, quantity: newItem.quantity || 1 }],
+          isDrawerOpen: true,
+        };
+      }
     case 'REMOVE_FROM_CART':
       return {
         ...state,
@@ -33,9 +65,19 @@ const cartReducer = (state, action) => {
     case 'INCREMENT_ITEM_QTY':
       return {
         ...state,
-        items: state.items.map((item) =>
-          item.id === action.payload ? { ...item, quantity: (item.quantity || 1) + 1 } : item
-        ),
+        items: state.items.map((item) => {
+          if (item.id === action.payload) {
+            const maxAvailable = getMaxAvailableQuantity(item, state.items);
+            const currentQty = item.quantity || 1;
+            // Only increment if inventory allows or is unlimited
+            // maxAvailable represents how many MORE can be added total, so if it's > 0, we can add one more
+            if (maxAvailable === null || maxAvailable > 0) {
+              return { ...item, quantity: currentQty + 1 };
+            }
+            // If inventory limit reached, don't increment (components will show modal)
+          }
+          return item;
+        }),
       };
     case 'DECREMENT_ITEM_QTY':
       return {
@@ -99,7 +141,24 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTotalPrice = () => {
-    return state.items.reduce((total, item) => total + item.totalPrice * (item.quantity || 1), 0);
+    return state.items.reduce((total, item) => {
+      let itemTotal = 0;
+      
+      if (item.type === "charm") {
+        // For charms: unit price * quantity
+        const singlePrice = item.price || item.totalPrice || 0;
+        itemTotal = singlePrice * (item.quantity || 1);
+      } else {
+        // For cases: (base price + charms) * quantity
+        const base = typeof item.basePrice === "number" ? item.basePrice : item.price || item.totalPrice || 0;
+        const charmsTotal = item.pinsDetails && item.pinsDetails.length
+          ? item.pinsDetails.reduce((sum, pin) => sum + (pin.price || 0), 0)
+          : 0;
+        itemTotal = (base + charmsTotal) * (item.quantity || 1);
+      }
+      
+      return total + itemTotal;
+    }, 0);
   };
 
   const getTotalItems = () => {

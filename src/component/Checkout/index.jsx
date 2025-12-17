@@ -5,6 +5,7 @@ import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { createPaymentIntent } from '../../utils/mockPaymentAPI';
+import { getMaxAvailableQuantity } from '../../utils/inventory';
 import InternationalNote from '../InternationalNote';
 import CheckoutHeader from './components/CheckoutHeader';
 import LoadingState from './components/LoadingState';
@@ -49,6 +50,7 @@ const CheckoutForm = () => {
   const [paymentElementReady, setPaymentElementReady] = useState(false);
   const [showShippingInfo, setShowShippingInfo] = useState(false);
   const [showMobileSummary, setShowMobileSummary] = useState(false);
+  const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
   const [customerInfo, setCustomerInfo] = useState({
     email: '',
     name: '',
@@ -74,6 +76,51 @@ const CheckoutForm = () => {
   const showInternationalNote =
     selectedCountry && selectedCountry.toUpperCase() !== 'GB' && cart.length > 0;
   const totalWithShipping = subtotal + vatAmount + shippingCost;
+
+  // Handle increment with inventory check
+  const handleIncrementWithCheck = (itemId) => {
+    const item = cart.find(i => i.id === itemId);
+    if (!item) return;
+    
+    const maxAvailable = getMaxAvailableQuantity(item, cart);
+    const canIncrement = maxAvailable === null || maxAvailable > 0;
+    
+    if (canIncrement) {
+      incrementItemQty(itemId);
+      // Clear error when successfully incrementing
+      setItemErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[itemId];
+        return newErrors;
+      });
+    } else {
+      // Show inline error message for out of stock items
+      let itemName = '';
+      
+      if (item.type === 'charm') {
+        itemName = item.name || item.pin?.name || 'Charm';
+        const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
+        setItemErrors(prev => ({
+          ...prev,
+          [itemId]: errorMessage
+        }));
+      } else {
+        // For case items, just increment (they handle their own errors)
+        incrementItemQty(itemId);
+      }
+    }
+  };
+
+  // Handle decrement with error clearing
+  const handleDecrementWithCheck = (itemId) => {
+    decrementItemQty(itemId);
+    // Clear error when decrementing
+    setItemErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[itemId];
+      return newErrors;
+    });
+  };
 
 
   // Redirect if cart is empty
@@ -199,9 +246,10 @@ const CheckoutForm = () => {
         shippingLabel={shippingLabel}
         showInternationalNote={showInternationalNote}
         onShowShippingInfo={() => setShowShippingInfo(true)}
-        onIncrement={incrementItemQty}
-        onDecrement={decrementItemQty}
+        onIncrement={handleIncrementWithCheck}
+        onDecrement={handleDecrementWithCheck}
         onRemove={removeFromCart}
+        itemErrors={itemErrors}
       />
  
       <div className="flex flex-col lg:flex-row  w-full">
@@ -243,24 +291,27 @@ const CheckoutForm = () => {
         </form>
 
         {/* Order Summary */}
-        <aside className="hidden lg:block border border-gray-200 bg-yellow-50 p-6 w-full lg:w-1/2 lg:sticky lg:top-20 mt-4 lg:mt-0">
-          <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-6 font-light font-inter">
+        <aside className="hidden lg:flex border border-gray-200 bg-yellow-50 p-6 w-full lg:w-1/2 lg:sticky lg:top-20 mt-4 lg:mt-0 flex-col max-h-[calc(100vh-8rem)]">
+          <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-6 font-light font-inter flex-shrink-0">
             Order Summary
           </h3>
-          <OrderSummary
-            cart={cart}
-            formatPrice={formatPrice}
-            subtotal={subtotal}
-            vatAmount={vatAmount}
-            shippingCost={shippingCost}
-            shippingLabel={shippingLabel}
-            totalWithShipping={totalWithShipping}
-            showInternationalNote={showInternationalNote}
-            onShowShippingInfo={() => setShowShippingInfo(true)}
-            onIncrement={incrementItemQty}
-            onDecrement={decrementItemQty}
-            onRemove={removeFromCart}
-          />
+          <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+            <OrderSummary
+              cart={cart}
+              formatPrice={formatPrice}
+              subtotal={subtotal}
+              vatAmount={vatAmount}
+              shippingCost={shippingCost}
+              shippingLabel={shippingLabel}
+              totalWithShipping={totalWithShipping}
+              showInternationalNote={showInternationalNote}
+              onShowShippingInfo={() => setShowShippingInfo(true)}
+              onIncrement={handleIncrementWithCheck}
+              onDecrement={handleDecrementWithCheck}
+              onRemove={removeFromCart}
+              itemErrors={itemErrors}
+            />
+          </div>
         </aside>
         
         <ShippingInfoModal

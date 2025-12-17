@@ -5,8 +5,8 @@ import { groupPinsByKey, getItemTotal } from "../../../data/helpers";
 
 const CharmLineItem = ({ item, formatPrice }) => (
   <div className="mt-2 flex flex-col gap-2">
-    <div className="flex items-center justify-between px-2 py-2">
-      <div className="flex items-center gap-2">
+    <div className="flex items-start justify-between px-2 py-2 gap-2">
+      <div className="flex items-start gap-2 flex-1 min-w-0">
         {item.image ? (
           <img
             src={item.image}
@@ -35,9 +35,9 @@ const CharmLineItem = ({ item, formatPrice }) => (
           </div>
         )}
 
-        <div className="text-xs font-light text-gray-900 line-clamp-1 mb-1 font-inter">
-          <div>{item.name || item.pin?.name || "Charm"}</div>
-          <div className="text-gray-500 font-light font-inter">
+        <div className="text-xs font-light text-gray-900 mb-1 font-inter flex-1 min-w-0">
+          <div className="break-words">{item.name || item.pin?.name || "Charm"}</div>
+          <div className="text-gray-500 font-light font-inter text-[10px]">
             {item.category === "bronze"
               ? "Bronze Charm"
               : item.category === "flags"
@@ -46,7 +46,7 @@ const CharmLineItem = ({ item, formatPrice }) => (
           </div>
         </div>
       </div>
-      <div className="text-xs font-medium text-gray-900 font-inter">
+      <div className="text-xs font-medium text-gray-900 font-inter flex-shrink-0">
         {formatPrice(item.price || item.totalPrice || 0)}
       </div>
     </div>
@@ -60,8 +60,8 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
 
   return (
     <div className="mt-2 flex flex-col gap-2">
-      <div className="flex items-center justify-between px-2 py-2">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start px-2 py-2 gap-2">
+        <div className="flex items-start gap-2 flex-1 min-w-0">
           {item.designImage ? (
             <img
               src={item.designImage}
@@ -90,8 +90,8 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
               style={{ backgroundColor: item.color }}
             />
           )}
-          <div className="text-xs font-light text-gray-900 line-clamp-1 mb-1 font-inter">
-            <div>{item.caseName || item.name}</div>
+          <div className="text-xs font-light text-gray-900 mb-1 font-inter flex-1 min-w-0">
+            <div className="break-words">{item.caseName || item.name}</div>
             <div className="flex items-center gap-2">
               <span className="text-gray-500 font-light font-inter">
                 Color:
@@ -103,7 +103,7 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
             </div>
           </div>
         </div>
-        <div className="text-xs font-medium text-gray-900 font-inter">
+        <div className="text-xs font-medium text-gray-900 font-inter flex-shrink-0">
           {formatPrice(base)}
         </div>
       </div>
@@ -111,12 +111,12 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
       {groupedList.map((pin, i) => (
         <div
           key={i}
-          className="flex items-center justify-between px-2 py-2"
+          className="flex items-start justify-between px-2 py-2 gap-2"
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-start gap-2 flex-1 min-w-0">
             <img
               src={pin.src}
-              alt={pin.name}
+              alt={pin.name || 'Charm'}
               className="w-24 h-24 object-contain"
               loading="lazy"
               fetchPriority="low"
@@ -124,16 +124,14 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
               width="96"
               height="96"
             />
-            <div className="text-xs font-light text-gray-900 line-clamp-1 mb-1 font-inter">
-              <div>
-                {pin.name} {pin.count > 1 ? `(x${pin.count})` : ""}
+            <div className="text-xs font-light text-gray-900 mb-1 font-inter flex-1 min-w-0">
+              <div className="break-words">
+                {pin.name || 'Charm'} {pin.count > 1 ? `(x${pin.count})` : ""}
               </div>
-              <div className="text-gray-500 font-light font-inter">
-                {formatPrice(pin.price)} each
-              </div>
+          
             </div>
           </div>
-          <div className="text-xs font-medium text-gray-900 font-inter">
+          <div className="text-xs font-medium text-gray-900 font-inter flex-shrink-0">
             {formatPrice(pin.price * pin.count)}
           </div>
         </div>
@@ -144,8 +142,8 @@ const CustomCaseWithCharms = ({ item, formatPrice }) => {
 
 const StandaloneCase = ({ item, formatPrice }) => (
   <div className="mt-2 flex flex-col gap-2">
-    <div className="flex items-center justify-between px-2 py-2">
-      <div className="flex items-center gap-2">
+    <div className="flex items-start justify-between px-2 py-2 gap-2">
+      <div className="flex items-start gap-2 flex-1 min-w-0">
         {item.designImage ? (
           <img
             src={item.designImage}
@@ -174,8 +172,8 @@ const StandaloneCase = ({ item, formatPrice }) => (
             style={{ backgroundColor: item.color }}
           />
         )}
-        <div className="text-xs font-light text-gray-900 line-clamp-1 mb-1 font-inter">
-          <div>{item.caseName || item.name || "Passport Case"}</div>
+        <div className="text-xs font-light text-gray-900 mb-1 font-inter flex-1 min-w-0">
+          <div className="break-words">{item.caseName || item.name || "Passport Case"}</div>
           {item.color && (
             <div className="flex items-center gap-2">
               <span className="text-gray-500 font-light font-inter">
@@ -189,7 +187,7 @@ const StandaloneCase = ({ item, formatPrice }) => (
           )}
         </div>
       </div>
-      <div className="text-xs font-medium text-gray-900 font-inter">
+      <div className="text-xs font-medium text-gray-900 font-inter flex-shrink-0">
         {formatPrice(
           item.basePrice || item.price || item.totalPrice || 0
         )}
@@ -203,29 +201,39 @@ const QuantityControls = ({
   item,
   incrementItemQty,
   decrementItemQty,
+  errorMessage,
 }) => (
   <div>
     <div className="text-xs text-gray-500 mb-2 font-light font-inter">
       Quantity:
     </div>
-    <div className="flex items-center border border-gray-200 rounded-sm p-1 w-fit">
-      <button
-        onClick={() => decrementItemQty(item.id || index)}
-        className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-        title="Decrease"
-      >
-        −
-      </button>
-      <div className="px-3 py-1 text-sm text-gray-900 font-light font-inter">
-        {item.quantity || 1}
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center border border-gray-200 rounded-sm p-1 w-fit">
+        <button
+          onClick={() => decrementItemQty(item.id || index)}
+          className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+          title="Decrease"
+        >
+          −
+        </button>
+        <div className="px-3 py-1 text-sm text-gray-900 font-light font-inter">
+          {item.quantity || 1}
+        </div>
+        <button
+          onClick={() => incrementItemQty(item.id || index)}
+          className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+          title="Add one more"
+        >
+          +
+        </button>
       </div>
-      <button
-        onClick={() => incrementItemQty(item.id || index)}
-        className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-        title="Add one more"
-      >
-        +
-      </button>
+      
+      {/* Inline Error Message */}
+      {errorMessage && (
+        <p className="text-xs text-red-600 font-inter">
+          {errorMessage}
+        </p>
+      )}
     </div>
   </div>
 );
@@ -325,6 +333,7 @@ const CartItem = ({
   setNoteTexts,
   handleNoteChange,
   handleSaveNote,
+  errorMessage,
 }) => (
   <div className="border border-gray-200 p-6 bg-white">
     <div className="flex items-start justify-between">
@@ -343,6 +352,7 @@ const CartItem = ({
             item={item}
             incrementItemQty={incrementItemQty}
             decrementItemQty={decrementItemQty}
+            errorMessage={errorMessage}
           />
           <div className="flex items-center justify-end">
             <button

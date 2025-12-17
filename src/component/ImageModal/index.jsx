@@ -32,7 +32,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
         <div className="flex-1 flex flex-col overflow-hidden p-4 sm:p-6 min-h-0">
           {/* Main Image - Takes most of the space */}
           <div className="flex-1 flex items-center justify-center min-h-0 mb-4">
-            <div className="relative border border-gray-100 p-4 sm:p-6 md:p-8 flex items-center justify-center w-full h-full">
+            <div className="relative  p-4 sm:p-6 md:p-8 flex items-center justify-center w-full h-full">
               <img
                 src={caseImages[selectedModalImage]}
                 alt={`${selectedCase.name} - View ${selectedModalImage + 1}`}

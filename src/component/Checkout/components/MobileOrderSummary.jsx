@@ -16,11 +16,12 @@ const MobileOrderSummary = ({
   onShowShippingInfo,
   onIncrement,
   onDecrement,
-  onRemove
+  onRemove,
+  itemErrors
 }) => {
   return (
     <>
-      <div className="lg:hidden px-6">
+      <div className="lg:hidden ">
         <button
           type="button"
           onClick={onToggle}
@@ -46,8 +47,8 @@ const MobileOrderSummary = ({
       </div>
       
       {isOpen && (
-        <div id="mobile-order-summary" className="lg:hidden px-6 pb-4">
-          <div className="mt-2 border border-gray-200 bg-yellow-50 p-4">
+        <div id="mobile-order-summary" className="lg:hidden  pb-4">
+          <div className="mt-2 bg-yellow-50 p-4">
             <OrderSummary
               cart={cart}
               formatPrice={formatPrice}
@@ -61,6 +62,7 @@ const MobileOrderSummary = ({
               onIncrement={onIncrement}
               onDecrement={onDecrement}
               onRemove={onRemove}
+              itemErrors={itemErrors}
             />
           </div>
         </div>

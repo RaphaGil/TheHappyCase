@@ -13,18 +13,29 @@ const CaseItem = ({
   onToggleNote,
   onNoteChange,
   onSaveNote,
-  onCancelNote
+  onCancelNote,
+  errorMessage
 }) => {
-  const base = typeof item.basePrice === 'number' ? item.basePrice : (item.price || 0);
   const groupedPins = Object.values(
     (item.pinsDetails || []).reduce((acc, pin) => {
-      const key = pin.src || pin.name;
-      acc[key] = acc[key] || { ...pin, quantity: 0 };
+      // Ensure pin has name property
+      const pinWithName = {
+        name: pin?.name || 'Charm',
+        src: pin?.src || '',
+        price: pin?.price || 0,
+        ...pin // Spread to include any other properties
+      };
+      const key = pinWithName.src || pinWithName.name;
+      acc[key] = acc[key] || { ...pinWithName, quantity: 0 };
       acc[key].quantity += 1;
       return acc;
     }, {})
   );
-  const basePreview = item.designImage || item.caseImage || item.image;
+  // Determine which image to show - prioritize case image if design image is not available or invalid
+  const hasValidDesignImage = item.designImage && 
+    typeof item.designImage === 'string' && 
+    item.designImage.trim().length > 0;
+  const basePreview = hasValidDesignImage ? item.designImage : (item.caseImage || item.image);
 
   const basePrice = typeof item.basePrice === 'number' ? item.basePrice : 8;
   const charms = item.pinsDetails && item.pinsDetails.length
@@ -67,9 +78,7 @@ const CaseItem = ({
               )}
             </div>
           </div>
-          <span className="text-sm font-medium text-gray-900 font-inter">
-            {formatPrice(base)}
-          </span>
+      
         </div>
 
         {groupedPins.length > 0 && groupedPins.map((groupedPin, i) => (
@@ -81,7 +90,7 @@ const CaseItem = ({
               {groupedPin.src ? (
                 <img
                   src={groupedPin.src}
-                  alt={groupedPin.name}
+                  alt={groupedPin.name || 'Charm'}
                   className="w-16 h-16 object-contain"
                   loading="lazy"
                 />
@@ -89,28 +98,36 @@ const CaseItem = ({
                 <div className="w-8 h-8 rounded bg-gray-200" />
               )}
               <span className="text-sm font-light text-gray-900 font-inter">
-                {groupedPin.name} (x{groupedPin.quantity})
+                {groupedPin.name || 'Charm'} {groupedPin.quantity > 1 ? `(x${groupedPin.quantity})` : ''}
               </span>
             </div>
-            <span className="text-sm font-medium text-gray-900 font-inter">
-              {formatPrice((groupedPin.price || 0) * groupedPin.quantity)}
-            </span>
+       
           </div>
         ))}
       </div>
 
       {/* Qty and price for case items */}
-      <div className="mt-3 flex items-center justify-between pt-3 border-t border-gray-100">
-        <QuantityControls
-          quantity={item.quantity || 1}
-          onDecrement={() => onDecrement(item.id)}
-          onIncrement={() => onIncrement(item.id)}
-        />
-        <div className="text-right">
-          <div className="text-sm font-medium text-gray-900 font-inter">
-            {formatPrice(unit * qty)}
+      <div className="mt-3 flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <QuantityControls
+            quantity={item.quantity || 1}
+            item={item}
+            onDecrement={() => onDecrement(item.id)}
+            onIncrement={() => onIncrement(item.id)}
+          />
+          <div className="text-right">
+            <div className="text-sm font-medium text-gray-900 font-inter">
+              {formatPrice(unit * qty)}
+            </div>
           </div>
         </div>
+        
+        {/* Inline Error Message */}
+        {errorMessage && (
+          <p className="text-sm text-red-600 font-inter ml-1">
+            {errorMessage}
+          </p>
+        )}
       </div>
 
       {/* Note Section */}

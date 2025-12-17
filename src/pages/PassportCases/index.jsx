@@ -5,13 +5,13 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import Products from '../../data/products.json';
 import { useCart } from '../../context/CartContext';
 import AddToCartBtn from '../../component/AddToCartBtn';
-import GlueInfoModal from '../../component/GlueInfoModal';
+import { getMaxAvailableQuantity } from '../../utils/inventory';
 
 const PassportCases = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const filterParam = searchParams.get('filter');
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   
   // Map filter values to case types
   const filterToType = {
@@ -31,9 +31,9 @@ const PassportCases = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedDetailImage, setSelectedDetailImage] = useState(null);
-  const [showGlueModal, setShowGlueModal] = useState(false);
-  const [pendingProduct, setPendingProduct] = useState(null);
   const [isSpecificationsOpen, setIsSpecificationsOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [quantityError, setQuantityError] = useState('');
 
   // Helper function to get products with quantities from localStorage
   const getProductsWithQuantities = () => {
@@ -117,6 +117,65 @@ const PassportCases = () => {
     };
     return caseTypeMap[caseType] || caseType;
   };
+
+  // Helper function to get color name from image filename
+  const getColorName = (image) => {
+    if (!image) return '';
+    
+    const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
+    
+    // Remove case type prefixes
+    let colorPart = filename
+      .replace(/^economycase/i, '')
+      .replace(/^businessclasscase/i, '')
+      .replace(/^firstclasscase/i, '')
+      .replace(/^smartcase/i, '')
+      .replace(/^premiumcase/i, '')
+      .replace(/^firstclass/i, '');
+    
+    const colorMap = {
+      'lightpink': 'Light Pink',
+      'lightblue': 'Light Blue',
+      'lightbrown': 'Light Brown',
+      'darkbrown': 'Dark Brown',
+      'darkblue': 'Dark Blue',
+      'jeansblue': 'Jeans Blue',
+      'brickred': 'Brick Red',
+      'navyblue': 'Navy Blue',
+      'gray': 'Gray',
+      'grey': 'Gray',
+      'black': 'Black',
+      'brown': 'Brown',
+      'red': 'Red',
+      'pink': 'Pink',
+      'blue': 'Blue',
+      'green': 'Green',
+      'purple': 'Purple',
+      'yellow': 'Yellow',
+      'orange': 'Orange'
+    };
+    
+    if (colorMap[colorPart]) {
+      return colorMap[colorPart];
+    }
+    
+    // Format the color name
+    colorPart = colorPart
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2')
+      .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/)
+      .filter(word => word.length > 0)
+      .join(' ')
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (colorMap[word]) return colorMap[word];
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+    
+    return colorPart || 'Color';
+  };
   
   // Update case type when filter param changes
   useEffect(() => {
@@ -132,6 +191,23 @@ const PassportCases = () => {
       setSelectedColor(selectedCase.colors[0].color);
     }
   }, [selectedCaseType, selectedColor, selectedCase]);
+
+  // Clamp quantity to max available inventory
+  useEffect(() => {
+    if (!selectedCaseType || !selectedColor) return;
+    
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    if (maxAvailable !== null && quantity > maxAvailable) {
+      setQuantity(Math.max(1, maxAvailable));
+    }
+    // Clear error when case type or color changes
+    setQuantityError('');
+  }, [selectedCaseType, selectedColor, cart, quantity]); // eslint-disable-line react-hooks/exhaustive-deps
   
   if (!selectedCase || !selectedCase.images || selectedCase.images.length === 0) {
     return (
@@ -197,6 +273,7 @@ const PassportCases = () => {
     setSelectedCaseType(type);
     setCurrentImageIndex(0);
     setSelectedDetailImage(null); // Reset detail image when case type changes
+    setQuantity(1); // Reset quantity when case type changes
     // Update URL with filter parameter
     const typeToFilter = {
       'economy': 'economy',
@@ -217,6 +294,7 @@ const PassportCases = () => {
     setSelectedColor(color);
     setCurrentImageIndex(0); // Reset image index when color changes
     setSelectedDetailImage(null); // Reset detail image when color changes
+    setQuantity(1); // Reset quantity when color changes
   };
   
   const handleDetailImageClick = (image) => {
@@ -224,23 +302,53 @@ const PassportCases = () => {
   };
 
   const handleAddToCart = (product) => {
-    // Show modal first
-    setPendingProduct(product);
-    setShowGlueModal(true);
-  };
-
-  const handleProceedToCart = () => {
-    if (!pendingProduct) return;
-    
+    // Add quantity to product
+    const productWithQuantity = {
+      ...product,
+      quantity: quantity
+    };
     // Ensure unique ID with timestamp
     const productWithId = {
-      ...pendingProduct,
+      ...productWithQuantity,
       id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
     };
     addToCart(productWithId);
-    setShowGlueModal(false);
-    setPendingProduct(null);
   };
+
+  const handleIncrementQuantity = () => {
+    if (isSelectedColorSoldOut()) return;
+    
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    if (maxAvailable === null || maxAvailable > quantity) {
+      setQuantity(quantity + 1);
+      setQuantityError(''); // Clear error when successfully incrementing
+    } else {
+      // Get item name and color for the alert message
+      const productsWithQuantities = getProductsWithQuantities();
+      const currentCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+      const itemName = currentCase?.name || getCaseDisplayName(selectedCaseType);
+      
+      // Get color name from selected color data
+      const selectedColorData = currentCase?.colors?.find(c => c.color === selectedColor);
+      const colorName = selectedColorData?.image ? getColorName(selectedColorData.image) : '';
+      
+      const colorText = colorName ? ` in ${colorName}` : '';
+      setQuantityError(`We don't have any more ${itemName}${colorText} in stock to be added anymore.`);
+    }
+  };
+
+  const handleDecrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+      setQuantityError(''); // Clear error when decrementing
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -264,8 +372,8 @@ const PassportCases = () => {
                   onClick={() => handleCaseTypeChange(caseItem.type)}
                   className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 relative ${
                     selectedCaseType === caseItem.type
-                      ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
-                      : 'border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300'
+                      ? 'border-b-2 border-blue-700 text-white bg-blue-600 font-medium'
+                      : 'border-b-2 border-transparent text-white hover:text-white hover:border-blue-300 hover:bg-blue-500 bg-blue-400'
                   } ${isSoldOut ? 'opacity-60' : ''} font-inter`}
                 >
                   <span className="flex items-center gap-2">
@@ -487,50 +595,80 @@ const PassportCases = () => {
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-light text-gray-900 font-inter">£{selectedCase.basePrice.toFixed(2)}</span>
               </div>
-              <div className="flex flex-col gap-3">
-                <AddToCartBtn
-                  product={{
-                    name: selectedCase?.name || 'Passport Case',
-                    caseType: selectedCaseType,
-                    caseName: selectedCase?.name || 'Passport Case',
-                    color: selectedColor,
-                    basePrice: selectedCase?.basePrice || 0,
-                    casePrice: selectedCase?.basePrice || 0,
-                    totalPrice: selectedCase?.basePrice || 0,
-                    price: selectedCase?.basePrice || 0,
-                    image: currentImage,
-                    caseImage: currentImage,
-                    quantity: 1
-                  }}
-                  disabled={isSelectedColorSoldOut()}
-                  onAdd={handleAddToCart}
-                  className="bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200"
-                />
-                <button
-                  onClick={() => {
-                    // Navigate to CreateYours with selected case and color
-                    navigate(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
-                  }}
-                  className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
-                >
-                  PERSONALIZE
-                </button>
+              
+              {/* Quantity Controls and Add to Cart */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  {/* Quantity Controls */}
+                  <div className="flex items-center border border-gray-200 rounded-sm h-[42px]">
+                    <button
+                      onClick={handleDecrementQuantity}
+                      disabled={quantity <= 1}
+                      className="h-full px-3 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label="Decrease quantity"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
+                      </svg>
+                    </button>
+                    <span className="text-sm font-medium text-gray-900 text-center font-inter min-w-[2.5rem] px-3 b flex items-center justify-center h-full">
+                      {quantity}
+                    </span>
+                  <button
+                    onClick={handleIncrementQuantity}
+                    className="h-full px-3 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+                    aria-label="Increase quantity"
+                  >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Add to Cart Button */}
+                  <div className="flex-1">
+                    <AddToCartBtn
+                      product={{
+                        name: selectedCase?.name || 'Passport Case',
+                        caseType: selectedCaseType,
+                        caseName: selectedCase?.name || 'Passport Case',
+                        color: selectedColor,
+                        basePrice: selectedCase?.basePrice || 0,
+                        casePrice: selectedCase?.basePrice || 0,
+                        totalPrice: selectedCase?.basePrice || 0,
+                        price: selectedCase?.basePrice || 0,
+                        image: currentImage,
+                        caseImage: currentImage,
+                        quantity: quantity
+                      }}
+                      disabled={isSelectedColorSoldOut()}
+                      onAdd={handleAddToCart}
+                      className="bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200"
+                    />
+                  </div>
+                </div>
+                
+                {/* Inline Error Message */}
+                {quantityError && (
+                  <p className="text-sm text-red-600 font-inter ml-1">
+                    {quantityError}
+                  </p>
+                )}
               </div>
+
+              <button
+                onClick={() => {
+                  // Navigate to CreateYours with selected case and color
+                  navigate(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
+                }}
+                className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+              >
+                PERSONALIZE
+              </button>
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Glue Info Modal */}
-      <GlueInfoModal
-        show={showGlueModal}
-        onClose={() => {
-          setShowGlueModal(false);
-          setPendingProduct(null);
-        }}
-        onProceed={handleProceedToCart}
-        productType="case"
-      />
     </div>
   );
 };

@@ -14,10 +14,11 @@ const CartItem = ({
   onToggleNote,
   onNoteChange,
   onSaveNote,
-  onCancelNote
+  onCancelNote,
+  errorMessage
 }) => {
   return (
-    <div className="border-b border-gray-100 pb-4 flex items-start gap-3">
+    <div className=" pb-4 flex items-start gap-3">
       <div className="flex-1">
         <div className="flex justify-end items-end mb-2">
           <button 
@@ -42,6 +43,7 @@ const CartItem = ({
             onNoteChange={onNoteChange}
             onSaveNote={onSaveNote}
             onCancelNote={onCancelNote}
+            errorMessage={errorMessage}
           />
         ) : (
           <CaseItem
@@ -56,6 +58,7 @@ const CartItem = ({
             onNoteChange={onNoteChange}
             onSaveNote={onSaveNote}
             onCancelNote={onCancelNote}
+            errorMessage={errorMessage}
           />
         )}
       </div>

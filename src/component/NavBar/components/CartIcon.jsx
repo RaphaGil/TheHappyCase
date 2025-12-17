@@ -8,7 +8,7 @@ const CartIcon = ({ isMobile = false }) => {
   return (
     <Link
       to="/cart"
-      className={`${isMobile ? 'md:hidden' : 'hidden md:flex'} items-center p-2 text-gray-900 hover:text-gray-700 relative transition-colors`}
+      className={`${isMobile ? 'flex md:hidden' : 'hidden md:flex'} items-center p-2 text-gray-900 hover:text-gray-700 relative transition-colors z-10`}
       aria-label="Go to cart"
     >
       <svg

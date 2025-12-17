@@ -1,10 +1,12 @@
 // Backend server for Stripe Embedded Checkout
 // Run with: node server.js
-// Install dependencies: npm install express stripe cors dotenv
+// Install dependencies: npm install express stripe cors dotenv nodemailer @supabase/supabase-js
 
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const nodemailer = require("nodemailer");
+const { createClient } = require("@supabase/supabase-js");
 
 // --- Validate keys ---
 if (
@@ -22,6 +24,18 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 });
 
 console.log("🔍 Stripe API version in use:", stripe.getApiField("version"));
+
+// --- Initialize Supabase Client ---
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
+  console.log("✅ Supabase client initialized");
+} else {
+  console.log("⚠️ Supabase not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable order storage.");
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -125,9 +139,11 @@ app.post("/create-payment-intent", async (req, res) => {
       automatic_payment_methods: {
         enabled: true,
       },
+      receipt_email: customerInfo?.email || undefined, // Stripe will send receipt automatically
       metadata: {
         item_count: Array.isArray(items) ? items.length : 0,
         customer_email: customerInfo?.email || "",
+        customer_name: customerInfo?.name || "",
       },
     });
 
@@ -135,6 +151,380 @@ app.post("/create-payment-intent", async (req, res) => {
   } catch (error) {
     console.error("Error creating payment intent:", error);
     res.status(500).json({ error: error.message || "Failed to create payment intent" });
+  }
+});
+
+// --- Send Order Confirmation Email ---
+app.post("/send-order-confirmation", async (req, res) => {
+  try {
+    const { paymentIntent, customerInfo, items } = req.body;
+
+    if (!customerInfo?.email) {
+      return res.status(400).json({ error: "Customer email is required" });
+    }
+
+    // Calculate total
+    const totalAmount = items?.reduce((sum, item) => sum + (item.totalPrice || item.price || 0) * (item.quantity || 1), 0) || 0;
+    const orderId = paymentIntent?.id || `order-${Date.now()}`;
+    const orderDate = paymentIntent?.created 
+      ? new Date(paymentIntent.created * 1000).toLocaleDateString('en-GB', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      : new Date().toLocaleDateString('en-GB');
+
+    // Format order items HTML
+    const itemsHtml = items?.map((item, index) => {
+      const itemName = item.caseName || item.name || 'Custom Case';
+      const itemPrice = ((item.totalPrice || item.price || 0) * (item.quantity || 1)).toFixed(2);
+      const quantity = item.quantity || 1;
+      
+      return `
+        <tr>
+          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+            <strong>${itemName}</strong>
+            ${item.color ? `<br><span style="color: #6b7280; font-size: 14px;">Color: ${item.color}</span>` : ''}
+            ${item.pinsDetails && item.pinsDetails.length > 0 ? `<br><span style="color: #6b7280; font-size: 14px;">Charms: ${item.pinsDetails.length}</span>` : ''}
+          </td>
+          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center;">${quantity}</td>
+          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right;">£${itemPrice}</td>
+        </tr>
+      `;
+    }).join('') || '';
+
+    // Email HTML template
+    const emailHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Confirmation</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 30px;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #059669; margin: 0; font-size: 28px;">Order Confirmed!</h1>
+            <p style="color: #6b7280; margin-top: 10px;">Thank you for your order</p>
+          </div>
+
+          <div style="background-color: #f9fafb; padding: 20px; border-radius: 6px; margin-bottom: 30px;">
+            <h2 style="margin-top: 0; font-size: 20px; color: #111827;">Order Details</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; color: #6b7280;">Order ID:</td>
+                <td style="padding: 8px 0; text-align: right; font-weight: bold;">${orderId}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #6b7280;">Order Date:</td>
+                <td style="padding: 8px 0; text-align: right;">${orderDate}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #6b7280;">Status:</td>
+                <td style="padding: 8px 0; text-align: right; color: #059669; font-weight: bold;">Confirmed</td>
+              </tr>
+            </table>
+          </div>
+
+          <div style="margin-bottom: 30px;">
+            <h2 style="font-size: 20px; color: #111827; margin-bottom: 15px;">Items Ordered</h2>
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #f9fafb;">
+                  <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Item</th>
+                  <th style="padding: 12px; text-align: center; border-bottom: 2px solid #e5e7eb;">Qty</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #e5e7eb;">Total:</td>
+                  <td style="padding: 12px; text-align: right; font-weight: bold; font-size: 18px; border-top: 2px solid #e5e7eb;">£${totalAmount.toFixed(2)}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          ${customerInfo?.address ? `
+          <div style="background-color: #f9fafb; padding: 20px; border-radius: 6px; margin-bottom: 30px;">
+            <h2 style="margin-top: 0; font-size: 20px; color: #111827;">Shipping Address</h2>
+            <p style="margin: 5px 0;">
+              ${customerInfo.name || ''}<br>
+              ${customerInfo.address.line1 || ''}<br>
+              ${customerInfo.address.line2 ? customerInfo.address.line2 + '<br>' : ''}
+              ${customerInfo.address.city || ''} ${customerInfo.address.postal_code || ''}<br>
+              ${customerInfo.address.country || ''}
+            </p>
+          </div>
+          ` : ''}
+
+          <div style="background-color: #eff6ff; padding: 20px; border-radius: 6px; border-left: 4px solid #3b82f6;">
+            <h3 style="margin-top: 0; color: #1e40af;">What's Next?</h3>
+            <p style="margin: 5px 0; color: #1e3a8a;">
+              Your order will be processed within 1-2 business days. You will receive a shipping confirmation email with tracking details once your items are dispatched.
+            </p>
+            <p style="margin: 10px 0 0 0; color: #1e3a8a;">
+              <strong>Estimated delivery:</strong> 3-5 business days
+            </p>
+          </div>
+
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280; font-size: 14px;">
+            <p>Questions about your order? Contact us at <a href="mailto:support@thehappycase.com" style="color: #3b82f6;">support@thehappycase.com</a></p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Configure email transporter
+    // For production, use environment variables for email credentials
+    // Options: Gmail, SendGrid, AWS SES, etc.
+    let transporter;
+    
+    if (process.env.EMAIL_SERVICE === 'gmail' && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      // Gmail configuration
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS, // Use App Password for Gmail
+        },
+      });
+    } else if (process.env.SENDGRID_API_KEY) {
+      // SendGrid configuration
+      transporter = nodemailer.createTransport({
+        host: 'smtp.sendgrid.net',
+        port: 587,
+        secure: false,
+        auth: {
+          user: 'apikey',
+          pass: process.env.SENDGRID_API_KEY,
+        },
+      });
+    } else if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+      // Custom SMTP configuration
+      transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT || 587,
+        secure: process.env.SMTP_SECURE === 'true',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+    } else {
+      // Development: Log email instead of sending
+      console.log('='.repeat(60));
+      console.log('ORDER CONFIRMATION EMAIL (Email service not configured)');
+      console.log('='.repeat(60));
+      console.log(`To: ${customerInfo.email}`);
+      console.log(`Subject: Order Confirmation - ${orderId}`);
+      console.log('---');
+      console.log(`Order ID: ${orderId}`);
+      console.log(`Order Date: ${orderDate}`);
+      console.log(`Total: £${totalAmount.toFixed(2)}`);
+      console.log(`Items: ${items?.length || 0}`);
+      console.log('='.repeat(60));
+      console.log('\nTo enable email sending, configure one of the following in your .env file:');
+      console.log('1. Gmail: EMAIL_SERVICE=gmail, EMAIL_USER=your-email@gmail.com, EMAIL_PASS=your-app-password');
+      console.log('2. SendGrid: SENDGRID_API_KEY=your-sendgrid-api-key');
+      console.log('3. Custom SMTP: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE');
+      console.log('='.repeat(60));
+
+      return res.json({ 
+        success: true, 
+        message: 'Order confirmation email logged (email service not configured)',
+        emailHtml // Return HTML for debugging/testing
+      });
+    }
+
+    // Send email
+    try {
+      const fromEmail = process.env.FROM_EMAIL || process.env.EMAIL_USER || 'orders@thehappycase.com';
+      
+      await transporter.sendMail({
+        from: `"The Happy Case" <${fromEmail}>`,
+        to: customerInfo.email,
+        subject: `Order Confirmation - ${orderId}`,
+        html: emailHtml,
+      });
+
+      console.log(`✅ Order confirmation email sent to ${customerInfo.email} for order ${orderId}`);
+
+      res.json({ 
+        success: true, 
+        message: 'Order confirmation email sent successfully'
+      });
+    } catch (emailError) {
+      console.error("Error sending email:", emailError);
+      // Log email details even if sending fails
+      console.log('='.repeat(60));
+      console.log('EMAIL SEND FAILED - Email details logged:');
+      console.log(`To: ${customerInfo.email}`);
+      console.log(`Subject: Order Confirmation - ${orderId}`);
+      console.log('='.repeat(60));
+      
+      // Still return success to not block the payment flow
+      res.json({ 
+        success: false, 
+        message: 'Order confirmed but email sending failed',
+        error: emailError.message,
+        emailHtml // Return HTML for debugging/testing
+      });
+    }
+  } catch (error) {
+    console.error("Error sending order confirmation email:", error);
+    res.status(500).json({ error: error.message || "Failed to send order confirmation email" });
+  }
+});
+
+// --- Save Order to Supabase ---
+app.post("/save-order", async (req, res) => {
+  try {
+    const { paymentIntent, customerInfo, items } = req.body;
+
+    if (!supabase) {
+      console.log("⚠️ Supabase not configured. Order not saved to database.");
+      return res.json({ 
+        success: false, 
+        message: "Supabase not configured. Order not saved to database." 
+      });
+    }
+
+    if (!paymentIntent || !customerInfo || !items || !Array.isArray(items)) {
+      return res.status(400).json({ error: "Missing required order information" });
+    }
+
+    // Calculate totals
+    const totalAmount = items.reduce((sum, item) => 
+      sum + (item.totalPrice || item.price || 0) * (item.quantity || 1), 0
+    );
+    const orderId = paymentIntent.id || `order-${Date.now()}`;
+    const orderDate = paymentIntent.created 
+      ? new Date(paymentIntent.created * 1000).toISOString()
+      : new Date().toISOString();
+
+    // Prepare order data
+    const orderData = {
+      order_id: orderId,
+      payment_intent_id: paymentIntent.id,
+      customer_email: customerInfo.email,
+      customer_name: customerInfo.name || null,
+      customer_phone: customerInfo.phone || null,
+      total_amount: totalAmount,
+      currency: paymentIntent.currency || 'gbp',
+      status: paymentIntent.status || 'succeeded',
+      order_date: orderDate,
+      shipping_address: customerInfo.address ? {
+        line1: customerInfo.address.line1,
+        line2: customerInfo.address.line2 || null,
+        city: customerInfo.address.city,
+        postal_code: customerInfo.address.postal_code,
+        country: customerInfo.address.country,
+        state: customerInfo.address.state || null,
+      } : null,
+      items: items.map(item => ({
+        name: item.caseName || item.name || 'Custom Case',
+        case_type: item.caseType || null,
+        color: item.color || null,
+        quantity: item.quantity || 1,
+        unit_price: item.totalPrice || item.price || 0,
+        total_price: (item.totalPrice || item.price || 0) * (item.quantity || 1),
+        pins: item.pins || item.pinsDetails || null,
+        custom_design: item.customDesign || false,
+        case_image: item.caseImage || item.image || null,
+        design_image: item.designImage || null,
+      })),
+      metadata: paymentIntent.metadata || {},
+    };
+
+    // Save to Supabase
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([orderData])
+      .select();
+
+    if (error) {
+      console.error("Error saving order to Supabase:", error);
+      return res.status(500).json({ 
+        error: error.message || "Failed to save order to database",
+        details: error 
+      });
+    }
+
+    console.log(`✅ Order ${orderId} saved to Supabase successfully`);
+
+    res.json({ 
+      success: true, 
+      message: "Order saved successfully",
+      order_id: orderId,
+      data: data 
+    });
+  } catch (error) {
+    console.error("Error saving order:", error);
+    res.status(500).json({ error: error.message || "Failed to save order" });
+  }
+});
+
+// --- Get Orders from Supabase ---
+app.get("/get-orders", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(503).json({ 
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable order fetching."
+      });
+    }
+
+    const { limit = 100, offset = 0, status, email } = req.query;
+
+    let query = supabase
+      .from('orders')
+      .select('*')
+      .order('order_date', { ascending: false })
+      .range(parseInt(offset), parseInt(offset) + parseInt(limit) - 1);
+
+    // Filter by status if provided
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    // Filter by email if provided
+    if (email) {
+      query = query.eq('customer_email', email);
+    }
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      console.error("Error fetching orders from Supabase:", error);
+      return res.status(500).json({ 
+        error: error.message || "Failed to fetch orders",
+        details: error 
+      });
+    }
+
+    // Get total count for pagination
+    const { count: totalCount } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true });
+
+    res.json({ 
+      success: true,
+      orders: data || [],
+      total: totalCount || 0,
+      limit: parseInt(limit),
+      offset: parseInt(offset)
+    });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch orders" });
   }
 });
 

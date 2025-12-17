@@ -6,11 +6,14 @@ import ColorSelector from "../../component/ColorSelector/index.jsx";
 import PinSelector from "../../component/PinSelector";
 import Products from "../../data/products.json";
 import { useCart } from "../../context/CartContext";
+import { createCompositeDesignImage } from "../../component/Canvas/utils/imageExport";
+import { getMaxAvailableQuantity } from "../../utils/inventory";
 
 // Components
 import MobileStepButtons from "./components/MobileStepButtons";
 import ViewMoreImagesButton from "./components/ViewMoreImagesButton";
 import ItemDescriptionDropdown from "./components/ItemDescriptionDropdown";
+import ItemDescriptionModal from "./components/ItemDescriptionModal";
 import ImageModal from "../../component/ImageModal";
 // import SaveDesignButton from "./components/SaveDesignButton";
 import MobileOverlay from "./components/MobileOverlay";
@@ -92,14 +95,18 @@ const CreateYours = () => {
   const [customTextAdded, setCustomTextAdded] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedModalImage, setSelectedModalImage] = useState(0);
-  const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false);
+  const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
   const [showAddTextModal, setShowAddTextModal] = useState(false);
+  const [inventoryMessage, setInventoryMessage] = useState('');
+  const [inventoryType, setInventoryType] = useState('warning');
+  const [quantityError, setQuantityError] = useState('');
+  const [charmInventoryError, setCharmInventoryError] = useState('');
   const caseDropdownRef = useRef(null);
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
 
   // Update case and color when URL params change
   useEffect(() => {
@@ -131,14 +138,175 @@ const CreateYours = () => {
     }
   }, [searchParams]);
 
+  // Auto-dismiss inventory message after 5 seconds
+  useEffect(() => {
+    if (inventoryMessage) {
+      const timer = setTimeout(() => {
+        setInventoryMessage('');
+      }, 5000); // 5 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [inventoryMessage]);
+
+  // Check inventory when case/color or charms change
+  useEffect(() => {
+    // Check case inventory
+    if (selectedCaseType && selectedColor) {
+      const productForInventory = {
+        caseType: selectedCaseType,
+        color: selectedColor,
+      };
+      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+      
+      if (maxAvailable !== null && maxAvailable === 0) {
+        const productsWithQuantities = getProductsWithQuantities();
+        const currentCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+        const caseName = currentCase?.name || 'Passport Case';
+        const colorText = selectedColor ? ` in ${selectedColor}` : '';
+        setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now.`);
+        setInventoryType('warning');
+      } else if (maxAvailable !== null && maxAvailable > 0) {
+        // Clear message if case is in stock
+        setInventoryMessage('');
+      }
+    }
+
+    // Check charm inventory for selected charms
+    if (selectedPins.length > 0) {
+      let outOfStockCharm = null;
+      
+      for (const { pin } of selectedPins) {
+        if (!pin) continue;
+        
+        const charmCategory = pin?.category || selectedCategory || 'colorful';
+        const charmName = pin?.name || 'charm';
+        const charmSrc = pin?.src || '';
+        
+        const charmProduct = {
+          type: 'charm',
+          category: charmCategory,
+          pin: pin,
+          name: charmName
+        };
+        
+        const maxAvailableCharm = getMaxAvailableQuantity(charmProduct, cart);
+        
+        // Skip if no inventory limit
+        if (maxAvailableCharm === null) continue;
+        
+        // Count standalone charms already in cart
+        let standaloneCharmsInCart = 0;
+        cart.forEach(cartItem => {
+          if (cartItem.type === 'charm') {
+            const cartPin = cartItem.pin || cartItem;
+            const cartPinName = cartPin.name || cartPin.src;
+            const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+            if ((cartPinName === charmName || cartPinName === charmSrc) && 
+                cartPinCategory === charmCategory) {
+              standaloneCharmsInCart += (cartItem.quantity || 1);
+            }
+          }
+        });
+        
+        // Count how many of this charm are in custom designs already in cart
+        let charmCountInCustomDesigns = 0;
+        cart.forEach(cartItem => {
+          if (cartItem.pins && Array.isArray(cartItem.pins)) {
+            cartItem.pins.forEach(cartPin => {
+              const cartPinName = cartPin.name || cartPin.src;
+              const cartPinCategory = cartPin.category || charmCategory;
+              if ((cartPinName === charmName || cartPinName === charmSrc) && 
+                  cartPinCategory === charmCategory) {
+                charmCountInCustomDesigns += (cartItem.quantity || 1);
+              }
+            });
+          }
+        });
+        
+        // Count how many of this charm are already selected in the current design
+        const charmCountInDesign = selectedPins.filter(p => {
+          const pPin = p.pin || p;
+          const pPinName = pPin.name || pPin.src;
+          const pPinCategory = pPin.category || charmCategory;
+          return (pPinName === charmName || pPinName === charmSrc) && 
+                 pPinCategory === charmCategory;
+        }).length;
+        
+        // Calculate total inventory and usage
+        const totalInventory = maxAvailableCharm + standaloneCharmsInCart;
+        const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
+        
+        // Check if charm is out of stock or would exceed inventory
+        if (maxAvailableCharm === 0 || totalUsage > totalInventory) {
+          outOfStockCharm = charmName;
+          break; // Exit early if any charm is out of stock
+        }
+      }
+      
+      // Set or clear inventory message based on findings
+      if (outOfStockCharm) {
+        setInventoryMessage(`Oops! We don't have any more ${outOfStockCharm} in stock right now.`);
+        setInventoryType('warning');
+      } else {
+        // Clear warning messages if all charms are in stock (but keep error messages from add to cart)
+        setInventoryMessage(prev => {
+          if (prev && prev.includes("can't add more to your basket")) {
+            return prev; // Keep error messages
+          }
+          // Only clear if it's a warning about charms
+          if (prev && !prev.includes("Passport Case") && !prev.includes("Case")) {
+            return '';
+          }
+          return prev;
+        });
+      }
+    } else {
+      // If no charms selected, clear charm-related inventory messages (but keep error messages)
+      setInventoryMessage(prev => {
+        if (prev && prev.includes("can't add more to your basket")) {
+          return prev; // Keep error messages
+        }
+        // Only clear charm warnings, not case warnings
+        if (prev && !prev.includes("Passport Case") && !prev.includes("Case")) {
+          return '';
+        }
+        return prev;
+      });
+    }
+  }, [selectedCaseType, selectedColor, selectedPins, quantity, cart, selectedCategory, isMobile]);
+
   // Handle case type selection
   const handleCaseTypeSelection = (caseType) => {
     setSelectedCaseType(caseType);
-    const selectedCase = Products.cases.find(c => c.type === caseType);
+    const productsWithQuantities = getProductsWithQuantities();
+    const selectedCase = productsWithQuantities.cases.find(c => c.type === caseType);
     if (selectedCase && selectedCase.colors.length > 0) {
-      const firstColor = selectedCase.colors[0];
-      setSelectedColor(firstColor.color);
-      setSelectedCaseImage(firstColor.image);
+      // Find first available (not sold out) color, or fallback to first color
+      const availableColor = selectedCase.colors.find(c => 
+        c.quantity === undefined || c.quantity > 0
+      ) || selectedCase.colors[0];
+      
+      // Check inventory for the selected case type and available color
+      const productForInventory = {
+        caseType: caseType,
+        color: availableColor.color,
+      };
+      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+      
+      // If out of stock, show alert but still allow selection
+      if (maxAvailable !== null && maxAvailable === 0) {
+        const caseName = selectedCase.name || 'Passport Case';
+        const colorText = availableColor.color ? ` in ${availableColor.color}` : '';
+        setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now.`);
+        setInventoryType('warning');
+      } else {
+        // Clear inventory message if case is in stock
+        setInventoryMessage('');
+      }
+      
+      setSelectedColor(availableColor.color);
+      setSelectedCaseImage(availableColor.image);
     }
     // Close mobile step after selection
     if (isMobile) {
@@ -148,6 +316,29 @@ const CreateYours = () => {
 
   // Handle color selection
   const handleColorSelection = (color, image) => {
+    // Check inventory for the selected case and color before setting
+    if (selectedCaseType && color) {
+      const productsWithQuantities = getProductsWithQuantities();
+      const currentCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+      
+      const productForInventory = {
+        caseType: selectedCaseType,
+        color: color,
+      };
+      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+      
+      // If out of stock, show alert but still allow selection
+      if (maxAvailable !== null && maxAvailable === 0) {
+        const caseName = currentCase?.name || 'Passport Case';
+        const colorText = color ? ` in ${color}` : '';
+        setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now.`);
+        setInventoryType('warning');
+      } else {
+        // Clear inventory message if color is in stock
+        setInventoryMessage('');
+      }
+    }
+    
     setSelectedColor(color);
     setSelectedCaseImage(image);
     // Close mobile step after selection
@@ -158,27 +349,183 @@ const CreateYours = () => {
 
   // Handle pin selection from PinSelector
   const handlePinSelection = useCallback((pin) => {
+    // Check inventory before adding charm
+    const getCharmCategory = () => {
+      if (pin.category) return pin.category;
+      // Try to infer category from selectedCategory
+      if (selectedCategory) return selectedCategory;
+      return 'colorful'; // Default fallback
+    };
+
+    const charmCategory = getCharmCategory();
+    const charmName = pin.name || pin.src || '';
+    const charmSrc = pin.src || '';
+
+    const product = {
+      name: charmName,
+      price: pin.price || 2.0,
+      totalPrice: pin.price || 2.0,
+      image: charmSrc,
+      pin: pin,
+      category: charmCategory,
+      type: 'charm'
+    };
+
+    // Check inventory for standalone charms in cart
+    // maxAvailable tells us how many MORE standalone charms can be added
+    const maxAvailable = getMaxAvailableQuantity(product, cart);
+    
+    // If no inventory limit, allow adding
+    if (maxAvailable === null) {
+      // This will be handled by the Canvas component
+      if (window.addPinToCanvas) {
+        window.addPinToCanvas(pin);
+      }
+      
+      // Close mobile overlay after pin selection
+      if (isMobile) {
+        setMobileCurrentStep(null);
+        // Scroll to top on small screens
+        setTimeout(() => {
+          window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+          });
+        }, 100);
+      } else {
+        // Scroll to the canvas area on larger screens
+        setTimeout(() => {
+          const canvasElement = document.querySelector('.happy-card');
+          if (canvasElement) {
+            canvasElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+          }
+        }, 100);
+      }
+      return;
+    }
+    
+    // Count standalone charms already in cart
+    let standaloneCharmsInCart = 0;
+    cart.forEach(cartItem => {
+      if (cartItem.type === 'charm') {
+        const cartPin = cartItem.pin || cartItem;
+        const cartPinName = cartPin.name || cartPin.src;
+        const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+        if ((cartPinName === charmName || cartPinName === charmSrc) && 
+            cartPinCategory === charmCategory) {
+          standaloneCharmsInCart += (cartItem.quantity || 1);
+        }
+      }
+    });
+    
+    // Count how many of this charm are in custom designs already in cart
+    // (getMaxAvailableQuantity only counts standalone charms, not charms in custom designs)
+    let charmCountInCustomDesigns = 0;
+    cart.forEach(cartItem => {
+      // Count charms in custom designs
+      if (cartItem.pins && Array.isArray(cartItem.pins)) {
+        cartItem.pins.forEach(cartPin => {
+          const cartPinName = cartPin.name || cartPin.src;
+          const cartPinCategory = cartPin.category || charmCategory;
+          if ((cartPinName === charmName || cartPinName === charmSrc) && 
+              cartPinCategory === charmCategory) {
+            charmCountInCustomDesigns += (cartItem.quantity || 1);
+          }
+        });
+      }
+    });
+    
+    // Count how many of this charm are already selected in the current design
+    const charmCountInDesign = selectedPins.filter(p => {
+      const pPin = p.pin || p;
+      const pPinName = pPin.name || pPin.src;
+      const pPinCategory = pPin.category || charmCategory;
+      return (pPinName === charmName || pPinName === charmSrc) && 
+             pPinCategory === charmCategory;
+    }).length;
+    
+    // Calculate total inventory: maxAvailable + standalone charms in cart
+    // This gives us the total available inventory for this charm
+    const totalInventory = maxAvailable + standaloneCharmsInCart;
+    
+    // Calculate total usage: standalone + in custom designs + in current design + 1 (new one)
+    const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign + 1;
+    
+    // If maxAvailable is 0, no more charms can be added (standalone or in designs)
+    // Also check if total usage would exceed total inventory
+    if (maxAvailable === 0 || totalUsage > totalInventory) {
+      const charmDisplayName = pin.name || pin.src || 'this charm';
+      const errorMessage = `Oops! We don't have any more ${charmDisplayName} in stock right now, so you can't add more to your basket.`;
+      
+      // Set inventory message immediately
+      setInventoryMessage(errorMessage);
+      setInventoryType('error');
+      setCharmInventoryError(`We don't have any more ${charmDisplayName} in stock.`);
+      
+      // Close mobile overlay if open so user can see the alert
+      if (isMobile) {
+        setMobileCurrentStep(null);
+        // Scroll to show the alert message
+        setTimeout(() => {
+          window.scrollTo({ 
+            top: document.body.scrollHeight, 
+            behavior: 'smooth' 
+          });
+        }, 300);
+      } else {
+        // Scroll to price summary area on desktop to show alert
+        setTimeout(() => {
+          const priceSummaryElement = document.querySelector('[class*="PriceSummary"]') || 
+                                     document.querySelector('.price-summary');
+          if (priceSummaryElement) {
+            priceSummaryElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+          }
+        }, 300);
+      }
+      
+      return;
+    }
+    
     // This will be handled by the Canvas component
     if (window.addPinToCanvas) {
       window.addPinToCanvas(pin);
     }
     
+    // Clear charm inventory error when successfully adding a charm
+    setCharmInventoryError('');
+    
+    // Clear inventory message only if it's a warning (not an error from this action)
+    // Don't clear immediately - let the useEffect handle it based on current state
+    
     // Close mobile overlay after pin selection
     if (isMobile) {
       setMobileCurrentStep(null);
-    }
-    
-    // Scroll to the canvas area to show the passport case with the new charm
-    setTimeout(() => {
-      const canvasElement = document.querySelector('.happy-card');
-      if (canvasElement) {
-        canvasElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
+      // Scroll to top on small screens
+      setTimeout(() => {
+        window.scrollTo({ 
+          top: 0, 
+          behavior: 'smooth' 
         });
-      }
-    }, 100); // Small delay to ensure the charm is added first
-  }, [isMobile]);
+      }, 100);
+    } else {
+      // Scroll to the canvas area on larger screens
+      setTimeout(() => {
+        const canvasElement = document.querySelector('.happy-card');
+        if (canvasElement) {
+          canvasElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }, 100);
+    }
+  }, [isMobile, cart, selectedPins, selectedCategory]);
 
   // Handle navigation from other pages
   useEffect(() => {
@@ -223,8 +570,248 @@ const CreateYours = () => {
     }
   }, [selectedCaseType]); // Run when selectedCaseType changes
 
+  // Helper function to get color name from image filename
+  const getColorName = (image) => {
+    if (!image) return '';
+    
+    const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
+    
+    let colorPart = filename
+      .replace(/^economycase/i, '')
+      .replace(/^businessclasscase/i, '')
+      .replace(/^firstclasscase/i, '')
+      .replace(/^smartcase/i, '')
+      .replace(/^premiumcase/i, '')
+      .replace(/^firstclass/i, '');
+    
+    const colorMap = {
+      'lightpink': 'Light Pink',
+      'lightblue': 'Light Blue',
+      'lightbrown': 'Light Brown',
+      'darkbrown': 'Dark Brown',
+      'darkblue': 'Dark Blue',
+      'jeansblue': 'Jeans Blue',
+      'brickred': 'Brick Red',
+      'navyblue': 'Navy Blue',
+      'gray': 'Gray',
+      'grey': 'Gray',
+      'black': 'Black',
+      'brown': 'Brown',
+      'red': 'Red',
+      'pink': 'Pink',
+      'blue': 'Blue',
+      'green': 'Green',
+      'purple': 'Purple',
+      'yellow': 'Yellow',
+      'orange': 'Orange'
+    };
+    
+    if (colorMap[colorPart]) {
+      return colorMap[colorPart];
+    }
+    
+    colorPart = colorPart
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2')
+      .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/)
+      .filter(word => word.length > 0)
+      .join(' ')
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (colorMap[word]) return colorMap[word];
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+    
+    return colorPart || 'Color';
+  };
+
+  // Clamp quantity to max available inventory
+  useEffect(() => {
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    if (maxAvailable !== null && quantity > maxAvailable) {
+      setQuantity(maxAvailable);
+    }
+    // Clear error when case type or color changes
+    setQuantityError('');
+  }, [selectedCaseType, selectedColor, cart, quantity]);
+
+  // Handle quantity increment with inventory check
+  const handleIncrementQuantity = () => {
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // Check case inventory first
+    // maxAvailable is how many MORE can be added, so if it's 0 or less, or if incrementing would exceed it, we can't add any more
+    if (maxAvailable !== null && (maxAvailable <= 0 || quantity + 1 > maxAvailable)) {
+      // Get item name and color for error message
+      const itemName = selectedCase?.name || 'Passport Case';
+      const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
+      const colorName = selectedColorData?.image ? getColorName(selectedColorData.image) : '';
+      
+      const colorText = colorName ? ` in ${colorName}` : '';
+      const errorMessage = `Oops! We don't have any more ${itemName}${colorText} in stock right now, so you can't add more to your basket.`;
+      setQuantityError(`We don't have any more ${itemName}${colorText} in stock to be added anymore.`);
+      setInventoryMessage(errorMessage);
+      setInventoryType('error');
+      return;
+    }
+    
+    // Check charm inventory for all charms in the design
+    if (selectedPins.length > 0) {
+      for (const { pin } of selectedPins) {
+        if (!pin) continue;
+        
+        const getCharmCategory = () => {
+          if (pin.category) return pin.category;
+          if (selectedCategory) return selectedCategory;
+          return 'colorful';
+        };
+        
+        const charmCategory = getCharmCategory();
+        const charmName = pin.name || pin.src || '';
+        const charmSrc = pin.src || '';
+        
+        const charmProduct = {
+          name: charmName,
+          price: pin.price || 2.0,
+          totalPrice: pin.price || 2.0,
+          image: charmSrc,
+          pin: pin,
+          category: charmCategory,
+          type: 'charm'
+        };
+        
+        const charmMaxAvailable = getMaxAvailableQuantity(charmProduct, cart);
+        
+        // If no inventory limit for this charm, skip check
+        if (charmMaxAvailable === null) continue;
+        
+        // Count standalone charms already in cart
+        let standaloneCharmsInCart = 0;
+        cart.forEach(cartItem => {
+          if (cartItem.type === 'charm') {
+            const cartPin = cartItem.pin || cartItem;
+            const cartPinName = cartPin.name || cartPin.src;
+            const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+            if ((cartPinName === charmName || cartPinName === charmSrc) && 
+                cartPinCategory === charmCategory) {
+              standaloneCharmsInCart += (cartItem.quantity || 1);
+            }
+          }
+        });
+        
+        // Count how many of this charm are in custom designs already in cart
+        let charmCountInCustomDesigns = 0;
+        cart.forEach(cartItem => {
+          if (cartItem.pins && Array.isArray(cartItem.pins)) {
+            cartItem.pins.forEach(cartPin => {
+              const cartPinName = cartPin.name || cartPin.src;
+              const cartPinCategory = cartPin.category || charmCategory;
+              if ((cartPinName === charmName || cartPinName === charmSrc) && 
+                  cartPinCategory === charmCategory) {
+                charmCountInCustomDesigns += (cartItem.quantity || 1);
+              }
+            });
+          }
+        });
+        
+        // Count how many of this charm are in the current design (per design)
+        const charmCountInDesign = selectedPins.filter(p => {
+          const pPin = p.pin || p;
+          const pPinName = pPin.name || pPin.src;
+          const pPinCategory = pPin.category || charmCategory;
+          return (pPinName === charmName || pPinName === charmSrc) && 
+                 pPinCategory === charmCategory;
+        }).length;
+        
+        // Calculate total inventory and usage
+        const totalInventory = charmMaxAvailable + standaloneCharmsInCart;
+        // Already used: standalone + in other custom designs + in current design with current quantity
+        // New usage if we increment: current usage + charmCountInDesign (one more design)
+        const currentUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
+        const newUsage = currentUsage + charmCountInDesign;
+        
+        // Check if adding one more design would exceed inventory
+        if (charmMaxAvailable === 0 || newUsage > totalInventory) {
+          const errorMessage = `Oops! We don't have any more ${pin.name || 'this charm'} in stock right now, so you can't add more to your basket.`;
+          setCharmInventoryError(errorMessage);
+          // Show alert modal for charms when out of stock
+          setInventoryMessage(errorMessage);
+          setInventoryType('error');
+          return;
+        }
+      }
+    }
+    
+    // All checks passed, increment quantity
+    setQuantity(quantity + 1);
+    setQuantityError(''); // Clear error when successfully incrementing
+    setCharmInventoryError(''); // Clear charm inventory error when successfully incrementing
+    setInventoryMessage(''); // Clear inventory message when successfully incrementing
+  };
+
+  // Handle quantity decrement
+  const handleDecrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+      setQuantityError(''); // Clear error when decrementing
+      setCharmInventoryError(''); // Clear charm inventory error when decrementing
+      setInventoryMessage(''); // Clear inventory message when decrementing
+    }
+  };
+
+  // Helper function to get products with quantities from localStorage
+  const getProductsWithQuantities = () => {
+    const savedQuantities = localStorage.getItem('productQuantities');
+    if (!savedQuantities) return Products;
+    
+    try {
+      const quantities = JSON.parse(savedQuantities);
+      const mergedProducts = { ...Products };
+      
+      // Merge case quantities and color quantities
+      if (quantities.cases) {
+        mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
+          const updatedCase = {
+            ...caseItem,
+            quantity: quantities.cases[index] !== undefined ? quantities.cases[index] : caseItem.quantity
+          };
+          
+          // Merge color quantities if they exist
+          if (quantities.caseColors && quantities.caseColors[index]) {
+            updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
+              ...colorItem,
+              quantity: quantities.caseColors[index][colorIndex] !== undefined 
+                ? quantities.caseColors[index][colorIndex] 
+                : colorItem.quantity
+            }));
+          }
+          
+          return updatedCase;
+        });
+      }
+      
+      return mergedProducts;
+    } catch (error) {
+      console.error('Error loading saved quantities:', error);
+      return Products;
+    }
+  };
+
+  const productsWithQuantities = getProductsWithQuantities();
+  
   // Calculate total price
-  const selectedCase = Products.cases.find(c => c.type === selectedCaseType);
+  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   const caseBasePrice = selectedCase?.basePrice || 0;
   
   // Get images for the selected case and color
@@ -305,38 +892,210 @@ const CreateYours = () => {
   };
 
   // Execute the actual add to cart action
-  const executeAddToCart = () => {
+  const executeAddToCart = async () => {
+    // Check case inventory first
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailableCase = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // Get case name and color name for better error messages
+    const caseName = selectedCase?.name || 'Passport Case';
+    const colorData = selectedCase?.colors?.find(c => c.color === selectedColor);
+    const colorName = colorData?.color || selectedColor || '';
+    
+    // Validate case quantity against inventory
+    if (maxAvailableCase !== null && maxAvailableCase === 0) {
+      const colorText = colorName ? ` in ${colorName}` : '';
+      setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now, so you can't add more to your basket.`);
+      setInventoryType('error');
+      return;
+    }
+    
+    if (maxAvailableCase !== null && quantity > maxAvailableCase) {
+      const colorText = colorName ? ` in ${colorName}` : '';
+      setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now, so you can't add more to your basket.`);
+      setInventoryType('error');
+      if (maxAvailableCase > 0) {
+        setQuantity(maxAvailableCase);
+      } else {
+        setQuantity(1);
+      }
+      return;
+    }
+    
+    // Check charm inventory for each selected charm
+    for (const { pin } of selectedPins) {
+      const charmCategory = pin?.category || selectedCategory || 'colorful';
+      const charmName = pin?.name || 'charm';
+      
+      const charmProduct = {
+        type: 'charm',
+        category: charmCategory,
+        pin: pin,
+        name: charmName
+      };
+      
+      const maxAvailableCharm = getMaxAvailableQuantity(charmProduct, cart);
+      
+      // Count standalone charms already in cart
+      let standaloneCharmsInCart = 0;
+      cart.forEach(cartItem => {
+        if (cartItem.type === 'charm') {
+          const cartPin = cartItem.pin || cartItem;
+          const cartPinName = cartPin.name || cartPin.src;
+          const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+          if ((cartPinName === charmName || cartPinName === pin?.src) && 
+              cartPinCategory === charmCategory) {
+            standaloneCharmsInCart += (cartItem.quantity || 1);
+          }
+        }
+      });
+      
+      // Count how many of this charm are in custom designs already in cart
+      let charmCountInCustomDesigns = 0;
+      cart.forEach(cartItem => {
+        if (cartItem.pins && Array.isArray(cartItem.pins)) {
+          cartItem.pins.forEach(cartPin => {
+            const cartPinName = cartPin.name || cartPin.src;
+            const cartPinCategory = cartPin.category || charmCategory;
+            if ((cartPinName === charmName || cartPinName === pin?.src) && 
+                cartPinCategory === charmCategory) {
+              charmCountInCustomDesigns += (cartItem.quantity || 1);
+            }
+          });
+        }
+      });
+      
+      // Count how many of this charm are already selected in the current design
+      const charmCountInDesign = selectedPins.filter(p => {
+        const pPin = p.pin || p;
+        const pPinName = pPin.name || pPin.src;
+        const pPinCategory = pPin.category || charmCategory;
+        return (pPinName === charmName || pPinName === pin?.src) && 
+               pPinCategory === charmCategory;
+      }).length;
+      
+      // Calculate total inventory and usage
+      const totalInventory = maxAvailableCharm === null ? null : (maxAvailableCharm + standaloneCharmsInCart);
+      const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
+      
+      // Check if charm is out of stock
+      if (maxAvailableCharm !== null && maxAvailableCharm === 0) {
+        setInventoryMessage(`Oops! We don't have any more ${charmName} in stock right now, so you can't add more to your basket.`);
+        setInventoryType('error');
+        return;
+      }
+      
+      // Check if adding this design would exceed charm inventory
+      if (totalInventory !== null && totalUsage > totalInventory) {
+        setInventoryMessage(`Oops! We don't have any more ${charmName} in stock right now, so you can't add more to your basket.`);
+        setInventoryType('error');
+        return;
+      }
+    }
+    
     // Capture composed design image from canvas if available
-    let designImage = null;
+    let canvasDataURL = null;
     try {
       if (window.getDesignImageDataURL) {
-        designImage = window.getDesignImageDataURL();
+        const capturedImage = window.getDesignImageDataURL();
+        // Only set canvasDataURL if it's a valid non-empty string
+        if (capturedImage && typeof capturedImage === 'string' && capturedImage.trim().length > 0) {
+          canvasDataURL = capturedImage;
+        }
       }
-    } catch {}
+    } catch (error) {
+      console.error('Error capturing canvas image:', error);
+    }
+    
+    // Get the case image - prioritize selectedCaseImage since it's what's currently displayed
+    // Then fall back to color data image or case images (reuse colorData from above)
+    const caseImageToUse = selectedCaseImage || colorData?.image || selectedCase?.images?.[0];
+    
+    // Ensure we always have a case image - if all else fails, use empty string
+    const finalCaseImage = caseImageToUse || '';
+    
+    // Create composite design image (case + charms) if we have canvas content or charms
+    let designImage = null;
+    if ((canvasDataURL || selectedPins.length > 0) && finalCaseImage) {
+      try {
+        // Create composite image combining case background with canvas content
+        // Use dimensions matching the display container (300x350)
+        designImage = await createCompositeDesignImage(finalCaseImage, canvasDataURL, 300, 350);
+        console.log('Composite design image created:', designImage ? 'success' : 'failed');
+      } catch (error) {
+        console.error('Error creating composite design image:', error);
+        // Fall back to case image if composite fails
+        designImage = null;
+      }
+    } else if (canvasDataURL) {
+      // If we have canvas content but no case image, use canvas content
+      designImage = canvasDataURL;
+    }
+    
+    // Debug logging
+    console.log('Adding to cart - Image check:', {
+      selectedCaseImage: selectedCaseImage,
+      colorDataImage: colorData?.image,
+      selectedCaseImages: selectedCase?.images,
+      caseImageToUse: finalCaseImage,
+      hasCanvasData: !!canvasDataURL,
+      hasDesignImage: !!designImage,
+      designImageLength: designImage ? designImage.length : 0
+    });
+    
+    // Ensure pins have all required properties including name
+    const pinsDetails = selectedPins.map(({ pin }) => {
+      // Ensure pin has name, src, price properties
+      return {
+        name: pin?.name || 'Charm',
+        src: pin?.src || '',
+        price: pin?.price || 0,
+        category: pin?.category || '',
+        ...pin // Spread to include any other properties
+      };
+    });
+    
     const product = {
       id: `custom-${Date.now()}`,
       name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
       caseType: selectedCaseType,
       caseName: selectedCase?.name || 'Custom Case',
       color: selectedColor,
-      pins: selectedPins.map(({ pin }) => pin),
-      pinsDetails: selectedPins.map(({ pin }) => pin), // Add this for cart display
+      pins: pinsDetails,
+      pinsDetails: pinsDetails, // Add this for cart display
       basePrice: caseBasePrice,
       casePrice: caseBasePrice,
       pinsPrice: pinsPrice,
       totalPrice: parseFloat(totalPrice),
       price: parseFloat(totalPrice), // Keep for compatibility
-      image: selectedCaseImage,
-      caseImage: selectedCaseImage, // Add this for cart display
-      designImage,
+      image: finalCaseImage, // Case image to display in cart - always set
+      caseImage: finalCaseImage, // Case image to display in cart - always set
+      designImage: designImage, // Composite design image (case + charms) or null
       customDesign: true,
       quantity: quantity
     };
     
-    // Add to cart with quantity
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
-    }
+    // Debug: Log the product being added
+    console.log('Product being added to cart:', {
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      caseImage: product.caseImage,
+      designImage: product.designImage ? `present (${product.designImage.length} chars)` : 'null',
+      hasImage: !!product.image,
+      hasCaseImage: !!product.caseImage,
+      hasDesignImage: !!product.designImage
+    });
+    
+    // Add to cart with quantity (will be grouped if identical item exists, but custom designs are kept separate)
+    const productWithQuantity = {
+      ...product,
+      quantity: quantity
+    };
+    addToCart(productWithQuantity);
   };
 
   // Handle pin selection callback from Canvas
@@ -356,6 +1115,8 @@ const CreateYours = () => {
   // Handle pin removal callback from Canvas
   const handlePinRemove = useCallback((removedPin) => {
     setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
+    // Clear charm inventory error when removing a charm
+    setCharmInventoryError('');
   }, []);
 
   // Handle save image function from Canvas
@@ -387,13 +1148,13 @@ const CreateYours = () => {
 
 
   return (
-    <section className={`w-full py-1 md:py-12 bg-white ${isMobile ? 'h-screen fixed inset-0 overflow-hidden' : 'min-h-screen'}`}>
-      <div className={`lg:container mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 relative z-10 mt-4 ${isMobile ? 'pb-40 xs:pb-44 sm:pb-48 h-full flex flex-col overflow-hidden' : 'pb-2 sm:pb-24 flex flex-col'}`}>
+    <section className={`w-full pt-4  pb-1 md:pb-8 bg-white ${isMobile ? 'h-screen fixed inset-0 overflow-hidden' : 'min-h-screen'}`}>
+      <div className={`max-w-7xl mx-auto px-2 xs:px-3 sm:px-4 md:px-8 relative z-10 ${isMobile ? 'pb-40 xs:pb-44 sm:pb-48 h-full flex flex-col overflow-hidden' : 'pb-2 sm:pb-24 flex flex-col'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
             onClick={() => navigate('/')}
-            className="absolute top-2 xs:top-3 right-2 xs:right-3 sm:right-4 z-50 w-7 h-7 xs:w-8 xs:h-8 flex items-center justify-center transition-colors"
+            className="absolute right-2 xs:right-3 sm:right-4 z-50 w-7 h-7 xs:w-8 xs:h-8 flex items-center justify-center transition-colors"
             aria-label="Close and go back to home"
           >
             <svg className="w-12 h-12 xs:w-5 xs:h-5 mt-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,26 +1163,30 @@ const CreateYours = () => {
           </button>
         )}
         
-        {/* Header Section - Fixed at top, never overlaps */}
-        <div className="text-center mb-1 xs:mb-1.5 sm:mb-2 md:mb-6 flex-shrink-0">
-          <h1 className="text-title text-gray-900 tracking-title mt-2 xs:mt-3 sm:mt-4 md:mt-0">
+        {/* Header Section - At the top */}
+        <div className="text-center flex-shrink-0 mt-4 md:mt-6">
+          <h1 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
             CREATE YOURS
           </h1>
-          <div className="w-12 xs:w-14 sm:w-16 h-px bg-gray-300 mx-auto mb-1 xs:mb-1.5 md:mb-4"></div>
-          <p className="lg:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
+          <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-2 md:mb-4"></div>
+          <p className="md:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case with our interactive creator
           </p>
         </div>
         
         {/* MAIN SECTION - Canvas and Right Side */}
-        <div className="flex flex-col lg:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-6 lg:gap-12 flex-1 overflow-hidden lg:items-start">
+        <div className="flex flex-col mt-6 md:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-12 flex-1 overflow-hidden md:items-center">
           
           {/* LEFT - Design Canvas - Centered */}
-          <div className="w-full lg:w-1/2 flex flex-col flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-2 sm:py-3 md:py-0">
+          <div className={`md:w-1/2 flex flex-col flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-1 sm:py-2 md:py-0 order-1 md:order-1 ${
+            isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
+              ? 'md:sticky md:top-0 md:self-start'
+              : ''
+          }`}>
 
-            <div className="w-full h-full flex flex-col justify-start xs:justify-center items-center">
-              <div className="w-[300px] h-[350px] md:h-[350px] relative mt-0 md:mt-auto lg:mt-4" style={{isolation: 'isolate'}}>
+            <div className="w-full h-full flex flex-col justify-start xs:justify-center items-center md:justify-center">
+              <div className="w-[300px] h-[350px] md:h-[350px] relative mt-0 md:mt-2" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
                   <div 
@@ -450,7 +1215,7 @@ const CreateYours = () => {
               </div>
               
               {/* Action Buttons - Bottom - Hidden on mobile */}
-              <div className="mt-4 mb-4 hidden md:flex flex-row gap-2 xs:gap-2.5 sm:gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] lg:max-w-[480px]">
+              <div className="mt-8 md:mt-24 mb-4 hidden md:flex flex-col lg:flex-row gap-2 xs:gap-2.5 sm:gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] md:max-w-[480px] relative z-0">
                 <ViewMoreImagesButton
                   caseImages={caseImages}
                   onOpenModal={() => {
@@ -461,8 +1226,7 @@ const CreateYours = () => {
                 
                 <ItemDescriptionDropdown
                   selectedCase={selectedCase}
-                  showDescriptionDropdown={showDescriptionDropdown}
-                  setShowDescriptionDropdown={setShowDescriptionDropdown}
+                  onOpenModal={() => setShowDescriptionModal(true)}
                 />
               </div>
             </div>
@@ -473,7 +1237,11 @@ const CreateYours = () => {
 
           {/* Right Side - Charms Selection */}
           <div 
-            className="w-full lg:w-1/2 flex flex-col space-y-4 sm:space-y-6 order-1 lg:order-2 lg:max-h-[calc(100vh-200px)] lg:overflow-y-auto hide-scrollbar"
+            className={`w-full md:w-1/2 flex flex-col space-y-4 sm:space-y-6 order-2 md:order-2 hide-scrollbar ${
+              isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
+                ? 'md:max-h-none md:overflow-visible'
+                : 'md:max-h-[calc(100vh-200px)] md:overflow-y-auto'
+            }`}
             style={{
               scrollbarWidth: 'none', /* Firefox */
               msOverflowStyle: 'none', /* IE and Edge */
@@ -496,13 +1264,18 @@ const CreateYours = () => {
                 handleCaseTypeSelection={handleCaseTypeSelection}
                 handleColorSelection={handleColorSelection}
                 handlePinSelection={handlePinSelection}
-                Products={Products}
+                Products={productsWithQuantities}
+                cart={cart}
               />
             )}
             {/* Passport Case Selection - Hidden on mobile */}
             <div className={`pb-6 border-b border-gray-100 flex-shrink-0 mt-6 overflow-visible ${isMobile ? 'hidden' : ''}`}>
               <button
-                onClick={() => setIsCaseDropdownOpen(!isCaseDropdownOpen)}
+                onClick={() => {
+                  setIsCharmsDropdownOpen(false);
+                  setIsAddTextDropdownOpen(false);
+                  setIsCaseDropdownOpen(!isCaseDropdownOpen);
+                }}
                 className="w-full flex items-center justify-between mb-4"
               >
                 <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
@@ -544,7 +1317,11 @@ const CreateYours = () => {
             {/* Charms Selection - Hidden on mobile */}
             <div className={`pb-6 border-b border-gray-100 mt-6 ${isMobile ? 'hidden' : 'block'}`}>
               <button
-                onClick={() => setIsCharmsDropdownOpen(!isCharmsDropdownOpen)}
+                onClick={() => {
+                  setIsCaseDropdownOpen(false);
+                  setIsAddTextDropdownOpen(false);
+                  setIsCharmsDropdownOpen(!isCharmsDropdownOpen);
+                }}
                 className="w-full flex items-center justify-between mb-4"
               >
                 <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
@@ -569,6 +1346,7 @@ const CreateYours = () => {
                     selectedPins={selectedPins}
                     onSelect={handlePinSelection}
                     Products={Products}
+                    cart={cart}
                   />
                 </div>
               )}
@@ -578,7 +1356,11 @@ const CreateYours = () => {
             {!isMobile && (
               <div className="pb-6 border-b border-gray-100 mt-6">
                 <button
-                  onClick={() => setIsAddTextDropdownOpen(!isAddTextDropdownOpen)}
+                  onClick={() => {
+                    setIsCaseDropdownOpen(false);
+                    setIsCharmsDropdownOpen(false);
+                    setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
+                  }}
                   className="w-full flex items-center justify-between mb-4"
                 >
                   <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
@@ -617,6 +1399,10 @@ const CreateYours = () => {
                 setShowPriceBreakdown={setShowPriceBreakdown}
                 quantity={quantity}
                 setQuantity={setQuantity}
+                onIncrementQuantity={handleIncrementQuantity}
+                onDecrementQuantity={handleDecrementQuantity}
+                quantityError={quantityError}
+                charmInventoryError={charmInventoryError}
                 selectedCase={selectedCase}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
@@ -625,6 +1411,8 @@ const CreateYours = () => {
                 pinsPrice={pinsPrice}
                 onAddToCart={handleAddToCart}
                 onShowTerms={() => setShowTermsModal(true)}
+                inventoryMessage={inventoryMessage}
+                inventoryType={inventoryType}
                 agreedToTerms={agreedToTerms}
                 setAgreedToTerms={(value) => {
                   setAgreedToTerms(value);
@@ -640,9 +1428,9 @@ const CreateYours = () => {
 
         {/* Fixed Mobile Step Buttons - Above Price Summary */}
         {isMobile && (
-          <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: '120px'}}>
+          <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: 'calc(130px + 0.75rem)'}}>
             <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 mb-0 pb-0">
-              <p className="text-[9px] xs:text-[10px] sm:text-[11px] text-gray-400 mb-2 xs:mb-2.5 text-center" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <p className="text-[14px] text-gray-700 mb-2 xs:mb-2.5 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
               </p>
               <MobileStepButtons
@@ -658,7 +1446,7 @@ const CreateYours = () => {
 
         {/* Fixed Price Summary - Mobile only */}
         {isMobile && (
-          <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] xs:max-h-[45vh] overflow-y-auto w-full safe-area-inset-bottom" style={{paddingBottom: 'env(safe-area-inset-bottom)'}}>
+          <div className="fixed left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] xs:max-h-[45vh] overflow-y-auto w-full safe-area-inset-bottom" style={{bottom: '0', paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)'}}>
             <div className="px-2 xs:px-2.5 sm:px-3 py-1.5 xs:py-2 sm:py-2.5">
               <PriceSummary
                 totalPrice={totalPrice}
@@ -668,6 +1456,10 @@ const CreateYours = () => {
                 setShowPriceBreakdown={setShowPriceBreakdown}
                 quantity={quantity}
                 setQuantity={setQuantity}
+                onIncrementQuantity={handleIncrementQuantity}
+                onDecrementQuantity={handleDecrementQuantity}
+                quantityError={quantityError}
+                charmInventoryError={charmInventoryError}
                 selectedCase={selectedCase}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
@@ -684,6 +1476,8 @@ const CreateYours = () => {
                   }
                 }}
                 showTermsError={showTermsError}
+                inventoryMessage={inventoryMessage}
+                inventoryType={inventoryType}
                 isMobile={true}
               />
             </div>
@@ -700,6 +1494,14 @@ const CreateYours = () => {
           setSelectedModalImage={setSelectedModalImage}
           onClose={() => setShowImageModal(false)}
         />
+
+        {/* Item Description Modal */}
+        <ItemDescriptionModal
+          show={showDescriptionModal}
+          onClose={() => setShowDescriptionModal(false)}
+          selectedCase={selectedCase}
+        />
+
 
         {/* Terms of Use Modal */}
         <TermsOfUseModal

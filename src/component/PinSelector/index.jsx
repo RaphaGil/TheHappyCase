@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
+import { getMaxAvailableQuantity } from "../../utils/inventory";
 
 // -----------------------------
 // Helpers
@@ -233,39 +234,109 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick }) => {
   );
 };
 
-const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove }) => (
-  <div className="max-h-80 sm:max-h-96 overflow-y-auto p-2">
-    <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2 justify-items-center md:max-w-3xl mx-auto">
-      {filteredPins.map((pin, index) => {
-        const selectedPinEntry = selectedPins.find((p) => p.pin === pin);
-        const isSelected = !!selectedPinEntry;
-        const isSoldOut = pin.quantity !== undefined && pin.quantity === 0;
-        const uniqueKey = pin.src
-          ? `${pin.src}-${index}`
-          : `${pin.name}-${index}`;
-
-        const handleClick = () => {
-          if (isSoldOut) return;
-          if (isSelected && onRemove && selectedPinEntry) {
-            onRemove(selectedPinEntry.imgInstance);
-          } else {
-            onSelect(pin);
+const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selectedCategory }) => {
+  // Helper function to check if a charm is sold out
+  const checkCharmSoldOut = (pin) => {
+    // Get charm category
+    const charmCategory = pin.category || selectedCategory || 'colorful';
+    const charmName = pin.name || pin.src || '';
+    
+    const product = {
+      type: 'charm',
+      category: charmCategory,
+      pin: pin,
+      name: charmName
+    };
+    
+    const maxAvailable = getMaxAvailableQuantity(product, cart || []);
+    
+    // If no inventory limit, not sold out
+    if (maxAvailable === null) {
+      return false;
+    }
+    
+    // Count standalone charms already in cart
+    let standaloneCharmsInCart = 0;
+    (cart || []).forEach(cartItem => {
+      if (cartItem.type === 'charm') {
+        const cartPin = cartItem.pin || cartItem;
+        const cartPinName = cartPin.name || cartPin.src;
+        const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+        if ((cartPinName === charmName || cartPinName === pin.src) && 
+            cartPinCategory === charmCategory) {
+          standaloneCharmsInCart += (cartItem.quantity || 1);
+        }
+      }
+    });
+    
+    // Count how many of this charm are in custom designs already in cart
+    let charmCountInCustomDesigns = 0;
+    (cart || []).forEach(cartItem => {
+      if (cartItem.pins && Array.isArray(cartItem.pins)) {
+        cartItem.pins.forEach(cartPin => {
+          const cartPinName = cartPin.name || cartPin.src;
+          const cartPinCategory = cartPin.category || charmCategory;
+          if ((cartPinName === charmName || cartPinName === pin.src) && 
+              cartPinCategory === charmCategory) {
+            charmCountInCustomDesigns += (cartItem.quantity || 1);
           }
-        };
+        });
+      }
+    });
+    
+    // Count how many of this charm are already selected in the current design
+    const charmCountInDesign = selectedPins.filter(p => {
+      const pPin = p.pin || p;
+      const pPinName = pPin.name || pPin.src;
+      const pPinCategory = pPin.category || charmCategory;
+      return (pPinName === charmName || pPinName === pin.src) && 
+             pPinCategory === charmCategory;
+    }).length;
+    
+    // Calculate total inventory: maxAvailable + standalone charms in cart
+    const totalInventory = maxAvailable + standaloneCharmsInCart;
+    
+    // Calculate total usage: standalone + in custom designs + in current design
+    const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign;
+    
+    // Sold out if maxAvailable is 0 or total usage equals or exceeds total inventory
+    return maxAvailable === 0 || totalUsage >= totalInventory;
+  };
 
-        return (
-          <PinCard
-            key={uniqueKey}
-            pin={pin}
-            isSelected={isSelected}
-            isSoldOut={isSoldOut}
-            onClick={handleClick}
-          />
-        );
-      })}
+  return (
+    <div className="max-h-80 sm:max-h-96 overflow-y-auto p-2">
+      <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2 justify-items-center md:max-w-3xl mx-auto">
+        {filteredPins.map((pin, index) => {
+          const selectedPinEntry = selectedPins.find((p) => p.pin === pin);
+          const isSelected = !!selectedPinEntry;
+          const isSoldOut = checkCharmSoldOut(pin);
+          const uniqueKey = pin.src
+            ? `${pin.src}-${index}`
+            : `${pin.name}-${index}`;
+
+          const handleClick = () => {
+            if (isSoldOut) return;
+            if (isSelected && onRemove && selectedPinEntry) {
+              onRemove(selectedPinEntry.imgInstance);
+            } else {
+              onSelect(pin);
+            }
+          };
+
+          return (
+            <PinCard
+              key={uniqueKey}
+              pin={pin}
+              isSelected={isSelected}
+              isSoldOut={isSoldOut}
+              onClick={handleClick}
+            />
+          );
+        })}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const PinSelector = ({
   pins,
@@ -276,6 +347,7 @@ const PinSelector = ({
   onRemove,
   onDropdownToggle,
   Products,
+  cart,
 }) => {
   const [subCategory, setSubCategory] = useState("all");
 
@@ -352,6 +424,8 @@ const PinSelector = ({
             selectedPins={selectedPins}
             onSelect={onSelect}
             onRemove={onRemove}
+            cart={cart}
+            selectedCategory={selectedCategory}
           />
         </div>
       )}
