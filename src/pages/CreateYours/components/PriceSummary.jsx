@@ -77,7 +77,7 @@ const PriceSummary = ({
               {/* Quantity Selector and Add to Cart Button - Right */}
               <div className="flex flex-row items-center gap-2 xs:gap-3">
                 {/* Quantity Selector */}
-                <div className="flex items-center border border-gray-200 rounded-sm py-1.5 xs:py-2 px-0.5 flex-shrink-0 gap-0"> 
+                <div className="flex items-center border border-gray-200 rounded-sm py-2.5 xs:py-2 px-0.5 flex-shrink-0 gap-0"> 
                   <button
                     onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
                     className="w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
