@@ -32,21 +32,9 @@ const PriceSummary = ({
 
   return (
       <div className={`${isMobile ? 'pt-0 mt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
-        {/* Mobile: Price on top, Terms above buttons, Quantity and Add to Cart side by side */}
+        {/* Mobile: Terms above, then Price + Quantity + Add to Cart in same row */}
         {isMobile ? (
           <>
-            {/* Price Section */}
-            <div className="mb-1.5">
-              <div className="flex flex-col">
-                <h3 className={`text-xs text-gray-500 font-light font-inter mb-0`}>
-                  Subtotal
-                </h3>
-                <h3 className={`text-base xs:text-lg sm:text-xl text-gray-900 font-light font-inter leading-none`}>
-                  {formatPrice(totalPrice)}
-                </h3>
-              </div>
-            </div>
-
             {/* Terms Agreement Checkbox - Above buttons */}
             <div className="mb-1.5">
               <label className="flex items-start gap-1.5 cursor-pointer">
@@ -74,54 +62,67 @@ const PriceSummary = ({
               )}
             </div>
 
-            {/* Quantity Selector and Add to Cart Button - Side by side */}
-            <div className="flex flex-row gap-2 xs:gap-2.5 items-center">
-              {/* Quantity Selector - Left - Always shows 1 */}
-              <div className="flex items-center border border-gray-200 rounded-sm p-0.5 flex-shrink-0">
-                <button
-                  onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
-                  className="w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                  aria-label="Decrease quantity"
-                > 
-                  −
-                </button>
-                <div className="px-2 xs:px-3 py-0.5 text-sm xs:text-base text-gray-900 font-light font-inter min-w-[1.5rem] xs:min-w-[2rem] text-center">
-                  {Math.max(quantity, 1)}
-                </div>
-                <button
-                  onClick={onIncrementQuantity || (() => setQuantity(quantity + 1))}
-                  className="w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
+            {/* Subtotal Price, Quantity Selector, and Add to Cart Button - All in same row */}
+            <div className="flex flex-row items-center justify-between">
+              {/* Subtotal Price - Left */}
+              <div className="flex flex-col flex-shrink-0">
+                <h3 className={`text-[10px] xs:text-xs text-gray-500 font-light font-inter mb-0 leading-none`}>
+                  Subtotal
+                </h3>
+                <h3 className={`text-sm xs:text-base sm:text-lg text-gray-900 font-light font-inter leading-none`}>
+                  {formatPrice(totalPrice)}
+                </h3>
               </div>
 
-              {/* Add to Cart Button - Right */}
-              <div className="flex-1">
-                <AddToCartBtn 
-                  product={{
-                    id: `custom-${Date.now()}`,
-                    name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
-                    caseType: selectedCaseType,
-                    caseName: selectedCase?.name || 'Custom Case',
-                    color: selectedColor,
-                    pins: selectedPins.map(({ pin }) => pin),
-                    pinsDetails: selectedPins.map(({ pin }) => pin),
-                    basePrice: caseBasePrice,
-                    casePrice: caseBasePrice,
-                    pinsPrice: pinsPrice,
-                    totalPrice: parseFloat(totalPrice),
-                    price: parseFloat(totalPrice),
-                    image: selectedCaseImage,
-                    caseImage: selectedCaseImage,
-                    customDesign: true,
-                    quantity: quantity
-                  }}
-                  onAdd={onAddToCart}
-                  className="py-1.5 xs:py-2 text-xs xs:text-sm font-light"
-                  disabled={false}
-                />
+              {/* Quantity Selector and Add to Cart Button - Right */}
+              <div className="flex flex-row items-center gap-2 xs:gap-3">
+                {/* Quantity Selector */}
+                <div className="flex items-center border border-gray-200 rounded-sm py-1.5 xs:py-2 px-0.5 flex-shrink-0 gap-0"> 
+                  <button
+                    onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
+                    className="w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+                    aria-label="Decrease quantity"
+                  > 
+                    −
+                  </button>
+                  <div className="px-1 xs:px-1.5 py-0.5 text-sm xs:text-base text-gray-900 font-light font-inter min-w-[1.5rem] xs:min-w-[2rem] text-center">
+                    {Math.max(quantity, 1)}
+                  </div>
+                  <button
+                    onClick={onIncrementQuantity || (() => setQuantity(quantity + 1))}
+                    className="w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Add to Cart Button */}
+                <div className="flex-shrink-0">
+                  <AddToCartBtn 
+                    product={{
+                      id: `custom-${Date.now()}`,
+                      name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
+                      caseType: selectedCaseType,
+                      caseName: selectedCase?.name || 'Custom Case',
+                      color: selectedColor,
+                      pins: selectedPins.map(({ pin }) => pin),
+                      pinsDetails: selectedPins.map(({ pin }) => pin),
+                      basePrice: caseBasePrice,
+                      casePrice: caseBasePrice,
+                      pinsPrice: pinsPrice,
+                      totalPrice: parseFloat(totalPrice),
+                      price: parseFloat(totalPrice),
+                      image: selectedCaseImage,
+                      caseImage: selectedCaseImage,
+                      customDesign: true,
+                      quantity: quantity
+                    }}
+                    onAdd={onAddToCart}
+                    className="!w-auto cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 text-sm font-light whitespace-nowrap p-4"
+                    disabled={false}
+                  />
+                </div>
               </div>
             </div>
             
