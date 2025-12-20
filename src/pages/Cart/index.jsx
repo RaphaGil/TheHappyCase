@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useCart } from "../../context/CartContext";
 import { useCurrency } from "../../context/CurrencyContext";
 import { useNavigate } from "react-router-dom";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
+import { areItemsIdentical } from "../../utils/cartHelpers";
 import CartHeader from "./components/CartHeader";
 import EmptyCartState from "./components/EmptyCartState";
 import CartItem from "./components/CartItem";
 import OrderSummary from "./components/OrderSummary";
-import InventoryAlertModal from "../../component/InventoryAlertModal";
-
 const CartPage = () => {
   const {
     cart,
@@ -24,98 +23,225 @@ const CartPage = () => {
   const [openNoteIndex, setOpenNoteIndex] = useState(null);
   const [noteTexts, setNoteTexts] = useState({});
   const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
-  const [showInventoryModal, setShowInventoryModal] = useState(false);
-  const [inventoryMessage, setInventoryMessage] = useState('');
-  const [inventoryType, setInventoryType] = useState('error');
+  const errorTimeoutsRef = useRef({}); // Track timeouts for each error
 
-  // Helper function to get color name from image filename
-  const getColorName = (image) => {
-    if (!image) return '';
+  // Auto-clear error messages after 3 seconds
+  useEffect(() => {
+    const timeouts = errorTimeoutsRef.current;
     
-    const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
-    
-    let colorPart = filename
-      .replace(/^economycase/i, '')
-      .replace(/^businessclasscase/i, '')
-      .replace(/^firstclasscase/i, '')
-      .replace(/^smartcase/i, '')
-      .replace(/^premiumcase/i, '')
-      .replace(/^firstclass/i, '');
-    
-    const colorMap = {
-      'lightpink': 'Light Pink',
-      'lightblue': 'Light Blue',
-      'lightbrown': 'Light Brown',
-      'darkbrown': 'Dark Brown',
-      'darkblue': 'Dark Blue',
-      'jeansblue': 'Jeans Blue',
-      'brickred': 'Brick Red',
-      'navyblue': 'Navy Blue',
-      'gray': 'Gray',
-      'grey': 'Gray',
-      'black': 'Black',
-      'brown': 'Brown',
-      'red': 'Red',
-      'pink': 'Pink',
-      'blue': 'Blue',
-      'green': 'Green',
-      'purple': 'Purple',
-      'yellow': 'Yellow',
-      'orange': 'Orange'
+    Object.keys(itemErrors).forEach((itemKey) => {
+      // Clear any existing timeout for this item
+      if (timeouts[itemKey]) {
+        clearTimeout(timeouts[itemKey]);
+      }
+      
+      // Set new timeout to clear error after 3 seconds
+      timeouts[itemKey] = setTimeout(() => {
+        setItemErrors(prev => {
+          const newErrors = { ...prev };
+          // Handle both string errors (old format) and object errors (new format)
+          if (typeof newErrors[itemKey] === 'string') {
+            delete newErrors[itemKey];
+          } else if (newErrors[itemKey] && typeof newErrors[itemKey] === 'object') {
+            // Clear all errors for this item after timeout
+            delete newErrors[itemKey];
+          }
+          return newErrors;
+        });
+        delete timeouts[itemKey];
+      }, 3000); // 3 seconds
+    });
+
+    // Cleanup function to clear timeouts when component unmounts
+    return () => {
+      Object.values(timeouts).forEach(timeout => {
+        clearTimeout(timeout);
+      });
     };
-    
-    if (colorMap[colorPart]) {
-      return colorMap[colorPart];
-    }
-    
-    colorPart = colorPart
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2')
-      .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/)
-      .filter(word => word.length > 0)
-      .join(' ')
-      .toLowerCase()
-      .split(' ')
-      .map(word => {
-        if (colorMap[word]) return colorMap[word];
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(' ');
-    
-    return colorPart || 'Color';
+  }, [itemErrors]);
+
+  // Helper function to set error for all identical charms
+  const setErrorForAllIdenticalCharms = (item, errorMessage) => {
+    setItemErrors(prev => {
+      const newErrors = { ...prev };
+      // Find all identical charms in cart and set error for all
+      cart.forEach(cartItem => {
+        if (cartItem.type === 'charm' && areItemsIdentical(item, cartItem)) {
+          const itemKey = cartItem.id || cart.indexOf(cartItem);
+          newErrors[itemKey] = errorMessage;
+        }
+      });
+      return newErrors;
+    });
+  };
+
+  // Helper function to clear error for all identical charms
+  const clearErrorForAllIdenticalCharms = (item) => {
+    setItemErrors(prev => {
+      const newErrors = { ...prev };
+      // Find all identical charms in cart and clear error for all
+      cart.forEach(cartItem => {
+        if (cartItem.type === 'charm' && areItemsIdentical(item, cartItem)) {
+          const itemKey = cartItem.id || cart.indexOf(cartItem);
+          delete newErrors[itemKey];
+        }
+      });
+      return newErrors;
+    });
   };
 
   const handleIncrementWithCheck = (itemId, index) => {
-    const item = cart.find(i => (i.id === itemId) || (cart.indexOf(i) === index));
-    if (!item) return;
+    // Find item by id or by index if id is undefined
+    const item = cart.find(i => i.id === itemId) || cart[itemId] || cart[index];
+    if (!item) {
+      console.error('Item not found for increment:', itemId, index);
+      return;
+    }
     
-    // Check case inventory first (for custom designs or standalone cases)
+    // Check inventory
     const maxAvailable = getMaxAvailableQuantity(item, cart);
+    
+    // For standalone charms, check stock first
+    if (item.type === 'charm') {
+      const charmCategory = item.category || item.pin?.category || 'colorful';
+      const charmName = item.pin?.name || item.name || '';
+      const charmSrc = item.pin?.src || '';
+      
+      // If maxAvailable is 0, no more can be added
+      if (maxAvailable !== null && maxAvailable === 0) {
+        const itemName = item.name || item.pin?.name || 'Charm';
+        const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
+        setItemErrors(prev => ({
+          ...prev,
+          [itemId || index]: errorMessage
+        }));
+        setErrorForAllIdenticalCharms(item, errorMessage);
+        setTimeout(() => {
+          const itemElement = document.querySelector(`[data-item-id="${itemId || index}"]`);
+          if (itemElement) {
+            itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+        return;
+      }
+      
+      // If maxAvailable is null (unlimited), allow increment
+      if (maxAvailable === null) {
+        incrementItemQty(itemId);
+        setItemErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[itemId || index];
+          return newErrors;
+        });
+        clearErrorForAllIdenticalCharms(item);
+        return;
+      }
+      
+      // Count standalone charms already in cart (excluding current item)
+      let standaloneCharmsInCart = 0;
+      cart.forEach(cartItem => {
+        if (cartItem.type === 'charm') {
+          const cartItemId = cartItem.id;
+          const isCurrentItem = (cartItemId === itemId || (itemId === undefined && cart.indexOf(cartItem) === index));
+          if (isCurrentItem) return; // Skip current item
+          
+          const cartPin = cartItem.pin || cartItem;
+          const cartPinName = cartPin.name || cartPin.src;
+          const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+          if ((cartPinName === charmName || cartPinName === charmSrc) && 
+              cartPinCategory === charmCategory) {
+            standaloneCharmsInCart += (cartItem.quantity || 1);
+          }
+        }
+      });
+      
+      // Count how many of this charm are in custom designs already in cart
+      let charmCountInCustomDesigns = 0;
+      cart.forEach(cartItem => {
+        if (cartItem.type === 'charm') return; // Skip standalone charms
+        
+        const pinsToCheck = cartItem.pins || cartItem.pinsDetails || [];
+        pinsToCheck.forEach(cartPin => {
+          if (!cartPin) return;
+          const cartPinName = cartPin.name || cartPin.src;
+          const cartPinSrc = cartPin.src || '';
+          const cartPinCategory = cartPin.category || charmCategory;
+          
+          const nameMatches = (cartPinName === charmName || cartPinName === charmSrc || 
+                              cartPinSrc === charmName || cartPinSrc === charmSrc);
+          const categoryMatches = (cartPinCategory === charmCategory);
+          
+          if (nameMatches && categoryMatches) {
+            charmCountInCustomDesigns += (cartItem.quantity || 1);
+          }
+        });
+      });
+      
+      // Calculate total inventory: maxAvailable + standalone charms (excluding current item)
+      const currentStandaloneQty = item.quantity || 1;
+      const totalInventory = maxAvailable + standaloneCharmsInCart;
+      
+      // Calculate total usage if we increment: standalone (with new qty) + in custom designs
+      const newStandaloneQty = currentStandaloneQty + 1;
+      const totalUsage = newStandaloneQty + charmCountInCustomDesigns;
+      
+      // Check if incrementing would exceed inventory
+      if (totalUsage > totalInventory) {
+        const itemName = item.name || item.pin?.name || 'Charm';
+        const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
+        setItemErrors(prev => ({
+          ...prev,
+          [itemId || index]: errorMessage
+        }));
+        setErrorForAllIdenticalCharms(item, errorMessage);
+        setTimeout(() => {
+          const itemElement = document.querySelector(`[data-item-id="${itemId || index}"]`);
+          if (itemElement) {
+            itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
+        return;
+      }
+      
+      // Stock available for charm, allow increment
+      incrementItemQty(itemId);
+      setItemErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[itemId || index];
+        return newErrors;
+      });
+      clearErrorForAllIdenticalCharms(item);
+      return;
+    }
+    
+    // For cases (custom designs or standalone cases), check case inventory
     const canIncrementCase = maxAvailable === null || maxAvailable > 0;
     
     if (!canIncrementCase) {
       // Case is out of stock
-      let itemName = item.caseName || item.name || 'Passport Case';
-      let colorName = '';
-      
-      // Get color name from case image or color
-      if (item.caseImage || item.image) {
-        const imagePath = (item.caseImage || item.image);
-        colorName = getColorName(imagePath);
-      }
-      
-      const colorText = colorName ? ` in ${colorName}` : '';
-      const errorMessage = `We don't have any more ${itemName}${colorText} in stock to be added anymore.`;
-      
+      const itemName = item.caseName || item.name || 'Passport Case';
+      const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
       setItemErrors(prev => ({
         ...prev,
-        [itemId || index]: errorMessage
+        [itemId || index]: {
+          case: errorMessage,
+          charms: prev[itemId || index]?.charms || {}
+        }
       }));
+      
+      
+      setTimeout(() => {
+        const itemElement = document.querySelector(`[data-item-id="${itemId || index}"]`);
+        if (itemElement) {
+          itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
       return;
     }
     
     // For custom designs from CreateYours, check charm inventory
-    if ((item.pins && Array.isArray(item.pins) && item.pins.length > 0) || 
+    if (item.customDesign || 
+        (item.pins && Array.isArray(item.pins) && item.pins.length > 0) || 
         (item.pinsDetails && Array.isArray(item.pinsDetails) && item.pinsDetails.length > 0)) {
       const pinsToCheck = item.pins || item.pinsDetails || [];
       const currentQuantity = item.quantity || 1;
@@ -123,7 +249,8 @@ const CartPage = () => {
       for (const pin of pinsToCheck) {
         if (!pin) continue;
         
-        const charmCategory = pin.category || 'colorful';
+        // Normalize empty category string to 'colorful' (matching display logic)
+        const charmCategory = (pin.category && pin.category.trim() !== '') ? pin.category : 'colorful';
         const charmName = pin.name || pin.src || '';
         const charmSrc = pin.src || '';
         
@@ -204,56 +331,75 @@ const CartPage = () => {
         // Check if adding one more design would exceed inventory
         if (charmMaxAvailable === 0 || newUsage > totalInventory) {
           const errorMessage = `Oops! We don't have any more ${pin.name || 'this charm'} in stock right now, so you can't add more to your basket.`;
-          // Show alert modal for charms when out of stock
-          setInventoryMessage(errorMessage);
-          setInventoryType('error');
-          setShowInventoryModal(true);
-          // Also show inline error message
+          const errorKey = `${charmName}-${charmCategory}`;
+          
+          // Store error for the case item with charm-specific info
           setItemErrors(prev => ({
             ...prev,
-            [itemId || index]: errorMessage
+            [itemId || index]: {
+              case: prev[itemId || index]?.case || null,
+              charms: {
+                ...(prev[itemId || index]?.charms || {}),
+                [errorKey]: errorMessage
+              }
+            }
           }));
+          // Also set error for all matching standalone charm items
+          setErrorForAllIdenticalCharms(charmProduct, errorMessage);
+          setTimeout(() => {
+            const itemElement = document.querySelector(`[data-item-id="${itemId || index}"]`);
+            if (itemElement) {
+              itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 100);
           return;
         }
       }
     }
     
-    // All checks passed, allow increment
-    if (item.type === 'charm') {
-      // For standalone charms
-      const itemName = item.name || item.pin?.name || 'Charm';
-      // Show alert modal for charms when out of stock (if maxAvailable is 0)
-      if (maxAvailable === 0) {
-        const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
-        setInventoryMessage(errorMessage);
-        setInventoryType('error');
-        setShowInventoryModal(true);
-        setItemErrors(prev => ({
-          ...prev,
-          [itemId || index]: errorMessage
-        }));
-        return;
-      }
-    }
-    
     // Stock available, allow increment
     incrementItemQty(itemId);
-    // Clear error when successfully incrementing
+    // Clear error for the item
     setItemErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[itemId || index];
       return newErrors;
     });
+    // Clear errors for all charms within this custom design (if it's a custom design)
+    if (item.customDesign || 
+        (item.pins && Array.isArray(item.pins) && item.pins.length > 0) || 
+        (item.pinsDetails && Array.isArray(item.pinsDetails) && item.pinsDetails.length > 0)) {
+      const pinsToCheck = item.pins || item.pinsDetails || [];
+      pinsToCheck.forEach(pin => {
+        if (!pin) return;
+        const charmProduct = {
+          name: pin.name || pin.src || '',
+          price: pin.price || 2.0,
+          totalPrice: pin.price || 2.0,
+          image: pin.src || '',
+          pin: pin,
+          category: pin.category || 'colorful',
+          type: 'charm'
+        };
+        clearErrorForAllIdenticalCharms(charmProduct);
+      });
+    }
   };
 
   const handleDecrementWithCheck = (itemId, index) => {
+    // Find item by id or by index if id is undefined
+    const item = cart.find(i => i.id === itemId) || cart[itemId] || cart[index];
     decrementItemQty(itemId);
     // Clear error when decrementing
-    setItemErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors[itemId || index];
-      return newErrors;
-    });
+    if (item && item.type === 'charm') {
+      clearErrorForAllIdenticalCharms(item);
+    } else {
+      setItemErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[itemId || index];
+        return newErrors;
+      });
+    }
   };
 
   const handleCheckout = () => {
@@ -305,7 +451,8 @@ const CartPage = () => {
                   setNoteTexts={setNoteTexts}
                   handleNoteChange={handleNoteChange}
                   handleSaveNote={handleSaveNote}
-                  errorMessage={itemErrors[item.id || index]}
+                  errorMessage={typeof itemErrors[item.id || index] === 'string' ? itemErrors[item.id || index] : itemErrors[item.id || index]?.case}
+                  charmErrors={itemErrors[item.id || index]?.charms || {}}
                 />
               ))}
             </div>
@@ -318,13 +465,6 @@ const CartPage = () => {
         )}
       </div>
 
-      {/* Inventory Alert Modal */}
-      <InventoryAlertModal
-        show={showInventoryModal}
-        onClose={() => setShowInventoryModal(false)}
-        message={inventoryMessage}
-        type={inventoryType}
-      />
     </div>
   );
 };

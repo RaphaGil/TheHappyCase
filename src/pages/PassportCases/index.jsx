@@ -76,33 +76,74 @@ const PassportCases = () => {
   const productsWithQuantities = getProductsWithQuantities();
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   
-  // Helper function to check if selected color is sold out
+  // Helper function to check if selected color is sold out (considering cart inventory)
   const isSelectedColorSoldOut = () => {
     if (!selectedCase || !selectedColor) return false;
-    const selectedColorData = selectedCase.colors.find(c => c.color === selectedColor);
-    if (selectedColorData && selectedColorData.quantity !== undefined) {
-      return selectedColorData.quantity === 0;
-    }
-    // Fallback to case-level quantity
-    return selectedCase.quantity !== undefined && selectedCase.quantity === 0;
+    
+    // Check available inventory considering cart (items in basket)
+    // getMaxAvailableQuantity returns how many MORE can be added to the basket
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+    // If maxAvailable is null (unlimited) or > 0, color is available
+    return maxAvailable !== null && maxAvailable === 0;
+  };
+  
+  // Helper function to check if a specific color is sold out (considering cart inventory)
+  const isColorSoldOut = (color) => {
+    if (!selectedCase || !color) return false;
+    
+    // Check available inventory considering cart (items in basket)
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: color,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+    // If maxAvailable is null (unlimited) or > 0, color is available
+    return maxAvailable !== null && maxAvailable === 0;
   };
   
   // Helper function to check if a case type is sold out (all colors sold out or case-level quantity is 0)
   const isCaseTypeSoldOut = (caseType) => {
-    const caseData = productsWithQuantities.cases.find(c => c.type === caseType);
+    // Get fresh data from products
+    const caseData = Products.cases.find(c => c.type === caseType);
     if (!caseData) return false;
     
-    // Check case-level quantity first
-    if (caseData.quantity !== undefined && caseData.quantity === 0) {
-      return true;
-    }
+    // Note: We check inventory through getMaxAvailableQuantity below
+    // which properly handles localStorage quantities, product data, and cart items
+    // to determine if cases can be added to the basket
     
-    // Check if all colors are sold out
+    // Check if all colors are sold out (considering cart inventory)
+    // This uses getMaxAvailableQuantity which checks both color-level and case-level quantities
     if (caseData.colors && caseData.colors.length > 0) {
-      const allColorsSoldOut = caseData.colors.every(color => 
-        color.quantity !== undefined && color.quantity === 0
-      );
-      return allColorsSoldOut;
+      // Check if at least one color has available inventory that can be added to basket
+      // This considers items already in the basket/cart
+      const hasAvailableColor = caseData.colors.some(color => {
+        // Check available inventory considering cart (items in basket)
+        // getMaxAvailableQuantity returns how many MORE can be added to the basket
+        // It checks: color-level quantity -> case-level quantity -> product data
+        // Returns: null (unlimited), > 0 (can add more), or 0 (cannot add any more)
+        const productForInventory = {
+          caseType: caseType,
+          color: color.color,
+        };
+        const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+        
+        // If maxAvailable is null, it means unlimited inventory (can add to basket)
+        // If maxAvailable > 0, there's inventory available (can add to basket)
+        // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+        return maxAvailable === null || maxAvailable > 0;
+      });
+      
+      // If no color has available inventory (maxAvailable === 0 for all colors), 
+      // it means no cases can be added to the basket - show as SOLD OUT
+      return !hasAvailableColor;
     }
     
     return false;
@@ -270,6 +311,11 @@ const PassportCases = () => {
   const detailImages = getDetailImagesForColor();
 
   const handleCaseTypeChange = (type) => {
+    // Prevent selecting sold out case types
+    if (isCaseTypeSoldOut(type)) {
+      return;
+    }
+    
     setSelectedCaseType(type);
     setCurrentImageIndex(0);
     setSelectedDetailImage(null); // Reset detail image when case type changes
@@ -282,15 +328,34 @@ const PassportCases = () => {
     };
     const filterValue = typeToFilter[type] || 'economy';
     setSearchParams({ filter: filterValue });
-    // Set first color as default
+    // Set first available color as default (prefer non-sold-out colors)
     const productsWithQuantities = getProductsWithQuantities();
     const caseData = productsWithQuantities.cases.find(c => c.type === type);
     if (caseData && caseData.colors.length > 0) {
-      setSelectedColor(caseData.colors[0].color);
+      // Try to find first available (not sold out) color
+      const availableColor = caseData.colors.find(color => {
+        const productForInventory = {
+          caseType: type,
+          color: color.color,
+        };
+        const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+        return maxAvailable === null || maxAvailable > 0;
+      }) || caseData.colors[0]; // Fallback to first color if all are sold out
+      
+      setSelectedColor(availableColor.color);
     }
   };
 
   const handleColorChange = (color) => {
+    // Check if the color is sold out before changing
+    const colorData = selectedCase?.colors?.find(c => c.color === color);
+    const isColorSoldOut = colorData?.quantity !== undefined && colorData.quantity === 0;
+    
+    // Don't change to sold out colors
+    if (isColorSoldOut) {
+      return;
+    }
+    
     setSelectedColor(color);
     setCurrentImageIndex(0); // Reset image index when color changes
     setSelectedDetailImage(null); // Reset detail image when color changes
@@ -298,10 +363,19 @@ const PassportCases = () => {
   };
   
   const handleDetailImageClick = (image) => {
+    // Don't allow clicking on detail images when color is sold out
+    if (isSelectedColorSoldOut()) {
+      return;
+    }
     setSelectedDetailImage(image);
   };
 
   const handleAddToCart = (product) => {
+    // Prevent adding sold out items
+    if (isSelectedColorSoldOut()) {
+      return;
+    }
+    
     // Add quantity to product
     const productWithQuantity = {
       ...product,
@@ -312,6 +386,13 @@ const PassportCases = () => {
       ...productWithQuantity,
       id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
     };
+    console.log('💼 PassportCases page - Adding case to cart:', {
+      caseName: product.caseName || product.name,
+      caseType: product.caseType,
+      color: product.color,
+      quantity: quantity,
+      product: productWithId
+    });
     addToCart(productWithId);
   };
 
@@ -355,7 +436,7 @@ const PassportCases = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-title sm:text-title-lg font-light text-gray-900 mb-2 font-inter tracking-title">
+          <h1 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
             PASSPORT CASES
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-4"></div>
@@ -370,16 +451,17 @@ const PassportCases = () => {
                 <button
                   key={caseItem.type}
                   onClick={() => handleCaseTypeChange(caseItem.type)}
+                  disabled={isSoldOut}
                   className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 relative ${
                     selectedCaseType === caseItem.type
                       ? 'border-b-2 border-blue-700 text-white bg-blue-600 font-medium'
                       : 'border-b-2 border-transparent text-white hover:text-white hover:border-blue-300 hover:bg-blue-500 bg-blue-400'
-                  } ${isSoldOut ? 'opacity-60' : ''} font-inter`}
+                  } ${isSoldOut ? 'opacity-60 cursor-not-allowed' : ''} font-inter`}
                 >
                   <span className="flex items-center gap-2">
                     {getCaseDisplayName(caseItem.type)}
                     {isSoldOut && (
-                      <span className="text-[10px] text-red-600 font-medium">(Sold Out)</span>
+                      <span className="text-[10px] text-red-300 font-semibold bg-red-900 px-1.5 py-0.5 rounded">SOLD OUT</span>
                     )}
                   </span>
                 </button>
@@ -401,16 +483,34 @@ const PassportCases = () => {
               
             {/* Main Image Display */}
             <div className="relative group">
-              <div className="relative overflow-hidden  ">
+              <div 
+                className={`relative overflow-hidden ${isSelectedColorSoldOut() ? 'pointer-events-none cursor-not-allowed' : ''}`}
+                onClick={(e) => {
+                  // Prevent any action when clicking on sold out images
+                  if (isSelectedColorSoldOut()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                  }
+                }}
+              >
                 <img
                   src={currentImage}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
-                  className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50' : ''}`}
+                  className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''}`}
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
                   width="500"
                   height="500"
+                  onClick={(e) => {
+                    // Prevent any action when clicking on sold out images
+                    if (isSelectedColorSoldOut()) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return false;
+                    }
+                  }}
                   onError={(e) => {
                     e.target.style.display = 'none';
                     if (e.target.nextSibling) {
@@ -425,7 +525,9 @@ const PassportCases = () => {
                 </div>
                 {/* Sold Out Overlay */}
                 {isSelectedColorSoldOut() && (
-                  <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
+                  <div 
+                    className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20 pointer-events-none"
+                  >
                     <span className="text-white text-2xl font-medium uppercase tracking-wider font-inter">
                       Sold Out
                     </span>
@@ -442,11 +544,12 @@ const PassportCases = () => {
                   <button
                     key={index}
                     onClick={() => handleDetailImageClick(image)}
+                    disabled={isSelectedColorSoldOut()}
                     className={`relative aspect-square overflow-hidden bg-gray-50 border transition-all duration-200 max-w-[80px] mx-auto ${
                       selectedDetailImage === image || (!selectedDetailImage && index === 0 && currentImage === image)
                         ? 'border-gray-900 ring-2 ring-gray-300'
                         : 'border-gray-200 hover:border-gray-400'
-                    }`}
+                    } ${isSelectedColorSoldOut() ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <img
                       src={image}
@@ -481,21 +584,25 @@ const PassportCases = () => {
               <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-3 font-medium font-inter">Colours Available</h3>
               <div className="grid grid-cols-11 sm:grid-cols-7 md:grid-cols-8 gap-0.5 sm:gap-1.5 md:gap-2">
                 {selectedCase.colors.map((colorOption, index) => {
-                  const isColorSoldOut = colorOption.quantity !== undefined && colorOption.quantity === 0;
+                  const colorSoldOut = isColorSoldOut(colorOption.color);
                   return (
                     <div key={index} className="flex flex-col items-center sm:gap-1">
                       <button
-                        onClick={() => handleColorChange(colorOption.color)}
-                        disabled={isColorSoldOut}
+                        onClick={() => {
+                          if (!colorSoldOut) {
+                            handleColorChange(colorOption.color);
+                          }
+                        }}
+                        disabled={colorSoldOut}
                         className={`w-8 h-8 rounded-full border-2 transition-all duration-200 relative ${
                           selectedColor === colorOption.color
                             ? 'border-gray-900 ring-2 ring-gray-300 scale-110'
                             : 'border-gray-200 hover:border-gray-400'
-                        } ${isColorSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        } ${colorSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                         style={{ backgroundColor: colorOption.color }}
-                        title={isColorSoldOut ? 'Sold Out' : `Color ${index + 1}`}
+                        title={colorSoldOut ? 'Sold Out' : `Color ${index + 1}`}
                       />
-                      {isColorSoldOut && (
+                      {colorSoldOut && (
                         <span className="text-[9px] text-red-600 font-medium text-center">Sold Out</span>
                       )}
                     </div>

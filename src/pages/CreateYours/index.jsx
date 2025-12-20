@@ -6,8 +6,8 @@ import ColorSelector from "../../component/ColorSelector/index.jsx";
 import PinSelector from "../../component/PinSelector";
 import Products from "../../data/products.json";
 import { useCart } from "../../context/CartContext";
-import { createCompositeDesignImage } from "../../component/Canvas/utils/imageExport";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
+import { createCompositeDesignImage } from "../../component/Canvas/utils/imageExport";
 
 // Components
 import MobileStepButtons from "./components/MobileStepButtons";
@@ -89,7 +89,7 @@ const CreateYours = () => {
   const [isAddTextDropdownOpen, setIsAddTextDropdownOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [mobileCurrentStep, setMobileCurrentStep] = useState(null); // null = showing passport case, 'case' = case selection, 'color' = color selection, 'charms' = charms selection
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const [customText, setCustomText] = useState('');
   const [customTextError, setCustomTextError] = useState('');
   const [customTextAdded, setCustomTextAdded] = useState(false);
@@ -138,16 +138,17 @@ const CreateYours = () => {
     }
   }, [searchParams]);
 
-  // Auto-dismiss inventory message after 5 seconds
+  // Auto-dismiss inventory message after 3 seconds
   useEffect(() => {
     if (inventoryMessage) {
       const timer = setTimeout(() => {
         setInventoryMessage('');
-      }, 5000); // 5 seconds
+      }, 3000); // 3 seconds
 
       return () => clearTimeout(timer);
     }
   }, [inventoryMessage]);
+
 
   // Check inventory when case/color or charms change
   useEffect(() => {
@@ -159,14 +160,9 @@ const CreateYours = () => {
       };
       const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
       
-      if (maxAvailable !== null && maxAvailable === 0) {
-        const productsWithQuantities = getProductsWithQuantities();
-        const currentCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
-        const caseName = currentCase?.name || 'Passport Case';
-        const colorText = selectedColor ? ` in ${selectedColor}` : '';
-        setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now.`);
-        setInventoryType('warning');
-      } else if (maxAvailable !== null && maxAvailable > 0) {
+      // Don't show alert here - only show when clicking +/- buttons
+      // Clear any existing inventory messages when case/color changes
+      if (maxAvailable !== null && maxAvailable > 0) {
         // Clear message if case is in stock
         setInventoryMessage('');
       }
@@ -294,14 +290,9 @@ const CreateYours = () => {
       };
       const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
       
-      // If out of stock, show alert but still allow selection
-      if (maxAvailable !== null && maxAvailable === 0) {
-        const caseName = selectedCase.name || 'Passport Case';
-        const colorText = availableColor.color ? ` in ${availableColor.color}` : '';
-        setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now.`);
-        setInventoryType('warning');
-      } else {
-        // Clear inventory message if case is in stock
+      // Don't show alert here - only show when clicking +/- buttons
+      // Clear inventory message if case is in stock
+      if (maxAvailable !== null && maxAvailable > 0) {
         setInventoryMessage('');
       }
       
@@ -318,23 +309,15 @@ const CreateYours = () => {
   const handleColorSelection = (color, image) => {
     // Check inventory for the selected case and color before setting
     if (selectedCaseType && color) {
-      const productsWithQuantities = getProductsWithQuantities();
-      const currentCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
-      
       const productForInventory = {
         caseType: selectedCaseType,
         color: color,
       };
       const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
       
-      // If out of stock, show alert but still allow selection
-      if (maxAvailable !== null && maxAvailable === 0) {
-        const caseName = currentCase?.name || 'Passport Case';
-        const colorText = color ? ` in ${color}` : '';
-        setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now.`);
-        setInventoryType('warning');
-      } else {
-        // Clear inventory message if color is in stock
+      // Don't show alert here - only show when clicking +/- buttons
+      // Clear inventory message if color is in stock
+      if (maxAvailable !== null && maxAvailable > 0) {
         setInventoryMessage('');
       }
     }
@@ -361,12 +344,18 @@ const CreateYours = () => {
     const charmName = pin.name || pin.src || '';
     const charmSrc = pin.src || '';
 
+    // Ensure pin object has category property for cart tracking
+    const pinWithCategory = {
+      ...pin,
+      category: charmCategory
+    };
+
     const product = {
       name: charmName,
       price: pin.price || 2.0,
       totalPrice: pin.price || 2.0,
       image: charmSrc,
-      pin: pin,
+      pin: pinWithCategory,
       category: charmCategory,
       type: 'charm'
     };
@@ -378,8 +367,9 @@ const CreateYours = () => {
     // If no inventory limit, allow adding
     if (maxAvailable === null) {
       // This will be handled by the Canvas component
+      // Pass pin with category property so it's preserved
       if (window.addPinToCanvas) {
-        window.addPinToCanvas(pin);
+        window.addPinToCanvas(pinWithCategory);
       }
       
       // Close mobile overlay after pin selection
@@ -493,8 +483,9 @@ const CreateYours = () => {
     }
     
     // This will be handled by the Canvas component
+    // Pass pin with category property so it's preserved
     if (window.addPinToCanvas) {
-      window.addPinToCanvas(pin);
+      window.addPinToCanvas(pinWithCategory);
     }
     
     // Clear charm inventory error when successfully adding a charm
@@ -531,16 +522,21 @@ const CreateYours = () => {
   useEffect(() => {
     if (location.state?.selectedPin) {
       const selectedPin = location.state.selectedPin;
+      // Ensure pin has category property - use selectedPin.category or infer from context
+      const pinWithCategory = {
+        ...selectedPin,
+        category: selectedPin.category || selectedCategory || 'colorful'
+      };
       setTimeout(() => {
         if (window.addPinToCanvas) {
-          window.addPinToCanvas(selectedPin);
+          window.addPinToCanvas(pinWithCategory);
         }
       }, 1000);
       
       // Clear the navigation state
       window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+  }, [location.state, selectedCategory]);
 
   // When category changes, update pins from Products
   useEffect(() => {
@@ -762,7 +758,7 @@ const CreateYours = () => {
 
   // Handle quantity decrement
   const handleDecrementQuantity = () => {
-    if (quantity > 1) {
+    if (quantity > 0) {
       setQuantity(quantity - 1);
       setQuantityError(''); // Clear error when decrementing
       setCharmInventoryError(''); // Clear charm inventory error when decrementing
@@ -862,7 +858,9 @@ const CreateYours = () => {
   
   const caseImages = getCaseImages();
   const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
-  const totalPrice = ((caseBasePrice + pinsPrice) * quantity).toFixed(2);
+  // Use Math.max to ensure we show price for at least 1 item (since quantity starts at 0 but displays as 1)
+  const displayQuantity = Math.max(quantity, 1);
+  const totalPrice = ((caseBasePrice + pinsPrice) * displayQuantity).toFixed(2);
 
   // Group pins for price breakdown display
   const groupedPins = selectedPins.reduce((acc, { pin }) => {
@@ -893,6 +891,9 @@ const CreateYours = () => {
 
   // Execute the actual add to cart action
   const executeAddToCart = async () => {
+    // Ensure quantity is at least 1 (since display shows 1 when quantity is 0)
+    const effectiveQuantity = Math.max(quantity, 1);
+    
     // Check case inventory first
     const productForInventory = {
       caseType: selectedCaseType,
@@ -913,19 +914,20 @@ const CreateYours = () => {
       return;
     }
     
-    if (maxAvailableCase !== null && quantity > maxAvailableCase) {
+    if (maxAvailableCase !== null && effectiveQuantity > maxAvailableCase) {
       const colorText = colorName ? ` in ${colorName}` : '';
       setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now, so you can't add more to your basket.`);
       setInventoryType('error');
       if (maxAvailableCase > 0) {
         setQuantity(maxAvailableCase);
       } else {
-        setQuantity(1);
+        setQuantity(0);
       }
       return;
     }
     
     // Check charm inventory for each selected charm
+    // Since we're adding charms separately, we need to check if we can add quantity of each charm
     for (const { pin } of selectedPins) {
       const charmCategory = pin?.category || selectedCategory || 'colorful';
       const charmName = pin?.name || 'charm';
@@ -939,48 +941,6 @@ const CreateYours = () => {
       
       const maxAvailableCharm = getMaxAvailableQuantity(charmProduct, cart);
       
-      // Count standalone charms already in cart
-      let standaloneCharmsInCart = 0;
-      cart.forEach(cartItem => {
-        if (cartItem.type === 'charm') {
-          const cartPin = cartItem.pin || cartItem;
-          const cartPinName = cartPin.name || cartPin.src;
-          const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-          if ((cartPinName === charmName || cartPinName === pin?.src) && 
-              cartPinCategory === charmCategory) {
-            standaloneCharmsInCart += (cartItem.quantity || 1);
-          }
-        }
-      });
-      
-      // Count how many of this charm are in custom designs already in cart
-      let charmCountInCustomDesigns = 0;
-      cart.forEach(cartItem => {
-        if (cartItem.pins && Array.isArray(cartItem.pins)) {
-          cartItem.pins.forEach(cartPin => {
-            const cartPinName = cartPin.name || cartPin.src;
-            const cartPinCategory = cartPin.category || charmCategory;
-            if ((cartPinName === charmName || cartPinName === pin?.src) && 
-                cartPinCategory === charmCategory) {
-              charmCountInCustomDesigns += (cartItem.quantity || 1);
-            }
-          });
-        }
-      });
-      
-      // Count how many of this charm are already selected in the current design
-      const charmCountInDesign = selectedPins.filter(p => {
-        const pPin = p.pin || p;
-        const pPinName = pPin.name || pPin.src;
-        const pPinCategory = pPin.category || charmCategory;
-        return (pPinName === charmName || pPinName === pin?.src) && 
-               pPinCategory === charmCategory;
-      }).length;
-      
-      // Calculate total inventory and usage
-      const totalInventory = maxAvailableCharm === null ? null : (maxAvailableCharm + standaloneCharmsInCart);
-      const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
-      
       // Check if charm is out of stock
       if (maxAvailableCharm !== null && maxAvailableCharm === 0) {
         setInventoryMessage(`Oops! We don't have any more ${charmName} in stock right now, so you can't add more to your basket.`);
@@ -988,114 +948,145 @@ const CreateYours = () => {
         return;
       }
       
-      // Check if adding this design would exceed charm inventory
-      if (totalInventory !== null && totalUsage > totalInventory) {
+      // Check if we can add the requested quantity of this charm
+      if (maxAvailableCharm !== null && effectiveQuantity > maxAvailableCharm) {
         setInventoryMessage(`Oops! We don't have any more ${charmName} in stock right now, so you can't add more to your basket.`);
         setInventoryType('error');
         return;
       }
     }
     
-    // Capture composed design image from canvas if available
-    let canvasDataURL = null;
-    try {
-      if (window.getDesignImageDataURL) {
-        const capturedImage = window.getDesignImageDataURL();
-        // Only set canvasDataURL if it's a valid non-empty string
-        if (capturedImage && typeof capturedImage === 'string' && capturedImage.trim().length > 0) {
-          canvasDataURL = capturedImage;
-        }
-      }
-    } catch (error) {
-      console.error('Error capturing canvas image:', error);
-    }
-    
-    // Get the case image - prioritize selectedCaseImage since it's what's currently displayed
-    // Then fall back to color data image or case images (reuse colorData from above)
+    // Get the case image
     const caseImageToUse = selectedCaseImage || colorData?.image || selectedCase?.images?.[0];
-    
-    // Ensure we always have a case image - if all else fails, use empty string
     const finalCaseImage = caseImageToUse || '';
     
-    // Create composite design image (case + charms) if we have canvas content or charms
-    let designImage = null;
-    if ((canvasDataURL || selectedPins.length > 0) && finalCaseImage) {
-      try {
-        // Create composite image combining case background with canvas content
-        // Use dimensions matching the display container (300x350)
-        designImage = await createCompositeDesignImage(finalCaseImage, canvasDataURL, 300, 350);
-        console.log('Composite design image created:', designImage ? 'success' : 'failed');
-      } catch (error) {
-        console.error('Error creating composite design image:', error);
-        // Fall back to case image if composite fails
-        designImage = null;
-      }
-    } else if (canvasDataURL) {
-      // If we have canvas content but no case image, use canvas content
-      designImage = canvasDataURL;
+    // Get canvas image data URL (contains the charms/design)
+    let canvasImageDataURL = null;
+    if (window.getDesignImageDataURL) {
+      canvasImageDataURL = window.getDesignImageDataURL();
     }
     
-    // Debug logging
-    console.log('Adding to cart - Image check:', {
-      selectedCaseImage: selectedCaseImage,
-      colorDataImage: colorData?.image,
-      selectedCaseImages: selectedCase?.images,
-      caseImageToUse: finalCaseImage,
-      hasCanvasData: !!canvasDataURL,
-      hasDesignImage: !!designImage,
-      designImageLength: designImage ? designImage.length : 0
-    });
+    // Create composite image combining case background with canvas design
+    let designImage = finalCaseImage; // Fallback to case image if composite fails
+    if (finalCaseImage && canvasImageDataURL) {
+      try {
+        designImage = await createCompositeDesignImage(finalCaseImage, canvasImageDataURL, 300, 350);
+      } catch (error) {
+        console.error('Error creating composite design image:', error);
+        // Fallback to case image if composite creation fails
+        designImage = finalCaseImage;
+      }
+    } else if (canvasImageDataURL) {
+      // If no case image but we have canvas content, use canvas image
+      designImage = canvasImageDataURL;
+    }
     
-    // Ensure pins have all required properties including name
+    // Ensure pins have all required properties including name and category
     const pinsDetails = selectedPins.map(({ pin }) => {
-      // Ensure pin has name, src, price properties
+      const pinCategory = (pin?.category && pin.category.trim() !== '') 
+        ? pin.category 
+        : (selectedCategory && selectedCategory.trim() !== '') 
+          ? selectedCategory 
+          : 'colorful';
       return {
+        ...pin,
         name: pin?.name || 'Charm',
         src: pin?.src || '',
         price: pin?.price || 0,
-        category: pin?.category || '',
-        ...pin // Spread to include any other properties
+        category: pinCategory
       };
     });
     
-    const product = {
-      id: `custom-${Date.now()}`,
-      name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
+    // Generate unique timestamp for this add-to-cart action to ensure all items are independent
+    const uniqueTimestamp = Date.now();
+    
+    // Add items separately to cart
+    // 1. Add the case (quantity times)
+    const caseProduct = {
+      id: `case-${uniqueTimestamp}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for this case
+      name: caseName,
       caseType: selectedCaseType,
-      caseName: selectedCase?.name || 'Custom Case',
+      caseName: caseName,
       color: selectedColor,
-      pins: pinsDetails,
-      pinsDetails: pinsDetails, // Add this for cart display
       basePrice: caseBasePrice,
       casePrice: caseBasePrice,
-      pinsPrice: pinsPrice,
-      totalPrice: parseFloat(totalPrice),
-      price: parseFloat(totalPrice), // Keep for compatibility
-      image: finalCaseImage, // Case image to display in cart - always set
-      caseImage: finalCaseImage, // Case image to display in cart - always set
-      designImage: designImage, // Composite design image (case + charms) or null
-      customDesign: true,
-      quantity: quantity
+      totalPrice: caseBasePrice,
+      price: caseBasePrice,
+      image: designImage, // Use the composite design image
+      designImage: designImage, // Also set designImage property for cart display
+      caseImage: finalCaseImage, // Keep original case image reference
+      customDesign: true, // Mark as custom design to prevent grouping
+      quantity: effectiveQuantity
     };
     
-    // Debug: Log the product being added
-    console.log('Product being added to cart:', {
-      id: product.id,
-      name: product.name,
-      image: product.image,
-      caseImage: product.caseImage,
-      designImage: product.designImage ? `present (${product.designImage.length} chars)` : 'null',
-      hasImage: !!product.image,
-      hasCaseImage: !!product.caseImage,
-      hasDesignImage: !!product.designImage
+    console.log('🛒 CreateYours - Adding case to cart separately:', {
+      caseName: caseProduct.caseName,
+      caseType: caseProduct.caseType,
+      color: caseProduct.color,
+      quantity: caseProduct.quantity,
+      price: caseProduct.price,
+      id: caseProduct.id
     });
     
-    // Add to cart with quantity (will be grouped if identical item exists, but custom designs are kept separate)
-    const productWithQuantity = {
-      ...product,
-      quantity: quantity
-    };
-    addToCart(productWithQuantity);
+    addToCart(caseProduct);
+    
+    // 2. Add each charm separately (quantity times for each charm)
+    pinsDetails.forEach((pin, index) => {
+      const charmCategory = pin.category || selectedCategory || 'colorful';
+      const charmName = pin.name || 'Charm';
+      const charmPrice = pin.price || 2.0;
+      
+      const charmProduct = {
+        id: `charm-${uniqueTimestamp}-${index}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for each charm
+        name: charmName,
+        price: charmPrice,
+        totalPrice: charmPrice,
+        image: pin.src || '',
+        pin: pin,
+        category: charmCategory,
+        type: 'charm',
+        quantity: effectiveQuantity
+      };
+      
+      console.log(`🛒 CreateYours - Adding charm ${index + 1} to cart separately:`, {
+        charmName: charmProduct.name,
+        category: charmProduct.category,
+        quantity: charmProduct.quantity,
+        price: charmProduct.price,
+        id: charmProduct.id
+      });
+      
+      addToCart(charmProduct);
+    });
+    
+    // Log summary of what was added
+    console.log('🛒 CreateYours - All items added separately to cart:', {
+      case: {
+        name: caseProduct.caseName,
+        quantity: caseProduct.quantity,
+        price: caseProduct.price
+      },
+      charms: pinsDetails.map((pin, idx) => ({
+        charmNumber: idx + 1,
+        name: pin.name,
+        category: pin.category,
+        quantity: effectiveQuantity,
+        price: pin.price
+      })),
+      totalItems: 1 + pinsDetails.length, // 1 case + N charms
+      totalQuantity: effectiveQuantity
+    });
+
+    // Clear canvas after successfully adding to cart
+    if (window.clearCanvas) {
+      window.clearCanvas();
+    }
+    
+    // Clear selected pins state
+    setSelectedPins([]);
+    
+    // Reset quantity to 0 after adding to cart
+    setQuantity(0);
   };
 
   // Handle pin selection callback from Canvas
@@ -1299,6 +1290,7 @@ const CreateYours = () => {
                     Products={Products}
                     isCaseDropdownOpen={isCaseDropdownOpen}
                     setIsCaseDropdownOpen={setIsCaseDropdownOpen}
+                    cart={cart}
                   />
                   
                   {selectedColor && (
@@ -1307,6 +1299,8 @@ const CreateYours = () => {
                         colors={selectedCase?.colors || []}
                         selectedColor={selectedColor}
                         onSelect={handleColorSelection}
+                        caseType={selectedCaseType}
+                        cart={cart}
                       />
                     </div>
                   )}
@@ -1535,6 +1529,7 @@ const CreateYours = () => {
             setCustomTextAdded={setCustomTextAdded}
           />
         )}
+
       </div>
     </section>
   );

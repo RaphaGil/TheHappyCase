@@ -1,16 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, onRemove, errorMessage }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const itemRef = useRef(null);
+
+  // Handle click outside to close edit mode
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Don't close if clicking on any button or input
+      const target = event.target;
+      const isButton = target.tagName === 'BUTTON' || 
+                      target.closest('button') !== null ||
+                      target.closest('[role="button"]') !== null ||
+                      target.closest('[aria-label*="quantity"]') !== null;
+      const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+      
+      if (isButton || isInput) {
+        return; // Don't close when clicking buttons or inputs
+      }
+      
+      // Check if click is outside the item element
+      if (isEditing && itemRef.current && !itemRef.current.contains(event.target)) {
+        setIsEditing(false);
+      }
+    };
+
+    if (isEditing) {
+      // Add listener with a delay to ensure button clicks are processed first
+      const timeoutId = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+      }, 200);
+      
+      return () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isEditing]);
   // Handle standalone charm items
   if (item.type === 'charm') {
     const charm = item.pin || item;
-    const charmPrice = item.price || item.totalPrice || 0;
+    // Get unit price (always use item.price as the base unit price)
+    const unitPrice = item.price || 0;
     const qty = item.quantity || 1;
-    // Use item.totalPrice if available (already includes quantity), otherwise calculate
-    const total = item.totalPrice ? item.totalPrice * qty : charmPrice * qty;
+    // Always calculate total based on unit price and current quantity
+    const total = unitPrice * qty;
 
     return (
-      <div key={index} className="border-b border-gray-100 pb-4 last:border-b-0">
+      <div key={index} className=" pb-4 " ref={itemRef}>
         <div className="flex items-start gap-4">
           {/* Image with quantity badge */}
           <div className="relative flex-shrink-0 w-20 h-20 bg-gray-50 rounded-sm border border-gray-200 flex items-center justify-center overflow-visible">
@@ -31,11 +68,9 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
             ) : (
               <div className="w-full h-full rounded-sm bg-gray-100" />
             )}
-            {qty > 1 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
-                {qty}
-              </span>
-            )}
+            <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
+              {qty}
+            </span>
           </div>
           
           {/* Content */}
@@ -58,28 +93,88 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
               </div>
             </div>
             
-            {/* Quantity Controls */}
-            {onIncrement && onDecrement && (
+            {/* Edit Button */}
+            {!isEditing && (
+              <div className="mt-3">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                  className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter uppercase tracking-wider transition-colors"
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+            
+            {/* Quantity Controls and Remove Button - Shown when editing */}
+            {isEditing && onIncrement && onDecrement && (
               <div className="mt-3 flex items-center gap-3">
                 <div className="flex items-center gap-1 border border-gray-200 rounded-sm p-1">
                   <button 
-                    onClick={() => onDecrement(item.id || index)} 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const identifier = item.id !== undefined ? item.id : index;
+                      console.log('➖ Charm item decrement clicked:', { 
+                        identifier, 
+                        itemId: item.id, 
+                        index, 
+                        currentQty: item.quantity,
+                        itemName: item.name,
+                        itemType: item.type,
+                        hasOnDecrement: !!onDecrement
+                      });
+                      if (onDecrement) {
+                        onDecrement(identifier);
+                      }
+                    }} 
                     className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
                     aria-label="Decrease quantity"
+                    type="button"
                   >
                     −
                   </button>
                   <div className="px-2 py-0.5 text-xs text-gray-900 font-light font-inter min-w-[1.5rem] text-center">
                     {qty}
                   </div>
-                  <button 
-                    onClick={() => onIncrement(item.id || index)} 
-                    className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const identifier = item.id !== undefined ? item.id : index;
+                    console.log('➕ Charm item increment clicked:', { 
+                      identifier, 
+                      itemId: item.id, 
+                      index, 
+                      currentQty: item.quantity,
+                      itemName: item.name,
+                      itemType: item.type,
+                      hasOnIncrement: !!onIncrement
+                    });
+                    if (onIncrement) {
+                      onIncrement(identifier);
+                    }
+                  }} 
+                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+                  aria-label="Increase quantity"
+                  type="button"
+                >
+                  +
+                </button>
                 </div>
+                {onRemove && (
+                  <button
+                    onClick={() => {
+                      onRemove(index);
+                      setIsEditing(false);
+                    }}
+                    className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             )}
             
@@ -96,17 +191,27 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
   }
 
   // Handle case items (with or without charms)
-  const base = typeof item.basePrice === 'number' ? item.basePrice : 8;
+  // Get base price - prefer basePrice, then casePrice, then price, fallback to 8
+  const base = typeof item.basePrice === 'number' 
+    ? item.basePrice 
+    : (typeof item.casePrice === 'number' 
+      ? item.casePrice 
+      : (typeof item.price === 'number' ? item.price : 8));
+  
+  // Calculate charms total from pinsDetails if available
   const charms = item.pinsDetails && item.pinsDetails.length
     ? item.pinsDetails.reduce((s, p) => s + (p.price || 0), 0)
-    : Math.max(0, (item.totalPrice || 0) - base);
+    : 0;
+  
+  // Unit price = base + charms
   const unit = base + charms;
   const qty = item.quantity || 1;
-  // Use item.totalPrice if available (already includes quantity), otherwise calculate
-  const total = item.totalPrice ? item.totalPrice * qty : unit * qty;
+  
+  // Always calculate total based on unit price and current quantity
+  const total = unit * qty;
 
   return (
-    <div key={index} className="border-b border-gray-100 pb-4 last:border-b-0">
+    <div key={index} className=" pb-4 last:border-b-0" ref={itemRef}>
       <div className="flex items-start gap-4">
         {/* Image with quantity badge */}
         <div className="relative flex-shrink-0 w-20 h-20 bg-gray-50 rounded-sm border border-gray-200 flex items-center justify-center overflow-visible">
@@ -130,11 +235,9 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
               style={{ background: item.color }} 
             />
           )}
-          {qty > 1 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
-              {qty}
-            </span>
-          )}
+          <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
+            {qty}
+          </span>
         </div>
         
         {/* Content */}
@@ -160,9 +263,96 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
             </div>
           </div>
           
+          {/* Edit Button */}
+          {!isEditing && (
+            <div className="mt-3">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEditing(true);
+                }}
+                className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter uppercase tracking-wider transition-colors"
+              >
+                Edit
+              </button>
+            </div>
+          )}
+          
+          {/* Quantity Controls and Remove Button - Shown when editing */}
+          {isEditing && onIncrement && onDecrement && (
+            <div className="mt-3 flex items-center gap-3">
+              <div className="flex items-center gap-1 border border-gray-200 rounded-sm p-1">
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const identifier = item.id !== undefined ? item.id : index;
+                    console.log('➖ Case item decrement clicked:', { 
+                      identifier, 
+                      itemId: item.id, 
+                      index, 
+                      currentQty: item.quantity,
+                      itemName: item.caseName || item.name,
+                      hasOnDecrement: !!onDecrement
+                    });
+                    if (onDecrement) {
+                      onDecrement(identifier);
+                    } else {
+                      console.error('❌ onDecrement handler is missing!');
+                    }
+                  }} 
+                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+                  aria-label="Decrease quantity"
+                  type="button"
+                >
+                  −
+                </button>
+                <div className="px-2 py-0.5 text-xs text-gray-900 font-light font-inter min-w-[1.5rem] text-center">
+                  {qty}
+                </div>
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const identifier = item.id !== undefined ? item.id : index;
+                    console.log('➕ Case item increment clicked:', { 
+                      identifier, 
+                      itemId: item.id, 
+                      index, 
+                      currentQty: item.quantity,
+                      itemName: item.caseName || item.name,
+                      hasOnIncrement: !!onIncrement
+                    });
+                    if (onIncrement) {
+                      onIncrement(identifier);
+                    } else {
+                      console.error('❌ onIncrement handler is missing!');
+                    }
+                  }} 
+                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+                  aria-label="Increase quantity"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              {onRemove && (
+                <button
+                  onClick={() => {
+                    onRemove(index);
+                    setIsEditing(false);
+                  }}
+                  className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+          )}
+          
           {/* Charms list */}
           {item.pinsDetails && item.pinsDetails.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="mt-3 pt-3 ">
               <div className="flex flex-col gap-2">
                 {Object.values(item.pinsDetails.reduce((acc, pin) => {
                   acc[pin.src] = acc[pin.src] || { ...pin, quantity: 0 };
@@ -181,11 +371,9 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
                             className="w-full h-full object-contain p-1" 
                             loading="lazy" 
                           />
-                          {groupedPin.quantity > 1 && (
-                            <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-[10px] font-medium rounded-full h-4 w-4 flex items-center justify-center font-inter">
-                              {groupedPin.quantity}
-                            </span>
-                          )}
+                          <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-[10px] font-medium rounded-full h-4 w-4 flex items-center justify-center font-inter">
+                            {groupedPin.quantity}
+                          </span>
                         </div>
                         <span className="text-xs font-light text-gray-700 font-inter">
                           {groupedPin.name}

@@ -29,7 +29,7 @@ const OrderSummary = ({
             <div className="space-y-0 mt-2">
               {cart.map((item, index) => (
                 <OrderSummaryItem
-                  key={index}
+                  key={item.id || `item-${index}`}
                   item={item}
                   index={index}
                   formatPrice={formatPrice}

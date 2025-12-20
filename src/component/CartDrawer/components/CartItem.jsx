@@ -15,7 +15,8 @@ const CartItem = ({
   onNoteChange,
   onSaveNote,
   onCancelNote,
-  errorMessage
+  errorMessage,
+  charmErrors
 }) => {
   return (
     <div className=" pb-4 flex items-start gap-3">
@@ -59,6 +60,7 @@ const CartItem = ({
             onSaveNote={onSaveNote}
             onCancelNote={onCancelNote}
             errorMessage={errorMessage}
+            charmErrors={charmErrors}
           />
         )}
       </div>

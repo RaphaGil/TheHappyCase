@@ -3,7 +3,8 @@ import { useSearchParams, Link } from 'react-router-dom';
 import Products from '../../data/products.json';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
-import GlueInfoModal from '../../component/GlueInfoModal';
+import InventoryAlertModal from '../../component/InventoryAlertModal';
+import { getMaxAvailableQuantity } from '../../utils/inventory';
 
 // Map filter values to charm types
 const filterToType = {
@@ -15,7 +16,7 @@ const filterToType = {
 const Charms = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const filterParam = searchParams.get('filter');
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const { formatPrice } = useCurrency();
   
   const initialCharmType = filterParam && filterToType[filterParam.toLowerCase()] 
@@ -310,18 +311,11 @@ const Charms = () => {
     setSearchParams({ filter: filterValue });
   };
 
-  const [showGlueModal, setShowGlueModal] = useState(false);
-  const [pendingCharm, setPendingCharm] = useState(null);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [inventoryMessage, setInventoryMessage] = useState('');
+  const [inventoryType, setInventoryType] = useState('error');
 
   const handleAddToCart = (charm) => {
-    // Show modal first
-    setPendingCharm(charm);
-    setShowGlueModal(true);
-  };
-
-  const handleProceedToCart = () => {
-    if (!pendingCharm) return;
-    
     const getCharmCategory = () => {
       if (selectedCharmType === 'colorful') return 'colorful';
       if (selectedCharmType === 'bronze') return 'bronze';
@@ -330,28 +324,139 @@ const Charms = () => {
     };
 
     const getCharmName = () => {
-      if (selectedCharmType === 'flags') return `${pendingCharm.name} - Flag`;
-      if (selectedCharmType === 'bronze') return `${pendingCharm.name} - Bronze Charm`;
-      return `${pendingCharm.name} - Colorful Charm`;
+      // Extract base name only (remove suffixes like " Flag", " - Flag", " - Colorful Charm", etc.)
+      let baseName = charm.name || '';
+      // Remove common suffixes
+      baseName = baseName.replace(/\s*-\s*(Flag|Colorful Charm|Bronze Charm)$/i, '');
+      baseName = baseName.replace(/\s+Flag$/i, '');
+      return baseName.trim();
     };
 
     const getCharmPrice = () => {
-      if (selectedCharmType === 'bronze') return pendingCharm.price || 1.0;
-      return pendingCharm.price || 2.0;
+      if (selectedCharmType === 'bronze') return charm.price || 1.0;
+      return charm.price || 2.0;
     };
 
     const product = {
+      id: `charm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for each charm
       name: getCharmName(),
       price: getCharmPrice(),
       totalPrice: getCharmPrice(),
-      image: pendingCharm.src,
-      pin: pendingCharm,
+      image: charm.src,
+      pin: charm,
       category: getCharmCategory(),
       type: 'charm'
     };
+
+    // Check stock availability before adding to cart
+    const maxAvailable = getMaxAvailableQuantity(product, cart);
+    
+    // If maxAvailable is 0, the charm is out of stock
+    if (maxAvailable !== null && maxAvailable === 0) {
+      const charmDisplayName = charm.name || 'this charm';
+      const errorMessage = `Oops! We don't have any more ${charmDisplayName} in stock right now, so you can't add more to your basket.`;
+      setInventoryMessage(errorMessage);
+      setInventoryType('error');
+      setShowInventoryModal(true);
+      return;
+    }
+
+    // Stock available, proceed with adding to cart
+    console.log('📌 Charms page - Adding charm to cart:', {
+      charmName: charm.name,
+      charmSrc: charm.src,
+      category: getCharmCategory(),
+      product: product
+    });
     addToCart(product);
-    setShowGlueModal(false);
-    setPendingCharm(null);
+  };
+
+  // Helper function to check if a charm is sold out (considering cart inventory)
+  // Shows "Sold Out" if no more items can be added to the basket
+  // This includes charms in the cart (standalone and in custom designs)
+  const isCharmSoldOut = (charm) => {
+    if (!charm) return false;
+    
+    // Get charm category and name
+    const category = selectedCharmType; // colorful, bronze, or flags
+    const pinName = charm.name || charm.src;
+    const pinSrc = charm.src || '';
+    
+    if (!category || !pinName) return false;
+    
+    // Check available inventory considering cart (items in basket)
+    // getMaxAvailableQuantity returns how many MORE can be added to the basket
+    const productForInventory = {
+      type: 'charm',
+      category: category,
+      pin: charm,
+      name: pinName
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // If no inventory limit, charm is always available
+    if (maxAvailable === null) return false;
+    
+    // Count standalone charms already in cart
+    let standaloneCharmsInCart = 0;
+    cart.forEach(cartItem => {
+      if (cartItem.type === 'charm') {
+        const cartPin = cartItem.pin || cartItem;
+        const cartPinName = cartPin.name || cartPin.src;
+        const cartPinCategory = cartPin.category || cartItem.category || category;
+        if ((cartPinName === pinName || cartPinName === pinSrc) && 
+            cartPinCategory === category) {
+          standaloneCharmsInCart += (cartItem.quantity || 1);
+        }
+      }
+    });
+    
+    // Count how many of this charm are in custom designs already in cart
+    // This includes charms from CreateYours page (customDesign: true)
+    let charmCountInCustomDesigns = 0;
+    cart.forEach(cartItem => {
+      // Skip standalone charms (already counted above)
+      if (cartItem.type === 'charm') return;
+      
+      // Count charms in custom designs (cases with charms from CreateYours)
+      // Check both pins and pinsDetails arrays (CreateYours uses both)
+      const pinsToCheck = cartItem.pins || cartItem.pinsDetails || [];
+      
+      // Count how many times this charm appears in this design
+      let charmCountInThisDesign = 0;
+      pinsToCheck.forEach(cartPin => {
+        if (!cartPin) return;
+        
+        const cartPinName = cartPin.name || cartPin.src || '';
+        const cartPinSrc = cartPin.src || '';
+        const cartPinCategory = cartPin.category || category;
+        
+        // Match by name or src (exact match), and category must match
+        const nameMatches = (cartPinName === pinName || cartPinName === pinSrc || 
+                            cartPinSrc === pinName || cartPinSrc === pinSrc);
+        const categoryMatches = (cartPinCategory === category);
+        
+        if (nameMatches && categoryMatches) {
+          charmCountInThisDesign += 1;
+        }
+      });
+      
+      // Multiply by quantity (if user has 2 of this design, count charms twice)
+      if (charmCountInThisDesign > 0) {
+        charmCountInCustomDesigns += (charmCountInThisDesign * (cartItem.quantity || 1));
+      }
+    });
+    
+    // Calculate total inventory: maxAvailable + standalone charms in cart
+    // This gives us the total available inventory for this charm
+    const totalInventory = maxAvailable + standaloneCharmsInCart;
+    
+    // Calculate total usage: standalone + in custom designs
+    const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns;
+    
+    // If all inventory is used (totalUsage >= totalInventory), charm is sold out
+    // Also check if maxAvailable === 0 (no more standalone can be added)
+    return maxAvailable === 0 || totalUsage >= totalInventory;
   };
 
   const pastelColors = ['bg-pink-50', 'bg-blue-50', 'bg-purple-50', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50'];
@@ -373,7 +478,7 @@ const Charms = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-title sm:text-title-lg font-light text-gray-900 mb-2 tracking-title">
+          <h1 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
           CHARMS
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-3 sm:mb-4"></div>
@@ -520,6 +625,7 @@ const Charms = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 mb-12 min-h-[400px] sm:min-h-[600px]">
               {displayedCharms.map((charm, index) => {
               const colorIndex = index % pastelColors.length;
+              const soldOut = isCharmSoldOut(charm);
               return (
                 <div
                   key={index}
@@ -529,7 +635,7 @@ const Charms = () => {
                     <img
                       src={charm.src}
                       alt={charm.name}
-                      className={`w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80 ${(charm.quantity !== undefined && charm.quantity === 0) ? 'opacity-50' : ''}`}
+                      className={`w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80 ${soldOut ? 'opacity-50' : ''}`}
                       loading="lazy"
                       style={{
                         transform: `scale(${charm.size !== undefined ? charm.size * 0.9 : 0.9})`
@@ -547,7 +653,7 @@ const Charms = () => {
                       <span className="text-4xl">🎁</span>
                     </div>
                     {/* Sold Out Overlay */}
-                    {(charm.quantity !== undefined && charm.quantity === 0) && (
+                    {soldOut && (
                       <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
                         <span className="text-white text-xl font-medium uppercase tracking-wider font-inter">
                           Sold Out
@@ -555,7 +661,7 @@ const Charms = () => {
                       </div>
                     )}
                     {/* Add to Cart Button Overlay - Bottom right on mobile, bottom bar on desktop hover */}
-                    {(!charm.quantity || charm.quantity > 0) && (
+                    {!soldOut && (
                       <button
                         onClick={() => handleAddToCart(charm)}
                         className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10 font-inter"
@@ -569,11 +675,11 @@ const Charms = () => {
                       </button>
                     )}
                   </div>
-                  <h3 className="text-sm text-gray-700 text-center mb-1 font-light font-inter">
+                  <h3 className={`text-sm text-center mb-1 font-light font-inter ${soldOut ? 'text-gray-500' : 'text-gray-700'}`}>
                     {charm.name}
                   </h3>
                   <div className="text-center">
-                    <span className="text-sm text-gray-900 font-medium font-inter">
+                    <span className={`text-sm font-medium font-inter ${soldOut ? 'text-gray-500' : 'text-gray-900'}`}>
                       {formatPrice(getCharmPrice(charm))}
                     </span>
                   </div>
@@ -663,15 +769,15 @@ const Charms = () => {
 
       </div>
       
-      {/* Glue Info Modal */}
-      <GlueInfoModal
-        show={showGlueModal}
+      {/* Inventory Alert Modal */}
+      <InventoryAlertModal
+        show={showInventoryModal}
         onClose={() => {
-          setShowGlueModal(false);
-          setPendingCharm(null);
+          setShowInventoryModal(false);
+          setInventoryMessage('');
         }}
-        onProceed={handleProceedToCart}
-        productType="charm"
+        message={inventoryMessage}
+        type={inventoryType}
       />
     </div>
   );

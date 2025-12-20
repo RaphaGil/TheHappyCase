@@ -1,4 +1,5 @@
 import React from "react";
+import { getMaxAvailableQuantity } from "../../utils/inventory";
 
 // Helper function to extract color name from image filename
 const getColorName = (image) => {
@@ -66,9 +67,29 @@ const getColorName = (image) => {
   return colorPart || 'Color';
 };
 
-const ColorSelector = ({ colors, selectedColor, onSelect }) => {
+const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] }) => {
   const selectedColorData = colors.find(c => c.color === selectedColor);
   const selectedColorName = selectedColorData ? getColorName(selectedColorData.image) : '';
+
+  // Helper function to check if a color is sold out (considering cart inventory)
+  const isColorSoldOut = (color) => {
+    // If caseType is provided, check inventory using getMaxAvailableQuantity
+    if (caseType) {
+      const productForInventory = {
+        caseType: caseType,
+        color: color,
+      };
+      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+      
+      // If maxAvailable === 0, no more can be added to the basket - SOLD OUT
+      // If maxAvailable is null (unlimited) or > 0, color is available
+      return maxAvailable !== null && maxAvailable === 0;
+    }
+    
+    // Fallback to quantity check if caseType not provided
+    const colorData = colors.find(c => c.color === color);
+    return colorData && colorData.quantity !== undefined && colorData.quantity === 0;
+  };
 
   return (
     <div className="overflow-visible">
@@ -76,7 +97,7 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
-          const isSoldOut = quantity !== undefined && quantity === 0;
+          const isSoldOut = isColorSoldOut(color);
           
           return (
             <div

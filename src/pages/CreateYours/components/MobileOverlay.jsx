@@ -78,17 +78,65 @@ const MobileOverlay = ({
                     }
                     return opt.image || null;
                   };
+                  
+                  // Check if case is sold out
+                  // Shows "Sold Out" if no more items can be added to the basket
+                  const isCaseTypeSoldOut = () => {
+                    const caseData = Products && Products.cases ? Products.cases.find(c => c.type === opt.value) : null;
+                    if (!caseData) return false;
+                    
+                    // Note: We check inventory through getMaxAvailableQuantity below
+                    // which properly handles localStorage quantities, product data, and cart items
+                    // to determine if cases can be added to the basket
+                    
+                    // Check if all colors are sold out (considering cart inventory)
+                    // This uses getMaxAvailableQuantity which checks both color-level and case-level quantities
+                    if (caseData.colors && caseData.colors.length > 0) {
+                      // Check if at least one color has available inventory that can be added to basket
+                      // This considers items already in the basket/cart
+                      const hasAvailableColor = caseData.colors.some(color => {
+                        // Check available inventory considering cart (items in basket)
+                        // getMaxAvailableQuantity returns how many MORE can be added to the basket
+                        // It checks: color-level quantity -> case-level quantity -> product data
+                        // Returns: null (unlimited), > 0 (can add more), or 0 (cannot add any more)
+                        const productForInventory = {
+                          caseType: opt.value,
+                          color: color.color,
+                        };
+                        const maxAvailable = getMaxAvailableQuantity(productForInventory, cart || []);
+                        
+                        // If maxAvailable is null, it means unlimited inventory (can add to basket)
+                        // If maxAvailable > 0, there's inventory available (can add to basket)
+                        // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+                        return maxAvailable === null || maxAvailable > 0;
+                      });
+                      
+                      // If no color has available inventory (maxAvailable === 0 for all colors), 
+                      // it means no cases can be added to the basket - show as SOLD OUT
+                      return !hasAvailableColor;
+                    }
+                    
+                    return false;
+                  };
+                  
                   const caseImage = getCaseImage();
+                  const soldOut = isCaseTypeSoldOut();
+                  const isSelected = selectedCaseType === opt.value;
                   
                   return (
                     <button
                       key={opt.value}
-                      onClick={() => handleCaseTypeSelection(opt.value)}
+                      onClick={() => {
+                        if (!soldOut) {
+                          handleCaseTypeSelection(opt.value);
+                        }
+                      }}
+                      disabled={soldOut}
                       className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 ${
                         selectedCaseType === opt.value
                           ? ' text-gray-900'
                           : ' hover:border-gray-300'
-                      }`}
+                      } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
                       {caseImage && (
@@ -96,13 +144,13 @@ const MobileOverlay = ({
                           <img
                             src={caseImage}
                             alt={opt.label}
-                            className="w-full h-full object-contain p-0 xs:p-0.5 sm:p-1.5 md:p-3 lg:p-4 xl:p-5"
+                            className={`w-full h-full object-contain p-0 xs:p-0.5 sm:p-1.5 md:p-3 lg:p-4 xl:p-5 ${soldOut ? 'opacity-50' : ''}`}
                             loading="lazy"
                             onError={(e) => {
                               e.target.style.display = 'none';
                             }}
                           />
-                          {selectedCaseType === opt.value && (
+                          {isSelected && !soldOut && (
                             <div className="absolute top-0.5 right-0.5 xs:top-1 xs:right-1 sm:top-1.5 sm:right-1.5 md:top-2 md:right-2 lg:top-3 lg:right-3 xl:top-4 xl:right-4 w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 bg-gray-900 rounded-full flex items-center justify-center shadow-md">
                               <svg className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -111,9 +159,12 @@ const MobileOverlay = ({
                           )}
                         </div>
                       )}
-                      <span className="text-[9px] xs:text-[11px] sm:text-xs md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2">
+                      <span className={`text-[9px] xs:text-[11px] sm:text-xs md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2 ${soldOut ? 'text-gray-500' : ''}`}>
                         {opt.label}
                       </span>
+                      {soldOut && (
+                        <span className="text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs text-red-600 font-medium mt-0.5 xs:mt-1">Sold Out</span>
+                      )}
                     </button>
                   );
                 })}
@@ -127,6 +178,8 @@ const MobileOverlay = ({
                 colors={Products.cases.find(c => c.type === selectedCaseType)?.colors || []}
                 selectedColor={selectedColor}
                 onSelect={handleColorSelection}
+                caseType={selectedCaseType}
+                cart={cart}
               />
             </div>
           )}

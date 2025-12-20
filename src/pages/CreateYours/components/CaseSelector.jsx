@@ -1,7 +1,8 @@
 import React from 'react';
 import { CASE_OPTIONS } from '../../../data/constants';
+import { getMaxAvailableQuantity } from '../../../utils/inventory';
 
-const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle }) => {
+const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, cart = [] }) => {
   // Get image for a case type
   const getCaseImage = (caseType) => {
     // First try to get from Products.cases
@@ -21,27 +22,52 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle }
     return null;
   };
 
+  // Helper function to check if a case type is sold out (considering cart inventory)
+  // Shows "Sold Out" if no more items can be added to the basket
+  const isCaseTypeSoldOut = (caseType) => {
+    const caseData = Products && Products.cases ? Products.cases.find(c => c.type === caseType) : null;
+    if (!caseData) return false;
+    
+    // Note: We check inventory through getMaxAvailableQuantity below
+    // which properly handles localStorage quantities, product data, and cart items
+    // to determine if cases can be added to the basket
+    
+    // Check if all colors are sold out (considering cart inventory)
+    // This uses getMaxAvailableQuantity which checks both color-level and case-level quantities
+    if (caseData.colors && caseData.colors.length > 0) {
+      // Check if at least one color has available inventory that can be added to basket
+      // This considers items already in the basket/cart
+      const hasAvailableColor = caseData.colors.some(color => {
+        // Check available inventory considering cart (items in basket)
+        // getMaxAvailableQuantity returns how many MORE can be added to the basket
+        // It checks: color-level quantity -> case-level quantity -> product data
+        // Returns: null (unlimited), > 0 (can add more), or 0 (cannot add any more)
+        const productForInventory = {
+          caseType: caseType,
+          color: color.color,
+        };
+        const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+        
+        // If maxAvailable is null, it means unlimited inventory (can add to basket)
+        // If maxAvailable > 0, there's inventory available (can add to basket)
+        // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+        return maxAvailable === null || maxAvailable > 0;
+      });
+      
+      // If no color has available inventory (maxAvailable === 0 for all colors), 
+      // it means no cases can be added to the basket - show as SOLD OUT
+      return !hasAvailableColor;
+    }
+    
+    return false;
+  };
+
   return (
     <div className="w-full">
       <div className="flex flex-nowrap gap-2 xs:gap-2.5 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 justify-center items-start">
         {CASE_OPTIONS.map((opt) => {
           const caseImage = getCaseImage(opt.value);
-          const caseData = Products && Products.cases ? Products.cases.find(c => c.type === opt.value) : null;
-          const isCaseSoldOut = () => {
-            if (!caseData) return false;
-            // Check case-level quantity
-            if (caseData.quantity !== undefined && caseData.quantity === 0) {
-              return true;
-            }
-            // Check if all colors are sold out
-            if (caseData.colors && caseData.colors.length > 0) {
-              return caseData.colors.every(color => 
-                color.quantity !== undefined && color.quantity === 0
-              );
-            }
-            return false;
-          };
-          const soldOut = isCaseSoldOut();
+          const soldOut = isCaseTypeSoldOut(opt.value);
           const isSelected = selectedCaseType === opt.value;
           
           return (

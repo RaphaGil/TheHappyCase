@@ -54,7 +54,7 @@ const PriceSummary = ({
                   type="checkbox"
                   checked={agreedToTerms}
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
+                  className="mt-0.5 w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded  pf-2"
                 />
                 <span className="text-xs xs:text-sm text-gray-700 leading-tight font-light font-inter">
                   <button
@@ -76,18 +76,17 @@ const PriceSummary = ({
 
             {/* Quantity Selector and Add to Cart Button - Side by side */}
             <div className="flex flex-row gap-2 xs:gap-2.5 items-center">
-              {/* Quantity Selector - Left */}
+              {/* Quantity Selector - Left - Always shows 1 */}
               <div className="flex items-center border border-gray-200 rounded-sm p-0.5 flex-shrink-0">
                 <button
-                  onClick={onDecrementQuantity || (() => setQuantity(Math.max(1, quantity - 1)))}
+                  onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
                   className="w-6 h-6 xs:w-7 xs:h-7 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
                   aria-label="Decrease quantity"
-                  disabled={quantity <= 1}
                 > 
                   −
                 </button>
                 <div className="px-2 xs:px-3 py-0.5 text-sm xs:text-base text-gray-900 font-light font-inter min-w-[1.5rem] xs:min-w-[2rem] text-center">
-                  {quantity}
+                  {Math.max(quantity, 1)}
                 </div>
                 <button
                   onClick={onIncrementQuantity || (() => setQuantity(quantity + 1))}
@@ -154,7 +153,7 @@ const PriceSummary = ({
                   type="checkbox"
                   checked={agreedToTerms}
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900 focus:ring-2"
+                  className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded "
                 />
                 <span className="text-sm text-gray-700 leading-relaxed font-light font-inter">
                   I agree to the{' '}
@@ -180,14 +179,14 @@ const PriceSummary = ({
             <div className={`mt-4 flex flex-row gap-1.5 xs:gap-2`}>
               <div className={`flex items-center border border-gray-200 rounded-sm p-1`}>
                 <button
-                  onClick={onDecrementQuantity || (() => setQuantity(Math.max(1, quantity - 1)))}
+                  onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
                   className={`w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors`}
                   aria-label="Decrease quantity"
                 > 
                   −
                 </button>
                 <div className={`px-3 py-1 text-sm text-gray-900 font-light font-inter min-w-[2rem] text-center`}>
-                  {quantity}
+                  {Math.max(quantity, 1)}
                 </div>
                 <button
                   onClick={onIncrementQuantity || (() => setQuantity(quantity + 1))}

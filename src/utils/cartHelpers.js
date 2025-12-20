@@ -9,6 +9,14 @@ export const getItemGroupKey = (item) => {
     return `custom-${item.id || Date.now()}`;
   }
   
+  // For charms, always group by category and pin name (ignore unique IDs for grouping)
+  // This ensures the same charm shows as one item with quantity, regardless of where it came from
+  if (item.type === 'charm' || (item.category && item.pin)) {
+    const category = item.category || (item.pin && item.pin.category) || 'colorful';
+    const pinName = item.pin?.name || item.pin?.src || item.name || '';
+    return `charm-${category}-${pinName}`;
+  }
+  
   // For regular cases, group by caseType and color
   if (item.caseType && item.color) {
     // If it has pins, include them in the key (different pin combinations = different items)
@@ -22,9 +30,10 @@ export const getItemGroupKey = (item) => {
     return `case-${item.caseType}-${item.color}`;
   }
   
-  // For charms, group by category and pin name
-  if (item.category && item.pin) {
-    return `charm-${item.category}-${item.pin.name || item.pin.src}`;
+  // If item has a unique ID (from custom design), treat it as unique
+  // IDs starting with "case-" followed by timestamp are from CreateYours custom cases
+  if (item.id && item.id.startsWith('case-')) {
+    return `unique-${item.id}`;
   }
   
   // Fallback: use ID if available

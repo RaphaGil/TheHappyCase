@@ -8,6 +8,7 @@ import Pagination from './Pagination';
 import ResultsCount from './ResultsCount';
 import EmptyState from './EmptyState';
 import CharmsCallToAction from './CharmsCallToAction';
+import { getMaxAvailableQuantity } from '../../../utils/inventory';
 
 const CharmsPage = ({
   title,
@@ -21,7 +22,27 @@ const CharmsPage = ({
   searchPlaceholder = "Search charms...",
   inlineTabs = false
 }) => {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
+  
+  // Helper function to check if a charm is sold out (considering cart inventory)
+  const isCharmSoldOut = (charm) => {
+    if (!charm) return false;
+    
+    const pinName = charm.name || charm.src;
+    if (!categoryName || !pinName) return false;
+    
+    // Check available inventory considering cart (items in basket)
+    const productForInventory = {
+      type: 'charm',
+      category: categoryName,
+      pin: charm,
+      name: pinName
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+    return maxAvailable !== null && maxAvailable === 0;
+  };
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,6 +78,7 @@ const CharmsPage = ({
 
   const handleAddToCart = (charm) => {
     const product = {
+      id: `charm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for each charm
       name: `${charm.name} - ${title}`,
       price: charm.price || defaultPrice,
       totalPrice: charm.price || defaultPrice,
@@ -123,14 +145,18 @@ const CharmsPage = ({
         <div className="relative">
           {/* Charms Grid - 4 columns on large screens, responsive on smaller */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-            {currentPins.map((charm, index) => (
-              <CharmGridItem
-                key={index}
-                charm={charm}
-                index={startIndex + index}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
+            {currentPins.map((charm, index) => {
+              const soldOut = isCharmSoldOut(charm);
+              return (
+                <CharmGridItem
+                  key={index}
+                  charm={charm}
+                  index={startIndex + index}
+                  onAddToCart={handleAddToCart}
+                  isSoldOut={soldOut}
+                />
+              );
+            })}
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrency } from '../../../context/CurrencyContext';
 
-const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
+const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false }) => {
   const { formatPrice } = useCurrency();
   const pastelColors = ['bg-pink-50', 'bg-blue-50', 'bg-purple-50', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50'];
   const pastelBorders = ['border-pink-100', 'border-blue-100', 'border-purple-100', 'border-green-100', 'border-yellow-100', 'border-orange-100'];
@@ -16,7 +16,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
         <img
           src={charm.src}
           alt={charm.name}
-          className="w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80"
+          className={`w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80 ${isSoldOut ? 'opacity-50' : ''}`}
           loading="lazy"
           style={{
             transform: `scale(${charm.size !== undefined ? charm.size * 0.9 : 0.9})`
@@ -33,13 +33,21 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
         <div className="hidden w-full h-full items-center justify-center text-gray-400">
           <span className="text-4xl">🎁</span>
         </div>
-        {isSelected && (
+        {/* Sold Out Overlay */}
+        {isSoldOut && (
+          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center z-20">
+            <span className="text-white text-xl font-medium uppercase tracking-wider font-inter">
+              Sold Out
+            </span>
+          </div>
+        )}
+        {isSelected && !isSoldOut && (
           <div className="absolute -top-2 -right-2 bg-gray-900 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
             ✓
           </div>
         )}
         {/* Add to Cart Button Overlay */}
-        {onAddToCart && (
+        {onAddToCart && !isSoldOut && (
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -54,11 +62,11 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect }) => {
           </button>
         )}
       </div>
-      <h3 className="text-sm text-gray-700 text-center mb-1 font-light font-inter">
+      <h3 className={`text-sm text-center mb-1 font-light font-inter ${isSoldOut ? 'text-gray-500' : 'text-gray-700'}`}>
         {charm.name}
       </h3>
       <div className="text-center">
-        <span className="text-sm text-gray-900 font-medium font-inter">
+        <span className={`text-sm font-medium font-inter ${isSoldOut ? 'text-gray-500' : 'text-gray-900'}`}>
           {formatPrice(charm.price || 2.0)}
         </span>
       </div>

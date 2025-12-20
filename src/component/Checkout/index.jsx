@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -50,7 +50,11 @@ const CheckoutForm = () => {
   const [paymentElementReady, setPaymentElementReady] = useState(false);
   const [showShippingInfo, setShowShippingInfo] = useState(false);
   const [showMobileSummary, setShowMobileSummary] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authenticatedEmail, setAuthenticatedEmail] = useState('');
   const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
+  const errorTimeoutsRef = useRef({}); // Track timeouts for each error
+  const isNavigatingToSuccessRef = useRef(false); // Track if we're navigating to success page
   const [customerInfo, setCustomerInfo] = useState({
     email: '',
     name: '',
@@ -77,15 +81,64 @@ const CheckoutForm = () => {
     selectedCountry && selectedCountry.toUpperCase() !== 'GB' && cart.length > 0;
   const totalWithShipping = subtotal + vatAmount + shippingCost;
 
+  // Auto-clear error messages after 3 seconds
+  useEffect(() => {
+    const timeouts = errorTimeoutsRef.current;
+    
+    Object.keys(itemErrors).forEach((itemKey) => {
+      // Clear any existing timeout for this item
+      if (timeouts[itemKey]) {
+        clearTimeout(timeouts[itemKey]);
+      }
+      
+      // Set new timeout to clear error after 3 seconds
+      timeouts[itemKey] = setTimeout(() => {
+        setItemErrors(prev => {
+          const newErrors = { ...prev };
+          // Handle both string errors (old format) and object errors (new format)
+          if (typeof newErrors[itemKey] === 'string') {
+            delete newErrors[itemKey];
+          } else if (newErrors[itemKey] && typeof newErrors[itemKey] === 'object') {
+            // Clear all errors for this item after timeout
+            delete newErrors[itemKey];
+          }
+          return newErrors;
+        });
+        delete timeouts[itemKey];
+      }, 3000); // 3 seconds
+    });
+
+    // Cleanup function to clear timeouts when component unmounts
+    return () => {
+      Object.values(timeouts).forEach(timeout => {
+        clearTimeout(timeout);
+      });
+    };
+  }, [itemErrors]);
+
   // Handle increment with inventory check
   const handleIncrementWithCheck = (itemId) => {
-    const item = cart.find(i => i.id === itemId);
-    if (!item) return;
+    console.log('🔄 handleIncrementWithCheck called:', { itemId, cartLength: cart.length, cartItems: cart.map((i, idx) => ({ index: idx, id: i.id, name: i.name || i.caseName, type: i.type })) });
+    
+    // Find item by ID or by index
+    const item = typeof itemId === 'string' 
+      ? cart.find(i => i.id === itemId)
+      : (typeof itemId === 'number' && itemId >= 0 && itemId < cart.length ? cart[itemId] : null);
+    
+    console.log('📦 Item found:', item ? { name: item.name || item.caseName, id: item.id, type: item.type, quantity: item.quantity } : 'NOT FOUND');
+    
+    if (!item) {
+      console.error('❌ Item not found for increment:', itemId);
+      return;
+    }
     
     const maxAvailable = getMaxAvailableQuantity(item, cart);
     const canIncrement = maxAvailable === null || maxAvailable > 0;
     
+    console.log('📊 Inventory check:', { maxAvailable, canIncrement, currentQty: item.quantity });
+    
     if (canIncrement) {
+      console.log('✅ Calling incrementItemQty with:', itemId);
       incrementItemQty(itemId);
       // Clear error when successfully incrementing
       setItemErrors(prev => {
@@ -106,6 +159,7 @@ const CheckoutForm = () => {
         }));
       } else {
         // For case items, just increment (they handle their own errors)
+        console.log('⚠️ Case item - incrementing anyway despite inventory check');
         incrementItemQty(itemId);
       }
     }
@@ -123,9 +177,10 @@ const CheckoutForm = () => {
   };
 
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty (but not if we're navigating to success page)
   useEffect(() => {
-    if (cart.length === 0) {
+    // Don't redirect if we're navigating to success page
+    if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
       navigate('/cart');
     }
   }, [cart, navigate]);
@@ -183,11 +238,12 @@ const CheckoutForm = () => {
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/TheHappyCase/payment-success`,
+          return_url: `${window.location.origin}/payment-success`,
           payment_method_data: {
             billing_details: {
               name: customerInfo.name,
               email: customerInfo.email,
+              phone: null, // Required when fields.billing_details.phone is set to 'never'
               address: {
                 line1: customerInfo.address.line1,
                 line2: customerInfo.address.line2,
@@ -209,19 +265,35 @@ const CheckoutForm = () => {
       }
 
       if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // Payment succeeded
-        clearCart();
+        // Payment succeeded - navigate to success page
+        isNavigatingToSuccessRef.current = true; // Set flag to prevent redirect
+        const cartItemsCopy = [...cart]; // Create a copy to preserve cart data
+        clearCart(); // Clear cart before navigation
         navigate('/payment-success', { 
           state: { 
             paymentIntent,
             customerInfo,
-            items: cart,
+            items: cartItemsCopy,
           } 
         });
       } else if (paymentIntent && paymentIntent.status === 'requires_action') {
         // Payment requires additional action (e.g., 3D Secure)
-        // Stripe will handle this automatically via redirect
-        setError('Please complete the additional authentication step.');
+        // Stripe will handle redirect automatically to return_url
+        // After redirect completes, user will land on payment-success page
+      } else if (paymentIntent) {
+        // Other status (processing, requires_confirmation, etc.)
+        // For most cases, we still show success as the payment was initiated
+        // Note: 'processing' status means payment is being processed and may take time
+        isNavigatingToSuccessRef.current = true; // Set flag to prevent redirect
+        const cartItemsCopy = [...cart]; // Create a copy to preserve cart data
+        clearCart(); // Clear cart before navigation
+        navigate('/payment-success', { 
+          state: { 
+            paymentIntent,
+            customerInfo,
+            items: cartItemsCopy,
+          } 
+        });
       }
     } catch (err) {
       setError('An error occurred while processing your payment.');
@@ -256,12 +328,22 @@ const CheckoutForm = () => {
         {/* Checkout form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-6  p-6 w-full lg:w-1/2"
+          className="space-y-6  p-6 w-full lg:w-1/2 lg:flex-shrink-0"
         >
         {/* Customer Information */}
         <CustomerInfoForm 
           customerInfo={customerInfo}
           onInputChange={handleInputChange}
+          isAuthenticated={isAuthenticated}
+          authenticatedEmail={authenticatedEmail}
+          onSignIn={(email) => {
+            setIsAuthenticated(true);
+            setAuthenticatedEmail(email);
+          }}
+          onSignOut={() => {
+            setIsAuthenticated(false);
+            setAuthenticatedEmail('');
+          }}
         />
 
         {/* Payment Information */}
@@ -274,10 +356,10 @@ const CheckoutForm = () => {
         <button
           type="submit"
           disabled={!stripe || !elements || loading || !paymentElementReady}
-          className="w-full py-3 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
+          className="w-full py-3 text-sm uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
         >
           {loading ? 'Processing...' : 'Complete Payment'}
-        </button>
+</button>
         {showInternationalNote && (
           <InternationalNote
             className="mt-4"
@@ -292,9 +374,6 @@ const CheckoutForm = () => {
 
         {/* Order Summary */}
         <aside className="hidden lg:flex border border-gray-200 bg-yellow-50 p-6 w-full lg:w-1/2 lg:sticky lg:top-20 mt-4 lg:mt-0 flex-col max-h-[calc(100vh-8rem)]">
-          <h3 className="text-xs uppercase tracking-wider text-gray-900 mb-6 font-light font-inter flex-shrink-0">
-            Order Summary
-          </h3>
           <div className="flex-1 overflow-hidden flex flex-col min-h-0">
             <OrderSummary
               cart={cart}
@@ -368,8 +447,15 @@ const Checkout = () => {
   const cartIconSrc = `${assetBasePath}/images/cart.svg`;
 
   useEffect(() => {
-    if (cart.length === 0) {
+    // Don't redirect to cart if we're already on a different page (e.g., payment-success)
+    const currentPath = window.location.pathname;
+    if (cart.length === 0 && (currentPath === '/checkout' || currentPath.includes('/checkout'))) {
       navigate('/cart');
+      return;
+    }
+
+    // Only initialize payment options if we have items in cart
+    if (cart.length === 0) {
       return;
     }
 
