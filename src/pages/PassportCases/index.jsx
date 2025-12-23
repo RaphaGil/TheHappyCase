@@ -444,7 +444,7 @@ const PassportCases = () => {
 
         {/* Case Type Selection - Minimalist Tabs */}
         <div className="flex justify-center mb-12">
-          <div className="flex gap-1 border-b border-gray-200">
+          <div className="flex gap-0.5 border-b border-blue-300">
             {productsWithQuantities.cases.map((caseItem) => {
               const isSoldOut = isCaseTypeSoldOut(caseItem.type);
               return (
