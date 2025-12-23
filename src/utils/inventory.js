@@ -1,6 +1,9 @@
 import Products from '../data/products.json';
 import { areItemsIdentical } from './cartHelpers';
 
+// Track if initialization warning has been shown (to avoid spam)
+let initializationWarningShown = false;
+
 /**
  * Initialize productQuantities in localStorage from products.json if not already set
  * 
@@ -19,7 +22,10 @@ export const initializeQuantities = () => {
       return; // Already initialized and valid
     } catch (e) {
       // Invalid JSON, clear it and reinitialize
-      console.warn('Invalid productQuantities in localStorage, clearing and reinitializing');
+      if (!initializationWarningShown) {
+        console.warn('Invalid productQuantities in localStorage, clearing and reinitializing');
+        initializationWarningShown = true;
+      }
       localStorage.removeItem('productQuantities');
     }
   }
@@ -46,12 +52,23 @@ export const initializeQuantities = () => {
 
     if (hasQuantities) {
       localStorage.setItem('productQuantities', JSON.stringify(quantities));
-      console.log('Initialized productQuantities from products.json');
+      if (!initializationWarningShown) {
+        console.log('Initialized productQuantities from products.json');
+        initializationWarningShown = true;
+      }
     } else {
-      console.warn('No quantities found in products.json. Quantities must be set via Dashboard admin interface.');
+      // Only show warning once per session
+      if (!initializationWarningShown) {
+        // Use console.debug instead of console.warn to make it less intrusive
+        console.debug('No quantities found in products.json. Quantities must be set via Dashboard admin interface.');
+        initializationWarningShown = true;
+      }
     }
   } catch (error) {
-    console.error('Error initializing quantities:', error);
+    if (!initializationWarningShown) {
+      console.error('Error initializing quantities:', error);
+      initializationWarningShown = true;
+    }
   }
 };
 

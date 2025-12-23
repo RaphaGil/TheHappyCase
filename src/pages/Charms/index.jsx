@@ -491,12 +491,12 @@ const Charms = () => {
         <div className="pb-6">
           {/* Charm Type Selection - Main Tabs */}
           <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
-            <div className="flex gap-0.5 border-b border-gray-200 flex-wrap justify-center">
+            <div className="flex gap-0.5 border-b border-gray-200 flex-nowrap justify-center">
               {charmTypes.map((type) => (
                 <button
                   key={type.key}
                   onClick={() => handleCharmTypeChange(type.key)}
-                  className={`px-6 py-2.5 text-sm uppercase tracking-wider transition-all duration-200  ${
+                  className={`px-3 sm:px-6 py-2.5 text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
                     selectedCharmType === type.key
                       ? 'border-b-2 border-blue-700 text-white bg-blue-600'
                       : 'border-b-2 border-transparent text-white hover:text-white hover:border-blue-300 hover:bg-blue-500 bg-blue-400'
