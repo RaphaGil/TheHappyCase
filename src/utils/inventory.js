@@ -2,12 +2,69 @@ import Products from '../data/products.json';
 import { areItemsIdentical } from './cartHelpers';
 
 /**
+ * Initialize productQuantities in localStorage from products.json if not already set
+ * 
+ * NOTE: After deployment, quantities must be set via the Dashboard admin interface.
+ * This function only initializes from products.json if quantities exist there.
+ * If products.json doesn't have quantity fields, quantities will be unlimited (null)
+ * until set via Dashboard.
+ */
+export const initializeQuantities = () => {
+  // Check if quantities already exist in localStorage
+  const savedQuantities = localStorage.getItem('productQuantities');
+  if (savedQuantities) {
+    try {
+      // Validate that saved quantities are valid JSON
+      JSON.parse(savedQuantities);
+      return; // Already initialized and valid
+    } catch (e) {
+      // Invalid JSON, clear it and reinitialize
+      console.warn('Invalid productQuantities in localStorage, clearing and reinitializing');
+      localStorage.removeItem('productQuantities');
+    }
+  }
+
+  // Extract quantities from products.json and initialize localStorage
+  try {
+    const quantities = {
+      cases: Products.cases.map(c => c.quantity ?? null),
+      caseColors: Products.cases.map(c => 
+        c.colors?.map(col => col.quantity ?? null) || []
+      ),
+      pins: {
+        flags: Products.pins?.flags?.map(p => p.quantity ?? null) || [],
+        colorful: Products.pins?.colorful?.map(p => p.quantity ?? null) || [],
+        bronze: Products.pins?.bronze?.map(p => p.quantity ?? null) || [],
+      }
+    };
+
+    // Only save if we found at least some quantities
+    const hasQuantities = 
+      quantities.cases.some(q => q !== null) ||
+      quantities.caseColors.some(arr => arr.some(q => q !== null)) ||
+      Object.values(quantities.pins).some(arr => arr.some(q => q !== null));
+
+    if (hasQuantities) {
+      localStorage.setItem('productQuantities', JSON.stringify(quantities));
+      console.log('Initialized productQuantities from products.json');
+    } else {
+      console.warn('No quantities found in products.json. Quantities must be set via Dashboard admin interface.');
+    }
+  } catch (error) {
+    console.error('Error initializing quantities:', error);
+  }
+};
+
+/**
  * Get the maximum available quantity for an item based on inventory
  * @param {Object} item - The product/item to check
  * @param {Array} cart - Array of items currently in the cart
  * @returns {number|null} - Maximum quantity available (null if unlimited)
  */
 export const getMaxAvailableQuantity = (item, cart) => {
+  // Initialize quantities on first call if needed
+  initializeQuantities();
+
   // Get saved quantities from localStorage
   const savedQuantities = localStorage.getItem('productQuantities');
   let quantities = null;
