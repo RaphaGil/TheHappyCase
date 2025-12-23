@@ -500,7 +500,7 @@ app.get("/get-orders", async (req, res) => {
       query = query.eq('customer_email', email);
     }
 
-    const { data, error, count } = await query;
+    const { data, error } = await query;
 
     if (error) {
       console.error("Error fetching orders from Supabase:", error);
@@ -546,9 +546,362 @@ app.get("/session-status", async (req, res) => {
   }
 });
 
+// --- Get Inventory from Supabase (New Structure: inventory_items) ---
+app.get("/api/inventory", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(503).json({ 
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory fetching."
+      });
+    }
+
+    // Fetch all inventory items
+    const { data: items, error } = await supabase
+      .from('inventory_items')
+      .select('*')
+      .order('item_type, product_id');
+
+    if (error) {
+      // If table doesn't exist, return empty structure
+      if (error.code === 'PGRST116' || error.code === '42P01') {
+        return res.json({
+          success: true,
+          inventory: {
+            cases: null,
+            caseColors: null,
+            pins: {
+              flags: null,
+              colorful: null,
+              bronze: null
+            }
+          }
+        });
+      }
+      throw error;
+    }
+
+    // Transform items into the expected format
+    const Products = require('./src/data/products.json');
+    
+    // Initialize arrays with null values matching products.json structure
+    const inventory = {
+      cases: Products.cases.map(() => null),
+      caseColors: Products.cases.map(caseItem => caseItem.colors.map(() => null)),
+      pins: {
+        flags: Products.pins.flags.map(() => null),
+        colorful: Products.pins.colorful.map(() => null),
+        bronze: Products.pins.bronze.map(() => null)
+      }
+    };
+
+    // Group items by type
+    const caseItems = items.filter(item => item.item_type === 'case_color');
+    const flagPins = items.filter(item => item.item_type === 'pin_flags');
+    const colorfulPins = items.filter(item => item.item_type === 'pin_colorful');
+    const bronzePins = items.filter(item => item.item_type === 'pin_bronze');
+
+    // Process case colors - match by case ID and color
+    caseItems.forEach(item => {
+      const caseIndex = Products.cases.findIndex(c => c.id === item.product_id);
+      if (caseIndex !== -1) {
+        const caseData = Products.cases[caseIndex];
+        const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
+        if (colorIndex !== -1) {
+          inventory.caseColors[caseIndex][colorIndex] = item.qty_in_stock;
+        }
+      }
+    });
+
+    // Process pins - map by product_id
+    flagPins.forEach(item => {
+      const index = Products.pins.flags.findIndex(p => p.id === item.product_id);
+      if (index !== -1) {
+        inventory.pins.flags[index] = item.qty_in_stock;
+      }
+    });
+
+    colorfulPins.forEach(item => {
+      const index = Products.pins.colorful.findIndex(p => p.id === item.product_id);
+      if (index !== -1) {
+        inventory.pins.colorful[index] = item.qty_in_stock;
+      }
+    });
+
+    bronzePins.forEach(item => {
+      const index = Products.pins.bronze.findIndex(p => p.id === item.product_id);
+      if (index !== -1) {
+        inventory.pins.bronze[index] = item.qty_in_stock;
+      }
+    });
+
+    res.json({ 
+      success: true,
+      inventory: inventory
+    });
+  } catch (error) {
+    console.error("Error fetching inventory from Supabase:", error);
+    res.status(500).json({ 
+      error: error.message || "Failed to fetch inventory",
+      details: error 
+    });
+  }
+});
+
+// --- Update Inventory in Supabase (New Structure: inventory_items) ---
+app.post("/api/inventory", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(503).json({ 
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory updates."
+      });
+    }
+
+    const { cases, caseColors, pins } = req.body;
+    const Products = require('./src/data/products.json');
+
+    if (!cases && !caseColors && !pins) {
+      return res.status(400).json({ error: "No inventory data provided" });
+    }
+
+    const itemsToUpsert = [];
+
+    // Process case colors with all correct information
+    if (caseColors) {
+      caseColors.forEach((colorArray, caseIndex) => {
+        if (colorArray && Array.isArray(colorArray)) {
+          const caseItem = Products.cases[caseIndex];
+          if (caseItem) {
+            colorArray.forEach((qty, colorIndex) => {
+              const color = caseItem.colors[colorIndex];
+              if (color) {
+                const itemId = `case-${caseItem.id}-color-${color.color}`;
+                itemsToUpsert.push({
+                  item_id: itemId,
+                  item_type: "case_color",
+                  product_id: caseItem.id,
+                  name: `${caseItem.name} - ${color.color}`,
+                  color: color.color,
+                  price: caseItem.basePrice,
+                  qty_in_stock: qty !== null && qty !== undefined ? parseInt(qty) : null,
+                  category: null,
+                  case_type: caseItem.type,
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+
+    // Process overall case quantities (if provided) - update all colors for each case
+    if (cases) {
+      cases.forEach((qty, caseIndex) => {
+        const caseItem = Products.cases[caseIndex];
+        if (caseItem && qty !== null && qty !== undefined) {
+          // Update all colors for this case to the same quantity
+          caseItem.colors.forEach((color) => {
+            const itemId = `case-${caseItem.id}-color-${color.color}`;
+            // Check if this item is already in the array (from caseColors)
+            const existingIndex = itemsToUpsert.findIndex(item => item.item_id === itemId);
+            if (existingIndex >= 0) {
+              // Update existing entry with the overall case quantity
+              itemsToUpsert[existingIndex].qty_in_stock = parseInt(qty);
+            } else {
+              // Add new entry
+              itemsToUpsert.push({
+                item_id: itemId,
+                item_type: "case_color",
+                product_id: caseItem.id,
+                name: `${caseItem.name} - ${color.color}`,
+                color: color.color,
+                price: caseItem.basePrice,
+                qty_in_stock: parseInt(qty),
+                category: null,
+                case_type: caseItem.type,
+              });
+            }
+          });
+        }
+      });
+    }
+
+    // Process pins with all correct information
+    if (pins) {
+      if (pins.flags) {
+        pins.flags.forEach((qty, index) => {
+          const pin = Products.pins.flags[index];
+          if (pin) {
+            const itemId = `pin-flags-${pin.id}`;
+            itemsToUpsert.push({
+              item_id: itemId,
+              item_type: "pin_flags",
+              product_id: pin.id,
+              name: pin.name,
+              color: null,
+              price: pin.price,
+              qty_in_stock: qty !== null && qty !== undefined ? parseInt(qty) : null,
+              category: "flags",
+              case_type: null,
+            });
+          }
+        });
+      }
+
+      if (pins.colorful) {
+        pins.colorful.forEach((qty, index) => {
+          const pin = Products.pins.colorful[index];
+          if (pin) {
+            const itemId = `pin-colorful-${pin.id}`;
+            itemsToUpsert.push({
+              item_id: itemId,
+              item_type: "pin_colorful",
+              product_id: pin.id,
+              name: pin.name,
+              color: null,
+              price: pin.price,
+              qty_in_stock: qty !== null && qty !== undefined ? parseInt(qty) : null,
+              category: "colorful",
+              case_type: null,
+            });
+          }
+        });
+      }
+
+      if (pins.bronze) {
+        pins.bronze.forEach((qty, index) => {
+          const pin = Products.pins.bronze[index];
+          if (pin) {
+            const itemId = `pin-bronze-${pin.id}`;
+            itemsToUpsert.push({
+              item_id: itemId,
+              item_type: "pin_bronze",
+              product_id: pin.id,
+              name: pin.name,
+              color: null,
+              price: pin.price,
+              qty_in_stock: qty !== null && qty !== undefined ? parseInt(qty) : null,
+              category: "bronze",
+              case_type: null,
+            });
+          }
+        });
+      }
+    }
+
+    // Remove duplicates based on item_id (keep the last one)
+    const uniqueItems = [];
+    const seen = new Set();
+    for (let i = itemsToUpsert.length - 1; i >= 0; i--) {
+      if (!seen.has(itemsToUpsert[i].item_id)) {
+        seen.add(itemsToUpsert[i].item_id);
+        uniqueItems.unshift(itemsToUpsert[i]);
+      }
+    }
+
+    // Batch upsert all items with all correct information
+    if (uniqueItems.length === 0) {
+      return res.status(400).json({ error: "No items to update" });
+    }
+
+    // Use upsert to create or update items with all fields
+    const { data, error } = await supabase
+      .from('inventory_items')
+      .upsert(uniqueItems, {
+        onConflict: 'item_id',
+        ignoreDuplicates: false, // Update existing items
+      })
+      .select();
+
+    if (error) {
+      console.error("Error upserting inventory items:", error);
+      return res.status(500).json({ 
+        error: "Failed to save inventory items",
+        details: error.message 
+      });
+    }
+
+    const successful = data ? data.length : 0;
+    console.log(`✅ Upserted ${successful}/${uniqueItems.length} inventory items in Supabase with all correct information`);
+
+    res.json({ 
+      success: true,
+      message: `Inventory saved successfully (${successful} items saved with all correct information)`,
+      updatedCount: successful,
+      totalItems: uniqueItems.length,
+      inventory: data || []
+    });
+  } catch (error) {
+    console.error("Error updating inventory in Supabase:", error);
+    res.status(500).json({ 
+      error: error.message || "Failed to update inventory",
+      details: error 
+    });
+  }
+});
+
 // --- Health Check ---
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", message: "Stripe checkout server is running" });
+  res.json({ 
+    status: "ok", 
+    message: "Stripe checkout server is running",
+    supabase: supabase ? "configured" : "not configured"
+  });
+});
+
+// --- Supabase Config Check ---
+app.get("/api/config-check", (req, res) => {
+  const hasUrl = !!process.env.SUPABASE_URL;
+  const hasKey = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const isConfigured = supabase !== null;
+  
+  res.json({
+    supabaseUrl: hasUrl ? "set" : "missing",
+    supabaseKey: hasKey ? "set" : "missing",
+    supabaseClient: isConfigured ? "initialized" : "not initialized",
+    message: isConfigured 
+      ? "Supabase is properly configured" 
+      : "Supabase is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to .env and restart the server."
+  });
+});
+
+// --- Get All Inventory Items (with full details) ---
+app.get("/api/inventory/items", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(503).json({ 
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory fetching."
+      });
+    }
+
+    const { data: items, error } = await supabase
+      .from('inventory_items')
+      .select('*')
+      .order('item_type, product_id');
+
+    if (error) {
+      if (error.code === '42P01') {
+        return res.status(404).json({ 
+          error: "Table not found",
+          message: "Run the migration script first: node migrate-inventory-to-items.js"
+        });
+      }
+      throw error;
+    }
+
+    res.json({ 
+      success: true,
+      items: items || []
+    });
+  } catch (error) {
+    console.error("Error fetching inventory items:", error);
+    res.status(500).json({ 
+      error: error.message || "Failed to fetch inventory items",
+      details: error 
+    });
+  }
 });
 
 app.listen(PORT, () => {
