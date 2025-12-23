@@ -66,10 +66,10 @@ const PriceSummary = ({
             <div className="flex flex-row items-center justify-between">
               {/* Subtotal Price - Left */}
               <div className="flex flex-col flex-shrink-0">
-                <h3 className={`text-[10px] xs:text-xs text-gray-500 font-light font-inter mb-0 leading-none`}>
+                <h3 className={`text-[14px] xs:text-xs text-gray-500 font-light font-inter mb-0 leading-none`}>
                   Subtotal
                 </h3>
-                <h3 className={`text-sm xs:text-base sm:text-lg text-gray-900 font-light font-inter leading-none`}>
+                <h3 className={`text-xl xs:text-xl sm:text-2xl text-gray-900 font-light font-inter leading-none`}>
                   {formatPrice(totalPrice)}
                 </h3>
               </div>

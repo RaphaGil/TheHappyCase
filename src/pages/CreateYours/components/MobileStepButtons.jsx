@@ -5,17 +5,17 @@ import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor, onOpenAddText }) => {
   return (
     <div className="mb-4 flex justify-center">
-      <div className="grid grid-cols-4 gap-2 xs:gap-2.5 sm:gap-3 max-w-fit">
+      <div className="grid grid-cols-4 gap-1.5 xs:gap-2 sm:gap-2.5 max-w-fit">
         {/* Choose Case Button */}
         <button
           onClick={() => setMobileCurrentStep('case')}
-          className="aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover"
+          className="aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover"
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
-            className="text-sm xs:text-base sm:text-lg mb-1 text-btn-primary-blue-text"
+            className="text-xs xs:text-sm sm:text-base mb-0.5 text-btn-primary-blue-text"
           />
-          <span className="text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight text-btn-primary-blue-text" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-[9px] xs:text-[10px] sm:text-xs font-medium uppercase tracking-wide leading-tight text-btn-primary-blue-text" style={{fontFamily: "'Poppins', sans-serif"}}>
             Case
           </span>
         </button>
@@ -24,7 +24,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         <button
           onClick={() => setMobileCurrentStep('color')}
           disabled={!selectedCaseType}
-          className={`aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation ${
+          className={`aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation ${
             !selectedCaseType
               ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
@@ -32,13 +32,13 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faPalette} 
-            className={`text-sm xs:text-base sm:text-lg mb-1 ${
+            className={`text-xs xs:text-sm sm:text-base mb-0.5 ${
               !selectedCaseType 
                 ? 'text-gray-400' 
                 : 'text-btn-primary-blue-text'
             }`}
           />
-          <span className={`text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight ${
+          <span className={`text-[9px] xs:text-[10px] sm:text-xs font-medium uppercase tracking-wide leading-tight ${
             !selectedCaseType 
               ? 'text-gray-400' 
               : 'text-btn-primary-blue-text'
@@ -51,7 +51,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         <button
           onClick={() => setMobileCurrentStep('charms')}
           disabled={!selectedCaseType || !selectedColor}
-          className={`aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation ${
+          className={`aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation ${
             !selectedCaseType || !selectedColor
               ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
@@ -59,13 +59,13 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faPlane} 
-            className={`text-sm xs:text-base sm:text-lg mb-1 ${
+            className={`text-xs xs:text-sm sm:text-base mb-0.5 ${
               !selectedCaseType || !selectedColor 
                 ? 'text-gray-400' 
                 : 'text-btn-primary-blue-text'
             }`}
           />
-          <span className={`text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight ${
+          <span className={`text-[9px] xs:text-[10px] sm:text-xs font-medium uppercase tracking-wide leading-tight ${
             !selectedCaseType || !selectedColor 
               ? 'text-gray-400' 
               : 'text-btn-primary-blue-text'
@@ -77,13 +77,13 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         {/* Add Text Button */}
         <button
           onClick={onOpenAddText}
-          className="aspect-square h-[65px] xs:h-[70px] sm:h-[75px] flex flex-col items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover"
+          className="aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover"
         >
           <FontAwesomeIcon 
             icon={faFont} 
-            className="text-sm xs:text-base sm:text-lg mb-1 text-btn-primary-blue-text"
+            className="text-xs xs:text-sm sm:text-base mb-0.5 text-btn-primary-blue-text"
           />
-          <span className="text-[10px] xs:text-xs sm:text-sm font-medium uppercase tracking-wide leading-tight text-btn-primary-blue-text" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-[9px] xs:text-[10px] sm:text-xs font-medium uppercase tracking-wide leading-tight text-btn-primary-blue-text" style={{fontFamily: "'Poppins', sans-serif"}}>
             Add Text
           </span>
         </button>

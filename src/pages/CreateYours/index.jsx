@@ -1424,7 +1424,7 @@ const CreateYours = () => {
         {isMobile && (
           <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: 'calc(80px + 0.75rem)'}}>
             <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 mb-0 pb-0">
-              <p className="text-[14px] text-gray-700 mb-2 xs:mb-2.5 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <p className="text-[14px] text-gray-700 mb-2 xs:mb-2.5 text-center font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
               </p>
               <MobileStepButtons
