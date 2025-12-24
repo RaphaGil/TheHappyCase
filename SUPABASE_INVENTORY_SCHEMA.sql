@@ -39,3 +39,4 @@ FOR EACH ROW EXECUTE FUNCTION update_inventory_items_updated_at();
 ALTER TABLE inventory_items DISABLE ROW LEVEL SECURITY;
 
 
+

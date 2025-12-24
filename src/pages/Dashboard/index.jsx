@@ -64,6 +64,16 @@ const Dashboard = () => {
       // Always try to fetch from Supabase API first (source of truth for deployment)
       try {
         const response = await fetch('/api/inventory');
+        
+        // Check if response is HTML (404 page from dev server) instead of JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('text/html')) {
+          console.warn('⚠️ Dashboard: Received HTML response instead of JSON. Backend server may not be running or proxy not configured correctly.');
+          console.warn('⚠️ Dashboard: Make sure backend server is running: npm run server');
+          console.warn('⚠️ Dashboard: Falling back to localStorage cache');
+          throw new Error('Backend server returned HTML (likely 404). Is the server running on port 3001?');
+        }
+        
         if (response.ok) {
           const data = await response.json();
           if (data.success && data.inventory) {
@@ -91,6 +101,14 @@ const Dashboard = () => {
           }
         } else {
           console.warn('⚠️ Dashboard: Supabase API returned non-OK response:', response.status);
+          // Try to parse error response
+          try {
+            const errorData = await response.json();
+            console.warn('⚠️ Dashboard: Error details:', errorData);
+          } catch (e) {
+            // Not JSON, probably HTML 404 page
+            console.warn('⚠️ Dashboard: Non-JSON error response received');
+          }
         }
       } catch (error) {
         console.warn('⚠️ Dashboard: Failed to load from Supabase:', error.message);
@@ -188,10 +206,14 @@ const Dashboard = () => {
         body: JSON.stringify(payload),
       });
 
-      // Check if response is JSON
+      // Check if response is JSON (if not, likely a 404 HTML page from dev server)
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server returned non-JSON response. Make sure the backend server is running on port 3001.');
+        const errorMsg = contentType?.includes('text/html') 
+          ? 'Backend server returned HTML (likely 404). Make sure the backend server is running on port 3001 (npm run server) and the proxy is configured correctly.'
+          : `Server returned non-JSON response (${contentType}). Make sure the backend server is running on port 3001.`;
+        console.error('❌ Error saving inventory:', errorMsg);
+        throw new Error(errorMsg);
       }
 
       if (response.ok) {
@@ -247,7 +269,13 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error saving inventory to Supabase:', error);
       const errorMsg = error.message || 'Unknown error';
-      alert(`Error saving to Supabase: ${errorMsg}. Falling back to localStorage.\n\nMake sure:\n1. Backend server is running (npm run server)\n2. Proxy is configured in package.json\n3. Restart React dev server after adding proxy`);
+      
+      // Provide helpful troubleshooting message
+      const troubleshootingMsg = errorMsg.includes('HTML') || errorMsg.includes('404')
+        ? `Error: Backend server not reachable.\n\nTroubleshooting steps:\n1. Check if backend server is running: npm run server\n2. Verify server is on port 3001\n3. Restart React dev server if you just configured proxy\n4. Check setupProxy.js is in src/ directory\n\nFalling back to localStorage for now.`
+        : `Error saving to Supabase: ${errorMsg}\n\nFalling back to localStorage.`;
+      
+      alert(troubleshootingMsg);
       
       // Fallback to localStorage
       localStorage.setItem('productQuantities', JSON.stringify(payload));
