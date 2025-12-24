@@ -41,9 +41,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // --- Middleware ---
+// Production frontend URL (GitHub Pages)
+const PRODUCTION_FRONTEND_URL = "https://raphagil.github.io";
+
 const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL]
-  : ["http://localhost:3000", "http://127.0.0.1:3000"];
+  ? [process.env.FRONTEND_URL, PRODUCTION_FRONTEND_URL]
+  : ["http://localhost:3000", "http://127.0.0.1:3000", PRODUCTION_FRONTEND_URL];
 
 app.use(
   cors({
@@ -52,12 +55,13 @@ app.use(
       if (
         allowedOrigins.includes(origin) ||
         origin.includes("localhost") ||
-        origin.includes("127.0.0.1")
+        origin.includes("127.0.0.1") ||
+        origin.startsWith("https://raphagil.github.io") // Allow GitHub Pages
       ) {
         return callback(null, true);
       }
       console.log("⚠️ CORS blocked origin:", origin);
-      callback(null, true); // Allow all in dev
+      callback(null, true); // Allow all in dev (but log for production debugging)
     },
     credentials: true,
   })

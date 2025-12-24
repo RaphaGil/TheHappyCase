@@ -72,10 +72,10 @@
  * });
  */
 
+import { getApiUrl } from './apiConfig';
+
 export const createPaymentIntent = async (paymentData) => {
   const { amount, currency = 'gbp', items, customerInfo } = paymentData;
-  const backendUrl =
-    process.env.REACT_APP_BACKEND_URL?.replace(/\/$/, '') || 'http://localhost:3001';
 
   if (!amount || amount <= 0) {
     throw new Error('Amount is required and must be greater than 0');
@@ -87,7 +87,7 @@ export const createPaymentIntent = async (paymentData) => {
 
   // Try to create a real Payment Intent via backend
   try {
-    const response = await fetch(`${backendUrl}/create-payment-intent`, {
+    const response = await fetch(getApiUrl('/create-payment-intent'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

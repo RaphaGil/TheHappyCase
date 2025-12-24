@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Products from '../../data/products.json';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('inventory');
@@ -63,7 +64,7 @@ const Dashboard = () => {
       
       // Always try to fetch from Supabase API first (source of truth for deployment)
       try {
-        const response = await fetch('/api/inventory');
+        const response = await fetch(getApiUrl('/api/inventory'));
         
         // Check if response is HTML (404 page from dev server) instead of JSON
         const contentType = response.headers.get('content-type');
@@ -152,7 +153,7 @@ const Dashboard = () => {
     setOrdersError(null);
 
     try {
-      const res = await fetch('/get-orders?limit=100');
+      const res = await fetch(getApiUrl('/get-orders?limit=100'));
       const data = await res.json();
 
       if (data.success) setOrders(data.orders || []);
@@ -198,7 +199,7 @@ const Dashboard = () => {
 
     // Save to Supabase API
     try {
-      const response = await fetch('/api/inventory', {
+      const response = await fetch(getApiUrl('/api/inventory'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -354,7 +355,7 @@ const Dashboard = () => {
                   setInventorySource(null);
                   // Force reload from Supabase
                   try {
-                    const response = await fetch('/api/inventory');
+                    const response = await fetch(getApiUrl('/api/inventory'));
                     if (response.ok) {
                       const data = await response.json();
                       if (data.success && data.inventory) {

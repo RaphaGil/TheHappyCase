@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faHome, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+import { getApiUrl } from '../../utils/apiConfig';
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -16,7 +17,7 @@ const PaymentSuccess = () => {
     if (sessionId && !paymentIntent) {
       setLoading(true);
       // Fetch session status from backend
-      fetch(`/session-status?session_id=${sessionId}`)
+      fetch(getApiUrl(`/session-status?session_id=${sessionId}`))
         .then(res => res.json())
         .then(data => {
           if (data.status === 'complete') {

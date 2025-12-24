@@ -1,5 +1,6 @@
 import Products from '../data/products.json';
 import { areItemsIdentical } from './cartHelpers';
+import { getApiUrl } from './apiConfig';
 
 // Track if initialization warning has been shown (to avoid spam)
 let initializationWarningShown = false;
@@ -11,7 +12,7 @@ let initializationWarningShown = false;
 const fetchInventoryFromSupabase = async () => {
   try {
     // Try to fetch from API (server endpoint)
-    const response = await fetch('/api/inventory');
+    const response = await fetch(getApiUrl('/api/inventory'));
     if (response.ok) {
       const data = await response.json();
       if (data.success && data.inventory) {
@@ -44,7 +45,7 @@ const fetchInventoryFromSupabase = async () => {
  */
 export const getItemQuantityFromSupabase = async (itemId) => {
   try {
-    const response = await fetch(`/api/inventory/items`);
+    const response = await fetch(getApiUrl('/api/inventory/items'));
     if (response.ok) {
       const data = await response.json();
       if (data.success && data.items) {
