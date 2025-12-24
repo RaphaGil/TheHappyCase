@@ -8,64 +8,120 @@ const Dashboard = () => {
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [ordersError, setOrdersError] = useState(null);
+  const [loadingInventory, setLoadingInventory] = useState(true);
+  const [inventorySource, setInventorySource] = useState(null); // 'supabase', 'localStorage', or 'default'
 
-  /* -------------------- LOAD INVENTORY -------------------- */
-  useEffect(() => {
-    const savedQuantities = localStorage.getItem('productQuantities');
+  // Helper function to merge quantities into products
+  const mergeQuantities = (mergedProducts, quantities) => {
+    if (quantities.cases) {
+      mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
+        const updatedCase = {
+          ...caseItem,
+          quantity:
+            quantities.cases[index] !== undefined && quantities.cases[index] !== null
+              ? quantities.cases[index]
+              : caseItem.quantity,
+        };
 
-    if (!savedQuantities) {
-      setProducts(Products);
-      return;
-    }
-
-    try {
-      const quantities = JSON.parse(savedQuantities);
-      const mergedProducts = structuredClone(Products);
-
-      if (quantities.cases) {
-        mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
-          const updatedCase = {
-            ...caseItem,
+        if (quantities.caseColors?.[index]) {
+          updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
+            ...colorItem,
             quantity:
-              quantities.cases[index] !== undefined
-                ? quantities.cases[index]
-                : caseItem.quantity,
-          };
+              quantities.caseColors[index][colorIndex] !== undefined && 
+              quantities.caseColors[index][colorIndex] !== null
+                ? quantities.caseColors[index][colorIndex]
+                : colorItem.quantity,
+          }));
+        }
 
-          if (quantities.caseColors?.[index]) {
-            updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
-              ...colorItem,
-              quantity:
-                quantities.caseColors[index][colorIndex] !== undefined
-                  ? quantities.caseColors[index][colorIndex]
-                  : colorItem.quantity,
-            }));
-          }
-
-          return updatedCase;
-        });
-      }
-
-      if (quantities.pins) {
-        ['flags', 'colorful', 'bronze'].forEach((category) => {
-          if (quantities.pins[category]) {
-            mergedProducts.pins[category] =
-              mergedProducts.pins[category].map((charm, index) => ({
-                ...charm,
-                quantity:
-                  quantities.pins[category][index] !== undefined
-                    ? quantities.pins[category][index]
-                    : charm.quantity,
-              }));
-          }
-        });
-      }
-
-      setProducts(mergedProducts);
-    } catch (err) {
-      console.error(err);
-      setProducts(Products);
+        return updatedCase;
+      });
     }
+
+    if (quantities.pins) {
+      ['flags', 'colorful', 'bronze'].forEach((category) => {
+        if (quantities.pins[category]) {
+          mergedProducts.pins[category] =
+            mergedProducts.pins[category].map((charm, index) => ({
+              ...charm,
+              quantity:
+                quantities.pins[category][index] !== undefined && 
+                quantities.pins[category][index] !== null
+                  ? quantities.pins[category][index]
+                  : charm.quantity,
+            }));
+        }
+      });
+    }
+  };
+
+  /* -------------------- LOAD INVENTORY FROM SUPABASE -------------------- */
+  useEffect(() => {
+    const loadInventory = async () => {
+      setLoadingInventory(true);
+      console.log('📥 Dashboard: Loading inventory from Supabase...');
+      
+      // Always try to fetch from Supabase API first (source of truth for deployment)
+      try {
+        const response = await fetch('/api/inventory');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.inventory) {
+            const quantities = {
+              cases: data.inventory.cases,
+              caseColors: data.inventory.caseColors,
+              pins: data.inventory.pins
+            };
+            
+            // Cache in localStorage as backup
+            localStorage.setItem('productQuantities', JSON.stringify(quantities));
+            localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+            
+            // Merge with products
+            const mergedProducts = structuredClone(Products);
+            mergeQuantities(mergedProducts, quantities);
+            setProducts(mergedProducts);
+            setInventorySource('supabase');
+            
+            console.log('✅ Dashboard: Inventory loaded from Supabase inventory_items table');
+            console.log('✅ Dashboard: All saved quantities are now displayed');
+            console.log('💾 Dashboard: Data source: Supabase (persisted, will be available after deployment)');
+            setLoadingInventory(false);
+            return;
+          }
+        } else {
+          console.warn('⚠️ Dashboard: Supabase API returned non-OK response:', response.status);
+        }
+      } catch (error) {
+        console.warn('⚠️ Dashboard: Failed to load from Supabase:', error.message);
+        console.warn('⚠️ Dashboard: Falling back to localStorage cache');
+      }
+
+      // Fallback to localStorage (cached data)
+      const savedQuantities = localStorage.getItem('productQuantities');
+      if (savedQuantities) {
+        try {
+          const quantities = JSON.parse(savedQuantities);
+          const mergedProducts = structuredClone(Products);
+          mergeQuantities(mergedProducts, quantities);
+          setProducts(mergedProducts);
+          setInventorySource('localStorage');
+          console.log('⚠️ Dashboard: Using cached data from localStorage (Supabase unavailable)');
+          setLoadingInventory(false);
+          return;
+        } catch (err) {
+          console.error('❌ Dashboard: Error parsing localStorage data:', err);
+        }
+      }
+
+      // Final fallback: use products.json defaults
+      setProducts(Products);
+      setInventorySource('default');
+      console.log('⚠️ Dashboard: Using default quantities from products.json (no saved data found)');
+      setLoadingInventory(false);
+    };
+
+    loadInventory();
   }, []);
 
   /* -------------------- ORDERS -------------------- */
@@ -109,7 +165,7 @@ const Dashboard = () => {
     setSaved(false);
   };
 
-  const saveQuantities = () => {
+  const saveQuantities = async () => {
     const payload = {
       cases: products.cases.map((c) => c.quantity ?? null),
       caseColors: products.cases.map((c) =>
@@ -122,9 +178,83 @@ const Dashboard = () => {
       },
     };
 
-    localStorage.setItem('productQuantities', JSON.stringify(payload));
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    // Save to Supabase API
+    try {
+      const response = await fetch('/api/inventory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned non-JSON response. Make sure the backend server is running on port 3001.');
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('✅ Inventory saved to Supabase:', data);
+        console.log(`📊 Saved ${data.updatedCount || 0} items to inventory_items table`);
+        console.log('💾 All inventory data is now persisted in Supabase and will be available after deployment');
+        
+        // Verify the save was successful
+        if (data.success && data.updatedCount > 0) {
+          console.log('✅ Verification: Inventory successfully saved to Supabase database');
+          console.log('✅ This data will persist after deployment');
+          
+          // Update the displayed quantities to reflect what was saved
+          const quantities = {
+            cases: payload.cases,
+            caseColors: payload.caseColors,
+            pins: payload.pins
+          };
+          
+          // Merge with products to update display
+          const mergedProducts = structuredClone(Products);
+          mergeQuantities(mergedProducts, quantities);
+          setProducts(mergedProducts);
+          
+          // Mark as loaded from Supabase
+          setInventorySource('supabase');
+        }
+        
+        // Also save to localStorage as cache (backup only - Supabase is source of truth)
+        localStorage.setItem('productQuantities', JSON.stringify(payload));
+        localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+        
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000); // Show saved message longer
+      } else {
+        let errorMessage = 'Unknown error';
+        try {
+          const error = await response.json();
+          errorMessage = error.error || error.message || 'Unknown error';
+        } catch (e) {
+          errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        }
+        console.error('Failed to save inventory to Supabase:', errorMessage);
+        alert(`Failed to save to Supabase: ${errorMessage}. Falling back to localStorage.`);
+        
+        // Fallback to localStorage
+        localStorage.setItem('productQuantities', JSON.stringify(payload));
+        localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      }
+    } catch (error) {
+      console.error('Error saving inventory to Supabase:', error);
+      const errorMsg = error.message || 'Unknown error';
+      alert(`Error saving to Supabase: ${errorMsg}. Falling back to localStorage.\n\nMake sure:\n1. Backend server is running (npm run server)\n2. Proxy is configured in package.json\n3. Restart React dev server after adding proxy`);
+      
+      // Fallback to localStorage
+      localStorage.setItem('productQuantities', JSON.stringify(payload));
+      localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    }
   };
 
   /* -------------------- UI -------------------- */
@@ -162,14 +292,80 @@ const Dashboard = () => {
         {/* ---------------- INVENTORY ---------------- */}
         {activeTab === 'inventory' && (
           <>
-            <div className="flex justify-end mb-6">
+            {/* Data Source Indicator */}
+            {inventorySource && (
+              <div className={`mb-4 p-3 rounded-sm text-sm font-inter ${
+                inventorySource === 'supabase' 
+                  ? 'bg-green-50 border border-green-200 text-green-800' 
+                  : inventorySource === 'localStorage'
+                  ? 'bg-yellow-50 border border-yellow-200 text-yellow-800'
+                  : 'bg-gray-50 border border-gray-200 text-gray-800'
+              }`}>
+                {inventorySource === 'supabase' && (
+                  <span>✅ <strong>Loaded from Supabase:</strong> All saved inventory quantities are displayed. Data is persisted and will be available after deployment.</span>
+                )}
+                {inventorySource === 'localStorage' && (
+                  <span>⚠️ <strong>Using cached data:</strong> Supabase unavailable. Showing cached quantities from localStorage.</span>
+                )}
+                {inventorySource === 'default' && (
+                  <span>ℹ️ <strong>Using default quantities:</strong> No saved data found. Set quantities and click "Save Changes" to persist to Supabase.</span>
+                )}
+              </div>
+            )}
+            
+            {loadingInventory && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 text-blue-800 rounded-sm text-sm font-inter">
+                <span>⏳ Loading inventory from Supabase...</span>
+              </div>
+            )}
+            
+            <div className="flex justify-between items-center mb-6">
+              <button
+                onClick={async () => {
+                  setLoadingInventory(true);
+                  setInventorySource(null);
+                  // Force reload from Supabase
+                  try {
+                    const response = await fetch('/api/inventory');
+                    if (response.ok) {
+                      const data = await response.json();
+                      if (data.success && data.inventory) {
+                        const quantities = {
+                          cases: data.inventory.cases,
+                          caseColors: data.inventory.caseColors,
+                          pins: data.inventory.pins
+                        };
+                        const mergedProducts = structuredClone(Products);
+                        mergeQuantities(mergedProducts, quantities);
+                        setProducts(mergedProducts);
+                        setInventorySource('supabase');
+                        console.log('✅ Refreshed: Inventory reloaded from Supabase');
+                      }
+                    }
+                  } catch (error) {
+                    console.error('Failed to refresh from Supabase:', error);
+                  } finally {
+                    setLoadingInventory(false);
+                  }
+                }}
+                disabled={loadingInventory}
+                className="font-inter px-4 py-2 uppercase text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+              >
+                {loadingInventory ? 'Refreshing...' : '🔄 Refresh from Supabase'}
+              </button>
+              
               <button
                 onClick={saveQuantities}
+                disabled={loadingInventory}
                 className={`font-inter px-6 py-2 uppercase text-sm ${
-                  saved ? 'bg-green-600 text-white' : 'bg-black text-white'
+                  saved 
+                    ? 'bg-green-600 text-white' 
+                    : loadingInventory
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-black text-white hover:bg-gray-800'
                 }`}
               >
-                {saved ? '✓ Saved' : 'Save Changes'}
+                {loadingInventory ? 'Loading...' : saved ? '✓ Saved to Supabase' : 'Save Changes to Supabase'}
               </button>
             </div>
 

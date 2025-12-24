@@ -9,6 +9,8 @@ import ResultsCount from './ResultsCount';
 import EmptyState from './EmptyState';
 import CharmsCallToAction from './CharmsCallToAction';
 import { getMaxAvailableQuantity } from '../../../utils/inventory';
+import { areItemsIdentical } from '../../../utils/cartHelpers';
+import InventoryAlertModal from '../../../component/InventoryAlertModal';
 
 const CharmsPage = ({
   title,
@@ -23,6 +25,9 @@ const CharmsPage = ({
   inlineTabs = false
 }) => {
   const { addToCart, cart } = useCart();
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [inventoryMessage, setInventoryMessage] = useState('');
+  const [inventoryType, setInventoryType] = useState('error');
   
   // Helper function to check if a charm is sold out (considering cart inventory)
   const isCharmSoldOut = (charm) => {
@@ -87,7 +92,63 @@ const CharmsPage = ({
       category: categoryName,
       type: 'charm'
     };
-    addToCart(product);
+
+    // Check stock availability from Supabase inventory_items table
+    // maxAvailable represents how many MORE can be added (considering what's already in cart)
+    const maxAvailable = getMaxAvailableQuantity(product, cart);
+    
+    // Check if this charm already exists in cart
+    const existingItemIndex = cart.findIndex(item => areItemsIdentical(item, product));
+    
+    if (existingItemIndex !== -1) {
+      // Item already in cart - check if we can add more
+      // maxAvailable tells us how many MORE can be added
+      if (maxAvailable === null) {
+        // Unlimited stock - allow adding 1 more
+        addToCart(product);
+        return;
+      }
+      
+      if (maxAvailable > 0) {
+        // Can add more - allow adding 1 more (CartContext will increment quantity)
+        // The CartContext will ensure we don't exceed maxAvailable
+        addToCart(product);
+        return;
+      } else {
+        // Can't add more - already at maximum qty_in_stock
+        const charmDisplayName = charm.name || 'this charm';
+        const errorMessage = `Oops! We don't have any more ${charmDisplayName} in stock right now, so you can't add more to your basket.`;
+        setInventoryMessage(errorMessage);
+        setInventoryType('error');
+        setShowInventoryModal(true);
+        return;
+      }
+    } else {
+      // New item - check if we can add it
+      const requestedQty = product.quantity || 1;
+      
+      if (maxAvailable === null) {
+        // Unlimited stock - allow adding
+        addToCart(product);
+        return;
+      }
+      
+      if (maxAvailable >= requestedQty) {
+        // Can add the requested quantity - limit to maxAvailable to ensure we don't exceed stock
+        const quantityToAdd = Math.min(requestedQty, maxAvailable);
+        const limitedProduct = { ...product, quantity: quantityToAdd };
+        addToCart(limitedProduct);
+        return;
+      } else {
+        // Can't add requested quantity - show error with available amount
+        const charmDisplayName = charm.name || 'this charm';
+        const errorMessage = `Oops! We only have ${maxAvailable} ${charmDisplayName}${maxAvailable === 1 ? '' : 's'} in stock right now.`;
+        setInventoryMessage(errorMessage);
+        setInventoryType('error');
+        setShowInventoryModal(true);
+        return;
+      }
+    }
   };
 
   return (
@@ -182,6 +243,17 @@ const CharmsPage = ({
           <CharmsCallToAction links={callToActionLinks} />
         )}
       </div>
+
+      {/* Inventory Alert Modal */}
+      <InventoryAlertModal
+        show={showInventoryModal}
+        onClose={() => {
+          setShowInventoryModal(false);
+          setInventoryMessage('');
+        }}
+        message={inventoryMessage}
+        type={inventoryType}
+      />
     </div>
   );
 };
