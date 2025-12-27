@@ -21,7 +21,6 @@ import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
 import CaseSelector from "./components/CaseSelector";
 import TermsOfUseModal from "./components/TermsOfUseModal";
-import AddTextModal from "./components/AddTextModal";
 
 
 const CreateYours = () => {
@@ -100,7 +99,6 @@ const CreateYours = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
-  const [showAddTextModal, setShowAddTextModal] = useState(false);
   const [inventoryMessage, setInventoryMessage] = useState('');
   const [inventoryType, setInventoryType] = useState('warning');
   const [quantityError, setQuantityError] = useState('');
@@ -1351,7 +1349,7 @@ const CreateYours = () => {
               )}
             </div>
             
-            {/* Personalized Text - Hidden on mobile */}
+            {/* Personalized Text - Hidden on mobile (shown below buttons on mobile) */}
             {!isMobile && (
               <div className="pb-6 border-b border-gray-100 mt-6">
                 <button
@@ -1383,6 +1381,7 @@ const CreateYours = () => {
                     setCustomTextError={setCustomTextError}
                     customTextAdded={customTextAdded}
                     setCustomTextAdded={setCustomTextAdded}
+                    onClose={() => setIsAddTextDropdownOpen(false)}
                   />
                 )}
               </div>
@@ -1437,8 +1436,33 @@ const CreateYours = () => {
                 setMobileCurrentStep={setMobileCurrentStep}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
-                onOpenAddText={() => setShowAddTextModal(true)}
+                onOpenAddText={() => {
+                  setIsCaseDropdownOpen(false);
+                  setIsCharmsDropdownOpen(false);
+                  setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
+                  // Scroll to top when clicking add text
+                  window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                  });
+                }}
+                isAddTextDropdownOpen={isAddTextDropdownOpen}
               />
+              
+              {/* Add Text Dropdown Content - Mobile only, below buttons */}
+              {isAddTextDropdownOpen && (
+                <div className="mt-4 pb-4 border-b border-gray-100">
+                  <CustomTextSection
+                    customText={customText}
+                    setCustomText={setCustomText}
+                    customTextError={customTextError}
+                    setCustomTextError={setCustomTextError}
+                    customTextAdded={customTextAdded}
+                    setCustomTextAdded={setCustomTextAdded}
+                    onClose={() => setIsAddTextDropdownOpen(false)}
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -1521,19 +1545,6 @@ const CreateYours = () => {
           }}
         />
 
-        {/* Add Text Modal - Mobile only */}
-        {isMobile && (
-          <AddTextModal
-            show={showAddTextModal}
-            onClose={() => setShowAddTextModal(false)}
-            customText={customText}
-            setCustomText={setCustomText}
-            customTextError={customTextError}
-            setCustomTextError={setCustomTextError}
-            customTextAdded={customTextAdded}
-            setCustomTextAdded={setCustomTextAdded}
-          />
-        )}
 
       </div>
     </section>

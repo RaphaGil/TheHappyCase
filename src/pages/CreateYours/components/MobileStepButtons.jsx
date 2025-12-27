@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid-svg-icons';
 
-const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor, onOpenAddText }) => {
+const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor, onOpenAddText, isAddTextDropdownOpen }) => {
   return (
     <div className="mb-4 flex justify-center">
       <div className="grid grid-cols-4 gap-1.5 xs:gap-2 sm:gap-2.5 max-w-fit">
@@ -84,7 +84,11 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         {/* Add Text Button */}
         <button
           onClick={onOpenAddText}
-          className="aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover"
+          className={`aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation ${
+            isAddTextDropdownOpen
+              ? 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border'
+              : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
+          }`}
         >
           <FontAwesomeIcon 
             icon={faFont} 

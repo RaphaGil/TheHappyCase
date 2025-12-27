@@ -8,7 +8,8 @@ const CustomTextSection = ({
   setCustomTextError, 
   customTextAdded, 
   setCustomTextAdded,
-  onTextAdded 
+  onTextAdded,
+  onClose 
 }) => {
   const handleAddText = () => {
     if (!customText.trim()) {
@@ -26,6 +27,12 @@ const CustomTextSection = ({
       // Notify parent that text was added - make number 3 black
       if (onTextAdded) {
         onTextAdded();
+      }
+      // Close dropdown after adding text (with a small delay to show success message)
+      if (onClose) {
+        setTimeout(() => {
+          onClose();
+        }, 1000);
       }
     } else {
       setCustomTextError('Canvas is still loading. Please try again in a moment.');
