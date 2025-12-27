@@ -21,6 +21,8 @@ import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
 import CaseSelector from "./components/CaseSelector";
 import TermsOfUseModal from "./components/TermsOfUseModal";
+import AddTextModal from "./components/AddTextModal";
+import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from "../../data/constants";
 
 
 const CreateYours = () => {
@@ -99,6 +101,7 @@ const CreateYours = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
+  const [showAddTextModal, setShowAddTextModal] = useState(false);
   const [inventoryMessage, setInventoryMessage] = useState('');
   const [inventoryType, setInventoryType] = useState('warning');
   const [quantityError, setQuantityError] = useState('');
@@ -764,6 +767,29 @@ const CreateYours = () => {
     }
   };
 
+  // Handle adding text on mobile
+  const handleMobileAddText = () => {
+    if (!customText.trim()) {
+      setCustomTextError('Please enter the text you want to add.');
+      return;
+    }
+
+    if (typeof window !== 'undefined' && window.addTextToCanvas) {
+      window.addTextToCanvas(customText.trim(), {
+        fill: CUSTOM_TEXT_COLOR,
+        fontSize: CUSTOM_TEXT_SIZE,
+      });
+      setCustomTextAdded(true);
+      setCustomTextError('');
+      // Close dropdown after adding text
+      setTimeout(() => {
+        setIsAddTextDropdownOpen(false);
+      }, 500);
+    } else {
+      setCustomTextError('Canvas is still loading. Please try again in a moment.');
+    }
+  };
+
   // Helper function to get products with quantities from localStorage
   const getProductsWithQuantities = () => {
     const savedQuantities = localStorage.getItem('productQuantities');
@@ -1123,6 +1149,13 @@ const CreateYours = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Close add text dropdown when mobile step overlays are opened
+  useEffect(() => {
+    if (isMobile && mobileCurrentStep !== null) {
+      setIsAddTextDropdownOpen(false);
+    }
+  }, [mobileCurrentStep, isMobile]);
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -1164,11 +1197,8 @@ const CreateYours = () => {
           </p>
         </div>
         
-        {/* MAIN SECTION - Canvas and Right Side */}
-        <div className="flex flex-col mt-6 md:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-12 flex-1 overflow-hidden md:items-center">
-          
-          {/* LEFT - Design Canvas - Centered */}
-          <div className={`md:w-1/2 flex flex-col flex-1 overflow-hidden px-2 xs:px-3 sm:px-4 md:px-0 py-0 xs:py-1 sm:py-2 md:py-0 order-1 md:order-1 ${
+        {/* Canvas Section - Mobile: Top, Desktop: Left */}
+        <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'mt-2 mb-4' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
             isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
               ? 'md:sticky md:top-0 md:self-start'
               : ''
@@ -1222,11 +1252,13 @@ const CreateYours = () => {
             
             {/* Save Your Design Button - Hidden for now */}
             {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
-          </div>
-
+        </div>
+        
+        {/* MAIN SECTION - Right Side Content */}
+        <div className="flex flex-col md:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-12 flex-1 overflow-hidden md:items-center mt-0 md:mt-6">
           {/* Right Side - Charms Selection */}
           <div 
-            className={`w-full md:w-1/2 flex flex-col space-y-4 sm:space-y-6 order-2 md:order-2 hide-scrollbar ${
+            className={`w-full md:w-1/2 flex flex-col space-y-4 sm:space-y-6 hide-scrollbar ${
               isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
                 ? 'md:max-h-none md:overflow-visible'
                 : 'md:max-h-[calc(100vh-200px)] md:overflow-y-auto'
@@ -1313,11 +1345,6 @@ const CreateYours = () => {
                   setIsCaseDropdownOpen(false);
                   setIsAddTextDropdownOpen(false);
                   setIsCharmsDropdownOpen(!isCharmsDropdownOpen);
-                  // Scroll to top when clicking charm options
-                  window.scrollTo({ 
-                    top: 0, 
-                    behavior: 'smooth' 
-                  });
                 }}
                 className="w-full flex items-center justify-between mb-4"
               >
@@ -1349,7 +1376,7 @@ const CreateYours = () => {
               )}
             </div>
             
-            {/* Personalized Text - Hidden on mobile (shown below buttons on mobile) */}
+            {/* Personalized Text - Hidden on mobile */}
             {!isMobile && (
               <div className="pb-6 border-b border-gray-100 mt-6">
                 <button
@@ -1381,7 +1408,6 @@ const CreateYours = () => {
                     setCustomTextError={setCustomTextError}
                     customTextAdded={customTextAdded}
                     setCustomTextAdded={setCustomTextAdded}
-                    onClose={() => setIsAddTextDropdownOpen(false)}
                   />
                 )}
               </div>
@@ -1428,7 +1454,7 @@ const CreateYours = () => {
         {isMobile && (
           <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: 'calc(80px + 0.75rem)'}}>
             <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 mb-0 pb-0">
-              <p className="text-[14px] text-gray-700 mb-2 xs:mb-2.5 text-center font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
+              <p className="text-[14px] text-gray-700 mb-2 xs:mb-2.5 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
               </p>
               <MobileStepButtons
@@ -1436,33 +1462,75 @@ const CreateYours = () => {
                 setMobileCurrentStep={setMobileCurrentStep}
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
-                onOpenAddText={() => {
-                  setIsCaseDropdownOpen(false);
-                  setIsCharmsDropdownOpen(false);
-                  setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
-                  // Scroll to top when clicking add text
-                  window.scrollTo({ 
-                    top: 0, 
-                    behavior: 'smooth' 
-                  });
-                }}
-                isAddTextDropdownOpen={isAddTextDropdownOpen}
               />
               
-              {/* Add Text Dropdown Content - Mobile only, below buttons */}
-              {isAddTextDropdownOpen && (
-                <div className="mt-4 pb-4 border-b border-gray-100">
-                  <CustomTextSection
-                    customText={customText}
-                    setCustomText={setCustomText}
-                    customTextError={customTextError}
-                    setCustomTextError={setCustomTextError}
-                    customTextAdded={customTextAdded}
-                    setCustomTextAdded={setCustomTextAdded}
-                    onClose={() => setIsAddTextDropdownOpen(false)}
-                  />
-                </div>
-              )}
+              {/* Add Text Dropdown - Mobile only */}
+              <div className="mt-3 xs:mt-4 sm:mt-4 px-2 xs:px-3 sm:px-4">
+                <button
+                  onClick={() => {
+                    setIsCaseDropdownOpen(false);
+                    setIsCharmsDropdownOpen(false);
+                    setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
+                  }}
+                  className="w-full flex items-center justify-between mb-2"
+                >
+                  <h3 className="text-xs xs:text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+                    4. Add Text
+                  </h3>
+                  <svg 
+                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isAddTextDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {isAddTextDropdownOpen && (
+                  <div className="space-y-2 pt-2">
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={customText}
+                        onChange={(e) => {
+                          setCustomText(e.target.value);
+                          setCustomTextError('');
+                          setCustomTextAdded(false);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && customText.trim()) {
+                            handleMobileAddText();
+                          }
+                        }}
+                        placeholder="e.g. Your name"
+                        className="flex-1 px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+                        maxLength={MAX_TEXT_LENGTH}
+                      />
+                      <button
+                        onClick={handleMobileAddText}
+                        disabled={!customText.trim()}
+                        className="px-4 py-2 text-xs font-medium uppercase tracking-wider disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-100 rounded-sm active:scale-95 disabled:scale-100 focus:outline-none font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500 font-inter">
+                      Up to {MAX_TEXT_LENGTH} characters. Double-click the text on the case to edit or move it.
+                    </p>
+                    {customTextError && (
+                      <div className="text-xs text-gray-600 border border-gray-200 bg-gray-50 px-3 py-2 rounded">
+                        {customTextError}
+                      </div>
+                    )}
+                    {customTextAdded && (
+                      <div className="text-xs text-gray-600 border border-gray-200 bg-gray-50 px-3 py-2 rounded">
+                        Text added to your design! You can drag it to reposition it.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -1545,6 +1613,19 @@ const CreateYours = () => {
           }}
         />
 
+        {/* Add Text Modal - Mobile only */}
+        {isMobile && (
+          <AddTextModal
+            show={showAddTextModal}
+            onClose={() => setShowAddTextModal(false)}
+            customText={customText}
+            setCustomText={setCustomText}
+            customTextError={customTextError}
+            setCustomTextError={setCustomTextError}
+            customTextAdded={customTextAdded}
+            setCustomTextAdded={setCustomTextAdded}
+          />
+        )}
 
       </div>
     </section>

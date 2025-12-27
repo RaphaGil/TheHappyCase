@@ -1,11 +1,11 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBriefcase, faPalette, faPlane, faFont } from '@fortawesome/free-solid-svg-icons';
+import { faBriefcase, faPalette, faPlane } from '@fortawesome/free-solid-svg-icons';
 
-const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor, onOpenAddText, isAddTextDropdownOpen }) => {
+const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
   return (
     <div className="mb-4 flex justify-center">
-      <div className="grid grid-cols-4 gap-1.5 xs:gap-2 sm:gap-2.5 max-w-fit">
+      <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:gap-2.5 max-w-fit">
         {/* Choose Case Button */}
         <button
           onClick={() => setMobileCurrentStep('case')}
@@ -78,24 +78,6 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
               : 'text-btn-primary-blue-text'
           }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Charms
-          </span>
-        </button>
-        
-        {/* Add Text Button */}
-        <button
-          onClick={onOpenAddText}
-          className={`aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation ${
-            isAddTextDropdownOpen
-              ? 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border'
-              : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
-          }`}
-        >
-          <FontAwesomeIcon 
-            icon={faFont} 
-            className="text-xs xs:text-sm sm:text-base mb-0.5 text-btn-primary-blue-text"
-          />
-          <span className="text-[9px] xs:text-[10px] sm:text-xs font-medium uppercase tracking-wide leading-tight text-btn-primary-blue-text" style={{fontFamily: "'Poppins', sans-serif"}}>
-            Add Text
           </span>
         </button>
       </div>
