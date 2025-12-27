@@ -24,7 +24,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
 
   return (
     <div className="mb-2 flex justify-center">
-      <div className="grid grid-cols-3 gap-4 max-w-fit">
+      <div className="grid grid-cols-3 gap-6 max-w-fit">
         {/* Choose Case Button */}
         <button
           onClick={() => setMobileCurrentStep('case')}

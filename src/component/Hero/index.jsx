@@ -54,7 +54,7 @@ function Hero() {
 
 
   return (
-    <section className="w-full h-[90vh] md:h-[80vh] relative overflow-hidden">
+    <section className="w-full h-[80vh] md:h-[80vh] relative overflow-hidden">
       {/* Video Banner Background */}
       <div className="absolute inset-0 w-full h-full">
         
