@@ -12,8 +12,8 @@ const PerfectGiftSection = ({ image }) => {
         className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[550px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-gray-100 flex items-start"
         style={{
           backgroundImage: `url(${image})`,
-          backgroundSize: 'contain',
-          backgroundPosition: '',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed'
         }}
@@ -39,7 +39,7 @@ const PerfectGiftSection = ({ image }) => {
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
             <div className="text-center space-y-4 sm:space-y-5">
               <h2 
-                className="text-xl sm:text-2xl font-light text-white mb-4 sm:mb-5 font-inter tracking-title"
+                className="text-title font-light text-white mb-4 sm:mb-5 tracking-title"
             
               >
                 {sectionVisible && (
@@ -64,7 +64,7 @@ const PerfectGiftSection = ({ image }) => {
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16">
           <div className="space-y-6 lg:space-y-8">
             <h2 
-              className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-light text-gray-900 mb-6 font-inter tracking-title"
+              className="text-title font-light text-gray-900 mb-6 tracking-title"
             >
               {sectionVisible && (
                 <AnimatedTitle delay={100}>

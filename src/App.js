@@ -23,7 +23,6 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import About from './pages/About';
 import AddText from './component/AddText';
 import Dashboard from './pages/Dashboard';
-import AuthenticationCode from './pages/AuthenticationCode';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -70,7 +69,6 @@ function AppContent() {
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />
           <Route path="/about" element={<About />} />
-          <Route path="/authentication/code" element={<AuthenticationCode />} />
         </Routes>
       </main>
       {!hideFooter && <Footer />}

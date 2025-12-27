@@ -1475,7 +1475,7 @@ const CreateYours = () => {
                   className="w-full flex items-center justify-between mb-2"
                 >
                   <h3 className="text-xs xs:text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                    4. Add Text
+                   Add Text
                   </h3>
                   <svg 
                     className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isAddTextDropdownOpen ? 'rotate-180' : ''}`}

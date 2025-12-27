@@ -121,7 +121,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
         <h3 className="text-heading-sm font-light text-gray-800 mb-2 mt-4 font-inter">
           {displayName}
         </h3>
-        <p className="text-body-sm text-gray-700 mb-6 font-light font-inter">
+        <p className="text-body-md text-gray-700 mb-6 font-bold font-inter">
           {formatPrice(item.basePrice || 0)}
         </p>
         
@@ -129,7 +129,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
         <div className="mt-auto">
           <Link
             to="/CreateYours"
-            className="inline-block w-full py-3 text-md uppercase tracking-wider text-center font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+            className="inline-block w-full py-3 text-sm uppercase tracking-wider text-center shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
           >
            PERSONALIZE
           </Link>

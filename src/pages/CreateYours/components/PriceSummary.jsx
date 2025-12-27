@@ -32,46 +32,49 @@ const PriceSummary = ({
 
   return (
       <div className={`${isMobile ? 'pt-0 mt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
-        {/* Mobile: Terms above, then Price + Quantity + Add to Cart in same row */}
+        {/* Mobile: Price + Quantity + Add to Cart in same row, then Terms below */}
         {isMobile ? (
           <>
-            {/* Terms Agreement Checkbox - Above buttons */}
-            <div className="mb-1.5">
-              <label className="flex items-start gap-1.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded  pf-2"
-                />
-                <span className="text-xs xs:text-sm text-gray-700 leading-tight font-light font-inter">
-                  <button
-                    type="button"
-                    onClick={onShowTerms}
-                    className="text-gray-900 underline hover:text-gray-700 transition-colors font-light"
-                  >
-                    Terms of Use
-                  </button>
-                </span>
-              </label>
-              {/* Error message when trying to add to cart without accepting terms */}
-              {showTermsError && (
-                <div className="mt-1 text-xs xs:text-sm text-red-600 font-light font-inter">
-                  You must accept the terms to add items to cart.
-                </div>
-              )}
-            </div>
-
             {/* Subtotal Price, Quantity Selector, and Add to Cart Button - All in same row */}
-            <div className="flex flex-row items-center justify-between">
-              {/* Subtotal Price - Left */}
-              <div className="flex flex-col flex-shrink-0">
-                <h3 className={`text-[14px] xs:text-xs text-gray-500 font-light font-inter mb-0 leading-none`}>
-                  Subtotal
-                </h3>
-                <h3 className={`text-xl xs:text-xl sm:text-2xl text-gray-900 font-light font-inter leading-none`}>
-                  {formatPrice(totalPrice)}
-                </h3>
+            <div className="flex flex-row items-start justify-between mt-2">
+              {/* Subtotal Price and Terms - Left */}
+              <div className="flex flex-col gap-1.5">
+                {/* Total Price */}
+                <div className="flex flex-row items-center gap-1.5 mb-2">
+                  <h3 className={`text-[14px] xs:text-sm text-gray-500 font-light font-inter leading-none`}>
+                    Total:
+                  </h3>
+                  <h3 className={`text-md font-bold xs:text-base sm:text-lg text-gray-900  font-inter leading-none`}>
+                    {formatPrice(totalPrice)}
+                  </h3>
+                </div>
+                
+                {/* Terms Agreement Checkbox - Below Total Price */}
+                <div>
+                  <label className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={agreedToTerms}
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded"
+                    />
+                    <span className="text-xs xs:text-sm text-gray-700 leading-tight font-light font-inter">
+                      <button
+                        type="button"
+                        onClick={onShowTerms}
+                        className="text-gray-900 underline hover:text-gray-700 transition-colors font-light"
+                      >
+                        Terms of Use
+                      </button>
+                    </span>
+                  </label>
+                  {/* Error message when trying to add to cart without accepting terms */}
+                  {showTermsError && (
+                    <div className="mt-1 text-xs xs:text-sm text-red-600 font-light font-inter">
+                      You must accept the terms to add items to cart.
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Quantity Selector and Add to Cart Button - Right */}

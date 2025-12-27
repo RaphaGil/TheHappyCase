@@ -121,9 +121,9 @@ const AddText = () => {
     <div className="min-h-screen bg-white relative overflow-hidden" style={{width: '100vw', maxWidth: '100vw', overflowX: 'hidden'}}>
       {/* Canvas - Show on mobile only, positioned at top */}
       {isMobile && selectedCaseType && selectedColor && (
-        <div className="w-full flex justify-center pt-4 pb-4 bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-          <div className="w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[580px] flex flex-col items-center">
-            <div className="w-full overflow-hidden" style={{aspectRatio: window.innerWidth < 375 ? '1/1.1' : '1/1.2'}}>
+        <div className="">
+          <div className="w-full  ">
+            <div className="w-full ">
               <Canvas
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}
@@ -137,7 +137,7 @@ const AddText = () => {
         </div>
       )}
       
-      <div className={`max-w-md mx-auto px-4 ${isMobile && selectedCaseType && selectedColor ? 'py-6' : 'py-8'} pb-20`}>
+      <div className={`max-w-md mx-auto px-4 pt-0 pb-20`} >
         {/* Header */}
         <div className="mb-8">
           <button

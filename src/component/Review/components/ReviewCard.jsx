@@ -2,76 +2,43 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faGlobe } from '@fortawesome/free-solid-svg-icons';
 
-const ReviewCard = ({ review, isMobile = false }) => {
+const ReviewCard = ({ review }) => {
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (
       <FontAwesomeIcon
         key={index}
         icon={faStar}
-        className={`text-xs ${index < rating ? 'text-yellow-500' : 'text-gray-300'}`}
+        className={`text-base sm:text-lg ${index < rating ? 'text-yellow-400' : 'text-gray-200'}`}
       />
     ));
   };
 
-  if (isMobile) {
-    return (
-      <div
-        className="flex-shrink-0 bg-white border border-gray-200 p-4 transition-all duration-200 flex flex-col"
-        style={{ width: 'calc(66.67vw - 0.5rem)', minHeight: '280px' }}
-      >
-        <div className="flex items-center gap-1.5 mb-3">
-          {renderStars(review.rating)}
-        </div>
-        <p className="text-gray-700 mb-4 leading-relaxed text-body-sm flex-grow font-inter font-light">
-          "{review.text}"
-        </p>
-        <div className="flex items-center gap-2 mt-auto">
-          {review.avatar && (
-            <div className="w-8 h-8 rounded-full flex items-center justify-center text-gray-900 font-medium bg-gray-50 text-sm flex-shrink-0 font-inter">
-              {review.avatar}
-            </div>
-          )}
-          <div className="min-w-0 flex-1 font-medium text-gray-900 text-sm truncate font-inter">
-            <h4>
-              {review.name}
-            </h4>
-            <div className="flex items-center gap-1">
-              <FontAwesomeIcon icon={faGlobe} className="text-gray-400 text-xs flex-shrink-0" />
-              <p className="text-gray-500 text-body-sm truncate font-inter">
-                {review.location}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="hidden md:flex bg-white border border-gray-200 p-4 sm:p-5 md:p-6 lg:p-8 transition-all duration-200 hover:border-gray-300 flex-col min-h-[320px]">
-      <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 sm:p-7 md:p-8 transition-all duration-300 hover:shadow-lg hover:border-gray-200 flex flex-col min-h-[320px] group">
+      {/* Stars Rating */}
+      <div className="flex items-center gap-2 mb-4 sm:mb-5">
         {renderStars(review.rating)}
       </div>
 
       {/* Review Text */}
-      <p className="text-gray-700 mb-6 leading-relaxed text-body-sm flex-grow font-inter font-light">
+      <p className="text-gray-700 mb-6 leading-relaxed text-base sm:text-lg flex-grow font-inter font-light">
         "{review.text}"
       </p>
 
       {/* Customer Info */}
-      <div className="flex items-center gap-2 sm:gap-3 mt-auto">
+      <div className="flex items-center gap-3 sm:gap-4 mt-auto pt-4 border-t border-gray-100">
         {review.avatar && (
-          <div className="w-10 h-10 rounded-full flex items-center justify-center text-gray-900 font-medium border border-gray-200 bg-gray-50 text-sm flex-shrink-0 font-inter">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-gray-900 font-semibold bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 text-base flex-shrink-0 font-inter shadow-sm group-hover:shadow-md transition-shadow duration-300">
             {review.avatar}
           </div>
         )}
-        <div className="min-w-0 flex-1 font-medium text-gray-900 text-sm truncate font-inter">
-          <h4>
+        <div className="min-w-0 flex-1">
+          <h4 className="font-semibold text-gray-900 text-base mb-1 font-inter">
             {review.name}
           </h4>
           <div className="flex items-center gap-1.5">
             <FontAwesomeIcon icon={faGlobe} className="text-gray-400 text-xs flex-shrink-0" />
-            <p className="text-gray-500 text-sm truncate font-inter">
+            <p className="text-gray-500 text-sm font-inter">
               {review.location}
             </p>
           </div>

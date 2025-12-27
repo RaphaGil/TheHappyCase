@@ -45,7 +45,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
           Continue Shopping
         </button>
         <button
-          className="w-full py-2.5 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
+          className="w-full py-2.5 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-green-600 hover:bg-green-700 text-white border border-green-600 hover:border-green-700 transition-all duration-200"
           disabled={cartLength === 0}
           onClick={handleCheckout}
         >

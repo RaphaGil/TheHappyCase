@@ -439,7 +439,7 @@
         "name": "Heart Globe",
         "src": "/TheHappyCase/images/ColorfulPins/heartglobe.png",
         "price": 2,
-        "size": 0.80
+        "size": 0.70
       },
       {
         "id": 4,
@@ -667,7 +667,7 @@
         "name": "Daisy Duck",
         "src": "/TheHappyCase/images/ColorfulPins/daisyduck.png",
         "price": 2,
-        "size": 0.75,
+        "size": 0.7,
         "subCategory": "disney"
       },
       {
@@ -757,7 +757,7 @@
         "name": "Globe",
         "src": "/TheHappyCase/images/BronzePins/globe.png",
         "price": 1,
-        "size": 0.6,
+        "size": 0.55,
         "subCategory": "travel"
       },
       {
@@ -773,7 +773,7 @@
         "name": "NYC Taxi",
         "src": "/TheHappyCase/images/BronzePins/nyctaxi.png",
         "price": 1,
-        "size": 1,
+        "size": 0.9,
         "subCategory": "travel"
       },
       {

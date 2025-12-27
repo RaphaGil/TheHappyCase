@@ -664,34 +664,30 @@ const Canvas = ({
       
       const imgInstance = await loadImageLegacy(pin.src, false, pinSize, pinSize);
       
-      // Position the pin randomly, constrained to the case image area only
-      // Case image is 270px (square), centered horizontally in 300px container, positioned at 45% vertically in 350px container
-      // Case image dimensions and position
-      const caseImageSize = 270; // Case image is 270px square
-      const containerWidth = 300; // Container is 300px wide
-      const containerHeight = 350; // Container is 350px tall
+      // Position the pin randomly on the canvas
+      const canvasWidth = fabricCanvas.current.getWidth();
+      const canvasHeight = fabricCanvas.current.getHeight();
       
-      // Calculate case image bounds (centered horizontally, at 45% vertically)
-      const imageCenterX = containerWidth / 2; // 150px (center of 300px)
-      const imageCenterY = containerHeight * 0.45; // 157.5px (45% of 350px)
-      const imageHalfSize = caseImageSize / 2; // 135px
+      // Get object dimensions from bounding rect to ensure it stays within bounds
+      const objRect = imgInstance.getBoundingRect(true);
+      const objWidth = objRect.width;
+      const objHeight = objRect.height;
+      const halfWidth = objWidth / 2;
+      const halfHeight = objHeight / 2;
       
-      // Calculate bounds within the case image area
-      const imageLeft = imageCenterX - imageHalfSize; // 15px
-      const imageRight = imageCenterX + imageHalfSize; // 285px
-      const imageTop = imageCenterY - imageHalfSize; // 22.5px
-      const imageBottom = imageCenterY + imageHalfSize; // 292.5px
+      // Use margin similar to object:moving constraint (5px)
+      const margin = 5;
       
-      // Add padding to ensure pin stays within image bounds (using pinSize as buffer)
-      const padding = pinSize / 2;
-      const minX = imageLeft + padding;
-      const maxX = imageRight - padding;
-      const minY = imageTop + padding;
-      const maxY = imageBottom - padding;
+      // Calculate valid random position range
+      // Account for object size and margin to keep it fully within canvas
+      const minX = margin + halfWidth;
+      const maxX = canvasWidth - margin - halfWidth;
+      const minY = margin + halfHeight;
+      const maxY = canvasHeight - margin - halfHeight;
       
-      // Generate random position within the case image area
-      const randomLeft = minX + Math.random() * (maxX - minX);
-      const randomTop = minY + Math.random() * (maxY - minY);
+      // Generate random position within valid range
+      const randomLeft = Math.random() * (maxX - minX) + minX;
+      const randomTop = Math.random() * (maxY - minY) + minY;
       
       imgInstance.set({
         left: randomLeft,
@@ -763,59 +759,12 @@ const Canvas = ({
     }
   };
 
-  // Clear all pins/charms from canvas (but keep case)
-  const clearCanvas = useCallback(() => {
-    if (!fabricCanvas.current) return;
-    
-    const objects = fabricCanvas.current.getObjects();
-    
-    // Helper function to identify boundary rects
-    const isBoundaryRect = (obj) => {
-      if (!obj || obj.type !== 'rect') return false;
-      if (obj.isBoundaryRect === true) return true;
-      const strokeDashArray = obj.strokeDashArray;
-      const hasDashedStroke = Array.isArray(strokeDashArray) && 
-        ((strokeDashArray[0] === 4 && strokeDashArray[1] === 4) || 
-         (strokeDashArray[0] === 3 && strokeDashArray[1] === 3));
-      const isTransparentFill = !obj.fill || obj.fill === 'transparent';
-      const isNotSelectable = obj.selectable === false;
-      const isNotEvented = obj.evented === false;
-      return hasDashedStroke && isTransparentFill && isNotSelectable && isNotEvented;
-    };
-    
-    // Remove all objects except case and boundary rects
-    objects.forEach(obj => {
-      if (!obj.isCase && !isBoundaryRect(obj) && obj !== boundaryRectRef.current && obj !== caseBorderRectRef.current) {
-        // Remove border rectangle if exists
-        const borderRect = borderRectsRef.current.get(obj);
-        if (borderRect) {
-          fabricCanvas.current.remove(borderRect);
-          borderRectsRef.current.delete(obj);
-        }
-        // Remove the object itself
-        fabricCanvas.current.remove(obj);
-        // Notify parent about removal
-        if (onPinRemove) {
-          onPinRemove(obj);
-        }
-      }
-    });
-    
-    // Clear selection and controls
-    fabricCanvas.current.discardActiveObject();
-    fabricCanvas.current.renderAll();
-    setSelectedPin(null);
-    setShowControls(false);
-  }, [onPinRemove, setShowControls]);
-
   // Expose pin selection method globally
   useEffect(() => {
     window.addPinToCanvas = handlePinSelection;
     window.addTextToCanvas = handleAddText;
     // Expose getter so parent can fetch current composed design image
     window.getDesignImageDataURL = getDesignImageDataURL;
-    // Expose clear canvas function
-    window.clearCanvas = clearCanvas;
     if (onSaveImage) {
       onSaveImage(handleSaveImage);
     }
@@ -823,9 +772,8 @@ const Canvas = ({
       delete window.addPinToCanvas;
       delete window.addTextToCanvas;
       delete window.getDesignImageDataURL;
-      delete window.clearCanvas;
     };
-  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage, clearCanvas]);
+  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage]);
 
   return (
     <div className="w-full h-full flex flex-col  sm:items-center ">
