@@ -49,7 +49,14 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
 
         {/* Choose Charms Button */}
         <button
-          onClick={() => setMobileCurrentStep('charms')}
+          onClick={() => {
+            setMobileCurrentStep('charms');
+            // Scroll to top when clicking charm options
+            window.scrollTo({ 
+              top: 0, 
+              behavior: 'smooth' 
+            });
+          }}
           disabled={!selectedCaseType || !selectedColor}
           className={`aspect-square h-[55px] xs:h-[60px] sm:h-[65px] flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation ${
             !selectedCaseType || !selectedColor

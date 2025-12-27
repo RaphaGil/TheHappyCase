@@ -1315,6 +1315,11 @@ const CreateYours = () => {
                   setIsCaseDropdownOpen(false);
                   setIsAddTextDropdownOpen(false);
                   setIsCharmsDropdownOpen(!isCharmsDropdownOpen);
+                  // Scroll to top when clicking charm options
+                  window.scrollTo({ 
+                    top: 0, 
+                    behavior: 'smooth' 
+                  });
                 }}
                 className="w-full flex items-center justify-between mb-4"
               >

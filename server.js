@@ -434,6 +434,7 @@ app.post("/save-order", async (req, res) => {
         state: customerInfo.address.state || null,
       } : null,
       items: items.map(item => ({
+        id: item.id || null,
         name: item.caseName || item.name || 'Custom Case',
         case_type: item.caseType || null,
         color: item.color || null,

@@ -717,6 +717,14 @@
         "price": 2,
         "size": 0.8,
         "subCategory": "travel"
+      },
+      {
+        "id": 39,
+        "name": "Love",
+        "src": "/TheHappyCase/images/ColorfulPins/love.png",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "travel"
       }
     ],
     "bronze": [
