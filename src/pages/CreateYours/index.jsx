@@ -681,10 +681,10 @@ const CreateYours = () => {
         
         {/* Header Section */}
         <div className={`text-center flex-shrink-0 ${isMobile ? 'mt-3 mb-4' : 'mt-4 md:mt-6'}`}>
-          <h1 className={`${isMobile ? 'text-xl' : 'text-title'} text-gray-900 tracking-title mb-2`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h1 className={`${isMobile ? 'hidden' : 'text-title'} text-gray-900 tracking-title mb-2`} style={{fontFamily: "'Poppins', sans-serif"}}>
             CREATE YOURS
           </h1>
-          <div className={`${isMobile ? 'w-16' : 'w-16 sm:w-20 md:w-24'} h-px bg-gray-200 mx-auto ${isMobile ? 'mb-3' : 'mb-2 md:mb-4'}`}></div>
+          <div className={`${isMobile ? 'hidden' : 'w-16 sm:w-20 md:w-24'} h-px bg-gray-200 mx-auto ${isMobile ? 'mb-3' : 'mb-2 md:mb-4'}`}></div>
           <p className="md:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case with our interactive creator

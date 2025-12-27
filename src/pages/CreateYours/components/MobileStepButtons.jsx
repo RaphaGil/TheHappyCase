@@ -4,7 +4,7 @@ import { faBriefcase, faPalette, faPlane } from '@fortawesome/free-solid-svg-ico
 
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
   const getButtonClass = (step, isDisabled, isCompleted) => {
-    const baseClass = "aspect-square h-[56px] flex flex-col items-center justify-center gap-1.5 transition-all duration-200 touch-manipulation relative";
+    const baseClass = "aspect-square h-[70px] flex flex-col items-center justify-center gap-1.5 transition-all duration-200 touch-manipulation relative";
     
     if (isDisabled) {
       return `${baseClass} bg-gray-50 text-gray-400 cursor-not-allowed`;
@@ -33,9 +33,9 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
-            className={`text-base transition-transform duration-200 ${mobileCurrentStep === 'case' ? 'scale-110' : ''}`}
+            className={`text-lg transition-transform duration-200 ${mobileCurrentStep === 'case' ? 'scale-110' : ''}`}
           />
-          <span className="text-xs font-semibold uppercase tracking-wide" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-md font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
             Case
           </span>
         
@@ -50,9 +50,9 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faPalette} 
-            className={`text-base transition-transform duration-200 ${mobileCurrentStep === 'color' ? 'scale-110' : ''}`}
+            className={`text-lg transition-transform duration-200 ${mobileCurrentStep === 'color' ? 'scale-110' : ''}`}
           />
-          <span className="text-xs font-semibold uppercase tracking-wide" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-md font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
             Color
           </span>
          
@@ -72,9 +72,9 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         >
           <FontAwesomeIcon 
             icon={faPlane} 
-            className={`text-base transition-transform duration-200 ${mobileCurrentStep === 'charms' ? 'scale-110' : ''}`}
+            className={`text-lg transition-transform duration-200 ${mobileCurrentStep === 'charms' ? 'scale-110' : ''}`}
           />
-          <span className="text-xs font-semibold uppercase tracking-wide" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-md font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
             Charms
           </span>
         </button>

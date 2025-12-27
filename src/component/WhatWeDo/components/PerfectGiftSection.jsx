@@ -9,13 +9,12 @@ const PerfectGiftSection = ({ image }) => {
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch">
       {/* Image - Full width on mobile, left side on larger screens */}
       <div 
-        className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[550px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-gray-100 flex items-start"
+        className="relative w-full md:w-1/2 h-[500px] sm:h-[550px] md:h-[550px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-gray-100 flex items-start"
         style={{
           backgroundImage: `url(${image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed'
+          backgroundRepeat: 'no-repeat'
         }}
       >
         {/* Fallback img for SEO and accessibility */}

@@ -7,13 +7,13 @@ const DesignIdeasGrid = ({ images }) => {
   return (
     <div className="w-full mb-12 md:mb-16">
       {/* Images Grid - 4 images in 1 row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4  w-full ">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 w-full">
         {displayImages.map((image, index) => (
           <div
             key={index}
-            className="group bg-white transition-all duration-500 ease-out hover:shadow-lg overflow-hidden "
+            className="group bg-white transition-all duration-500 ease-out hover:shadow-lg overflow-hidden"
           >
-            <div className="relative w-full aspect-square overflow-hidden h-[500px]">
+            <div className="relative w-full aspect-square overflow-hidden md:h-[500px]">
               <img
                 src={image}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
