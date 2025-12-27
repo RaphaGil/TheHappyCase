@@ -93,7 +93,7 @@ const AddTextModal = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between p-3 xs:p-4 border-b border-gray-200">
           <h3 className="text-xs xs:text-sm font-medium text-gray-900 uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
-            4. Add Text
+             Add Text
           </h3>
           <button
             onClick={onClose}

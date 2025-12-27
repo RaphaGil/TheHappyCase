@@ -1,529 +1,176 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 
-import Canvas from "../../component/Canvas/index.jsx";
-import ColorSelector from "../../component/ColorSelector/index.jsx";
-import PinSelector from "../../component/PinSelector";
 import Products from "../../data/products.json";
 import { useCart } from "../../context/CartContext";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
 import { createCompositeDesignImage } from "../../component/Canvas/utils/imageExport";
+import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE } from "../../data/constants";
+
+// Utils & Helpers
+import { 
+  getDefaultCaseAndColor, 
+  getColorName, 
+  getProductsWithQuantities, 
+  countCharmInCart,
+  canAddCharm,
+  scrollToElement,
+  getCaseImages
+} from "./utils/createYoursHelpers";
+
+// Hooks
+import { useURLParams } from "./hooks/useURLParams";
+import { useInventoryCheck } from "./hooks/useInventoryCheck";
 
 // Components
-import MobileStepButtons from "./components/MobileStepButtons";
-import ViewMoreImagesButton from "./components/ViewMoreImagesButton";
-import ItemDescriptionDropdown from "./components/ItemDescriptionDropdown";
-import ItemDescriptionModal from "./components/ItemDescriptionModal";
-import ImageModal from "../../component/ImageModal";
-// import SaveDesignButton from "./components/SaveDesignButton";
+import CanvasSection from "./components/CanvasSection";
+import DesktopControls from "./components/DesktopControls";
+import MobileControls from "./components/MobileControls";
 import MobileOverlay from "./components/MobileOverlay";
-import CustomTextSection from "./components/CustomTextSection";
-import PriceSummary from "./components/PriceSummary";
-import CaseSelector from "./components/CaseSelector";
+import ImageModal from "../../component/ImageModal";
+import ItemDescriptionModal from "./components/ItemDescriptionModal";
 import TermsOfUseModal from "./components/TermsOfUseModal";
 import AddTextModal from "./components/AddTextModal";
-import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from "../../data/constants";
-
 
 const CreateYours = () => {
+  // ============================================================================
+  // ROUTING & NAVIGATION
+  // ============================================================================
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [pins, setPins] = useState([]);
-  const [mobileSubCategory, setMobileSubCategory] = useState('all');
   
-  // Initialize default case and color from URL params or defaults
-  const getDefaultCaseAndColor = () => {
-    const caseParam = searchParams.get('case');
-    const colorParam = searchParams.get('color');
-    
-    // If URL params exist, use them
-    if (caseParam) {
-      const caseFromParam = Products.cases.find(c => c.type === caseParam);
-      if (caseFromParam) {
-        // If color param exists and is valid for this case, use it
-        if (colorParam) {
-          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
-          if (colorData) {
-            return {
-              caseType: caseFromParam.type,
-              color: colorData.color,
-              image: colorData.image
-            };
-          }
-        }
-        // Otherwise use first color of the case
-        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
-          return {
-            caseType: caseFromParam.type,
-            color: caseFromParam.colors[0].color,
-            image: caseFromParam.colors[0].image
-          };
-        }
-      }
-    }
-    
-    // Fallback to default
-    if (Products.cases.length > 0) {
-      const defaultCase = Products.cases.find(c => c.type === "economy") || Products.cases[0];
-      if (defaultCase && defaultCase.colors.length > 0) {
-        return {
-          caseType: defaultCase.type,
-          color: defaultCase.colors[0].color,
-          image: defaultCase.colors[0].image
-        };
-      }
-    }
-    return { caseType: "economy", color: "", image: "" };
-  };
-
-  const defaultValues = getDefaultCaseAndColor();
+  // ============================================================================
+  // STATE - Product Selection
+  // ============================================================================
+  const defaultValues = getDefaultCaseAndColor(searchParams);
   const [selectedCaseType, setSelectedCaseType] = useState(defaultValues.caseType);
   const [selectedColor, setSelectedColor] = useState(defaultValues.color);
   const [selectedCaseImage, setSelectedCaseImage] = useState(defaultValues.image);
   const [selectedPins, setSelectedPins] = useState([]);
-  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
-  const [saveImageFunction, setSaveImageFunction] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [pins, setPins] = useState([]);
+  
+  // ============================================================================
+  // STATE - UI Controls
+  // ============================================================================
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [mobileCurrentStep, setMobileCurrentStep] = useState(null);
+  const [mobileSubCategory, setMobileSubCategory] = useState('all');
   const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
   const [isCharmsDropdownOpen, setIsCharmsDropdownOpen] = useState(false);
   const [isAddTextDropdownOpen, setIsAddTextDropdownOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [mobileCurrentStep, setMobileCurrentStep] = useState(null); // null = showing passport case, 'case' = case selection, 'color' = color selection, 'charms' = charms selection
-  const [quantity, setQuantity] = useState(0);
-  const [customText, setCustomText] = useState('');
-  const [customTextError, setCustomTextError] = useState('');
-  const [customTextAdded, setCustomTextAdded] = useState(false);
+  
+  // ============================================================================
+  // STATE - Modals & Overlays
+  // ============================================================================
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedModalImage, setSelectedModalImage] = useState(0);
   const [showDescriptionModal, setShowDescriptionModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [pendingAddToCart, setPendingAddToCart] = useState(false);
-  const [showTermsError, setShowTermsError] = useState(false);
   const [showAddTextModal, setShowAddTextModal] = useState(false);
+  
+  // ============================================================================
+  // STATE - Custom Text
+  // ============================================================================
+  const [customText, setCustomText] = useState('');
+  const [customTextError, setCustomTextError] = useState('');
+  const [customTextAdded, setCustomTextAdded] = useState(false);
+  
+  // ============================================================================
+  // STATE - Cart & Inventory
+  // ============================================================================
+  const [quantity, setQuantity] = useState(0);
   const [inventoryMessage, setInventoryMessage] = useState('');
   const [inventoryType, setInventoryType] = useState('warning');
   const [quantityError, setQuantityError] = useState('');
   const [charmInventoryError, setCharmInventoryError] = useState('');
+  
+  // ============================================================================
+  // STATE - Terms & Cart Actions
+  // ============================================================================
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [pendingAddToCart, setPendingAddToCart] = useState(false);
+  const [showTermsError, setShowTermsError] = useState(false);
+  
+  // ============================================================================
+  // STATE - Other
+  // ============================================================================
+  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [saveImageFunction, setSaveImageFunction] = useState(null);
   const caseDropdownRef = useRef(null);
+  
+  // ============================================================================
+  // CONTEXT & DATA
+  // ============================================================================
   const { addToCart, cart } = useCart();
-
-  // Update case and color when URL params change
+  const productsWithQuantities = getProductsWithQuantities();
+  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+  const caseBasePrice = selectedCase?.basePrice || 0;
+  const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
+  
+  // ============================================================================
+  // COMPUTED VALUES
+  // ============================================================================
+  const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
+  const displayQuantity = Math.max(quantity, 1);
+  const totalPrice = ((caseBasePrice + pinsPrice) * displayQuantity).toFixed(2);
+  
+  const groupedPins = selectedPins.reduce((acc, { pin }) => {
+    if (!pin) return acc;
+    const key = `${pin.src}|${pin.name}|${pin.price}`;
+    if (!acc[key]) {
+      acc[key] = { ...pin, count: 0 };
+    }
+    acc[key].count += 1;
+    return acc;
+  }, {});
+  const groupedPinsList = Object.values(groupedPins);
+  
+  // ============================================================================
+  // CUSTOM HOOKS
+  // ============================================================================
+  
+  // Handle URL params
+  useURLParams(searchParams, setSelectedCaseType, setSelectedColor, setSelectedCaseImage, selectedCategory);
+  
+  // Handle inventory checking
+  useInventoryCheck({
+    selectedCaseType,
+    selectedColor,
+    selectedPins,
+    quantity,
+    cart,
+    selectedCategory,
+    inventoryMessage,
+    setInventoryMessage,
+    setInventoryType,
+    setQuantityError,
+    setCharmInventoryError,
+    setQuantity
+  });
+  
+  // ============================================================================
+  // EFFECTS - Initialization & Data Loading
+  // ============================================================================
+  
+  // Update color when case type changes
   useEffect(() => {
-    const caseParam = searchParams.get('case');
-    const colorParam = searchParams.get('color');
-    
-    if (caseParam) {
-      const caseFromParam = Products.cases.find(c => c.type === caseParam);
-      if (caseFromParam) {
-        setSelectedCaseType(caseFromParam.type);
-        
-        // If color param exists and is valid for this case, use it
-        if (colorParam) {
-          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
-          if (colorData) {
-            setSelectedColor(colorData.color);
-            setSelectedCaseImage(colorData.image);
-            return;
-          }
-        }
-        
-        // Otherwise use first color of the case
-        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
-          const firstColor = caseFromParam.colors[0];
-          setSelectedColor(firstColor.color);
-          setSelectedCaseImage(firstColor.image);
-        }
+    if (Products.cases.length > 0) {
+      const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
+      if (defaultCase && defaultCase.colors.length > 0) {
+        const defaultColor = defaultCase.colors[0];
+        setSelectedColor(defaultColor.color);
+        setSelectedCaseImage(defaultColor.image);
       }
     }
-  }, [searchParams]);
-
-  // Auto-dismiss inventory message after 3 seconds
-  useEffect(() => {
-    if (inventoryMessage) {
-      const timer = setTimeout(() => {
-        setInventoryMessage('');
-      }, 3000); // 3 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [inventoryMessage]);
-
-
-  // Check inventory when case/color or charms change
-  useEffect(() => {
-    // Check case inventory
-    if (selectedCaseType && selectedColor) {
-      const productForInventory = {
-        caseType: selectedCaseType,
-        color: selectedColor,
-      };
-      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-      
-      // Don't show alert here - only show when clicking +/- buttons
-      // Clear any existing inventory messages when case/color changes
-      if (maxAvailable !== null && maxAvailable > 0) {
-        // Clear message if case is in stock
-        setInventoryMessage('');
-      }
-    }
-
-    // Check charm inventory for selected charms
-    if (selectedPins.length > 0) {
-      let outOfStockCharm = null;
-      
-      for (const { pin } of selectedPins) {
-        if (!pin) continue;
-        
-        const charmCategory = pin?.category || selectedCategory || 'colorful';
-        const charmName = pin?.name || 'charm';
-        const charmSrc = pin?.src || '';
-        
-        const charmProduct = {
-          type: 'charm',
-          category: charmCategory,
-          pin: pin,
-          name: charmName
-        };
-        
-        const maxAvailableCharm = getMaxAvailableQuantity(charmProduct, cart);
-        
-        // Skip if no inventory limit
-        if (maxAvailableCharm === null) continue;
-        
-        // Count standalone charms already in cart
-        let standaloneCharmsInCart = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.type === 'charm') {
-            const cartPin = cartItem.pin || cartItem;
-            const cartPinName = cartPin.name || cartPin.src;
-            const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-            if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                cartPinCategory === charmCategory) {
-              standaloneCharmsInCart += (cartItem.quantity || 1);
-            }
-          }
-        });
-        
-        // Count how many of this charm are in custom designs already in cart
-        let charmCountInCustomDesigns = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.pins && Array.isArray(cartItem.pins)) {
-            cartItem.pins.forEach(cartPin => {
-              const cartPinName = cartPin.name || cartPin.src;
-              const cartPinCategory = cartPin.category || charmCategory;
-              if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                  cartPinCategory === charmCategory) {
-                charmCountInCustomDesigns += (cartItem.quantity || 1);
-              }
-            });
-          }
-        });
-        
-        // Count how many of this charm are already selected in the current design
-        const charmCountInDesign = selectedPins.filter(p => {
-          const pPin = p.pin || p;
-          const pPinName = pPin.name || pPin.src;
-          const pPinCategory = pPin.category || charmCategory;
-          return (pPinName === charmName || pPinName === charmSrc) && 
-                 pPinCategory === charmCategory;
-        }).length;
-        
-        // Calculate total inventory and usage
-        const totalInventory = maxAvailableCharm + standaloneCharmsInCart;
-        const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
-        
-        // Check if charm is out of stock or would exceed inventory
-        if (maxAvailableCharm === 0 || totalUsage > totalInventory) {
-          outOfStockCharm = charmName;
-          break; // Exit early if any charm is out of stock
-        }
-      }
-      
-      // Set or clear inventory message based on findings
-      if (outOfStockCharm) {
-        setInventoryMessage(`Oops! We don't have any more ${outOfStockCharm} in stock right now.`);
-        setInventoryType('warning');
-      } else {
-        // Clear warning messages if all charms are in stock (but keep error messages from add to cart)
-        setInventoryMessage(prev => {
-          if (prev && prev.includes("can't add more to your basket")) {
-            return prev; // Keep error messages
-          }
-          // Only clear if it's a warning about charms
-          if (prev && !prev.includes("Passport Case") && !prev.includes("Case")) {
-            return '';
-          }
-          return prev;
-        });
-      }
-    } else {
-      // If no charms selected, clear charm-related inventory messages (but keep error messages)
-      setInventoryMessage(prev => {
-        if (prev && prev.includes("can't add more to your basket")) {
-          return prev; // Keep error messages
-        }
-        // Only clear charm warnings, not case warnings
-        if (prev && !prev.includes("Passport Case") && !prev.includes("Case")) {
-          return '';
-        }
-        return prev;
-      });
-    }
-  }, [selectedCaseType, selectedColor, selectedPins, quantity, cart, selectedCategory, isMobile]);
-
-  // Handle case type selection
-  const handleCaseTypeSelection = (caseType) => {
-    setSelectedCaseType(caseType);
-    const productsWithQuantities = getProductsWithQuantities();
-    const selectedCase = productsWithQuantities.cases.find(c => c.type === caseType);
-    if (selectedCase && selectedCase.colors.length > 0) {
-      // Find first available (not sold out) color, or fallback to first color
-      const availableColor = selectedCase.colors.find(c => 
-        c.quantity === undefined || c.quantity > 0
-      ) || selectedCase.colors[0];
-      
-      // Check inventory for the selected case type and available color
-      const productForInventory = {
-        caseType: caseType,
-        color: availableColor.color,
-      };
-      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-      
-      // Don't show alert here - only show when clicking +/- buttons
-      // Clear inventory message if case is in stock
-      if (maxAvailable !== null && maxAvailable > 0) {
-        setInventoryMessage('');
-      }
-      
-      setSelectedColor(availableColor.color);
-      setSelectedCaseImage(availableColor.image);
-    }
-    // Close mobile step after selection
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
-  };
-
-  // Handle color selection
-  const handleColorSelection = (color, image) => {
-    // Check inventory for the selected case and color before setting
-    if (selectedCaseType && color) {
-      const productForInventory = {
-        caseType: selectedCaseType,
-        color: color,
-      };
-      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-      
-      // Don't show alert here - only show when clicking +/- buttons
-      // Clear inventory message if color is in stock
-      if (maxAvailable !== null && maxAvailable > 0) {
-        setInventoryMessage('');
-      }
-    }
-    
-    setSelectedColor(color);
-    setSelectedCaseImage(image);
-    // Close mobile step after selection
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
-  };
-
-  // Handle pin selection from PinSelector
-  const handlePinSelection = useCallback((pin) => {
-    // Check inventory before adding charm
-    const getCharmCategory = () => {
-      if (pin.category) return pin.category;
-      // Try to infer category from selectedCategory
-      if (selectedCategory) return selectedCategory;
-      return 'colorful'; // Default fallback
-    };
-
-    const charmCategory = getCharmCategory();
-    const charmName = pin.name || pin.src || '';
-    const charmSrc = pin.src || '';
-
-    // Ensure pin object has category property for cart tracking
-    const pinWithCategory = {
-      ...pin,
-      category: charmCategory
-    };
-
-    const product = {
-      name: charmName,
-      price: pin.price || 2.0,
-      totalPrice: pin.price || 2.0,
-      image: charmSrc,
-      pin: pinWithCategory,
-      category: charmCategory,
-      type: 'charm'
-    };
-
-    // Check inventory for standalone charms in cart
-    // maxAvailable tells us how many MORE standalone charms can be added
-    const maxAvailable = getMaxAvailableQuantity(product, cart);
-    
-    // If no inventory limit, allow adding
-    if (maxAvailable === null) {
-      // This will be handled by the Canvas component
-      // Pass pin with category property so it's preserved
-      if (window.addPinToCanvas) {
-        window.addPinToCanvas(pinWithCategory);
-      }
-      
-      // Close mobile overlay after pin selection
-      if (isMobile) {
-        setMobileCurrentStep(null);
-        // Scroll to top on small screens
-        setTimeout(() => {
-          window.scrollTo({ 
-            top: 0, 
-            behavior: 'smooth' 
-          });
-        }, 100);
-      } else {
-        // Scroll to the canvas area on larger screens
-        setTimeout(() => {
-          const canvasElement = document.querySelector('.happy-card');
-          if (canvasElement) {
-            canvasElement.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center' 
-            });
-          }
-        }, 100);
-      }
-      return;
-    }
-    
-    // Count standalone charms already in cart
-    let standaloneCharmsInCart = 0;
-    cart.forEach(cartItem => {
-      if (cartItem.type === 'charm') {
-        const cartPin = cartItem.pin || cartItem;
-        const cartPinName = cartPin.name || cartPin.src;
-        const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-        if ((cartPinName === charmName || cartPinName === charmSrc) && 
-            cartPinCategory === charmCategory) {
-          standaloneCharmsInCart += (cartItem.quantity || 1);
-        }
-      }
-    });
-    
-    // Count how many of this charm are in custom designs already in cart
-    // (getMaxAvailableQuantity only counts standalone charms, not charms in custom designs)
-    let charmCountInCustomDesigns = 0;
-    cart.forEach(cartItem => {
-      // Count charms in custom designs
-      if (cartItem.pins && Array.isArray(cartItem.pins)) {
-        cartItem.pins.forEach(cartPin => {
-          const cartPinName = cartPin.name || cartPin.src;
-          const cartPinCategory = cartPin.category || charmCategory;
-          if ((cartPinName === charmName || cartPinName === charmSrc) && 
-              cartPinCategory === charmCategory) {
-            charmCountInCustomDesigns += (cartItem.quantity || 1);
-          }
-        });
-      }
-    });
-    
-    // Count how many of this charm are already selected in the current design
-    const charmCountInDesign = selectedPins.filter(p => {
-      const pPin = p.pin || p;
-      const pPinName = pPin.name || pPin.src;
-      const pPinCategory = pPin.category || charmCategory;
-      return (pPinName === charmName || pPinName === charmSrc) && 
-             pPinCategory === charmCategory;
-    }).length;
-    
-    // Calculate total inventory: maxAvailable + standalone charms in cart
-    // This gives us the total available inventory for this charm
-    const totalInventory = maxAvailable + standaloneCharmsInCart;
-    
-    // Calculate total usage: standalone + in custom designs + in current design + 1 (new one)
-    const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign + 1;
-    
-    // If maxAvailable is 0, no more charms can be added (standalone or in designs)
-    // Also check if total usage would exceed total inventory
-    if (maxAvailable === 0 || totalUsage > totalInventory) {
-      const charmDisplayName = pin.name || pin.src || 'this charm';
-      const errorMessage = `Oops! We don't have any more ${charmDisplayName} in stock right now, so you can't add more to your basket.`;
-      
-      // Set inventory message immediately
-      setInventoryMessage(errorMessage);
-      setInventoryType('error');
-      setCharmInventoryError(`We don't have any more ${charmDisplayName} in stock.`);
-      
-      // Close mobile overlay if open so user can see the alert
-      if (isMobile) {
-        setMobileCurrentStep(null);
-        // Scroll to show the alert message
-        setTimeout(() => {
-          window.scrollTo({ 
-            top: document.body.scrollHeight, 
-            behavior: 'smooth' 
-          });
-        }, 300);
-      } else {
-        // Scroll to price summary area on desktop to show alert
-        setTimeout(() => {
-          const priceSummaryElement = document.querySelector('[class*="PriceSummary"]') || 
-                                     document.querySelector('.price-summary');
-          if (priceSummaryElement) {
-            priceSummaryElement.scrollIntoView({ 
-              behavior: 'smooth', 
-              block: 'center' 
-            });
-          }
-        }, 300);
-      }
-      
-      return;
-    }
-    
-    // This will be handled by the Canvas component
-    // Pass pin with category property so it's preserved
-    if (window.addPinToCanvas) {
-      window.addPinToCanvas(pinWithCategory);
-    }
-    
-    // Clear charm inventory error when successfully adding a charm
-    setCharmInventoryError('');
-    
-    // Clear inventory message only if it's a warning (not an error from this action)
-    // Don't clear immediately - let the useEffect handle it based on current state
-    
-    // Close mobile overlay after pin selection
-    if (isMobile) {
-      setMobileCurrentStep(null);
-      // Scroll to top on small screens
-      setTimeout(() => {
-        window.scrollTo({ 
-          top: 0, 
-          behavior: 'smooth' 
-        });
-      }, 100);
-    } else {
-      // Scroll to the canvas area on larger screens
-      setTimeout(() => {
-        const canvasElement = document.querySelector('.happy-card');
-        if (canvasElement) {
-          canvasElement.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'center' 
-          });
-        }
-      }, 100);
-    }
-  }, [isMobile, cart, selectedPins, selectedCategory]);
-
+  }, [selectedCaseType]);
+  
   // Handle navigation from other pages
   useEffect(() => {
     if (location.state?.selectedPin) {
       const selectedPin = location.state.selectedPin;
-      // Ensure pin has category property - use selectedPin.category or infer from context
       const pinWithCategory = {
         ...selectedPin,
         category: selectedPin.category || selectedCategory || 'colorful'
@@ -533,12 +180,10 @@ const CreateYours = () => {
           window.addPinToCanvas(pinWithCategory);
         }
       }, 1000);
-      
-      // Clear the navigation state
       window.history.replaceState({}, document.title);
     }
   }, [location.state, selectedCategory]);
-
+  
   // When category changes, update pins from Products
   useEffect(() => {
     if (selectedCategory) {
@@ -549,97 +194,196 @@ const CreateYours = () => {
         setPins(Products.pins[selectedCategory] || []);
       }
     }
-    // Reset subcategory when category changes
     setMobileSubCategory('all');
   }, [selectedCategory]);
-
-
-  // Update color when case type changes
+  
+  // ============================================================================
+  // EFFECTS - UI Behavior
+  // ============================================================================
+  
+  // Track screen size changes
   useEffect(() => {
-    if (Products.cases.length > 0) {
-      const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
-      if (defaultCase && defaultCase.colors.length > 0) {
-        const defaultColor = defaultCase.colors[0];
-        // Always update when case type changes to ensure correct color is shown
-        setSelectedColor(defaultColor.color);
-        setSelectedCaseImage(defaultColor.image);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Close add text dropdown when mobile step overlays are opened
+  useEffect(() => {
+    if (isMobile && mobileCurrentStep !== null) {
+      setIsAddTextDropdownOpen(false);
+    }
+  }, [mobileCurrentStep, isMobile]);
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (caseDropdownRef.current && !caseDropdownRef.current.contains(e.target)) {
+        setIsCaseDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
+  
+  // ============================================================================
+  // HANDLERS - Case & Color Selection
+  // ============================================================================
+  
+  const handleCaseTypeSelection = (caseType) => {
+    setSelectedCaseType(caseType);
+    const selectedCase = productsWithQuantities.cases.find(c => c.type === caseType);
+    if (selectedCase && selectedCase.colors.length > 0) {
+      const availableColor = selectedCase.colors.find(c => 
+        c.quantity === undefined || c.quantity > 0
+      ) || selectedCase.colors[0];
+      
+      const productForInventory = {
+        caseType: caseType,
+        color: availableColor.color,
+      };
+      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+      
+      if (maxAvailable !== null && maxAvailable > 0) {
+        setInventoryMessage('');
+      }
+      
+      setSelectedColor(availableColor.color);
+      setSelectedCaseImage(availableColor.image);
+    }
+    
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    }
+  };
+  
+  const handleColorSelection = (color, image) => {
+    if (selectedCaseType && color) {
+      const productForInventory = {
+        caseType: selectedCaseType,
+        color: color,
+      };
+      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+      
+      if (maxAvailable !== null && maxAvailable > 0) {
+        setInventoryMessage('');
       }
     }
-  }, [selectedCaseType]); // Run when selectedCaseType changes
-
-  // Helper function to get color name from image filename
-  const getColorName = (image) => {
-    if (!image) return '';
     
-    const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
+    setSelectedColor(color);
+    setSelectedCaseImage(image);
     
-    let colorPart = filename
-      .replace(/^economycase/i, '')
-      .replace(/^businessclasscase/i, '')
-      .replace(/^firstclasscase/i, '')
-      .replace(/^smartcase/i, '')
-      .replace(/^premiumcase/i, '')
-      .replace(/^firstclass/i, '');
-    
-    const colorMap = {
-      'lightpink': 'Light Pink',
-      'lightblue': 'Light Blue',
-      'lightbrown': 'Light Brown',
-      'darkbrown': 'Dark Brown',
-      'darkblue': 'Dark Blue',
-      'jeansblue': 'Jeans Blue',
-      'brickred': 'Brick Red',
-      'navyblue': 'Navy Blue',
-      'gray': 'Gray',
-      'grey': 'Gray',
-      'black': 'Black',
-      'brown': 'Brown',
-      'red': 'Red',
-      'pink': 'Pink',
-      'blue': 'Blue',
-      'green': 'Green',
-      'purple': 'Purple',
-      'yellow': 'Yellow',
-      'orange': 'Orange'
-    };
-    
-    if (colorMap[colorPart]) {
-      return colorMap[colorPart];
+    if (isMobile) {
+      setMobileCurrentStep(null);
     }
-    
-    colorPart = colorPart
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2')
-      .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/)
-      .filter(word => word.length > 0)
-      .join(' ')
-      .toLowerCase()
-      .split(' ')
-      .map(word => {
-        if (colorMap[word]) return colorMap[word];
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(' ');
-    
-    return colorPart || 'Color';
   };
-
-  // Clamp quantity to max available inventory
-  useEffect(() => {
-    const productForInventory = {
-      caseType: selectedCaseType,
-      color: selectedColor,
+  
+  // ============================================================================
+  // HANDLERS - Pin/Charm Selection
+  // ============================================================================
+  
+  const handlePinSelection = useCallback((pin) => {
+    const getCharmCategory = () => {
+      if (pin.category) return pin.category;
+      if (selectedCategory) return selectedCategory;
+      return 'colorful';
     };
-    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
     
-    if (maxAvailable !== null && quantity > maxAvailable) {
-      setQuantity(maxAvailable);
+    const charmCategory = getCharmCategory();
+    const charmName = pin.name || pin.src || '';
+    const charmSrc = pin.src || '';
+    
+    const pinWithCategory = {
+      ...pin,
+      category: charmCategory
+    };
+    
+    const product = {
+      name: charmName,
+      price: pin.price || 2.0,
+      totalPrice: pin.price || 2.0,
+      image: charmSrc,
+      pin: pinWithCategory,
+      category: charmCategory,
+      type: 'charm'
+    };
+    
+    const maxAvailable = getMaxAvailableQuantity(product, cart);
+    
+    // If no inventory limit, allow adding
+    if (maxAvailable === null) {
+      if (window.addPinToCanvas) {
+        window.addPinToCanvas(pinWithCategory);
+      }
+      
+      if (isMobile) {
+        setMobileCurrentStep(null);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+      } else {
+        scrollToElement('.happy-card');
+      }
+      return;
     }
-    // Clear error when case type or color changes
-    setQuantityError('');
-  }, [selectedCaseType, selectedColor, cart, quantity]);
-
-  // Handle quantity increment with inventory check
+    
+    // Check inventory
+    const checkResult = canAddCharm(pin, selectedCategory, selectedPins, quantity, cart);
+    
+    if (!checkResult.canAdd) {
+      const charmDisplayName = pin.name || pin.src || 'this charm';
+      setInventoryMessage(checkResult.message || `Oops! We don't have any more ${charmDisplayName} in stock right now, so you can't add more to your basket.`);
+      setInventoryType('error');
+      setCharmInventoryError(`We don't have any more ${charmDisplayName} in stock.`);
+      
+      if (isMobile) {
+        setMobileCurrentStep(null);
+        setTimeout(() => {
+          window.scrollTo({ 
+            top: document.body.scrollHeight, 
+            behavior: 'smooth' 
+          });
+        }, 300);
+      } else {
+        scrollToElement('[class*="PriceSummary"]', { block: 'center' });
+      }
+      return;
+    }
+    
+    // Add pin to canvas
+    if (window.addPinToCanvas) {
+      window.addPinToCanvas(pinWithCategory);
+    }
+    
+    setCharmInventoryError('');
+    
+    if (isMobile) {
+      setMobileCurrentStep(null);
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    } else {
+      scrollToElement('.happy-card');
+    }
+  }, [isMobile, cart, selectedPins, selectedCategory, quantity]);
+  
+  const handlePinSelect = useCallback((imgInstance) => {
+    if (imgInstance && imgInstance.pinData) {
+      setSelectedPins(prev => [...prev, { imgInstance, pin: imgInstance.pinData }]);
+    }
+  }, []);
+  
+  const handlePinRemove = useCallback((removedPin) => {
+    setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
+    setCharmInventoryError('');
+  }, []);
+  
+  const handleSaveImageFunction = useCallback((saveFunction) => {
+    setSaveImageFunction(() => saveFunction);
+  }, []);
+  
+  // ============================================================================
+  // HANDLERS - Quantity Management
+  // ============================================================================
+  
   const handleIncrementQuantity = () => {
     const productForInventory = {
       caseType: selectedCaseType,
@@ -647,14 +391,10 @@ const CreateYours = () => {
     };
     const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
     
-    // Check case inventory first
-    // maxAvailable is how many MORE can be added, so if it's 0 or less, or if incrementing would exceed it, we can't add any more
+    // Check case inventory
     if (maxAvailable !== null && (maxAvailable <= 0 || quantity + 1 > maxAvailable)) {
-      // Get item name and color for error message
       const itemName = selectedCase?.name || 'Passport Case';
-      const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
       const colorName = selectedColorData?.image ? getColorName(selectedColorData.image) : '';
-      
       const colorText = colorName ? ` in ${colorName}` : '';
       const errorMessage = `Oops! We don't have any more ${itemName}${colorText} in stock right now, so you can't add more to your basket.`;
       setQuantityError(`We don't have any more ${itemName}${colorText} in stock to be added anymore.`);
@@ -668,13 +408,7 @@ const CreateYours = () => {
       for (const { pin } of selectedPins) {
         if (!pin) continue;
         
-        const getCharmCategory = () => {
-          if (pin.category) return pin.category;
-          if (selectedCategory) return selectedCategory;
-          return 'colorful';
-        };
-        
-        const charmCategory = getCharmCategory();
+        const charmCategory = pin?.category || selectedCategory || 'colorful';
         const charmName = pin.name || pin.src || '';
         const charmSrc = pin.src || '';
         
@@ -689,40 +423,15 @@ const CreateYours = () => {
         };
         
         const charmMaxAvailable = getMaxAvailableQuantity(charmProduct, cart);
-        
-        // If no inventory limit for this charm, skip check
         if (charmMaxAvailable === null) continue;
         
-        // Count standalone charms already in cart
-        let standaloneCharmsInCart = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.type === 'charm') {
-            const cartPin = cartItem.pin || cartItem;
-            const cartPinName = cartPin.name || cartPin.src;
-            const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-            if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                cartPinCategory === charmCategory) {
-              standaloneCharmsInCart += (cartItem.quantity || 1);
-            }
-          }
-        });
+        const { standaloneCount, inCustomDesignsCount } = countCharmInCart(
+          charmName, 
+          charmSrc, 
+          charmCategory, 
+          cart
+        );
         
-        // Count how many of this charm are in custom designs already in cart
-        let charmCountInCustomDesigns = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.pins && Array.isArray(cartItem.pins)) {
-            cartItem.pins.forEach(cartPin => {
-              const cartPinName = cartPin.name || cartPin.src;
-              const cartPinCategory = cartPin.category || charmCategory;
-              if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                  cartPinCategory === charmCategory) {
-                charmCountInCustomDesigns += (cartItem.quantity || 1);
-              }
-            });
-          }
-        });
-        
-        // Count how many of this charm are in the current design (per design)
         const charmCountInDesign = selectedPins.filter(p => {
           const pPin = p.pin || p;
           const pPinName = pPin.name || pPin.src;
@@ -731,18 +440,13 @@ const CreateYours = () => {
                  pPinCategory === charmCategory;
         }).length;
         
-        // Calculate total inventory and usage
-        const totalInventory = charmMaxAvailable + standaloneCharmsInCart;
-        // Already used: standalone + in other custom designs + in current design with current quantity
-        // New usage if we increment: current usage + charmCountInDesign (one more design)
-        const currentUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
+        const totalInventory = charmMaxAvailable + standaloneCount;
+        const currentUsage = standaloneCount + inCustomDesignsCount + (charmCountInDesign * quantity);
         const newUsage = currentUsage + charmCountInDesign;
         
-        // Check if adding one more design would exceed inventory
         if (charmMaxAvailable === 0 || newUsage > totalInventory) {
           const errorMessage = `Oops! We don't have any more ${pin.name || 'this charm'} in stock right now, so you can't add more to your basket.`;
           setCharmInventoryError(errorMessage);
-          // Show alert modal for charms when out of stock
           setInventoryMessage(errorMessage);
           setInventoryType('error');
           return;
@@ -750,30 +454,31 @@ const CreateYours = () => {
       }
     }
     
-    // All checks passed, increment quantity
     setQuantity(quantity + 1);
-    setQuantityError(''); // Clear error when successfully incrementing
-    setCharmInventoryError(''); // Clear charm inventory error when successfully incrementing
-    setInventoryMessage(''); // Clear inventory message when successfully incrementing
+    setQuantityError('');
+    setCharmInventoryError('');
+    setInventoryMessage('');
   };
-
-  // Handle quantity decrement
+  
   const handleDecrementQuantity = () => {
     if (quantity > 0) {
       setQuantity(quantity - 1);
-      setQuantityError(''); // Clear error when decrementing
-      setCharmInventoryError(''); // Clear charm inventory error when decrementing
-      setInventoryMessage(''); // Clear inventory message when decrementing
+      setQuantityError('');
+      setCharmInventoryError('');
+      setInventoryMessage('');
     }
   };
-
-  // Handle adding text on mobile
+  
+  // ============================================================================
+  // HANDLERS - Custom Text
+  // ============================================================================
+  
   const handleMobileAddText = () => {
     if (!customText.trim()) {
       setCustomTextError('Please enter the text you want to add.');
       return;
     }
-
+    
     if (typeof window !== 'undefined' && window.addTextToCanvas) {
       window.addTextToCanvas(customText.trim(), {
         fill: CUSTOM_TEXT_COLOR,
@@ -781,7 +486,6 @@ const CreateYours = () => {
       });
       setCustomTextAdded(true);
       setCustomTextError('');
-      // Close dropdown after adding text
       setTimeout(() => {
         setIsAddTextDropdownOpen(false);
       }, 500);
@@ -789,148 +493,36 @@ const CreateYours = () => {
       setCustomTextError('Canvas is still loading. Please try again in a moment.');
     }
   };
-
-  // Helper function to get products with quantities from localStorage
-  const getProductsWithQuantities = () => {
-    const savedQuantities = localStorage.getItem('productQuantities');
-    if (!savedQuantities) return Products;
-    
-    try {
-      const quantities = JSON.parse(savedQuantities);
-      const mergedProducts = { ...Products };
-      
-      // Merge case quantities and color quantities
-      if (quantities.cases) {
-        mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
-          const updatedCase = {
-            ...caseItem,
-            quantity: quantities.cases[index] !== undefined ? quantities.cases[index] : caseItem.quantity
-          };
-          
-          // Merge color quantities if they exist
-          if (quantities.caseColors && quantities.caseColors[index]) {
-            updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
-              ...colorItem,
-              quantity: quantities.caseColors[index][colorIndex] !== undefined 
-                ? quantities.caseColors[index][colorIndex] 
-                : colorItem.quantity
-            }));
-          }
-          
-          return updatedCase;
-        });
-      }
-      
-      return mergedProducts;
-    } catch (error) {
-      console.error('Error loading saved quantities:', error);
-      return Products;
-    }
-  };
-
-  const productsWithQuantities = getProductsWithQuantities();
   
-  // Calculate total price
-  const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
-  const caseBasePrice = selectedCase?.basePrice || 0;
+  // ============================================================================
+  // HANDLERS - Add to Cart
+  // ============================================================================
   
-  // Get images for the selected case and color
-  const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
-  
-  // Get detail images from SmartCase folder
-  const getCaseImages = () => {
-    // Get the main color image
-    const colorImage = selectedColorData?.image || selectedCase?.images?.[0] || '';
-    
-    // Extract the filename from the color image path to match SmartCase images
-    let imageBaseName = '';
-    if (colorImage) {
-      const imagePath = colorImage.split('/').pop(); // Get filename
-      // For economy case, images are like "economycasepink.png"
-      // Extract the color part (e.g., "pink", "red", etc.)
-      if (imagePath.includes('economycase')) {
-        imageBaseName = imagePath.replace('economycase', '').replace('.png', '');
-      }
-    }
-    
-    // Build images array from SmartCase folder
-    const smartCaseImages = [];
-    
-    // Add the main color image
-    if (colorImage) {
-      smartCaseImages.push(colorImage);
-    }
-    
-    // Add detail images from SmartCase folder
-    // These are common detail images that apply to all colors
-    const detailImages = [
-      '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
-    ];
-    
-    // Add detail images if they exist
-    detailImages.forEach(img => {
-      if (img) {
-        smartCaseImages.push(img);
-      }
-    });
-    
-    // If we have at least one image, return them; otherwise return empty array
-    return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [colorImage] : []);
-  };
-  
-  const caseImages = getCaseImages();
-  const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
-  // Use Math.max to ensure we show price for at least 1 item (since quantity starts at 0 but displays as 1)
-  const displayQuantity = Math.max(quantity, 1);
-  const totalPrice = ((caseBasePrice + pinsPrice) * displayQuantity).toFixed(2);
-
-  // Group pins for price breakdown display
-  const groupedPins = selectedPins.reduce((acc, { pin }) => {
-    if (!pin) return acc;
-    const key = `${pin.src}|${pin.name}|${pin.price}`;
-    if (!acc[key]) {
-      acc[key] = { ...pin, count: 0 };
-    }
-    acc[key].count += 1;
-    return acc;
-  }, {});
-  const groupedPinsList = Object.values(groupedPins);
-
-  // Handle add to cart
   const handleAddToCart = () => {
-    // Check if terms are agreed
     if (!agreedToTerms) {
-      // Show error message only
       setShowTermsError(true);
       setPendingAddToCart(true);
       return;
     }
     
-    // Clear any error message and proceed with adding to cart
     setShowTermsError(false);
     executeAddToCart();
   };
-
-  // Execute the actual add to cart action
+  
   const executeAddToCart = async () => {
-    // Ensure quantity is at least 1 (since display shows 1 when quantity is 0)
     const effectiveQuantity = Math.max(quantity, 1);
     
-    // Check case inventory first
+    // Check case inventory
     const productForInventory = {
       caseType: selectedCaseType,
       color: selectedColor,
     };
     const maxAvailableCase = getMaxAvailableQuantity(productForInventory, cart);
     
-    // Get case name and color name for better error messages
     const caseName = selectedCase?.name || 'Passport Case';
     const colorData = selectedCase?.colors?.find(c => c.color === selectedColor);
     const colorName = colorData?.color || selectedColor || '';
     
-    // Validate case quantity against inventory
     if (maxAvailableCase !== null && maxAvailableCase === 0) {
       const colorText = colorName ? ` in ${colorName}` : '';
       setInventoryMessage(`Oops! We don't have any more ${caseName}${colorText} in stock right now, so you can't add more to your basket.`);
@@ -950,8 +542,7 @@ const CreateYours = () => {
       return;
     }
     
-    // Check charm inventory for each selected charm
-    // Since we're adding charms separately, we need to check if we can add quantity of each charm
+    // Check charm inventory
     for (const { pin } of selectedPins) {
       const charmCategory = pin?.category || selectedCategory || 'colorful';
       const charmName = pin?.name || 'charm';
@@ -965,14 +556,12 @@ const CreateYours = () => {
       
       const maxAvailableCharm = getMaxAvailableQuantity(charmProduct, cart);
       
-      // Check if charm is out of stock
       if (maxAvailableCharm !== null && maxAvailableCharm === 0) {
         setInventoryMessage(`Oops! We don't have any more ${charmName} in stock right now, so you can't add more to your basket.`);
         setInventoryType('error');
         return;
       }
       
-      // Check if we can add the requested quantity of this charm
       if (maxAvailableCharm !== null && effectiveQuantity > maxAvailableCharm) {
         setInventoryMessage(`Oops! We don't have any more ${charmName} in stock right now, so you can't add more to your basket.`);
         setInventoryType('error');
@@ -980,32 +569,29 @@ const CreateYours = () => {
       }
     }
     
-    // Get the case image
+    // Get images
     const caseImageToUse = selectedCaseImage || colorData?.image || selectedCase?.images?.[0];
     const finalCaseImage = caseImageToUse || '';
     
-    // Get canvas image data URL (contains the charms/design)
     let canvasImageDataURL = null;
     if (window.getDesignImageDataURL) {
       canvasImageDataURL = window.getDesignImageDataURL();
     }
     
-    // Create composite image combining case background with canvas design
-    let designImage = finalCaseImage; // Fallback to case image if composite fails
+    // Create composite image
+    let designImage = finalCaseImage;
     if (finalCaseImage && canvasImageDataURL) {
       try {
         designImage = await createCompositeDesignImage(finalCaseImage, canvasImageDataURL, 300, 350);
       } catch (error) {
         console.error('Error creating composite design image:', error);
-        // Fallback to case image if composite creation fails
         designImage = finalCaseImage;
       }
     } else if (canvasImageDataURL) {
-      // If no case image but we have canvas content, use canvas image
       designImage = canvasImageDataURL;
     }
     
-    // Ensure pins have all required properties including name and category
+    // Prepare pins details
     const pinsDetails = selectedPins.map(({ pin }) => {
       const pinCategory = (pin?.category && pin.category.trim() !== '') 
         ? pin.category 
@@ -1021,13 +607,12 @@ const CreateYours = () => {
       };
     });
     
-    // Generate unique timestamp for this add-to-cart action to ensure all items are independent
+    // Generate unique timestamp
     const uniqueTimestamp = Date.now();
     
-    // Add items separately to cart
-    // 1. Add the case (quantity times)
+    // Add case to cart
     const caseProduct = {
-      id: `case-${uniqueTimestamp}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for this case
+      id: `case-${uniqueTimestamp}-${Math.random().toString(36).substr(2, 9)}`,
       name: caseName,
       caseType: selectedCaseType,
       caseName: caseName,
@@ -1036,32 +621,23 @@ const CreateYours = () => {
       casePrice: caseBasePrice,
       totalPrice: caseBasePrice,
       price: caseBasePrice,
-      image: designImage, // Use the composite design image
-      designImage: designImage, // Also set designImage property for cart display
-      caseImage: finalCaseImage, // Keep original case image reference
-      customDesign: true, // Mark as custom design to prevent grouping
+      image: designImage,
+      designImage: designImage,
+      caseImage: finalCaseImage,
+      customDesign: true,
       quantity: effectiveQuantity
     };
     
-    console.log('🛒 CreateYours - Adding case to cart separately:', {
-      caseName: caseProduct.caseName,
-      caseType: caseProduct.caseType,
-      color: caseProduct.color,
-      quantity: caseProduct.quantity,
-      price: caseProduct.price,
-      id: caseProduct.id
-    });
-    
     addToCart(caseProduct);
     
-    // 2. Add each charm separately (quantity times for each charm)
+    // Add each charm to cart
     pinsDetails.forEach((pin, index) => {
       const charmCategory = pin.category || selectedCategory || 'colorful';
       const charmName = pin.name || 'Charm';
       const charmPrice = pin.price || 2.0;
       
       const charmProduct = {
-        id: `charm-${uniqueTimestamp}-${index}-${Math.random().toString(36).substr(2, 9)}`, // Unique ID for each charm
+        id: `charm-${uniqueTimestamp}-${index}-${Math.random().toString(36).substr(2, 9)}`,
         name: charmName,
         price: charmPrice,
         totalPrice: charmPrice,
@@ -1072,205 +648,74 @@ const CreateYours = () => {
         quantity: effectiveQuantity
       };
       
-      console.log(`🛒 CreateYours - Adding charm ${index + 1} to cart separately:`, {
-        charmName: charmProduct.name,
-        category: charmProduct.category,
-        quantity: charmProduct.quantity,
-        price: charmProduct.price,
-        id: charmProduct.id
-      });
-      
       addToCart(charmProduct);
     });
     
-    // Log summary of what was added
-    console.log('🛒 CreateYours - All items added separately to cart:', {
-      case: {
-        name: caseProduct.caseName,
-        quantity: caseProduct.quantity,
-        price: caseProduct.price
-      },
-      charms: pinsDetails.map((pin, idx) => ({
-        charmNumber: idx + 1,
-        name: pin.name,
-        category: pin.category,
-        quantity: effectiveQuantity,
-        price: pin.price
-      })),
-      totalItems: 1 + pinsDetails.length, // 1 case + N charms
-      totalQuantity: effectiveQuantity
-    });
-
-    // Clear canvas after successfully adding to cart
+    // Clear canvas and reset state
     if (window.clearCanvas) {
       window.clearCanvas();
     }
-    
-    // Clear selected pins state
     setSelectedPins([]);
-    
-    // Reset quantity to 0 after adding to cart
     setQuantity(0);
   };
-
-  // Handle pin selection callback from Canvas
-  const handlePinSelect = useCallback((imgInstance) => {
-    if (imgInstance && imgInstance.pinData) {
-      console.log('handlePinSelect called for:', imgInstance.pinData.name); // Debug log
-      setSelectedPins(prev => {
-        console.log('Current selectedPins count:', prev.length); // Debug log
-
-        // Always allow adding multiple instances of the same charm
-        console.log('Adding pin instance to selectedPins'); // Debug log
-        return [...prev, { imgInstance, pin: imgInstance.pinData }];
-      });
-    }
-  }, []);
-
-  // Handle pin removal callback from Canvas
-  const handlePinRemove = useCallback((removedPin) => {
-    setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
-    // Clear charm inventory error when removing a charm
-    setCharmInventoryError('');
-  }, []);
-
-  // Handle save image function from Canvas
-  const handleSaveImageFunction = useCallback((saveFunction) => {
-    setSaveImageFunction(() => saveFunction);
-  }, []);
-
-  // Track screen size changes
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Close add text dropdown when mobile step overlays are opened
-  useEffect(() => {
-    if (isMobile && mobileCurrentStep !== null) {
-      setIsAddTextDropdownOpen(false);
-    }
-  }, [mobileCurrentStep, isMobile]);
-
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const onDocClick = (e) => {
-      if (caseDropdownRef.current && !caseDropdownRef.current.contains(e.target)) {
-        setIsCaseDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
-  }, []);
-
-
+  
+  // ============================================================================
+  // RENDER
+  // ============================================================================
+  
   return (
-    <section className={`w-full pt-4  pb-1 md:pb-8 bg-white ${isMobile ? 'h-screen fixed inset-0 overflow-hidden' : 'min-h-screen'}`}>
-      <div className={`max-w-7xl mx-auto px-2 xs:px-3 sm:px-4 md:px-8 relative z-10 ${isMobile ? 'pb-40 xs:pb-44 sm:pb-48 h-full flex flex-col overflow-hidden' : 'pb-2 sm:pb-24 flex flex-col'}`}>
+    <section className={`w-full pt-4 pb-1 md:pb-8 bg-white ${isMobile ? 'h-screen fixed inset-0 overflow-hidden' : 'min-h-screen'}`}>
+      <div className={`max-w-7xl mx-auto px-3 xs:px-4 sm:px-4 md:px-8 relative z-10 ${isMobile ? 'pb-32 xs:pb-36 sm:pb-40 h-full flex flex-col overflow-hidden' : 'pb-2 sm:pb-24 flex flex-col'}`}>
         {/* Close Button - Mobile only */}
         {isMobile && (
           <button
             onClick={() => navigate('/')}
-            className="absolute right-2 xs:right-3 sm:right-4 z-50 w-7 h-7 xs:w-8 xs:h-8 flex items-center justify-center transition-colors"
+            className="absolute right-3 top-3 z-50 w-8 h-8 flex items-center justify-center text-gray-600 hover:text-gray-900"
             aria-label="Close and go back to home"
           >
-            <svg className="w-12 h-12 xs:w-5 xs:h-5 mt-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         )}
         
-        {/* Header Section - At the top */}
-        <div className="text-center flex-shrink-0 mt-4 md:mt-6">
-          <h1 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
+        {/* Header Section */}
+        <div className={`text-center flex-shrink-0 ${isMobile ? 'mt-3 mb-4' : 'mt-4 md:mt-6'}`}>
+          <h1 className={`${isMobile ? 'text-xl' : 'text-title'} text-gray-900 tracking-title mb-2`} style={{fontFamily: "'Poppins', sans-serif"}}>
             CREATE YOURS
           </h1>
-          <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-2 md:mb-4"></div>
+          <div className={`${isMobile ? 'w-16' : 'w-16 sm:w-20 md:w-24'} h-px bg-gray-200 mx-auto ${isMobile ? 'mb-3' : 'mb-2 md:mb-4'}`}></div>
           <p className="md:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
              style={{fontFamily: "'Poppins', sans-serif"}}>
             Design your perfect passport case with our interactive creator
           </p>
         </div>
         
-        {/* Main Content Container - Side by side on desktop */}
+        {/* Main Content Container */}
         <div className={`flex flex-col ${isMobile ? '' : 'md:flex-row md:gap-8 lg:gap-12'} flex-1 overflow-hidden mt-0 ${isMobile ? '' : 'md:mt-6'}`}>
-          {/* Canvas Section - Mobile: Top, Desktop: Left */}
-          <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'mt-2 mb-4' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
-              isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
-                ? 'md:sticky md:top-0 md:self-start'
-                : ''
-            }`}>
-
-            <div className="w-full h-full flex flex-col justify-start xs:justify-center items-center md:justify-center">
-              <div className="w-[300px] h-[350px] md:h-[350px] relative mt-0 md:mt-2" style={{isolation: 'isolate'}}>
-                {/* Background Case Image - Always behind canvas */}
-                {selectedCaseImage && (
-                  <div 
-                    className="absolute inset-0 w-full h-full bg-contain bg-no-repeat"
-                    style={{
-                      backgroundImage: `url(${selectedCaseImage})`,
-                      zIndex: 0,
-                      pointerEvents: 'none',
-                      backgroundSize: '270px',
-                      backgroundPosition: 'center 45%',
-                    }}
-                    key={`case-bg-${selectedCaseType}-${selectedColor}`}
-                  />
-                )}
-                {/* Canvas Overlay - Always on top */}
-                <div className="w-full h-full absolute inset-0 " style={{zIndex: 10, pointerEvents: 'auto', width: '100%', height: '100%'}}>
-                  <Canvas
-                    selectedCaseType={selectedCaseType}
-                    selectedColor={selectedColor}
-                    onPinSelect={handlePinSelect}
-                    onPinRemove={handlePinRemove}
-                    onSaveImage={handleSaveImageFunction}
-                    products={Products}
-                  />
-                </div>
-              </div>
-              
-              {/* Action Buttons - Bottom - Hidden on mobile */}
-              <div className="mt-8 md:mt-24 mb-4 hidden md:flex flex-col lg:flex-row gap-2 xs:gap-2.5 sm:gap-3 flex-shrink-0 w-full max-w-full xs:max-w-[calc(100vw-2rem)] sm:max-w-[400px] md:max-w-[480px] relative z-0">
-                <ViewMoreImagesButton
-                  caseImages={caseImages}
-                  onOpenModal={() => {
-                    setShowImageModal(true);
-                    setSelectedModalImage(0);
-                  }}
-                />
-                
-                <ItemDescriptionDropdown
-                  selectedCase={selectedCase}
-                  onOpenModal={() => setShowDescriptionModal(true)}
-                />
-              </div>
-            </div>
-            
-            {/* Save Your Design Button - Hidden for now */}
-            {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
-          </div>
-          
-          {/* MAIN SECTION - Right Side Content */}
-          <div className={`flex flex-col ${isMobile ? '' : 'md:w-1/2 md:flex-1'} gap-2 xs:gap-3 sm:gap-4 overflow-hidden`}>
-            {/* Right Side - Charms Selection */}
-            <div 
-              className={`w-full flex flex-col space-y-4 sm:space-y-6 hide-scrollbar ${
-              isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
-                ? 'md:max-h-none md:overflow-visible'
-                : 'md:max-h-[calc(100vh-200px)] md:overflow-y-auto'
-            }`}
-            style={{
-              scrollbarWidth: 'none', /* Firefox */
-              msOverflowStyle: 'none', /* IE and Edge */
+          {/* Canvas Section */}
+          <CanvasSection
+            selectedCaseType={selectedCaseType}
+            selectedColor={selectedColor}
+            selectedCaseImage={selectedCaseImage}
+            selectedCase={selectedCase}
+            selectedColorData={selectedColorData}
+            isMobile={isMobile}
+            isCaseDropdownOpen={isCaseDropdownOpen}
+            isCharmsDropdownOpen={isCharmsDropdownOpen}
+            isAddTextDropdownOpen={isAddTextDropdownOpen}
+            onPinSelect={handlePinSelect}
+            onPinRemove={handlePinRemove}
+            onSaveImage={handleSaveImageFunction}
+            onOpenImageModal={() => {
+              setShowImageModal(true);
+              setSelectedModalImage(0);
             }}
-          >
-            
+            onOpenDescriptionModal={() => setShowDescriptionModal(true)}
+          />
+          
+          {/* Right Side Content */}
+          <div className={`flex flex-col ${isMobile ? '' : 'md:w-1/2 md:flex-1'} gap-2 xs:gap-3 sm:gap-4 overflow-hidden`}>
             {/* Mobile Step Content Overlay */}
             {isMobile && (
               <MobileOverlay
@@ -1291,133 +736,34 @@ const CreateYours = () => {
                 cart={cart}
               />
             )}
-            {/* Passport Case Selection - Hidden on mobile */}
-            <div className={`pb-6 border-b border-gray-100 flex-shrink-0 mt-6 overflow-visible ${isMobile ? 'hidden' : ''}`}>
-              <button
-                onClick={() => {
-                  setIsCharmsDropdownOpen(false);
-                  setIsAddTextDropdownOpen(false);
-                  setIsCaseDropdownOpen(!isCaseDropdownOpen);
-                }}
-                className="w-full flex items-center justify-between mb-4"
-              >
-                <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  1. Choose Case
-                </h3>
-                <svg 
-                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isCaseDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {isCaseDropdownOpen && (
-                <div className="space-y-6 overflow-visible">
-                  <CaseSelector
-                    selectedCaseType={selectedCaseType}
-                    onSelect={handleCaseTypeSelection}
-                    Products={Products}
-                    isCaseDropdownOpen={isCaseDropdownOpen}
-                    setIsCaseDropdownOpen={setIsCaseDropdownOpen}
-                    cart={cart}
-                  />
-                  
-                  {selectedColor && (
-                    <div className="mt-10 overflow-visible">
-                      <ColorSelector
-                        colors={selectedCase?.colors || []}
-                        selectedColor={selectedColor}
-                        onSelect={handleColorSelection}
-                        caseType={selectedCaseType}
-                        cart={cart}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Charms Selection - Hidden on mobile */}
-            <div className={`pb-6 border-b border-gray-100 mt-6 ${isMobile ? 'hidden' : 'block'}`}>
-              <button
-                onClick={() => {
-                  setIsCaseDropdownOpen(false);
-                  setIsAddTextDropdownOpen(false);
-                  setIsCharmsDropdownOpen(!isCharmsDropdownOpen);
-                }}
-                className="w-full flex items-center justify-between mb-4"
-              >
-                <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                  3. Choose Charms
-                </h3>
-                <svg 
-                  className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isCharmsDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {isCharmsDropdownOpen && (
-                <div className="relative z-10">
-                  <PinSelector
-                    pins={pins}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    selectedPins={selectedPins}
-                    onSelect={handlePinSelection}
-                    Products={Products}
-                    cart={cart}
-                  />
-                </div>
-              )}
-            </div>
             
-            {/* Personalized Text - Hidden on mobile */}
+            {/* Desktop Controls */}
             {!isMobile && (
-              <div className="pb-6 border-b border-gray-100 mt-6">
-                <button
-                  onClick={() => {
-                    setIsCaseDropdownOpen(false);
-                    setIsCharmsDropdownOpen(false);
-                    setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
-                  }}
-                  className="w-full flex items-center justify-between mb-4"
-                >
-                  <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                    4. Add Text
-                  </h3>
-                  <svg 
-                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isAddTextDropdownOpen ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {isAddTextDropdownOpen && (
-                  <CustomTextSection
-                    customText={customText}
-                    setCustomText={setCustomText}
-                    customTextError={customTextError}
-                    setCustomTextError={setCustomTextError}
-                    customTextAdded={customTextAdded}
-                    setCustomTextAdded={setCustomTextAdded}
-                  />
-                )}
-              </div>
-            )}
-
-            {/* Price Summary - Hidden on mobile */}
-            {!isMobile && (
-              <PriceSummary
+              <DesktopControls
+                isCaseDropdownOpen={isCaseDropdownOpen}
+                isCharmsDropdownOpen={isCharmsDropdownOpen}
+                isAddTextDropdownOpen={isAddTextDropdownOpen}
+                setIsCaseDropdownOpen={setIsCaseDropdownOpen}
+                setIsCharmsDropdownOpen={setIsCharmsDropdownOpen}
+                setIsAddTextDropdownOpen={setIsAddTextDropdownOpen}
+                selectedCaseType={selectedCaseType}
+                selectedColor={selectedColor}
+                selectedCase={selectedCase}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                pins={pins}
+                selectedPins={selectedPins}
+                customText={customText}
+                setCustomText={setCustomText}
+                customTextError={customTextError}
+                setCustomTextError={setCustomTextError}
+                customTextAdded={customTextAdded}
+                setCustomTextAdded={setCustomTextAdded}
+                handleCaseTypeSelection={handleCaseTypeSelection}
+                handleColorSelection={handleColorSelection}
+                handlePinSelection={handlePinSelection}
+                productsWithQuantities={productsWithQuantities}
+                cart={cart}
                 totalPrice={totalPrice}
                 caseBasePrice={caseBasePrice}
                 groupedPinsList={groupedPinsList}
@@ -1429,10 +775,6 @@ const CreateYours = () => {
                 onDecrementQuantity={handleDecrementQuantity}
                 quantityError={quantityError}
                 charmInventoryError={charmInventoryError}
-                selectedCase={selectedCase}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedPins={selectedPins}
                 selectedCaseImage={selectedCaseImage}
                 pinsPrice={pinsPrice}
                 onAddToCart={handleAddToCart}
@@ -1449,156 +791,73 @@ const CreateYours = () => {
                 showTermsError={showTermsError}
               />
             )}
-          </div>
           </div>
         </div>
-
-        {/* Fixed Mobile Step Buttons - Above Price Summary */}
+        
+        {/* Mobile Controls */}
         {isMobile && (
-          <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: 'calc(80px + 0.75rem)'}}>
-            <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 mb-0 pb-0">
-              <p className="text-[14px] text-gray-700 xs:mb-2.5 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
-                Choose the options below:
-              </p>
-              <MobileStepButtons
-                mobileCurrentStep={mobileCurrentStep}
-                setMobileCurrentStep={setMobileCurrentStep}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-              />
-              
-              {/* Add Text Dropdown - Mobile only */}
-              <div className="mt-3 xs:mt-4 sm:mt-4 px-2 xs:px-3 sm:px-4">
-                <button
-                  onClick={() => {
-                    setIsCaseDropdownOpen(false);
-                    setIsCharmsDropdownOpen(false);
-                    setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
-                  }}
-                  className="w-full flex items-center justify-between mb-2"
-                >
-                  <h3 className="text-xs xs:text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                     Add Text
-                  </h3>
-                  <svg 
-                    className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isAddTextDropdownOpen ? 'rotate-180' : ''}`}
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {isAddTextDropdownOpen && (
-                  <div className="space-y-2 pt-2">
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={customText}
-                        onChange={(e) => {
-                          setCustomText(e.target.value);
-                          setCustomTextError('');
-                          setCustomTextAdded(false);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && customText.trim()) {
-                            handleMobileAddText();
-                          }
-                        }}
-                        placeholder="e.g. Your name"
-                        className="flex-1 px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
-                        style={{ fontSize: '16px' }}
-                        maxLength={MAX_TEXT_LENGTH}
-                      />
-                      <button
-                        onClick={handleMobileAddText}
-                        disabled={!customText.trim()}
-                        className="px-4 py-2 text-xs font-medium uppercase tracking-wider disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-100 rounded-sm active:scale-95 disabled:scale-100 focus:outline-none font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200"
-                      >
-                        Add
-                      </button>
-                    </div>
-                    <p className="text-xs text-gray-500 font-inter">
-                      Up to {MAX_TEXT_LENGTH} characters. Double-click the text on the case to edit or move it.
-                    </p>
-                    {customTextError && (
-                      <div className="text-xs text-gray-600 border border-gray-200 bg-gray-50 px-3 py-2 rounded">
-                        {customTextError}
-                      </div>
-                    )}
-                    {customTextAdded && (
-                      <div className="text-xs text-gray-600 border border-gray-200 bg-gray-50 px-3 py-2 rounded">
-                        Text added to your design! You can drag it to reposition it.
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <MobileControls
+            mobileCurrentStep={mobileCurrentStep}
+            setMobileCurrentStep={setMobileCurrentStep}
+            selectedCaseType={selectedCaseType}
+            selectedColor={selectedColor}
+            isAddTextDropdownOpen={isAddTextDropdownOpen}
+            setIsAddTextDropdownOpen={setIsAddTextDropdownOpen}
+            customText={customText}
+            setCustomText={setCustomText}
+            customTextError={customTextError}
+            setCustomTextError={setCustomTextError}
+            customTextAdded={customTextAdded}
+            setCustomTextAdded={setCustomTextAdded}
+            handleMobileAddText={handleMobileAddText}
+            totalPrice={totalPrice}
+            caseBasePrice={caseBasePrice}
+            groupedPinsList={groupedPinsList}
+            showPriceBreakdown={showPriceBreakdown}
+            setShowPriceBreakdown={setShowPriceBreakdown}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            onIncrementQuantity={handleIncrementQuantity}
+            onDecrementQuantity={handleDecrementQuantity}
+            quantityError={quantityError}
+            charmInventoryError={charmInventoryError}
+            selectedCase={selectedCase}
+            selectedPins={selectedPins}
+            selectedCaseImage={selectedCaseImage}
+            pinsPrice={pinsPrice}
+            onAddToCart={handleAddToCart}
+            onShowTerms={() => setShowTermsModal(true)}
+            agreedToTerms={agreedToTerms}
+            setAgreedToTerms={(value) => {
+              setAgreedToTerms(value);
+              if (value) {
+                setShowTermsError(false);
+              }
+            }}
+            showTermsError={showTermsError}
+            setShowTermsError={setShowTermsError}
+            inventoryMessage={inventoryMessage}
+            inventoryType={inventoryType}
+          />
         )}
-
-        {/* Fixed Price Summary - Mobile only */}
-        {isMobile && (
-          <div className="fixed left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] xs:max-h-[45vh] overflow-y-auto w-full safe-area-inset-bottom" style={{bottom: '0', paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)'}}>
-            <div className="px-2 xs:px-2.5 sm:px-3 py-1.5 xs:py-2 sm:py-2.5">
-              <PriceSummary
-                totalPrice={totalPrice}
-                caseBasePrice={caseBasePrice}
-                groupedPinsList={groupedPinsList}
-                showPriceBreakdown={showPriceBreakdown}
-                setShowPriceBreakdown={setShowPriceBreakdown}
-                quantity={quantity}
-                setQuantity={setQuantity}
-                onIncrementQuantity={handleIncrementQuantity}
-                onDecrementQuantity={handleDecrementQuantity}
-                quantityError={quantityError}
-                charmInventoryError={charmInventoryError}
-                selectedCase={selectedCase}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedPins={selectedPins}
-                selectedCaseImage={selectedCaseImage}
-                pinsPrice={pinsPrice}
-                onAddToCart={handleAddToCart}
-                onShowTerms={() => setShowTermsModal(true)}
-                agreedToTerms={agreedToTerms}
-                setAgreedToTerms={(value) => {
-                  setAgreedToTerms(value);
-                  if (value) {
-                    setShowTermsError(false);
-                  }
-                }}
-                showTermsError={showTermsError}
-                inventoryMessage={inventoryMessage}
-                inventoryType={inventoryType}
-                isMobile={true}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Image Modal */}
+        
+        {/* Modals */}
         <ImageModal
           show={showImageModal}
           selectedCase={selectedCase}
           selectedColorData={selectedColorData}
-          caseImages={caseImages}
+          caseImages={getCaseImages(selectedColorData, selectedCase)}
           selectedModalImage={selectedModalImage}
           setSelectedModalImage={setSelectedModalImage}
           onClose={() => setShowImageModal(false)}
         />
-
-        {/* Item Description Modal */}
+        
         <ItemDescriptionModal
           show={showDescriptionModal}
           onClose={() => setShowDescriptionModal(false)}
           selectedCase={selectedCase}
         />
-
-
-        {/* Terms of Use Modal */}
+        
         <TermsOfUseModal
           show={showTermsModal}
           onClose={() => {
@@ -1609,15 +868,13 @@ const CreateYours = () => {
             setAgreedToTerms(true);
             setShowTermsError(false);
             setShowTermsModal(false);
-            // If there was a pending add to cart, execute it
             if (pendingAddToCart) {
               setPendingAddToCart(false);
               executeAddToCart();
             }
           }}
         />
-
-        {/* Add Text Modal - Mobile only */}
+        
         {isMobile && (
           <AddTextModal
             show={showAddTextModal}
@@ -1630,7 +887,6 @@ const CreateYours = () => {
             setCustomTextAdded={setCustomTextAdded}
           />
         )}
-
       </div>
     </section>
   );
