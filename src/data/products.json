@@ -197,7 +197,7 @@
         "name": "Albania Flag",
         "src": "/TheHappyCase/images/Flags/albania.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -205,7 +205,7 @@
         "name": "Armenia Flag",
         "src": "/TheHappyCase/images/Flags/armenia.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -213,7 +213,7 @@
         "name": "Belgium Flag",
         "src": "/TheHappyCase/images/Flags/belgium.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -221,7 +221,7 @@
         "name": "Bosnia  Flag",
         "src": "/TheHappyCase/images/Flags/bosnia.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -229,7 +229,7 @@
         "name": "Brazil Flag",
         "src": "/TheHappyCase/images/Flags/brazil.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       },
       {
@@ -237,7 +237,7 @@
         "name": "British Virgin Islands Flag",
         "src": "/TheHappyCase/images/Flags/britishvirginislands.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       },
       {
@@ -245,7 +245,7 @@
         "name": "Croatia Flag",
         "src": "/TheHappyCase/images/Flags/croatia.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -253,7 +253,7 @@
         "name": "Dublin Flag",
         "src": "/TheHappyCase/images/Flags/dublin.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -261,7 +261,7 @@
         "name": "Egypt Flag",
         "src": "/TheHappyCase/images/Flags/egypt.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "africa"
       },
       {
@@ -269,7 +269,7 @@
         "name": "France Flag",
         "src": "/TheHappyCase/images/Flags/france.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -277,7 +277,7 @@
         "name": "Germany Flag",
         "src": "/TheHappyCase/images/Flags/germany.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -285,7 +285,7 @@
         "name": "India Flag",
         "src": "/TheHappyCase/images/Flags/india.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "asia"
       },
       {
@@ -293,7 +293,7 @@
         "name": "Italy Flag",
         "src": "/TheHappyCase/images/Flags/italy.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -301,7 +301,7 @@
         "name": "Jamaica  Flag",
         "src": "/TheHappyCase/images/Flags/jamaica.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       },
       {
@@ -309,7 +309,7 @@
         "name": "Japan  Flag",
         "src": "/TheHappyCase/images/Flags/japan.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       },
       {
@@ -317,7 +317,7 @@
         "name": "Hungary Flag",
         "src": "/TheHappyCase/images/Flags/hungary.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       },
       {
@@ -325,7 +325,7 @@
         "name": "LGBTQIA+ Flag",
         "src": "/TheHappyCase/images/Flags/lgbtqia.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "special"
       },
       {
@@ -333,7 +333,7 @@
         "name": "Netherlands Flag",
         "src": "/TheHappyCase/images/Flags/netherlands.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -341,7 +341,7 @@
         "name": "Norway Flag",
         "src": "/TheHappyCase/images/Flags/norway.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -349,7 +349,7 @@
         "name": "Portugal Flag",
         "src": "/TheHappyCase/images/Flags/portugal.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -357,7 +357,7 @@
         "name": "Puerto Rico  Flag",
         "src": "/TheHappyCase/images/Flags/puertorico.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       },
       {
@@ -365,7 +365,7 @@
         "name": "Scotland Flag",
         "src": "/TheHappyCase/images/Flags/scotland.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -373,7 +373,7 @@
         "name": "South Africa Flag",
         "src": "/TheHappyCase/images/Flags/southafrica.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "africa"
       },
       {
@@ -381,7 +381,7 @@
         "name": "Spain Flag",
         "src": "/TheHappyCase/images/Flags/spain.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -389,7 +389,7 @@
         "name": "Sweden Flag",
         "src": "/TheHappyCase/images/Flags/sweden.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -397,7 +397,7 @@
         "name": "Switzerland Flag",
         "src": "/TheHappyCase/images/Flags/switzerland.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -405,7 +405,7 @@
         "name": "United Kingdon Flag",
         "src": "/TheHappyCase/images/Flags/uk.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "europe"
       },
       {
@@ -413,7 +413,7 @@
         "name": "United States Flag",
         "src": "/TheHappyCase/images/Flags/eua.png",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "continent": "americas"
       }
     ],
@@ -439,7 +439,7 @@
         "name": "Heart Globe",
         "src": "/TheHappyCase/images/ColorfulPins/heartglobe.png",
         "price": 2,
-        "size": 0.90
+        "size": 0.80
       },
       {
         "id": 4,
@@ -454,7 +454,7 @@
         "name": "Paw",
         "src": "/TheHappyCase/images/ColorfulPins/paw.png",
         "price": 2,
-        "size": 0.5
+        "size": 0.4
       },
       {
         "id": 6,
