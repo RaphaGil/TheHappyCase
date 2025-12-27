@@ -45,6 +45,31 @@ const CustomTextSection = ({
     setCustomTextError('');
   };
 
+  const handleInputFocus = (e) => {
+    // Prevent page scroll/movement when input is focused (like payment forms)
+    // Store current scroll position
+    const scrollY = window.scrollY || window.pageYOffset;
+    const scrollX = window.scrollX || window.pageXOffset;
+    
+    // Use setTimeout to restore scroll position after browser's default behavior
+    setTimeout(() => {
+      window.scrollTo({
+        left: scrollX,
+        top: scrollY,
+        behavior: 'instant'
+      });
+    }, 0);
+    
+    // Also use requestAnimationFrame as a backup
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        left: scrollX,
+        top: scrollY,
+        behavior: 'instant'
+      });
+    });
+  };
+
   return (
     <div className="space-y-4 ">
         <div>
@@ -56,6 +81,7 @@ const CustomTextSection = ({
               setCustomTextError('');
               setCustomTextAdded(false);
             }}
+            onFocus={handleInputFocus}
             placeholder="e.g. Your name"
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
             maxLength={40}
