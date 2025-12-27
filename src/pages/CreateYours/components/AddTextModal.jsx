@@ -126,6 +126,7 @@ const AddTextModal = ({
               }}
               placeholder="e.g. Your name"
               className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+              style={{ fontSize: '16px' }}
               maxLength={40}
             />
             <p className="mt-1 text-sm text-gray-500 font-inter">

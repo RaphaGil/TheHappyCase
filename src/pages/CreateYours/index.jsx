@@ -1197,12 +1197,14 @@ const CreateYours = () => {
           </p>
         </div>
         
-        {/* Canvas Section - Mobile: Top, Desktop: Left */}
-        <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'mt-2 mb-4' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
-            isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
-              ? 'md:sticky md:top-0 md:self-start'
-              : ''
-          }`}>
+        {/* Main Content Container - Side by side on desktop */}
+        <div className={`flex flex-col ${isMobile ? '' : 'md:flex-row md:gap-8 lg:gap-12'} flex-1 overflow-hidden mt-0 ${isMobile ? '' : 'md:mt-6'}`}>
+          {/* Canvas Section - Mobile: Top, Desktop: Left */}
+          <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'mt-2 mb-4' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
+              isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
+                ? 'md:sticky md:top-0 md:self-start'
+                : ''
+            }`}>
 
             <div className="w-full h-full flex flex-col justify-start xs:justify-center items-center md:justify-center">
               <div className="w-[300px] h-[350px] md:h-[350px] relative mt-0 md:mt-2" style={{isolation: 'isolate'}}>
@@ -1252,13 +1254,13 @@ const CreateYours = () => {
             
             {/* Save Your Design Button - Hidden for now */}
             {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
-        </div>
-        
-        {/* MAIN SECTION - Right Side Content */}
-        <div className="flex flex-col md:flex-row gap-2 xs:gap-3 sm:gap-4 md:gap-12 flex-1 overflow-hidden md:items-center mt-0 md:mt-6">
-          {/* Right Side - Charms Selection */}
-          <div 
-            className={`w-full md:w-1/2 flex flex-col space-y-4 sm:space-y-6 hide-scrollbar ${
+          </div>
+          
+          {/* MAIN SECTION - Right Side Content */}
+          <div className={`flex flex-col ${isMobile ? '' : 'md:w-1/2 md:flex-1'} gap-2 xs:gap-3 sm:gap-4 overflow-hidden`}>
+            {/* Right Side - Charms Selection */}
+            <div 
+              className={`w-full flex flex-col space-y-4 sm:space-y-6 hide-scrollbar ${
               isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
                 ? 'md:max-h-none md:overflow-visible'
                 : 'md:max-h-[calc(100vh-200px)] md:overflow-y-auto'
@@ -1448,13 +1450,14 @@ const CreateYours = () => {
               />
             )}
           </div>
+          </div>
         </div>
 
         {/* Fixed Mobile Step Buttons - Above Price Summary */}
         {isMobile && (
           <div className="fixed left-0 right-0 z-0 bg-white md:hidden w-full" style={{bottom: 'calc(80px + 0.75rem)'}}>
             <div className="px-2 xs:px-3 sm:px-4 py-2 xs:py-2.5 sm:py-3 mb-0 pb-0">
-              <p className="text-[14px] text-gray-700 mb-2 xs:mb-2.5 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
+              <p className="text-[14px] text-gray-700 xs:mb-2.5 text-center font-thin" style={{fontFamily: "'Poppins', sans-serif"}}>
                 Choose the options below:
               </p>
               <MobileStepButtons
@@ -1475,7 +1478,7 @@ const CreateYours = () => {
                   className="w-full flex items-center justify-between mb-2"
                 >
                   <h3 className="text-xs xs:text-sm uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-                   Add Text
+                     Add Text
                   </h3>
                   <svg 
                     className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${isAddTextDropdownOpen ? 'rotate-180' : ''}`}
@@ -1505,6 +1508,7 @@ const CreateYours = () => {
                         }}
                         placeholder="e.g. Your name"
                         className="flex-1 px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+                        style={{ fontSize: '16px' }}
                         maxLength={MAX_TEXT_LENGTH}
                       />
                       <button
