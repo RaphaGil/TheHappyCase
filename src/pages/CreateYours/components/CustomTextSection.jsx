@@ -83,7 +83,7 @@ const CustomTextSection = ({
             }}
             onFocus={handleInputFocus}
             placeholder="e.g. Your name"
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+            className="w-full px-3 py-2 border border-gray-200  focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
             maxLength={40}
           />
           <p className="mt-1 text-sm text-gray-500 font-inter">
@@ -97,7 +97,7 @@ const CustomTextSection = ({
           </div>
         )}
         {customTextAdded && (
-          <div className="text-sm text-gray-600 border border-gray-200 bg-gray-50 px-3 py-2">
+          <div className="text-sm text-green-600 py-2">
             Text added to your design! You can drag it to reposition it.
           </div>
         )}
@@ -105,14 +105,14 @@ const CustomTextSection = ({
           <button
             onClick={handleAddText}
             disabled={!customText.trim()}
-            className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed rounded-md active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200"
+            className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed active:scale-95 disabled:scale-100 font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border hover:border-btn-light-blue-hover transition-all duration-200"
           >
            Add Text
           </button>
           <button
             onClick={handleClear}
             disabled={!customText.trim()}
-            className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed rounded-md active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
+            className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
           >
            Clear
           </button>

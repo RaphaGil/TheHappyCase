@@ -4,16 +4,16 @@ const ItemDescriptionDropdown = ({ selectedCase, onOpenModal }) => {
   if (!selectedCase) return null;
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 min-w-0">
       <button
         onClick={onOpenModal}
-        className="w-full px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 sm:py-2.5 text-[10px] xs:text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md transition-all duration-200 flex items-center justify-center gap-1 xs:gap-1.5 sm:gap-2 shadow-sm hover:shadow-md hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100"
+        className="w-full px-3 md:px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100"
         style={{fontFamily: "'Poppins', sans-serif"}}
       >
-        <svg className="w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span className="whitespace-nowrap">ITEM DESCRIPTION</span>
+        <span className="whitespace-nowrap truncate">DETAILS</span>
       </button>
     </div>
   );

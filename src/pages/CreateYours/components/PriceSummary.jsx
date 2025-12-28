@@ -31,12 +31,12 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-      <div className={`${isMobile ? 'pt-0 mt-0' : 'pt-6'} flex-shrink-0 relative z-0 ${isMobile ? '' : 'mt-auto'}`}>
+      <div className={`${isMobile ? 'pt-0 mt-0 ' : 'pt-6'} flex-shrink-0 relative z-0 bg-gray-100 ${isMobile ? '' : 'mt-auto flex flex-col justify-between'}`}>
         {/* Mobile: Price + Quantity + Add to Cart in same row, then Terms below */}
         {isMobile ? (
           <>
             {/* Subtotal Price, Quantity Selector, and Add to Cart Button - All in same row */}
-            <div className="flex flex-row items-start justify-between mt-2">
+            <div className="flex flex-row items-start justify-between mt-2 ">
               {/* Subtotal Price and Terms - Left */}
               <div className="flex flex-col gap-1.5">
                 {/* Total Price */}
@@ -78,7 +78,7 @@ const PriceSummary = ({
               </div>
 
               {/* Quantity Selector and Add to Cart Button - Right */}
-              <div className="flex flex-row items-center gap-2 xs:gap-3">
+              <div className="flex flex-row items-center gap-2">
                 {/* Quantity Selector */}
                 <div className="flex items-center border border-gray-200 rounded-sm py-2.5 xs:py-2 px-0.5 flex-shrink-0 gap-0"> 
                   <button
@@ -101,7 +101,7 @@ const PriceSummary = ({
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="flex-shrink-0">
+                <div className="flex-1 min-w-0">
                   <AddToCartBtn 
                     product={{
                       id: `custom-${Date.now()}`,
@@ -122,7 +122,7 @@ const PriceSummary = ({
                       quantity: quantity
                     }}
                     onAdd={onAddToCart}
-                    className="!w-auto cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 text-sm font-light whitespace-nowrap p-4"
+                    className="!w-full cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 px-8 text-sm font-light whitespace-nowrap"
                     disabled={false}
                   />
                 </div>
@@ -141,11 +141,11 @@ const PriceSummary = ({
         ) : (
           <>
             {/* Desktop: Price on top */}
-            <div className={`flex flex-col mb-4`}>
-              <h3 className={`text-base text-gray-500 font-light font-inter flex-shrink-0`}>
-                Subtotal: 
+            <div className={`flex items-end flex-row mb-4 gap-2`}>
+              <h3 className={`text-sm text-gray-500 font-light font-inter `}>
+                Total: 
               </h3>
-              <h3 className={`text-base text-gray-900 font-light font-inter flex-shrink-0`}>
+              <h3 className={`text-md font-bold text-gray-900 font-inter `}>
                 {formatPrice(totalPrice)}
               </h3>
             </div>
@@ -179,9 +179,9 @@ const PriceSummary = ({
               )}
             </div>
 
-            {/* Desktop: Quantity selector and Add to Cart side by side */}
-            <div className={`mt-4 flex flex-row gap-1.5 xs:gap-2`}>
-              <div className={`flex items-center border border-gray-200 rounded-sm p-1`}>
+            {/* Desktop: Quantity selector and Add to Cart side by side - Pushed to bottom */}
+            <div className={`mt-auto flex flex-row gap-1.5 xs:gap-2 items-center`}>
+              <div className={`flex items-center border border-gray-200 rounded-sm py-2.5 px-1`}>
                 <button
                   onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
                   className={`w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors`}
@@ -189,7 +189,7 @@ const PriceSummary = ({
                 > 
                   −
                 </button>
-                <div className={`px-3 py-1 text-sm text-gray-900 font-light font-inter min-w-[2rem] text-center`}>
+                <div className={`px-3 py-0 text-sm text-gray-900 font-light font-inter min-w-[2rem] text-center`}>
                   {Math.max(quantity, 1)}
                 </div>
                 <button
@@ -254,11 +254,7 @@ const PriceSummary = ({
           ))}
         </div>
       )}
-      {!isMobile && (
-        <p className="text-xs text-gray-500 text-center mt-4 font-light font-inter">
-          <Link to="/shipping" className="text-gray-600 hover:text-gray-900 underline font-light">Shipping</Link> calculated at checkout.
-        </p>
-      )}
+    
     </div>
   );
 };

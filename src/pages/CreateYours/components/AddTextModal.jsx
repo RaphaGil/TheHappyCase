@@ -87,7 +87,7 @@ const AddTextModal = ({
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-sm max-w-md w-full border border-gray-200 shadow-lg"
+        className="bg-white  max-w-md w-full border border-gray-200 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -97,7 +97,7 @@ const AddTextModal = ({
           </h3>
           <button
             onClick={onClose}
-            className="p-1 xs:p-2 hover:bg-gray-50 transition-colors rounded"
+            className="p-1 xs:p-2 hover:bg-gray-50 transition-colors "
             aria-label="Close modal"
           >
             <svg className="w-4 h-4 xs:w-5 xs:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ const AddTextModal = ({
                 }, 100);
               }}
               placeholder="e.g. Your name"
-              className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+              className="w-full px-3 py-2 border border-gray-200 focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
               style={{ fontSize: '16px' }}
               maxLength={40}
             />
@@ -140,7 +140,7 @@ const AddTextModal = ({
             </div>
           )}
           {customTextAdded && (
-            <div className="text-sm text-gray-600 border border-gray-200 bg-gray-50 px-3 py-2 font-inter">
+            <div className="text-sm text-gray-600  px-3 py-2 font-inter">
               Text added to your design! You can drag it to reposition it.
             </div>
           )}
@@ -149,14 +149,14 @@ const AddTextModal = ({
             <button
               onClick={handleAddText}
               disabled={!customText.trim()}
-              className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed rounded-md active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200"
+              className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed  active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200"
             >
               Add Text
             </button>
             <button
               onClick={handleClear}
               disabled={!customText.trim()}
-              className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed rounded-md active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
+              className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
             >
               Clear
             </button>

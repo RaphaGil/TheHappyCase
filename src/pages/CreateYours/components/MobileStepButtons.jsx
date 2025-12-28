@@ -3,84 +3,89 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faPalette, faPlane } from '@fortawesome/free-solid-svg-icons';
 
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
-  const getButtonClass = (step, isDisabled, isCompleted) => {
-    const baseClass = "aspect-square h-[70px] flex flex-col items-center justify-center gap-1.5 transition-all duration-200 touch-manipulation relative";
-    
-    if (isDisabled) {
-      return `${baseClass} bg-gray-50 text-gray-400 cursor-not-allowed`;
-    }
-    
-    const isActive = mobileCurrentStep === step;
-    if (isActive) {
-      return `${baseClass} bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border`;
-    }
-    
-    if (isCompleted) {
-      return `${baseClass} bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border opacity-80`;
-    }
-    
-    return `${baseClass} bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover`;
-  };
-
   return (
-    <div className="mb-2 flex justify-center">
-      <div className="grid grid-cols-3 gap-6 max-w-fit">
+    <div className="mb-4 flex justify-center">
+      <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:gap-2.5 max-w-fit">
         {/* Choose Case Button */}
         <button
           onClick={() => setMobileCurrentStep('case')}
-          className={`${getButtonClass('case', false, !!selectedCaseType)} relative`}
-          aria-label="Choose case type"
+          className="py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
-            className={`text-lg transition-transform duration-200 ${mobileCurrentStep === 'case' ? 'scale-110' : ''}`}
+            className="w-4 h-4 text-btn-primary-blue-text"
           />
-          <span className="text-md font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className="text-sm font-medium uppercase tracking-wide leading-tight text-btn-primary-blue-text" style={{fontFamily: "'Poppins', sans-serif"}}>
             Case
           </span>
-        
         </button>
 
         {/* Choose Color Button */}
         <button
           onClick={() => setMobileCurrentStep('color')}
           disabled={!selectedCaseType}
-          className={getButtonClass('color', !selectedCaseType, !!selectedColor)}
-          aria-label="Choose color"
+          className={`py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
+            !selectedCaseType
+              ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
+              : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
+          }`}
         >
           <FontAwesomeIcon 
             icon={faPalette} 
-            className={`text-lg transition-transform duration-200 ${mobileCurrentStep === 'color' ? 'scale-110' : ''}`}
+            className={`w-4 h-4 ${
+              !selectedCaseType 
+                ? 'text-gray-400' 
+                : 'text-btn-primary-blue-text'
+            }`}
           />
-          <span className="text-md font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className={`text-sm font-medium uppercase tracking-wide leading-tight ${
+            !selectedCaseType 
+              ? 'text-gray-400' 
+              : 'text-btn-primary-blue-text'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Color
           </span>
-         
         </button>
 
         {/* Choose Charms Button */}
         <button
           onClick={() => {
             setMobileCurrentStep('charms');
-            setTimeout(() => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 100);
+            // Scroll to top when clicking charm options
+            window.scrollTo({ 
+              top: 0, 
+              behavior: 'smooth' 
+            });
           }}
           disabled={!selectedCaseType || !selectedColor}
-          className={`${getButtonClass('charms', !selectedCaseType || !selectedColor, false)} relative`}
-          aria-label="Choose charms"
+          className={`py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
+            !selectedCaseType || !selectedColor
+              ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
+              : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
+          }`}
         >
           <FontAwesomeIcon 
             icon={faPlane} 
-            className={`text-lg transition-transform duration-200 ${mobileCurrentStep === 'charms' ? 'scale-110' : ''}`}
+            className={`w-4 h-4 ${
+              !selectedCaseType || !selectedColor 
+                ? 'text-gray-400' 
+                : 'text-btn-primary-blue-text'
+            }`}
           />
-          <span className="text-md font-thin " style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className={`text-sm font-medium uppercase tracking-wide leading-tight ${
+            !selectedCaseType || !selectedColor 
+              ? 'text-gray-400' 
+              : 'text-btn-primary-blue-text'
+          }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Charms
           </span>
         </button>
+
       </div>
     </div>
   );
 };
 
 export default MobileStepButtons;
+
+

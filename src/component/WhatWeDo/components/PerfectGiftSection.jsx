@@ -9,12 +9,13 @@ const PerfectGiftSection = ({ image }) => {
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch">
       {/* Image - Full width on mobile, left side on larger screens */}
       <div 
-        className="relative w-full md:w-1/2 h-[500px] sm:h-[550px] md:h-[550px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-gray-100 flex items-start"
+        className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[550px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-gray-100 flex items-start"
         style={{
           backgroundImage: `url(${image})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
-          backgroundRepeat: 'no-repeat'
+          backgroundSize: 'contain',
+          backgroundPosition: '',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed'
         }}
       >
         {/* Fallback img for SEO and accessibility */}
@@ -38,7 +39,7 @@ const PerfectGiftSection = ({ image }) => {
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
             <div className="text-center space-y-4 sm:space-y-5">
               <h2 
-                className="text-title font-light text-white mb-4 sm:mb-5 tracking-title"
+                className="text-xl sm:text-2xl font-light text-white mb-4 sm:mb-5 font-inter tracking-title"
             
               >
                 {sectionVisible && (
@@ -63,7 +64,7 @@ const PerfectGiftSection = ({ image }) => {
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16">
           <div className="space-y-6 lg:space-y-8">
             <h2 
-              className="text-title font-light text-gray-900 mb-6 tracking-title"
+              className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-light text-gray-900 mb-6 font-inter tracking-title"
             >
               {sectionVisible && (
                 <AnimatedTitle delay={100}>
