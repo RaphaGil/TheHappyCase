@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react';
-
-import NavBar from '../../component/NavBar';
 import { useLocation } from 'react-router-dom';
 
 const RefundPolicy = () => {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     window.scrollTo(0, 0);

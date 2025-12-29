@@ -62,12 +62,4 @@ export const getApiUrl = (endpoint) => {
   }
 };
 
-export default {
-  getApiBaseUrl,
-  getApiUrl,
-};
-
-
-
-
 

@@ -33,7 +33,7 @@ const InternationalNote = ({
             <h3 className={`text-sm font-semibold ${titleColor} mb-1`}>
               {title}
             </h3>
-            <p className={`text-xs ${textColor} font-light leading-relaxed`} className="font-inter">
+            <p className={`text-xs ${textColor} font-light leading-relaxed font-inter`}>
               {message}
             </p>
           </div>

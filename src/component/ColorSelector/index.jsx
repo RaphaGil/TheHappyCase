@@ -68,9 +68,6 @@ const getColorName = (image) => {
 };
 
 const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] }) => {
-  const selectedColorData = colors.find(c => c.color === selectedColor);
-  const selectedColorName = selectedColorData ? getColorName(selectedColorData.image) : '';
-
   // Helper function to check if a color is sold out (considering cart inventory)
   const isColorSoldOut = (color) => {
     // If caseType is provided, check inventory using getMaxAvailableQuantity
@@ -87,13 +84,12 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
     }
     
     // Fallback to quantity check if caseType not provided
-    const colorData = colors.find(c => c.color === color);
-    return colorData && colorData.quantity !== undefined && colorData.quantity === 0;
+    return colors.find(c => c.color === color)?.quantity === 0;
   };
 
   return (
     <div className="overflow-visible">
-      <div className="flex flex-wrap gap-3 overflow-visible justify-center justify-center ">
+      <div className="flex flex-wrap gap-3 overflow-visible justify-center">
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
