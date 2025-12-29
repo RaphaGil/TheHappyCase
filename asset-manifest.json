@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/TheHappyCase/static/css/main.74ca886b.css",
-    "main.js": "/TheHappyCase/static/js/main.152202de.js",
+    "main.js": "/TheHappyCase/static/js/main.e6230518.js",
     "static/js/488.caa66493.chunk.js": "/TheHappyCase/static/js/488.caa66493.chunk.js",
     "static/media/hero.mp4": "/TheHappyCase/static/media/hero.7092aa58a6bf57f3d0c8.mp4",
     "index.html": "/TheHappyCase/index.html",
     "main.74ca886b.css.map": "/TheHappyCase/static/css/main.74ca886b.css.map",
-    "main.152202de.js.map": "/TheHappyCase/static/js/main.152202de.js.map",
+    "main.e6230518.js.map": "/TheHappyCase/static/js/main.e6230518.js.map",
     "488.caa66493.chunk.js.map": "/TheHappyCase/static/js/488.caa66493.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.74ca886b.css",
-    "static/js/main.152202de.js"
+    "static/js/main.e6230518.js"
   ]
 }
