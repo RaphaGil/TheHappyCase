@@ -32,3 +32,5 @@ export const getCaseImages = (selectedColorData, selectedCase) => {
   return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [colorImage] : []);
 };
 
+
+

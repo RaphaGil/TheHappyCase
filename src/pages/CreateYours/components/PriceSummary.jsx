@@ -52,7 +52,7 @@ const PriceSummary = ({
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={agreedToTerms}
+                      checked={agreedToTerms || false}
                       onChange={(e) => setAgreedToTerms(e.target.checked)}
                       className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded"
                     />
@@ -153,7 +153,7 @@ const PriceSummary = ({
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={agreedToTerms}
+                  checked={agreedToTerms || false}
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
                   className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded "
                 />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCurrency } from '../../../context/CurrencyContext';
 
-const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false }) => {
+const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false, charmPrice }) => {
   const { formatPrice } = useCurrency();
   const pastelColors = ['bg-pink-50', 'bg-blue-50', 'bg-purple-50', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50'];
   const pastelBorders = ['border-pink-100', 'border-blue-100', 'border-purple-100', 'border-green-100', 'border-yellow-100', 'border-orange-100'];
@@ -9,10 +9,9 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
 
   return (
     <div
-      className={`flex flex-col group ${onSelect ? 'cursor-pointer' : ''}`}
-      onClick={onSelect}
+      className="flex flex-col group"
     >
-      <div className={`aspect-square mb-3 ${pastelColors[colorIndex]} flex items-center justify-center overflow-hidden border ${pastelBorders[colorIndex]} relative`}>
+      <div className={`aspect-square mb-3 ${pastelColors[colorIndex]} flex items-center justify-center overflow-hidden md:border ${pastelBorders[colorIndex]} relative`}>
         <img
           src={charm.src}
           alt={charm.name}
@@ -46,18 +45,20 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
             ✓
           </div>
         )}
-        {/* Add to Cart Button Overlay */}
+        {/* Add to Cart Button Overlay - Bottom right on mobile, bottom bar on desktop hover */}
         {onAddToCart && !isSoldOut && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               onAddToCart(charm);
             }}
-            className="absolute bottom-0 left-0 right-0 py-2 text-gray-900 border-t border-gray-200 bg-white transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 font-inter"
+            className="absolute bottom-2 right-2 md:bottom-0 md:left-0 md:right-0 md:top-auto py-2 px-2 md:py-2 md:px-0 text-gray-900 md:border-t md:border-gray-200 bg-white md:bg-white rounded-full md:rounded-none shadow-md md:shadow-none transition-all duration-200 text-xs uppercase tracking-wider flex items-center justify-center opacity-100 translate-y-0 md:opacity-0 md:translate-y-full md:group-hover:opacity-100 md:group-hover:translate-y-0 hover:bg-gray-50 z-10 font-inter"
           >
-            <svg className="w-4 h-4 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Bag Icon - Visible on mobile only, hidden on md screens and up */}
+            <svg className="w-5 h-5 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
+            {/* Button Text - Visible on desktop only */}
             <span className="hidden md:inline">Add to Cart</span>
           </button>
         )}
@@ -67,7 +68,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
       </h3>
       <div className="text-center">
         <span className={`text-sm font-medium font-inter ${isSoldOut ? 'text-gray-500' : 'text-gray-900'}`}>
-          {formatPrice(charm.price || 2.0)}
+          {formatPrice(charmPrice)}
         </span>
       </div>
     </div>

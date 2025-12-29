@@ -44,3 +44,5 @@ ALTER TABLE inventory_items DISABLE ROW LEVEL SECURITY;
 
 
 
+
+

@@ -1137,7 +1137,7 @@ const CreateYours = () => {
                     <div className="flex gap-2">
                       <input
                         type="text"
-                        value={customText}
+                        value={customText || ''}
                         onChange={(e) => {
                           setCustomText(e.target.value);
                           setCustomTextError('');

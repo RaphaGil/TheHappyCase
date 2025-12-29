@@ -111,7 +111,7 @@ const AddTextModal = ({
           <div>
             <input
               type="text"
-              value={customText}
+              value={customText || ''}
               onChange={(e) => {
                 setCustomText(e.target.value);
                 setCustomTextError('');

@@ -146,3 +146,5 @@ export const getDefaultCaseAndColor = (searchParams) => {
   return { caseType: "economy", color: "", image: "" };
 };
 
+
+
