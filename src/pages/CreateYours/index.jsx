@@ -85,7 +85,6 @@ const CreateYours = () => {
   const [selectedCaseImage, setSelectedCaseImage] = useState(defaultValues.image);
   const [selectedPins, setSelectedPins] = useState([]);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
-  const [saveImageFunction, setSaveImageFunction] = useState(null);
   const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
   const [isCharmsDropdownOpen, setIsCharmsDropdownOpen] = useState(false);
   const [isAddTextDropdownOpen, setIsAddTextDropdownOpen] = useState(false);
@@ -843,17 +842,6 @@ const CreateYours = () => {
     // Get the main color image
     const colorImage = selectedColorData?.image || selectedCase?.images?.[0] || '';
     
-    // Extract the filename from the color image path to match SmartCase images
-    let imageBaseName = '';
-    if (colorImage) {
-      const imagePath = colorImage.split('/').pop(); // Get filename
-      // For economy case, images are like "economycasepink.png"
-      // Extract the color part (e.g., "pink", "red", etc.)
-      if (imagePath.includes('economycase')) {
-        imageBaseName = imagePath.replace('economycase', '').replace('.png', '');
-      }
-    }
-    
     // Build images array from SmartCase folder
     const smartCaseImages = [];
     
@@ -1137,7 +1125,7 @@ const CreateYours = () => {
 
   // Handle save image function from Canvas
   const handleSaveImageFunction = useCallback((saveFunction) => {
-    setSaveImageFunction(() => saveFunction);
+    // Function saved for potential future use
   }, []);
 
   // Track screen size changes

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useCurrency } from '../../../context/CurrencyContext';
 import AddToCartBtn from '../../../component/AddToCartBtn';
 

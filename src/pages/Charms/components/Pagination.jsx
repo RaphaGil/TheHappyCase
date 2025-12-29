@@ -38,12 +38,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPrevious, onNext 
           <button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`px-3 py-1 text-xs transition-all duration-200 ${
+            className={`px-3 py-1 text-xs transition-all duration-200 font-inter ${
               currentPage === page
                 ? 'border-b-2 border-gray-900 text-gray-900 font-medium'
                 : 'border-b-2 border-transparent text-gray-400 hover:text-gray-700 hover:border-gray-300'
             }`}
-            className="font-inter"
             aria-label={`Go to page ${page}`}
           >
             {page}
