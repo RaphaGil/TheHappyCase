@@ -7,7 +7,6 @@ const PriceSummary = ({
   caseBasePrice, 
   groupedPinsList, 
   showPriceBreakdown, 
-  setShowPriceBreakdown,
   quantity,
   setQuantity,
   onIncrementQuantity,

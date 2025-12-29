@@ -1123,10 +1123,6 @@ const CreateYours = () => {
     setCharmInventoryError('');
   }, []);
 
-  // Handle save image function from Canvas
-  const handleSaveImageFunction = useCallback((saveFunction) => {
-    // Function saved for potential future use
-  }, []);
 
   // Track screen size changes
   useEffect(() => {
@@ -1218,7 +1214,6 @@ const CreateYours = () => {
                     selectedColor={selectedColor}
                     onPinSelect={handlePinSelect}
                     onPinRemove={handlePinRemove}
-                    onSaveImage={handleSaveImageFunction}
                     products={Products}
                   />
                 </div>
