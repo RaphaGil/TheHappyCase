@@ -11,12 +11,19 @@ import { useCart } from "../../context/CartContext";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
 import { createCompositeDesignImage } from "../../component/Canvas/utils/imageExport";
 
+// Utils
+import { getProductsWithQuantities, getDefaultCaseAndColor } from "./utils/helpers";
+import { calculatePinsPrice, calculateTotalPrice, groupPinsForBreakdown } from "./utils/priceCalculations";
+import { getCaseImages } from "./utils/caseImages";
+
+// Hooks
+import { useInventoryCheck } from "./hooks/useInventoryCheck";
+
 // Components
 import ViewMoreImagesButton from "./components/ViewMoreImagesButton";
 import ItemDescriptionDropdown from "./components/ItemDescriptionDropdown";
 import ItemDescriptionModal from "./components/ItemDescriptionModal";
 import ImageModal from "../../component/ImageModal";
-// import SaveDesignButton from "./components/SaveDesignButton";
 import MobileOverlay from "./components/MobileOverlay";
 import CustomTextSection from "./components/CustomTextSection";
 import PriceSummary from "./components/PriceSummary";
@@ -34,52 +41,7 @@ const CreateYours = () => {
   const [pins, setPins] = useState([]);
   const [mobileSubCategory, setMobileSubCategory] = useState('all');
   
-  // Initialize default case and color from URL params or defaults
-  const getDefaultCaseAndColor = () => {
-    const caseParam = searchParams.get('case');
-    const colorParam = searchParams.get('color');
-    
-    // If URL params exist, use them
-    if (caseParam) {
-      const caseFromParam = Products.cases.find(c => c.type === caseParam);
-      if (caseFromParam) {
-        // If color param exists and is valid for this case, use it
-        if (colorParam) {
-          const colorData = caseFromParam.colors.find(c => c.color === colorParam);
-          if (colorData) {
-            return {
-              caseType: caseFromParam.type,
-              color: colorData.color,
-              image: colorData.image
-            };
-          }
-        }
-        // Otherwise use first color of the case
-        if (caseFromParam.colors && caseFromParam.colors.length > 0) {
-          return {
-            caseType: caseFromParam.type,
-            color: caseFromParam.colors[0].color,
-            image: caseFromParam.colors[0].image
-          };
-        }
-      }
-    }
-    
-    // Fallback to default
-    if (Products.cases.length > 0) {
-      const defaultCase = Products.cases.find(c => c.type === "economy") || Products.cases[0];
-      if (defaultCase && defaultCase.colors.length > 0) {
-        return {
-          caseType: defaultCase.type,
-          color: defaultCase.colors[0].color,
-          image: defaultCase.colors[0].image
-        };
-      }
-    }
-    return { caseType: "economy", color: "", image: "" };
-  };
-
-  const defaultValues = getDefaultCaseAndColor();
+  const defaultValues = getDefaultCaseAndColor(searchParams);
   const [selectedCaseType, setSelectedCaseType] = useState(defaultValues.caseType);
   const [selectedColor, setSelectedColor] = useState(defaultValues.color);
   const [selectedCaseImage, setSelectedCaseImage] = useState(defaultValues.image);
@@ -102,12 +64,30 @@ const CreateYours = () => {
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
   const [showAddTextModal, setShowAddTextModal] = useState(false);
-  const [inventoryMessage, setInventoryMessage] = useState('');
-  const [inventoryType, setInventoryType] = useState('warning');
-  const [quantityError, setQuantityError] = useState('');
-  const [charmInventoryError, setCharmInventoryError] = useState('');
   const caseDropdownRef = useRef(null);
   const { addToCart, cart } = useCart();
+  const productsWithQuantities = getProductsWithQuantities();
+  
+  // Use inventory check hook
+  const {
+    inventoryMessage,
+    inventoryType,
+    quantityError,
+    charmInventoryError,
+    setInventoryMessage,
+    setInventoryType,
+    setQuantityError,
+    setCharmInventoryError,
+    checkQuantityIncrement
+  } = useInventoryCheck({
+    selectedCaseType,
+    selectedColor,
+    selectedPins,
+    quantity,
+    cart,
+    selectedCategory,
+    selectedCase: productsWithQuantities.cases.find(c => c.type === selectedCaseType)
+  });
 
   // Update case and color when URL params change
   useEffect(() => {
@@ -138,140 +118,6 @@ const CreateYours = () => {
       }
     }
   }, [searchParams]);
-
-  // Auto-dismiss inventory message after 3 seconds
-  useEffect(() => {
-    if (inventoryMessage) {
-      const timer = setTimeout(() => {
-        setInventoryMessage('');
-      }, 3000); // 3 seconds
-
-      return () => clearTimeout(timer);
-    }
-  }, [inventoryMessage]);
-
-
-  // Check inventory when case/color or charms change
-  useEffect(() => {
-    // Check case inventory
-    if (selectedCaseType && selectedColor) {
-      const productForInventory = {
-        caseType: selectedCaseType,
-        color: selectedColor,
-      };
-      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-      
-      // Don't show alert here - only show when clicking +/- buttons
-      // Clear any existing inventory messages when case/color changes
-      if (maxAvailable !== null && maxAvailable > 0) {
-        // Clear message if case is in stock
-        setInventoryMessage('');
-      }
-    }
-
-    // Check charm inventory for selected charms
-    if (selectedPins.length > 0) {
-      let outOfStockCharm = null;
-      
-      for (const { pin } of selectedPins) {
-        if (!pin) continue;
-        
-        const charmCategory = pin?.category || selectedCategory || 'colorful';
-        const charmName = pin?.name || 'charm';
-        const charmSrc = pin?.src || '';
-        
-        const charmProduct = {
-          type: 'charm',
-          category: charmCategory,
-          pin: pin,
-          name: charmName
-        };
-        
-        const maxAvailableCharm = getMaxAvailableQuantity(charmProduct, cart);
-        
-        // Skip if no inventory limit
-        if (maxAvailableCharm === null) continue;
-        
-        // Count standalone charms already in cart
-        let standaloneCharmsInCart = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.type === 'charm') {
-            const cartPin = cartItem.pin || cartItem;
-            const cartPinName = cartPin.name || cartPin.src;
-            const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-            if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                cartPinCategory === charmCategory) {
-              standaloneCharmsInCart += (cartItem.quantity || 1);
-            }
-          }
-        });
-        
-        // Count how many of this charm are in custom designs already in cart
-        let charmCountInCustomDesigns = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.pins && Array.isArray(cartItem.pins)) {
-            cartItem.pins.forEach(cartPin => {
-              const cartPinName = cartPin.name || cartPin.src;
-              const cartPinCategory = cartPin.category || charmCategory;
-              if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                  cartPinCategory === charmCategory) {
-                charmCountInCustomDesigns += (cartItem.quantity || 1);
-              }
-            });
-          }
-        });
-        
-        // Count how many of this charm are already selected in the current design
-        const charmCountInDesign = selectedPins.filter(p => {
-          const pPin = p.pin || p;
-          const pPinName = pPin.name || pPin.src;
-          const pPinCategory = pPin.category || charmCategory;
-          return (pPinName === charmName || pPinName === charmSrc) && 
-                 pPinCategory === charmCategory;
-        }).length;
-        
-        // Calculate total inventory and usage
-        const totalInventory = maxAvailableCharm + standaloneCharmsInCart;
-        const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
-        
-        // Check if charm is out of stock or would exceed inventory
-        if (maxAvailableCharm === 0 || totalUsage > totalInventory) {
-          outOfStockCharm = charmName;
-          break; // Exit early if any charm is out of stock
-        }
-      }
-      
-      // Set or clear inventory message based on findings
-      if (outOfStockCharm) {
-        setInventoryMessage(`Oops! We don't have any more ${outOfStockCharm} in stock right now.`);
-        setInventoryType('warning');
-      } else {
-        // Clear warning messages if all charms are in stock (but keep error messages from add to cart)
-        setInventoryMessage(prev => {
-          if (prev && prev.includes("can't add more to your basket")) {
-            return prev; // Keep error messages
-          }
-          // Only clear if it's a warning about charms
-          if (prev && !prev.includes("Passport Case") && !prev.includes("Case")) {
-            return '';
-          }
-          return prev;
-        });
-      }
-    } else {
-      // If no charms selected, clear charm-related inventory messages (but keep error messages)
-      setInventoryMessage(prev => {
-        if (prev && prev.includes("can't add more to your basket")) {
-          return prev; // Keep error messages
-        }
-        // Only clear charm warnings, not case warnings
-        if (prev && !prev.includes("Passport Case") && !prev.includes("Case")) {
-          return '';
-        }
-        return prev;
-      });
-    }
-  }, [selectedCaseType, selectedColor, selectedPins, quantity, cart, selectedCategory, isMobile]);
 
   // Handle case type selection
   const handleCaseTypeSelection = (caseType) => {
@@ -517,7 +363,7 @@ const CreateYours = () => {
         }
       }, 100);
     }
-  }, [isMobile, cart, selectedPins, selectedCategory]);
+  }, [isMobile, cart, selectedPins, selectedCategory, setCharmInventoryError, setInventoryMessage, setInventoryType]);
 
   // Handle navigation from other pages
   useEffect(() => {
@@ -567,194 +413,25 @@ const CreateYours = () => {
     }
   }, [selectedCaseType]); // Run when selectedCaseType changes
 
-  // Helper function to get color name from image filename
-  const getColorName = (image) => {
-    if (!image) return '';
-    
-    const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
-    
-    let colorPart = filename
-      .replace(/^economycase/i, '')
-      .replace(/^businessclasscase/i, '')
-      .replace(/^firstclasscase/i, '')
-      .replace(/^smartcase/i, '')
-      .replace(/^premiumcase/i, '')
-      .replace(/^firstclass/i, '');
-    
-    const colorMap = {
-      'lightpink': 'Light Pink',
-      'lightblue': 'Light Blue',
-      'lightbrown': 'Light Brown',
-      'darkbrown': 'Dark Brown',
-      'darkblue': 'Dark Blue',
-      'jeansblue': 'Jeans Blue',
-      'brickred': 'Brick Red',
-      'navyblue': 'Navy Blue',
-      'gray': 'Gray',
-      'grey': 'Gray',
-      'black': 'Black',
-      'brown': 'Brown',
-      'red': 'Red',
-      'pink': 'Pink',
-      'blue': 'Blue',
-      'green': 'Green',
-      'purple': 'Purple',
-      'yellow': 'Yellow',
-      'orange': 'Orange'
-    };
-    
-    if (colorMap[colorPart]) {
-      return colorMap[colorPart];
-    }
-    
-    colorPart = colorPart
-      .replace(/([a-z])([A-Z])/g, '$1 $2')
-      .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2')
-      .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/)
-      .filter(word => word.length > 0)
-      .join(' ')
-      .toLowerCase()
-      .split(' ')
-      .map(word => {
-        if (colorMap[word]) return colorMap[word];
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      })
-      .join(' ');
-    
-    return colorPart || 'Color';
-  };
-
-  // Clamp quantity to max available inventory
-  useEffect(() => {
-    const productForInventory = {
-      caseType: selectedCaseType,
-      color: selectedColor,
-    };
-    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    if (maxAvailable !== null && quantity > maxAvailable) {
-      setQuantity(maxAvailable);
-    }
-    // Clear error when case type or color changes
-    setQuantityError('');
-  }, [selectedCaseType, selectedColor, cart, quantity]);
 
   // Handle quantity increment with inventory check
   const handleIncrementQuantity = () => {
+    // Clamp quantity to max available first
     const productForInventory = {
       caseType: selectedCaseType,
       color: selectedColor,
     };
     const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    // Check case inventory first
-    // maxAvailable is how many MORE can be added, so if it's 0 or less, or if incrementing would exceed it, we can't add any more
-    if (maxAvailable !== null && (maxAvailable <= 0 || quantity + 1 > maxAvailable)) {
-      // Get item name and color for error message
-      const itemName = selectedCase?.name || 'Passport Case';
-      const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
-      const colorName = selectedColorData?.image ? getColorName(selectedColorData.image) : '';
-      
-      const colorText = colorName ? ` in ${colorName}` : '';
-      const errorMessage = `Oops! We don't have any more ${itemName}${colorText} in stock right now, so you can't add more to your basket.`;
-      setQuantityError(`We don't have any more ${itemName}${colorText} in stock to be added anymore.`);
-      setInventoryMessage(errorMessage);
-      setInventoryType('error');
-      return;
+    if (maxAvailable !== null && quantity >= maxAvailable) {
+      return; // Can't increment
     }
     
-    // Check charm inventory for all charms in the design
-    if (selectedPins.length > 0) {
-      for (const { pin } of selectedPins) {
-        if (!pin) continue;
-        
-        const getCharmCategory = () => {
-          if (pin.category) return pin.category;
-          if (selectedCategory) return selectedCategory;
-          return 'colorful';
-        };
-        
-        const charmCategory = getCharmCategory();
-        const charmName = pin.name || pin.src || '';
-        const charmSrc = pin.src || '';
-        
-        const charmProduct = {
-          name: charmName,
-          price: pin.price || 2.0,
-          totalPrice: pin.price || 2.0,
-          image: charmSrc,
-          pin: pin,
-          category: charmCategory,
-          type: 'charm'
-        };
-        
-        const charmMaxAvailable = getMaxAvailableQuantity(charmProduct, cart);
-        
-        // If no inventory limit for this charm, skip check
-        if (charmMaxAvailable === null) continue;
-        
-        // Count standalone charms already in cart
-        let standaloneCharmsInCart = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.type === 'charm') {
-            const cartPin = cartItem.pin || cartItem;
-            const cartPinName = cartPin.name || cartPin.src;
-            const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-            if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                cartPinCategory === charmCategory) {
-              standaloneCharmsInCart += (cartItem.quantity || 1);
-            }
-          }
-        });
-        
-        // Count how many of this charm are in custom designs already in cart
-        let charmCountInCustomDesigns = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.pins && Array.isArray(cartItem.pins)) {
-            cartItem.pins.forEach(cartPin => {
-              const cartPinName = cartPin.name || cartPin.src;
-              const cartPinCategory = cartPin.category || charmCategory;
-              if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                  cartPinCategory === charmCategory) {
-                charmCountInCustomDesigns += (cartItem.quantity || 1);
-              }
-            });
-          }
-        });
-        
-        // Count how many of this charm are in the current design (per design)
-        const charmCountInDesign = selectedPins.filter(p => {
-          const pPin = p.pin || p;
-          const pPinName = pPin.name || pPin.src;
-          const pPinCategory = pPin.category || charmCategory;
-          return (pPinName === charmName || pPinName === charmSrc) && 
-                 pPinCategory === charmCategory;
-        }).length;
-        
-        // Calculate total inventory and usage
-        const totalInventory = charmMaxAvailable + standaloneCharmsInCart;
-        // Already used: standalone + in other custom designs + in current design with current quantity
-        // New usage if we increment: current usage + charmCountInDesign (one more design)
-        const currentUsage = standaloneCharmsInCart + charmCountInCustomDesigns + (charmCountInDesign * quantity);
-        const newUsage = currentUsage + charmCountInDesign;
-        
-        // Check if adding one more design would exceed inventory
-        if (charmMaxAvailable === 0 || newUsage > totalInventory) {
-          const errorMessage = `Oops! We don't have any more ${pin.name || 'this charm'} in stock right now, so you can't add more to your basket.`;
-          setCharmInventoryError(errorMessage);
-          // Show alert modal for charms when out of stock
-          setInventoryMessage(errorMessage);
-          setInventoryType('error');
-          return;
-        }
-      }
+    if (checkQuantityIncrement(quantity)) {
+      setQuantity(quantity + 1);
+      setQuantityError('');
+      setCharmInventoryError('');
+      setInventoryMessage('');
     }
-    
-    // All checks passed, increment quantity
-    setQuantity(quantity + 1);
-    setQuantityError(''); // Clear error when successfully incrementing
-    setCharmInventoryError(''); // Clear charm inventory error when successfully incrementing
-    setInventoryMessage(''); // Clear inventory message when successfully incrementing
   };
 
   // Handle quantity decrement
@@ -790,102 +467,18 @@ const CreateYours = () => {
     }
   };
 
-  // Helper function to get products with quantities from localStorage
-  const getProductsWithQuantities = () => {
-    const savedQuantities = localStorage.getItem('productQuantities');
-    if (!savedQuantities) return Products;
-    
-    try {
-      const quantities = JSON.parse(savedQuantities);
-      const mergedProducts = { ...Products };
-      
-      // Merge case quantities and color quantities
-      if (quantities.cases) {
-        mergedProducts.cases = mergedProducts.cases.map((caseItem, index) => {
-          const updatedCase = {
-            ...caseItem,
-            quantity: quantities.cases[index] !== undefined ? quantities.cases[index] : caseItem.quantity
-          };
-          
-          // Merge color quantities if they exist
-          if (quantities.caseColors && quantities.caseColors[index]) {
-            updatedCase.colors = updatedCase.colors.map((colorItem, colorIndex) => ({
-              ...colorItem,
-              quantity: quantities.caseColors[index][colorIndex] !== undefined 
-                ? quantities.caseColors[index][colorIndex] 
-                : colorItem.quantity
-            }));
-          }
-          
-          return updatedCase;
-        });
-      }
-      
-      return mergedProducts;
-    } catch (error) {
-      console.error('Error loading saved quantities:', error);
-      return Products;
-    }
-  };
-
-  const productsWithQuantities = getProductsWithQuantities();
-  
   // Calculate total price
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   const caseBasePrice = selectedCase?.basePrice || 0;
   
   // Get images for the selected case and color
   const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
+  const caseImages = getCaseImages(selectedColorData, selectedCase);
   
-  // Get detail images from SmartCase folder
-  const getCaseImages = () => {
-    // Get the main color image
-    const colorImage = selectedColorData?.image || selectedCase?.images?.[0] || '';
-    
-    // Build images array from SmartCase folder
-    const smartCaseImages = [];
-    
-    // Add the main color image
-    if (colorImage) {
-      smartCaseImages.push(colorImage);
-    }
-    
-    // Add detail images from SmartCase folder
-    // These are common detail images that apply to all colors
-    const detailImages = [
-      '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-      '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
-    ];
-    
-    // Add detail images if they exist
-    detailImages.forEach(img => {
-      if (img) {
-        smartCaseImages.push(img);
-      }
-    });
-    
-    // If we have at least one image, return them; otherwise return empty array
-    return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [colorImage] : []);
-  };
-  
-  const caseImages = getCaseImages();
-  const pinsPrice = selectedPins.reduce((total, { pin }) => total + (pin?.price || 0), 0);
-  // Use Math.max to ensure we show price for at least 1 item (since quantity starts at 0 but displays as 1)
-  const displayQuantity = Math.max(quantity, 1);
-  const totalPrice = ((caseBasePrice + pinsPrice) * displayQuantity).toFixed(2);
-
-  // Group pins for price breakdown display
-  const groupedPins = selectedPins.reduce((acc, { pin }) => {
-    if (!pin) return acc;
-    const key = `${pin.src}|${pin.name}|${pin.price}`;
-    if (!acc[key]) {
-      acc[key] = { ...pin, count: 0 };
-    }
-    acc[key].count += 1;
-    return acc;
-  }, {});
-  const groupedPinsList = Object.values(groupedPins);
+  // Calculate prices
+  const pinsPrice = calculatePinsPrice(selectedPins);
+  const totalPrice = calculateTotalPrice(caseBasePrice, pinsPrice, quantity);
+  const groupedPinsList = groupPinsForBreakdown(selectedPins);
 
   // Handle add to cart
   const handleAddToCart = () => {
@@ -1121,7 +714,7 @@ const CreateYours = () => {
     setSelectedPins(prev => prev.filter(p => p.imgInstance !== removedPin));
     // Clear charm inventory error when removing a charm
     setCharmInventoryError('');
-  }, []);
+  }, [setCharmInventoryError]);
 
 
   // Track screen size changes
@@ -1236,8 +829,6 @@ const CreateYours = () => {
               </div>
             </div>
             
-            {/* Save Your Design Button - Hidden for now */}
-            {/* <SaveDesignButton saveImageFunction={saveImageFunction} /> */}
           </div>
           
           {/* MAIN SECTION - Right Side Content */}
