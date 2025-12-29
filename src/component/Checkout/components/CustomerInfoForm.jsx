@@ -104,7 +104,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           value={customerInfo.address.line1}
           onChange={onInputChange}
           required
-          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
         />
       </div>
 
@@ -146,7 +146,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.address.postal_code}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
           />
         </div>
         

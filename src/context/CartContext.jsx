@@ -269,6 +269,12 @@ export const CartProvider = ({ children }) => {
     return state.items.length;
   };
 
+  const getTotalQuantity = () => {
+    return state.items.reduce((total, item) => {
+      return total + (item.quantity || 1);
+    }, 0);
+  };
+
   const value = {
     cart: state.items,
     checkoutSession: state.checkoutSession,
@@ -284,6 +290,7 @@ export const CartProvider = ({ children }) => {
     updateItemNote,
     getTotalPrice,
     getTotalItems,
+    getTotalQuantity,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -1,11 +1,11 @@
 // Backend server for Stripe Embedded Checkout
 // Run with: node server.js
-// Install dependencies: npm install express stripe cors dotenv nodemailer @supabase/supabase-js
+// Install dependencies: npm install express stripe cors dotenv resend @supabase/supabase-js
 
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const { createClient } = require("@supabase/supabase-js");
 
 // --- Validate keys ---
@@ -127,7 +127,7 @@ app.post("/create-checkout-session", async (req, res) => {
 });
 
 // --- Create Payment Intent for Payment Element ---
-app.post("/create-payment-intent", async (req, res) => {
+app.post("/api/create-payment-intent", async (req, res) => {
   try {
     const { amount, currency, items, customerInfo } = req.body || {};
 
@@ -136,9 +136,48 @@ app.post("/create-payment-intent", async (req, res) => {
     }
 
     const resolvedCurrency = (currency || "gbp").toLowerCase();
+    const roundedAmount = Math.round(amount);
+
+    // Stripe minimum amounts by currency (in smallest currency unit)
+    const minimumAmounts = {
+      'gbp': 30,      // 30 pence = £0.30
+      'usd': 50,      // 50 cents = $0.50
+      'eur': 50,      // 50 cents = €0.50
+      'cad': 50,      // 50 cents = C$0.50
+      'aud': 50,      // 50 cents = A$0.50
+      'brl': 50,      // 50 centavos = R$0.50
+      'jpy': 50,      // 50 yen
+      'mxn': 100,     // 100 centavos = MX$1.00
+      'inr': 50,      // 50 paise = ₹0.50
+    };
+
+    const minimumAmount = minimumAmounts[resolvedCurrency] || 30; // Default to 30
+
+    if (roundedAmount < minimumAmount) {
+      const currencySymbols = {
+        'gbp': '£',
+        'usd': '$',
+        'eur': '€',
+        'cad': 'C$',
+        'aud': 'A$',
+        'brl': 'R$',
+        'jpy': '¥',
+        'mxn': 'MX$',
+        'inr': '₹',
+      };
+      const symbol = currencySymbols[resolvedCurrency] || resolvedCurrency.toUpperCase();
+      const minDisplay = (minimumAmount / 100).toFixed(2);
+      const currentDisplay = (roundedAmount / 100).toFixed(2);
+      
+      return res.status(400).json({ 
+        error: `Amount is too small. Minimum amount is ${symbol}${minDisplay}. Your amount is ${symbol}${currentDisplay}.` 
+      });
+    }
+
+    console.log(`💳 Creating payment intent: ${roundedAmount} ${resolvedCurrency.toUpperCase()}`);
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount),
+      amount: roundedAmount,
       currency: resolvedCurrency,
       automatic_payment_methods: {
         enabled: true,
@@ -151,15 +190,30 @@ app.post("/create-payment-intent", async (req, res) => {
       },
     });
 
+    console.log(`✅ Payment intent created: ${paymentIntent.id}`);
+
     res.json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
-    console.error("Error creating payment intent:", error);
-    res.status(500).json({ error: error.message || "Failed to create payment intent" });
+    console.error("❌ Error creating payment intent:", error);
+    
+    // Provide more helpful error messages
+    let errorMessage = error.message || "Failed to create payment intent";
+    
+    if (error.type === 'StripeInvalidRequestError') {
+      // Stripe-specific errors
+      if (error.message.includes('minimum')) {
+        errorMessage = error.message;
+      } else if (error.message.includes('currency')) {
+        errorMessage = `Invalid currency: ${error.message}`;
+      }
+    }
+    
+    res.status(500).json({ error: errorMessage });
   }
 });
 
 // --- Send Order Confirmation Email ---
-app.post("/send-order-confirmation", async (req, res) => {
+app.post("/api/send-order-confirmation", async (req, res) => {
   try {
     const { paymentIntent, customerInfo, items } = req.body;
 
@@ -286,46 +340,16 @@ app.post("/send-order-confirmation", async (req, res) => {
       </html>
     `;
 
-    // Configure email transporter
-    // For production, use environment variables for email credentials
-    // Options: Gmail, SendGrid, AWS SES, etc.
-    let transporter;
+    // Configure Resend email service
+    const resendApiKey = process.env.RESEND_API_KEY || 're_iV7Ucv7i_M6Bbi2iwk9HFxBzfNSsJqJWY';
+    // Resend requires verified domains. For testing, use onboarding@resend.dev
+    // For production, you must verify your own domain at https://resend.com/domains
+    const fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
     
-    if (process.env.EMAIL_SERVICE === 'gmail' && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      // Gmail configuration
-      transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS, // Use App Password for Gmail
-        },
-      });
-    } else if (process.env.SENDGRID_API_KEY) {
-      // SendGrid configuration
-      transporter = nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        secure: false,
-        auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_API_KEY,
-        },
-      });
-    } else if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-      // Custom SMTP configuration
-      transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT || 587,
-        secure: process.env.SMTP_SECURE === 'true',
-        auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,
-        },
-      });
-    } else {
+    if (!resendApiKey) {
       // Development: Log email instead of sending
       console.log('='.repeat(60));
-      console.log('ORDER CONFIRMATION EMAIL (Email service not configured)');
+      console.log('ORDER CONFIRMATION EMAIL (Resend API key not configured)');
       console.log('='.repeat(60));
       console.log(`To: ${customerInfo.email}`);
       console.log(`Subject: Order Confirmation - ${orderId}`);
@@ -335,43 +359,78 @@ app.post("/send-order-confirmation", async (req, res) => {
       console.log(`Total: £${totalAmount.toFixed(2)}`);
       console.log(`Items: ${items?.length || 0}`);
       console.log('='.repeat(60));
-      console.log('\nTo enable email sending, configure one of the following in your .env file:');
-      console.log('1. Gmail: EMAIL_SERVICE=gmail, EMAIL_USER=your-email@gmail.com, EMAIL_PASS=your-app-password');
-      console.log('2. SendGrid: SENDGRID_API_KEY=your-sendgrid-api-key');
-      console.log('3. Custom SMTP: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE');
+      console.log('\nTo enable email sending, set RESEND_API_KEY in your .env file');
       console.log('='.repeat(60));
 
       return res.json({ 
         success: true, 
-        message: 'Order confirmation email logged (email service not configured)',
+        message: 'Order confirmation email logged (Resend API key not configured)',
         emailHtml // Return HTML for debugging/testing
       });
     }
 
-    // Send email
+    // Send email using Resend
     try {
-      const fromEmail = process.env.FROM_EMAIL || process.env.EMAIL_USER || 'orders@thehappycase.com';
+      const resend = new Resend(resendApiKey);
       
-      await transporter.sendMail({
-        from: `"The Happy Case" <${fromEmail}>`,
+      console.log('📧 Attempting to send email via Resend...');
+      console.log(`From: ${fromEmail}`);
+      console.log(`To: ${customerInfo.email}`);
+      console.log(`Subject: Order Confirmation - ${orderId}`);
+      
+      // Resend requires the "from" email to be verified in your Resend account
+      // Format: "Name <email@domain.com>" or just "email@domain.com"
+      const { data, error } = await resend.emails.send({
+        from: `The Happy Case <${fromEmail}>`,
         to: customerInfo.email,
         subject: `Order Confirmation - ${orderId}`,
         html: emailHtml,
       });
 
+      if (error) {
+        console.error('❌ Resend API Error:', error);
+        throw new Error(error.message || JSON.stringify(error) || 'Failed to send email via Resend');
+      }
+
+      if (!data || !data.id) {
+        console.warn('⚠️ Resend returned no data or email ID');
+      }
+
       console.log(`✅ Order confirmation email sent to ${customerInfo.email} for order ${orderId}`);
+      console.log(`📧 Resend email ID: ${data?.id || 'N/A'}`);
 
       res.json({ 
         success: true, 
-        message: 'Order confirmation email sent successfully'
+        message: 'Order confirmation email sent successfully',
+        emailId: data?.id
       });
     } catch (emailError) {
-      console.error("Error sending email:", emailError);
+      console.error("❌ Error sending email via Resend:", emailError);
+      console.error("❌ Error details:", {
+        message: emailError.message,
+        stack: emailError.stack,
+        name: emailError.name
+      });
       // Log email details even if sending fails
       console.log('='.repeat(60));
       console.log('EMAIL SEND FAILED - Email details logged:');
       console.log(`To: ${customerInfo.email}`);
+      console.log(`From: ${fromEmail}`);
       console.log(`Subject: Order Confirmation - ${orderId}`);
+      console.log(`Error: ${emailError.message}`);
+      console.log('='.repeat(60));
+      console.log('💡 Troubleshooting:');
+      console.log('1. Resend requires domain verification. You cannot use @gmail.com addresses.');
+      console.log('2. For testing: Use "onboarding@resend.dev" (already set as default)');
+      console.log('3. For production: Verify your own domain at https://resend.com/domains');
+      console.log('4. Steps to verify domain:');
+      console.log('   a. Go to https://resend.com/domains');
+      console.log('   b. Click "Add Domain"');
+      console.log('   c. Add your domain (e.g., thehappycase.com)');
+      console.log('   d. Add the DNS records Resend provides');
+      console.log('   e. Wait for verification (usually a few minutes)');
+      console.log('   f. Update FROM_EMAIL in .env to use your verified domain');
+      console.log('5. Check that the Resend API key is correct');
       console.log('='.repeat(60));
       
       // Still return success to not block the payment flow

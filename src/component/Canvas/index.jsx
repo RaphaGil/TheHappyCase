@@ -664,10 +664,29 @@ const Canvas = ({
       
       const imgInstance = await loadImageLegacy(pin.src, false, pinSize, pinSize);
       
-      // Center the pin on the canvas
+      // Place the pin at a random position on the canvas
+      // Account for the pin's size to ensure it stays within canvas bounds
+      const canvasWidth = fabricCanvas.current.getWidth();
+      const canvasHeight = fabricCanvas.current.getHeight();
+      
+      // Use the actual rendered size of the pin (accounting for scale)
+      const pinWidth = (imgInstance.width || pinSize) * (imgInstance.scaleX || 1);
+      const pinHeight = (imgInstance.height || pinSize) * (imgInstance.scaleY || 1);
+      
+      // Calculate safe area (leave margin to prevent pins from going outside)
+      const margin = 20; // Margin from edges
+      const minX = margin + pinWidth / 2;
+      const maxX = canvasWidth - margin - pinWidth / 2;
+      const minY = margin + pinHeight / 2;
+      const maxY = canvasHeight - margin - pinHeight / 2;
+      
+      // Generate random position within safe bounds
+      const randomX = Math.random() * (maxX - minX) + minX;
+      const randomY = Math.random() * (maxY - minY) + minY;
+      
       imgInstance.set({
-        left: fabricCanvas.current.getWidth() / 2,
-        top: fabricCanvas.current.getHeight() / 2
+        left: randomX,
+        top: randomY
       });
 
       // Store pin data

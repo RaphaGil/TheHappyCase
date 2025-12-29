@@ -52,7 +52,7 @@ const Reviews = () => {
 
           {/* Reviews Container - Same layout for mobile and desktop */}
           <div 
-            className={`grid gap-6 sm:gap-8 md:gap-8 ${
+            className={`grid gap-6 sm:gap-8 md:gap-8 md:px-16 lg:px-20 ${
               reviewsPerSlide === 3 
                 ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
                 : reviewsPerSlide === 2

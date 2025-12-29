@@ -12,9 +12,8 @@ export const designIdeasImages = [
   '/TheHappyCase/images/designideas/designidea2.png',
   '/TheHappyCase/images/designideas/designidea3.png',
   '/TheHappyCase/images/designideas/designidea4.png',
-  '/TheHappyCase/images/designideas/designidea5.png',
-  '/TheHappyCase/images/designideas/designidea6.png',
-  '/TheHappyCase/images/designideas/designidea7.png',
+ 
+ 
 ];
 
 // Text overlays for each image (currently commented out but kept for future use)

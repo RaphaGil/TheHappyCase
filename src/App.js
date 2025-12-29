@@ -31,7 +31,8 @@ function AppContent() {
   const isHomePage = location.pathname === '/';
   const hideNavBar = location.pathname === '/checkout';
   const hideNavBarOnMobile = location.pathname === '/CreateYours' || location.pathname === '/AddText';
-  const hideFooter = location.pathname === '/checkout' || location.pathname === '/CreateYours' || location.pathname === '/AddText';
+  const hideFooter = location.pathname === '/checkout' || location.pathname === '/AddText';
+  const hideFooterOnMobile = location.pathname === '/CreateYours';
 
   return (
     <div className="App bg-white min-h-screen">
@@ -71,7 +72,11 @@ function AppContent() {
           <Route path="/about" element={<About />} />
         </Routes>
       </main>
-      {!hideFooter && <Footer />}
+      {!hideFooter && (
+        <div className={hideFooterOnMobile ? 'hidden md:block' : ''}>
+          <Footer />
+        </div>
+      )}
       <CartDrawer />
     </div>
   );

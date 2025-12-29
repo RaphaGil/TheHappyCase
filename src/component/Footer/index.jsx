@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
+import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faEtsy, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import AnimatedTitle from '../AnimatedTitle';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
@@ -72,7 +72,7 @@ function Footer() {
             </p>
             <div className="flex flex-col gap-3 pt-2">
             <p className="text-body-sm text-gray-900 font-light font-inter">Follow us!</p>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <a 
                 href="https://instagram.com/thehappycase.store" 
                 target="_blank" 
@@ -99,6 +99,15 @@ function Footer() {
                 aria-label="Follow us on Facebook"
               >
                 <FontAwesomeIcon icon={faFacebookBrand} className="text-lg" style={{color: '#1877F2'}} />
+              </a>
+              <a 
+                href="https://www.etsy.com/shop/TheHappyCaseShop?ref=dashboard-header" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-80"
+                aria-label="Visit our Etsy shop"
+              >
+                <FontAwesomeIcon icon={faEtsy} className="text-lg" style={{color: '#F45800'}} />
               </a>
               </div>
             </div>
@@ -138,19 +147,19 @@ function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <a href="/" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link to="/" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                    Home
-                  </a>
+                  </Link>
                 </li>
                 {/* <li>
-                  <a href="/DesignIdeas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
+                  <Link to="/DesignIdeas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                     Design Ideas
-                  </a>
+                  </Link>
                 </li> */}
                 <li>
-                  <a href="/CreateYours" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link to="/CreateYours" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Create Yours
-                  </a>
+                  </Link>
                 </li>
               </ul>
             )}
@@ -162,19 +171,19 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="/" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link to="/" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                  Home
-                </a>
+                </Link>
               </li>
               {/* <li>
-                <a href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
+                <Link to="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                   Design Ideas
-                </a>
+                </Link>
               </li> */}
               <li>
-                <a href="/CreateYours" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link to="/CreateYours" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Create Yours
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -220,7 +229,7 @@ function Footer() {
               </ul>
             )}
             {/* Desktop: Always visible content */}
-            <ul className="hidden md:block space-y-3 ">
+            <ul className="hidden md:block space-y-1 ">
               <li>
                 <Link to="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Shipping and Processing Times

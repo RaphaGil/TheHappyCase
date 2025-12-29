@@ -61,7 +61,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
       {/* Product Image */}
       <div className="relative mt-8">
         <div 
-          className="aspect-square overflow-hidden w-full max-w-2xl mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl transition-all duration-300 hover:border-gray-300 h-[250px] sm:h-[300px] md:h-[350px] relative"
+          className="aspect-square overflow-hidden w-full max-w-2xl mx-auto sm:max-w-xl md:max-w-3xl lg:max-w-4xl transition-all duration-300 hover:border-gray-300 h-[250px] sm:h-[300px] md:h-[450px] lg:h-[500px] relative"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
@@ -118,7 +118,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Product Info */}
       <div className="text-center flex flex-col flex-grow">
-        <h3 className="text-heading-sm font-light text-gray-800 mb-2 mt-4 font-inter">
+        <h3 className="font-thin text-lg text-gray-800 mb-2 mt-4 ">
           {displayName}
         </h3>
         <p className="text-body-md text-gray-700 mb-6 font-bold font-inter">

@@ -10,7 +10,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPrevious, onNext 
         {currentPage > 1 && (
           <button
             onClick={onPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 z-10 bg-white rounded-full p-2 md:p-3 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 md:-translate-x-12 z-10 bg-transparent rounded-full p-2 md:p-3 border border-gray-200 hover:border-gray-400 transition-all duration-200"
             aria-label="Previous page"
           >
             <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,7 +22,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPrevious, onNext 
         {currentPage < totalPages && (
           <button
             onClick={onNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 z-10 bg-white rounded-full p-2 md:p-3 border border-gray-200 hover:border-gray-400 transition-all duration-200"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 md:translate-x-12 z-10 bg-transparent rounded-full p-2 md:p-3 border border-gray-200 hover:border-gray-400 transition-all duration-200"
             aria-label="Next page"
           >
             <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

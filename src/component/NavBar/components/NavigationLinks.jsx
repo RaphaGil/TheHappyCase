@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
   const linkClass = isMobile
-    ? "px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-sm uppercase tracking-wider"
-    : "px-3 py-1.5 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-sm uppercase tracking-wider text-gray-600";
+    ? "px-4 py-2 hover:text-gray-900 hover:bg-gray-50 font-light block transition-colors text-sm uppercase tracking-wider hover:border-b-2 hover:border-blue-500"
+    : "px-3 py-1.5 hover:text-gray-900 font-light block transition-all duration-200 text-sm uppercase tracking-wider text-gray-600 hover:border-b-2 hover:border-blue-500";
 
   const links = [
     { to: "/", label: "Home" },

@@ -1237,7 +1237,7 @@ const CreateYours = () => {
               </div>
               
               {/* Action Buttons - Bottom - Hidden on mobile */}
-              <div className="mt-8 md:mt-auto mb-0 hidden md:flex flex-row gap-2 md:gap-2.5 lg:gap-3 flex-shrink-0 w-full max-w-full md:max-w-[480px] lg:max-w-[520px] relative z-0">
+              <div className="mt-8 md:mt-8 mb-0 hidden md:flex flex-row gap-2 md:gap-2.5 lg:gap-3 flex-shrink-0 w-full max-w-full md:max-w-[480px] lg:max-w-[520px] relative z-0">
                 <ViewMoreImagesButton
                   caseImages={caseImages}
                   onOpenModal={() => {

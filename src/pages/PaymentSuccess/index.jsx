@@ -9,8 +9,43 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   const { paymentIntent, customerInfo, items } = location.state || {};
   const sessionId = searchParams.get('session_id');
+
+  // Send order confirmation email
+  useEffect(() => {
+    // Only send email if we have paymentIntent, customerInfo, and items, and haven't sent it yet
+    if (paymentIntent && customerInfo?.email && items && items.length > 0 && !emailSent) {
+      const sendEmail = async () => {
+        try {
+          const response = await fetch(getApiUrl('/api/send-order-confirmation'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              paymentIntent,
+              customerInfo,
+              items,
+            }),
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            console.log('✅ Order confirmation email sent successfully');
+            setEmailSent(true);
+          } else {
+            console.error('❌ Failed to send email:', result.error || result.message);
+          }
+        } catch (error) {
+          console.error('❌ Error sending order confirmation email:', error);
+        }
+      };
+
+      sendEmail();
+    }
+  }, [paymentIntent, customerInfo, items, emailSent]);
 
   // Handle Stripe redirect with session_id
   useEffect(() => {

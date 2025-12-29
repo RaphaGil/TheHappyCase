@@ -307,11 +307,9 @@ const QuantityControls = ({
   decrementItemQty,
 }) => (
   <div>
-    {item.type !== 'charm' && (
-      <div className="text-xs text-gray-500 mb-2 font-light font-inter">
-        Quantity:
-      </div>
-    )}
+    <div className="text-xs text-gray-500 mb-2 font-light font-inter">
+      Quantity:
+    </div>
     <div className="flex flex-col gap-2">
       <div className="flex items-center border border-gray-200 rounded-sm p-1 w-fit">
         <button

@@ -79,6 +79,19 @@ code {
     monospace;
 }
 
+/* PerfectGiftSection background styles */
+.perfect-gift-bg {
+  background-position: center;
+  background-size: cover;
+}
+
+/* Fixed background attachment for medium screens and above */
+@media (min-width: 768px) {
+  .perfect-gift-bg {
+    background-attachment: fixed;
+  }
+}
+
 /* Custom Font Classes */
 .lazy-dog-title {
   font-family: 'Fredoka One', cursive !important;

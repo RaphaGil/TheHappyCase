@@ -87,7 +87,10 @@ export const createPaymentIntent = async (paymentData) => {
 
   // Try to create a real Payment Intent via backend
   try {
-    const response = await fetch(getApiUrl('/create-payment-intent'), {
+    const apiUrl = getApiUrl('/api/create-payment-intent');
+    console.log('📞 Calling backend to create payment intent:', apiUrl);
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -102,52 +105,50 @@ export const createPaymentIntent = async (paymentData) => {
 
     if (!response.ok) {
       const errorBody = await response.text();
+      console.error('❌ Backend error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorBody.substring(0, 200) // First 200 chars
+      });
       throw new Error(
-        `Backend responded with ${response.status} ${response.statusText}: ${errorBody}`
+        `Backend responded with ${response.status} ${response.statusText}: ${errorBody.substring(0, 100)}`
       );
     }
 
     const data = await response.json();
+    console.log('✅ Backend response received:', { 
+      hasClientSecret: !!data.clientSecret,
+      keys: Object.keys(data)
+    });
 
     if (!data.clientSecret) {
+      console.error('❌ Backend response missing clientSecret:', data);
       throw new Error('Backend did not return a clientSecret');
     }
 
+    console.log('✅ Payment intent created successfully');
     return {
       client_secret: data.clientSecret,
     };
   } catch (error) {
     console.error(
-      'Failed to create payment intent via backend. Falling back to mock client secret.',
+      '❌ Failed to create payment intent via backend. Falling back to mock client secret.',
       error
+    );
+    console.error('Error details:', {
+      message: error.message,
+      name: error.name,
+      stack: error.stack?.substring(0, 200)
+    });
+    
+    // Don't fall back to mock - throw the error so the user knows something is wrong
+    throw new Error(
+      `Failed to create payment intent: ${error.message}. Please ensure your backend server is running on port 3001.`
     );
   }
 
-  // Fallback: generate a mock client secret (dev only)
-  const generateStripeId = () => {
-    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let result = '';
-    for (let i = 0; i < 24; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
-  const paymentIntentId = generateStripeId();
-  const secretPart = generateStripeId();
-  const mockClientSecret = `pi_${paymentIntentId}_secret_${secretPart}`;
-
-  console.warn(
-    '⚠️ Using mock client secret. Payment Element will fail against Stripe servers.'
-  );
-  console.warn(
-    'Make sure your backend server is running and REACT_APP_BACKEND_URL points to it.'
-  );
-
-  return {
-    client_secret: mockClientSecret,
-    payment_intent_id: `pi_${paymentIntentId}`,
-  };
+  // Removed fallback to mock - we should always use real payment intents
+  // If we reach here, something went wrong and we should show an error
 };
 
 // Mock function to simulate successful payment

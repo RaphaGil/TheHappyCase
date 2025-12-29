@@ -31,7 +31,7 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-      <div className={`${isMobile ? 'pt-0 mt-0 ' : 'pt-6'} flex-shrink-0 relative z-0 bg-gray-100 ${isMobile ? '' : 'mt-auto flex flex-col justify-between'}`}>
+      <div className={`${isMobile ? 'pt-0 mt-0 bg-gray-100' : 'pt-6'} flex-shrink-0 relative z-0  ${isMobile ? '' : 'mt-auto flex flex-col justify-between'}`}>
         {/* Mobile: Price + Quantity + Add to Cart in same row, then Terms below */}
         {isMobile ? (
           <>

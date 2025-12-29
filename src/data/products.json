@@ -138,10 +138,11 @@
         "/TheHappyCase/images/FirstClassCase/firstclasscasebrickred.png",
         "/TheHappyCase/images/FirstClassCase/firstclasscasepink.png",
         "/TheHappyCase/images/FirstClassCase/firstclasscasebrown.png",
-        "/TheHappyCase/images/FirstClassCase/firstclasscaselightblue.png",
+        "/TheHappyCase/images/FirstClassCase/firstclasscaseblue.png",
         "/TheHappyCase/images/FirstClassCase/firstclasscasegray.png",
         "/TheHappyCase/images/FirstClassCase/firstclasscasepurple.png",
-        "/TheHappyCase/images/FirstClassCase/firstclasscasegreen.png"
+        "/TheHappyCase/images/FirstClassCase/firstclasscasegreen.png",
+         "/TheHappyCase/images/FirstClassCase/firstclasscasedarkpink.png"
       ],
       "colors": [
         {
@@ -157,6 +158,10 @@
           "image": "/TheHappyCase/images/FirstClassCase/firstclasscasegreen.png"
         },
         {
+          "color": "#ab8b72",
+          "image": "/TheHappyCase/images/FirstClassCase/firstclasscasedarkpink.png"
+        },
+        {
           "color": "#bfa29c",
           "image": "/TheHappyCase/images/FirstClassCase/firstclasscasepink.png"
         },
@@ -169,8 +174,16 @@
           "image": "/TheHappyCase/images/FirstClassCase/firstclasscasegray.png"
         },
         {
-          "color": "#919fab",
+          "color": "#5f6074",
           "image": "/TheHappyCase/images/FirstClassCase/firstclasscasenavyblue.png"
+        },
+        {
+          "color": "#768695",
+          "image": "/TheHappyCase/images/FirstClassCase/firstclasscaseblue.png"
+        },
+        {
+          "color": "#cea55c",
+          "image": "/TheHappyCase/images/FirstClassCase/firstclasscaselightbrown.png"
         },
         {
           "color": "#272a34",
@@ -461,7 +474,7 @@
         "name": "Colorful Camera",
         "src": "/TheHappyCase/images/ColorfulPins/camera.png",
         "price": 2,
-        "size": 0.65,
+        "size": 0.55,
         "subCategory": "camera"
       },
       {
@@ -707,7 +720,7 @@
         "name": "Wine",
         "src": "/TheHappyCase/images/ColorfulPins/wineglass.png",
         "price": 2,
-        "size": 0.45,
+        "size": 0.4,
         "subCategory": "drinks"
       },
       {

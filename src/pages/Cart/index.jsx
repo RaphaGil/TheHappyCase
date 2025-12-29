@@ -13,7 +13,7 @@ const CartPage = () => {
     cart,
     removeFromCart,
     getTotalPrice,
-    getTotalItems,
+    getTotalQuantity,
     incrementItemQty,
     decrementItemQty,
     updateItemNote,
@@ -427,7 +427,7 @@ const CartPage = () => {
     <div className="min-h-screen bg-white py-8 md:py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <CartHeader
-          totalItems={getTotalItems()}
+          totalItems={getTotalQuantity()}
           onBack={() => navigate("/")}
         />
 

@@ -9,13 +9,12 @@ const PerfectGiftSection = ({ image }) => {
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch">
       {/* Image - Full width on mobile, left side on larger screens */}
       <div 
-        className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[550px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-gray-100 flex items-start"
+        className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[650px] lg:h-[700px] xl:h-[750px] overflow-hidden bg-gray-100 flex items-start perfect-gift-bg"
         style={{
           backgroundImage: `url(${image})`,
-          backgroundSize: 'contain',
-          backgroundPosition: '',
           backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed'
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         {/* Fallback img for SEO and accessibility */}
@@ -38,21 +37,15 @@ const PerfectGiftSection = ({ image }) => {
         <div className="absolute inset-0 flex items-center justify-center z-10 md:hidden">
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
             <div className="text-center space-y-4 sm:space-y-5">
-              <h2 
-                className="text-xl sm:text-2xl font-light text-white mb-4 sm:mb-5 font-inter tracking-title"
-            
-              >
+              <h2 className="text-subtitle-lg md:text-title font-light text-white mb-4 sm:mb-5 font-inter tracking-title">
                 {sectionVisible && (
                   <AnimatedTitle delay={100}>
                     The Perfect Gift for Every Moment
                   </AnimatedTitle>
                 )}
               </h2>
-              <p 
-                className="text-sm sm:text-base text-white leading-relaxed font-light font-inter px-2 sm:px-4"
-            
-              >
-                Created with love for birthdays, weddings, and for all the travelers who carry their stories around the world.
+              <p className="text-sm sm:text-base text-white leading-relaxed font-light font-inter px-2 sm:px-4">
+                Created with love for all the travelers who carry their stories around the world.
               </p>
             </div>
           </div>
@@ -63,18 +56,14 @@ const PerfectGiftSection = ({ image }) => {
       <div className="hidden md:flex md:w-1/2 items-center justify-center bg-white">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16">
           <div className="space-y-6 lg:space-y-8">
-            <h2 
-              className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-light text-gray-900 mb-6 font-inter tracking-title"
-            >
+            <h2 className="text-subtitle-lg md:text-title font-light text-gray-900 mb-6 font-inter tracking-title">
               {sectionVisible && (
                 <AnimatedTitle delay={100}>
                   The Perfect Gift for Every Moment
                 </AnimatedTitle>
               )}
             </h2>
-            <p 
-              className="text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed font-light font-inter"
-            >
+            <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed font-light font-inter">
               Created with love for birthdays, weddings, and for all the travelers who carry their stories around the world.
             </p>
           </div>

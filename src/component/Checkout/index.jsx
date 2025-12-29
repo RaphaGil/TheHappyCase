@@ -439,10 +439,12 @@ const CheckoutForm = () => {
 
 const Checkout = () => {
   const { cart, getTotalPrice } = useCart();
-  const { currency } = useCurrency();
+  const { currency, convertPrice } = useCurrency();
   const navigate = useNavigate();
   const [options, setOptions] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [paymentError, setPaymentError] = useState(null);
+  const hasInitializedRef = useRef(false);
   const assetBasePath = process.env.PUBLIC_URL || '';
   const cartIconSrc = `${assetBasePath}/images/cart.svg`;
 
@@ -454,16 +456,38 @@ const Checkout = () => {
       return;
     }
 
-    // Only initialize payment options if we have items in cart
-    if (cart.length === 0) {
+    // Only initialize payment options once when we have items in cart
+    if (cart.length === 0 || hasInitializedRef.current || options !== null) {
       return;
     }
 
     const initializeOptions = async () => {
       try {
+        hasInitializedRef.current = true;
         setLoading(true);
-        const amount = Math.round(getTotalPrice() * 100);
+        
+        // Get total price in GBP, then convert to selected currency
+        const totalPriceGBP = getTotalPrice();
+        const totalPriceInCurrency = convertPrice(totalPriceGBP);
+        
+        // Convert to smallest currency unit (pence, cents, etc.)
+        // For currencies like JPY that don't use decimals, multiply by 1
+        const currencyMultipliers = {
+          'jpy': 1,  // Japanese Yen doesn't use decimals
+          'krw': 1,  // South Korean Won doesn't use decimals
+          'vnd': 1,  // Vietnamese Dong doesn't use decimals
+        };
+        const multiplier = currencyMultipliers[currency.toLowerCase()] || 100;
+        const amount = Math.round(totalPriceInCurrency * multiplier);
         const currencyCode = currency.toLowerCase();
+        
+        console.log('💳 Creating payment intent:', {
+          totalPriceGBP,
+          totalPriceInCurrency,
+          currency: currencyCode,
+          amount,
+          multiplier
+        });
         
         const result = await createPaymentIntent({
           amount,
@@ -487,17 +511,64 @@ const Checkout = () => {
             },
           },
         });
+        setPaymentError(null); // Clear any previous errors
       } catch (err) {
         console.error('Failed to initialize payment options:', err);
+        setPaymentError(err.message || 'Failed to initialize payment. Please ensure the backend server is running.');
+        hasInitializedRef.current = false; // Allow retry on error
       } finally {
         setLoading(false);
       }
     };
 
     initializeOptions();
-  }, [cart, getTotalPrice, currency, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cart.length]); // Only re-run if cart length changes (hasInitializedRef prevents re-init)
 
-  if (loading || !options) {
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  if (paymentError) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <CheckoutHeader cartIconSrc={cartIconSrc} />
+        <div className="flex-1 flex items-center justify-center bg-white py-10">
+          <div className="max-w-md mx-auto px-4 text-center">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-red-900 mb-3" style={{fontFamily: "'Poppins', sans-serif"}}>
+                Payment Setup Error
+              </h2>
+              <p className="text-red-700 mb-4 font-inter">
+                {paymentError}
+              </p>
+              <div className="text-sm text-red-600 mb-4 font-inter">
+                <p className="mb-2">To fix this issue:</p>
+                <ol className="list-decimal list-inside space-y-1 text-left">
+                  <li>Make sure your backend server is running: <code className="bg-red-100 px-1 rounded">npm run server</code></li>
+                  <li>Verify the server is running on port 3001</li>
+                  <li>Check that the proxy is configured correctly</li>
+                  <li>Refresh this page to retry</li>
+                </ol>
+              </div>
+              <button
+                onClick={() => {
+                  setPaymentError(null);
+                  hasInitializedRef.current = false;
+                  window.location.reload();
+                }}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors font-inter"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!options) {
     return <LoadingState />;
   }
 
