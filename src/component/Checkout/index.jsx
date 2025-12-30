@@ -324,11 +324,11 @@ const CheckoutForm = () => {
         itemErrors={itemErrors}
       />
  
-      <div className="flex flex-col lg:flex-row  w-full">
+      <div className="flex flex-col lg:flex-row  w-full ">
         {/* Checkout form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-6  p-6 w-full lg:w-1/2 lg:flex-shrink-0"
+          className="space-y-6  mt-6 lg:mt-0 lg:p-6 w-full lg:w-1/2 lg:flex-shrink-0"
         >
         {/* Customer Information */}
         <CustomerInfoForm 

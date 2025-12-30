@@ -4,7 +4,7 @@ import SignInModal from './SignInModal';
 const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authenticatedEmail, onSignIn, onSignOut }) => {
   const [showSignInModal, setShowSignInModal] = useState(false);
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
         <h3 className="text-md uppercase tracking-wider text-gray-900 mb-4 font-bold font-inter">
        Contact
       </h3>

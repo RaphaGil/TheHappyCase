@@ -140,7 +140,7 @@ const MobileOverlay = ({
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
                       {caseImage && (
-                        <div className="relative w-full aspect-square overflow-hidden rounded-md">
+                        <div className="relative w-full aspect-square overflow-hidden ">
                           <img
                             src={caseImage}
                             alt={opt.label}
@@ -159,7 +159,7 @@ const MobileOverlay = ({
                           )}
                         </div>
                       )}
-                      <span className={`text-[9px] xs:text-[11px] sm:text-xs md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2 ${soldOut ? 'text-gray-500' : ''}`}>
+                      <span className={`text-xs xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2 ${soldOut ? 'text-gray-500' : ''}`}>
                         {opt.label}
                       </span>
                       {soldOut && (
@@ -214,7 +214,7 @@ const MobileOverlay = ({
                           )}
                         </div>
                       )}
-                      <span className="font-medium text-[9px] xs:text-[10px]">{cat.label}</span>
+                      <span className="font-medium text-xs xs:text-sm">{cat.label}</span>
                     </button>
                   ))}
                 </div>
@@ -225,7 +225,7 @@ const MobileOverlay = ({
                 <div className="mb-3 xs:mb-4 relative">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="w-full flex items-center justify-between px-3 xs:px-4 py-2 xs:py-2.5 bg-gray-100 border border-gray-300 rounded-md text-left transition-all duration-200 hover:bg-gray-200 hover:border-gray-400"
+                    className="w-full flex items-center justify-between px-3 xs:px-4 py-2 xs:py-2.5 bg-gray-100 border border-gray-300 text-left transition-all duration-200 hover:bg-gray-200 hover:border-gray-400"
                     style={{fontFamily: "'Poppins', sans-serif"}}
                   >
                     <span className="text-xs xs:text-sm font-medium text-gray-900 uppercase tracking-wider">
@@ -249,7 +249,7 @@ const MobileOverlay = ({
                         onClick={() => setIsDropdownOpen(false)}
                       />
                       {/* Dropdown Menu */}
-                      <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto">
                         {filterTabs.map(({ key, label }) => (
                           <button
                             key={key}
@@ -389,7 +389,7 @@ const MobileOverlay = ({
                                 </div>
                               )}
                             </div>
-                            <span className={`text-[9px] xs:text-[10px] sm:text-xs text-center line-clamp-2 mt-0.5 xs:mt-1 ${
+                            <span className={`text-xs xs:text-sm sm:text-base text-center line-clamp-2 mt-0.5 xs:mt-1 ${
                               isSoldOut ? 'text-gray-500' : 'text-gray-700'
                             }`} style={{fontFamily: "'Poppins', sans-serif"}}>
                               {pin.name}

@@ -36,7 +36,7 @@ const getColorName = (image) => {
     'pink': 'Pink',
     'blue': 'Blue',
     'green': 'Green',
-    'purple': 'Purple',
+    'purple': 'Violet',
     'yellow': 'Yellow',
     'orange': 'Orange'
   };

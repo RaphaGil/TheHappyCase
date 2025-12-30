@@ -61,15 +61,13 @@
         }
       ],
       "specifications": {
-        "size": "14.9cm x 10cm",
         "dimensions": "14.9cm (W) x 10.7cm (H) x 1cm (D)",
         "rfid": "Yes",
         "material": "PU Leather",
         "closure": "Magnetic Snap Closure",
-        "cardSlots": "3 Card Slots",
+        "cardSlots": "3",
         "features": "RFID Protection, Water Resistant, Lightweight Design",
         "interior": "Document Pocket, Boarding Pass Slot, SIM Card Slot",
-        "passportCapacity": "2 Passports",
         "care": "Wipe clean with damp cloth"
       },
       "basePrice": 8
@@ -114,15 +112,12 @@
         }
       ],
       "specifications": {
-        "size": "14cm x 10.5cm",
         "dimensions": "14cm (W) x 9.5cm (H) x 1cm (D)",
         "rfid": "No",
         "material": "Genuine Leather",
         "closure": "No Closure",
-        "cardSlots": "4 Card Slots",
+        "cardSlots": "4",
         "interior": "Passport Pocket, Document Pocket",
-        "features": "RFID Protection, Water Resistant",
-        "passportCapacity": "2 Passports + Documents",
         "care": "Clean with leather conditioner, avoid excessive moisture"
       },
       "basePrice": 12
@@ -146,11 +141,11 @@
       ],
       "colors": [
         {
-          "color": "#f48940",
+          "color": "#d17956",
           "image": "/TheHappyCase/images/FirstClassCase/firstclasscasebrown.png"
         },
         {
-          "color": "#a76967",
+          "color": "#c76f82",
           "image": "/TheHappyCase/images/FirstClassCase/firstclasscasebrickred.png"
         },
         {
@@ -193,12 +188,12 @@
       "specifications": {
         "dimensions": "14cm (W) x 10.5cm (H) x 1.5cm (D)",
         "rfid": "Yes",
-        "material": "Luxury Genuine Leather",
+        "material": "Genuine Leather",
         "closure": "Button Snap Closure",
-        "cardSlots": "3 Card Slots",
+        "cardSlots": "3",
         "interior": " Document Pocket, Boarding Pass Slot, SIM Card Slot",
-        "features": "RFID Protection, Water Resistant",
-        "passportCapacity": "2 Passports + Documents + Boarding Passes"
+        "features": "Coin Pouch, RFID Protection, Water Resistant"
+
       },
       "basePrice": 12
     }

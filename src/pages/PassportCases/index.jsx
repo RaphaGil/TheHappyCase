@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faShield, faTag, faTruck } from '@fortawesome/free-solid-svg-icons';
 import Products from '../../data/products.json';
 import { useCart } from '../../context/CartContext';
 import AddToCartBtn from '../../component/AddToCartBtn';
@@ -191,7 +191,7 @@ const PassportCases = () => {
       'pink': 'Pink',
       'blue': 'Blue',
       'green': 'Green',
-      'purple': 'Purple',
+      'purple': 'Violet',
       'yellow': 'Yellow',
       'orange': 'Orange'
     };
@@ -289,11 +289,14 @@ const PassportCases = () => {
       ];
     } else if (selectedCaseType === 'business') {
       detailImages = [
-        '/TheHappyCase/images/BusinessClassCase/businessclass.png'
+        '/TheHappyCase/images/BusinessClassCase/businessclass.png',
+         '/TheHappyCase/images/BusinessClassCase/businessclass1.png'
       ];
     } else if (selectedCaseType === 'firstclass') {
       detailImages = [
-        '/TheHappyCase/images/FirstClassCase/firstclass.jpg'
+        '/TheHappyCase/images/FirstClassCase/firstclass.jpg',
+        '/TheHappyCase/images/FirstClassCase/firstclass1.png',
+        '/TheHappyCase/images/FirstClassCase/firstclass2.png'
       ];
     }
     
@@ -535,45 +538,6 @@ const PassportCases = () => {
                 )}
               </div>
             </div>
-            
-            {/* Detail Images Gallery */}
-            <div className="mt-3">
-           
-              <div className="grid grid-cols-5 sm:grid-cols-4 lg:grid-cols-7  gap-2">
-                {detailImages.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleDetailImageClick(image)}
-                    disabled={isSelectedColorSoldOut()}
-                    className={`relative aspect-square overflow-hidden bg-gray-50 border transition-all duration-200 max-w-[80px] mx-auto ${
-                      selectedDetailImage === image || (!selectedDetailImage && index === 0 && currentImage === image)
-                        ? 'border-gray-900 ring-2 ring-gray-300'
-                        : 'border-gray-200 hover:border-gray-400'
-                    } ${isSelectedColorSoldOut() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    <img
-                      src={image}
-                      alt={`${selectedCase.name} - Detail ${index + 1}`}
-                      className="w-full h-full object-contain"
-                      loading="lazy"
-                      fetchPriority="low"
-                      decoding="async"
-                      width="80"
-                      height="80"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        if (e.target.nextSibling) {
-                          e.target.nextSibling.style.display = 'flex';
-                        }
-                      }}
-                    />
-                    <div className="hidden w-full h-full items-center justify-center text-gray-300">
-                      <span className="text-2xl">📷</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Right Side - Details and Selection */}
@@ -581,7 +545,7 @@ const PassportCases = () => {
             
             {/* Color Selection */}
             <div className="border-b border-gray-100 pb-4 sm:pb-6 mt-3">
-              <h3 className="text-sm uppercase tracking-wider text-gray-900 mb-3 font-medium font-inter">Colours Available</h3>
+              <h3 className="mt-6 tracking-wider text-gray-900 mb-3 text-md font-inter">Colours Available</h3>
               <div className="grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 gap-2 sm:gap-1.5 md:gap-2">
                 {selectedCase.colors.map((colorOption, index) => {
                   const colorSoldOut = isColorSoldOut(colorOption.color);
@@ -607,7 +571,7 @@ const PassportCases = () => {
                         <span className="text-[9px] text-red-600 font-medium text-center">Sold Out</span>
                       ) : (
                         colorName && (
-                          <span className="text-[10px] sm:text-[9px] text-gray-700 font-medium text-center mt-0.5 font-inter leading-tight">
+                          <span className="text-[10px] sm:text-[11px] text-gray-700 font-thin text-center mt-1 font-inter leading-tight">
                             {colorName}
                           </span>
                         )
@@ -623,9 +587,9 @@ const PassportCases = () => {
               <div className="border-b border-gray-100 pb-8">
                 <button
                   onClick={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
-                  className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors font-inter"
+                  className="w-full flex items-center justify-between py-2 text-mduppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors font-inter"
                 >
-                  <span>Specifications</span>
+                  <span>Product Details</span>
                   <FontAwesomeIcon 
                     icon={isSpecificationsOpen ? faChevronUp : faChevronDown} 
                     className="text-xs transition-transform duration-200"
@@ -704,8 +668,76 @@ const PassportCases = () => {
               </div>
             )}
 
-            {/* Price and CTA */}
-            <div className="space-y-3 sm:space-y-4">
+            {/* RFID Protection and Material Badges */}
+            {(selectedCase.specifications?.rfid === "Yes" || selectedCase.specifications?.material) && (
+              <div className="pb-4 sm:pb-6 flex flex-wrap items-center gap-4 sm:gap-6">
+                {selectedCase.specifications?.rfid === "Yes" && (
+                  <p className="text-sm font-bold text-gray-900 font-inter flex items-center gap-2">
+                    <FontAwesomeIcon icon={faShield} className="text-blue-600" />
+                    RFID Protection
+                  </p>
+                )}
+                {selectedCase.specifications?.material && (
+                  <p className="text-sm font-bold text-gray-900 font-inter flex items-center gap-2">
+                    <FontAwesomeIcon icon={faTag} className="text-yellow-600" />
+                    {selectedCase.specifications.material}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Delivery Information */}
+            <div className="pb-4 sm:pb-6">
+              <p className="text-sm  text-gray-900 font-thin flex items-center gap-2">
+                <FontAwesomeIcon icon={faTruck} className="text-gray-700" />
+                Standard UK Delivery 2-4 Days
+              </p>
+            </div>
+
+          </div>
+
+          {/* Bottom Row - Detail Images and Personalize Button */}
+          <div className="col-span-1 sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-12 -mt-6 sm:-mt-4">
+            {/* Left side - Detail Images Gallery */}
+            <div className="flex items-center">
+              <div className="grid grid-cols-5 sm:grid-cols-4 lg:grid-cols-7 gap-2 w-full">
+                {detailImages.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleDetailImageClick(image)}
+                    disabled={isSelectedColorSoldOut()}
+                    className={`relative aspect-square overflow-hidden bg-gray-50 border transition-all duration-200 max-w-[80px] mx-auto ${
+                      selectedDetailImage === image || (!selectedDetailImage && index === 0 && currentImage === image)
+                        ? 'border-gray-900 ring-2 ring-gray-300'
+                        : 'border-gray-200 hover:border-gray-400'
+                    } ${isSelectedColorSoldOut() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${selectedCase.name} - Detail ${index + 1}`}
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                      fetchPriority="low"
+                      decoding="async"
+                      width="80"
+                      height="80"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        if (e.target.nextSibling) {
+                          e.target.nextSibling.style.display = 'flex';
+                        }
+                      }}
+                    />
+                    <div className="hidden w-full h-full items-center justify-center text-gray-300">
+                      <span className="text-2xl">📷</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Right side - Price, Add to Cart and PERSONALIZE Button */}
+            <div className="flex flex-col justify-end space-y-2 sm:space-y-3">
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-light text-gray-900 font-inter">£{selectedCase.basePrice.toFixed(2)}</span>
               </div>
@@ -733,10 +765,10 @@ const PassportCases = () => {
                     className="h-full px-3 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
                     aria-label="Increase quantity"
                   >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
-                      </svg>
-                    </button>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
                   </div>
 
                   {/* Add to Cart Button */}

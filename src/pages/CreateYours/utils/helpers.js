@@ -33,7 +33,7 @@ export const getColorName = (image) => {
     'pink': 'Pink',
     'blue': 'Blue',
     'green': 'Green',
-    'purple': 'Purple',
+    'purple': 'Violet',
     'yellow': 'Yellow',
     'orange': 'Orange'
   };
@@ -145,6 +145,7 @@ export const getDefaultCaseAndColor = (searchParams) => {
   }
   return { caseType: "economy", color: "", image: "" };
 };
+
 
 
 

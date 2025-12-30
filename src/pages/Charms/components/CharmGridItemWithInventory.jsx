@@ -19,3 +19,4 @@ const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart
 export default CharmGridItemWithInventory;
 
 
+
