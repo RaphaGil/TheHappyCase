@@ -10,16 +10,18 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [orderSaved, setOrderSaved] = useState(false);
   const { paymentIntent, customerInfo, items } = location.state || {};
   const sessionId = searchParams.get('session_id');
 
-  // Send order confirmation email
+  // Save order to Supabase and send confirmation email
   useEffect(() => {
-    // Only send email if we have paymentIntent, customerInfo, and items, and haven't sent it yet
-    if (paymentIntent && customerInfo?.email && items && items.length > 0 && !emailSent) {
-      const sendEmail = async () => {
+    // Only process if we have paymentIntent, customerInfo, and items, and haven't processed yet
+    if (paymentIntent && customerInfo?.email && items && items.length > 0 && !orderSaved) {
+      const saveOrderAndSendEmail = async () => {
         try {
-          const response = await fetch(getApiUrl('/api/send-order-confirmation'), {
+          // First, save order to Supabase
+          const saveOrderResponse = await fetch(getApiUrl('/api/save-order'), {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -31,21 +33,43 @@ const PaymentSuccess = () => {
             }),
           });
 
-          const result = await response.json();
-          if (result.success) {
+          const saveOrderResult = await saveOrderResponse.json();
+          if (saveOrderResult.success) {
+            console.log('✅ Order saved to Supabase successfully:', saveOrderResult.order_id);
+            setOrderSaved(true);
+          } else {
+            console.error('❌ Failed to save order:', saveOrderResult.error || saveOrderResult.message);
+            // Continue with email even if order save fails
+          }
+
+          // Then, send order confirmation email
+          const emailResponse = await fetch(getApiUrl('/api/send-order-confirmation'), {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              paymentIntent,
+              customerInfo,
+              items,
+            }),
+          });
+
+          const emailResult = await emailResponse.json();
+          if (emailResult.success) {
             console.log('✅ Order confirmation email sent successfully');
             setEmailSent(true);
           } else {
-            console.error('❌ Failed to send email:', result.error || result.message);
+            console.error('❌ Failed to send email:', emailResult.error || emailResult.message);
           }
         } catch (error) {
-          console.error('❌ Error sending order confirmation email:', error);
+          console.error('❌ Error processing order:', error);
         }
       };
 
-      sendEmail();
+      saveOrderAndSendEmail();
     }
-  }, [paymentIntent, customerInfo, items, emailSent]);
+  }, [paymentIntent, customerInfo, items, orderSaved]);
 
   // Handle Stripe redirect with session_id
   useEffect(() => {

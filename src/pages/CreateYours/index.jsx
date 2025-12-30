@@ -776,15 +776,15 @@ const CreateYours = () => {
         </div>
         
         {/* Main Content Container - Side by side on desktop */}
-        <div className={`flex flex-col ${isMobile ? '' : 'md:flex-row md:gap-8 lg:gap-12'} flex-1 overflow-hidden mt-0 ${isMobile ? '' : 'md:mt-6'}`}>
+        <div className={`flex flex-col ${isMobile ? '' : 'md:flex-row md:gap-8 lg:gap-12'} flex-1 overflow-hidden mt-0 ${isMobile ? '' : 'md:mt-12'}`}>
           {/* Canvas Section - Mobile: Top, Desktop: Left */}
-          <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'justify-start' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
+          <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'flex-1 justify-center' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
               isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
                 ? 'md:sticky md:top-0 md:self-start'
                 : ''
             }`}>
 
-            <div className="w-full flex flex-col justify-start items-center md:h-full md:justify-between">
+            <div className="w-full h-full flex flex-col justify-center items-center md:justify-between">
               <div className="w-[300px] h-[350px] md:h-[350px] relative md:mt-2" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
@@ -1183,7 +1183,7 @@ const CreateYours = () => {
         {/* Fixed Price Summary - Mobile only */}
         {isMobile && (
           <div className="fixed left-0 right-0 z-40 bg-gray-100 border-t border-gray-200 shadow-lg md:hidden max-h-[50vh] xs:max-h-[45vh] overflow-y-auto w-full safe-area-inset-bottom" style={{bottom: '0', paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)'}}>
-            <div className="px-2 xs:px-2.5 sm:px-3 py-1.5 xs:py-2 sm:py-2.5">
+            <div className="px-2 xs:px-2.5 sm:px-3 py-1.5 xs:py-2 sm:py-2.5 ">
               <PriceSummary
                 totalPrice={totalPrice}
                 caseBasePrice={caseBasePrice}

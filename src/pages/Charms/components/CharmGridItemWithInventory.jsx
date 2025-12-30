@@ -1,9 +1,22 @@
 import React from 'react';
+import { getMaxAvailableQuantity } from '../../../utils/inventory';
 import CharmGridItem from './CharmGridItem';
-import { useCharmSoldOut } from '../utils/useCharmSoldOut';
 
 const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart, charmPrice }) => {
-  const isSoldOut = useCharmSoldOut(charm, charmType, cart);
+  // Create a product object for inventory checking
+  const product = {
+    name: charm.name,
+    price: charmPrice,
+    totalPrice: charmPrice,
+    image: charm.src,
+    pin: charm,
+    category: charmType,
+    type: 'charm'
+  };
+
+  // Check inventory availability
+  const maxAvailable = getMaxAvailableQuantity(product, cart);
+  const isSoldOut = maxAvailable !== null && maxAvailable === 0;
 
   return (
     <CharmGridItem
@@ -17,6 +30,4 @@ const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart
 };
 
 export default CharmGridItemWithInventory;
-
-
 

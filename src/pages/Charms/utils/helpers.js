@@ -1,7 +1,7 @@
 import Products from '../../../data/products.json';
 
 /**
- * Get products with quantities from localStorage (includes charms)
+ * Get products with quantities merged from localStorage (Supabase inventory)
  */
 export const getProductsWithQuantities = () => {
   const savedQuantities = localStorage.getItem('productQuantities');
@@ -11,18 +11,29 @@ export const getProductsWithQuantities = () => {
     const quantities = JSON.parse(savedQuantities);
     const mergedProducts = { ...Products };
     
-    // Merge charm quantities
+    // Merge pin quantities if they exist
     if (quantities.pins) {
-      ['flags', 'colorful', 'bronze'].forEach(category => {
-        if (quantities.pins[category] && mergedProducts.pins[category]) {
-          mergedProducts.pins[category] = mergedProducts.pins[category].map((charm, index) => ({
-            ...charm,
-            quantity: quantities.pins[category][index] !== undefined 
-              ? quantities.pins[category][index] 
-              : charm.quantity
-          }));
-        }
-      });
+      mergedProducts.pins = {
+        ...mergedProducts.pins,
+        flags: mergedProducts.pins?.flags?.map((pin, index) => ({
+          ...pin,
+          quantity: quantities.pins.flags?.[index] !== undefined 
+            ? quantities.pins.flags[index] 
+            : pin.quantity
+        })) || [],
+        colorful: mergedProducts.pins?.colorful?.map((pin, index) => ({
+          ...pin,
+          quantity: quantities.pins.colorful?.[index] !== undefined 
+            ? quantities.pins.colorful[index] 
+            : pin.quantity
+        })) || [],
+        bronze: mergedProducts.pins?.bronze?.map((pin, index) => ({
+          ...pin,
+          quantity: quantities.pins.bronze?.[index] !== undefined 
+            ? quantities.pins.bronze[index] 
+            : pin.quantity
+        })) || []
+      };
     }
     
     return mergedProducts;
@@ -34,32 +45,49 @@ export const getProductsWithQuantities = () => {
 
 /**
  * Get charm price based on charm type
+ * @param {Object} charm - The charm object
+ * @param {string} charmType - 'bronze', 'colorful', or 'flags'
+ * @returns {number} - Price in pounds
  */
 export const getCharmPrice = (charm, charmType) => {
-  if (charmType === 'bronze') return charm.price || 1.0;
-  return charm.price || 2.0;
+  // If charm has a price property, use it
+  if (charm.price !== undefined && charm.price !== null) {
+    return charm.price;
+  }
+  
+  // Otherwise, use default prices based on type
+  if (charmType === 'bronze') {
+    return 1.50;
+  } else if (charmType === 'colorful' || charmType === 'flags') {
+    return 2.00;
+  }
+  
+  // Default fallback
+  return 2.00;
 };
 
 /**
- * Get charm category from charm type
+ * Get charm category string for cart/inventory tracking
+ * @param {string} charmType - 'bronze', 'colorful', or 'flags'
+ * @returns {string} - Category string
  */
 export const getCharmCategory = (charmType) => {
-  if (charmType === 'colorful') return 'colorful';
-  if (charmType === 'bronze') return 'bronze';
-  if (charmType === 'flags') return 'flags';
-  return 'colorful';
+  return charmType || 'colorful';
 };
 
 /**
- * Clean charm name (remove suffixes)
+ * Get formatted charm name
+ * @param {string} name - The charm name
+ * @returns {string} - Formatted name
  */
-export const getCharmName = (charmName) => {
-  let baseName = charmName || '';
-  // Remove common suffixes
-  baseName = baseName.replace(/\s*-\s*(Flag|Colorful Charm|Bronze Charm)$/i, '');
-  baseName = baseName.replace(/\s+Flag$/i, '');
-  return baseName.trim();
+export const getCharmName = (name) => {
+  if (!name) return 'Charm';
+  
+  // Remove common suffixes if needed
+  let formattedName = name;
+  formattedName = formattedName.replace(/\s*-\s*(Flag|Colorful Charm|Bronze Charm)$/i, '');
+  formattedName = formattedName.replace(/\s+Flag$/i, '');
+  
+  return formattedName.trim();
 };
-
-
 

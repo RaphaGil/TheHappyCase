@@ -29,7 +29,7 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-      <div className={`${isMobile ? 'pt-0 mt-0 bg-gray-100' : 'pt-6'} flex-shrink-0 relative z-0  ${isMobile ? '' : 'mt-auto flex flex-col justify-between'}`}>
+      <div className={`${isMobile ? 'pt-0 mt-0 bg-gray-100' : 'pt-14'} flex-shrink-0 relative z-0  ${isMobile ? '' : 'mt-auto flex flex-col justify-between'}`}>
         {/* Mobile: Price + Quantity + Add to Cart in same row, then Terms below */}
         {isMobile ? (
           <>
@@ -99,7 +99,7 @@ const PriceSummary = ({
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 ">
                   <AddToCartBtn 
                     product={{
                       id: `custom-${Date.now()}`,
@@ -149,7 +149,7 @@ const PriceSummary = ({
             </div>
 
             {/* Desktop: Terms Agreement Checkbox - Before Add to Cart */}
-            <div className="mb-4">
+            <div className="mb-4 ">
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"

@@ -1,9 +1,11 @@
+// Charm type options
 export const CHARM_TYPES = [
-  { key: 'colorful', label: 'Colorful Charms' },
-  { key: 'bronze', label: 'Bronze Charms' },
-  { key: 'flags', label: 'Flags' }
+  { value: 'colorful', label: 'Colorful Charms' },
+  { value: 'bronze', label: 'Bronze Charms' },
+  { value: 'flags', label: 'Flags Collection' }
 ];
 
+// Category tabs for each charm type
 export const FLAGS_CATEGORIES = [
   { key: 'all', label: 'ALL' },
   { key: 'europe', label: 'EUROPE' },
@@ -33,13 +35,14 @@ export const COLORFUL_CATEGORIES = [
   { key: 'camera', label: 'CAMERA' }
 ];
 
+// Map filter query params to charm types
 export const FILTER_TO_TYPE = {
   'colorful': 'colorful',
   'bronze': 'bronze',
-  'flags': 'flags'
+  'flags': 'flags',
+  'flag': 'flags'
 };
 
+// Pagination
 export const ITEMS_PER_PAGE = 20;
-
-
 

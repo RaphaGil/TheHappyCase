@@ -448,7 +448,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
 });
 
 // --- Save Order to Supabase ---
-app.post("/save-order", async (req, res) => {
+app.post("/api/save-order", async (req, res) => {
   try {
     const { paymentIntent, customerInfo, items } = req.body;
 

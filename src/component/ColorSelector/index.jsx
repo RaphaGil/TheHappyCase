@@ -1,5 +1,4 @@
 import React from "react";
-import { getMaxAvailableQuantity } from "../../utils/inventory";
 
 // Helper function to extract color name from image filename
 const getColorName = (image) => {
@@ -36,7 +35,7 @@ const getColorName = (image) => {
     'pink': 'Pink',
     'blue': 'Blue',
     'green': 'Green',
-    'purple': 'Violet',
+    'purple': 'Purple',
     'yellow': 'Yellow',
     'orange': 'Orange'
   };
@@ -67,33 +66,17 @@ const getColorName = (image) => {
   return colorPart || 'Color';
 };
 
-const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] }) => {
-  // Helper function to check if a color is sold out (considering cart inventory)
-  const isColorSoldOut = (color) => {
-    // If caseType is provided, check inventory using getMaxAvailableQuantity
-    if (caseType) {
-      const productForInventory = {
-        caseType: caseType,
-        color: color,
-      };
-      const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-      
-      // If maxAvailable === 0, no more can be added to the basket - SOLD OUT
-      // If maxAvailable is null (unlimited) or > 0, color is available
-      return maxAvailable !== null && maxAvailable === 0;
-    }
-    
-    // Fallback to quantity check if caseType not provided
-    return colors.find(c => c.color === color)?.quantity === 0;
-  };
+const ColorSelector = ({ colors, selectedColor, onSelect }) => {
+  const selectedColorData = colors.find(c => c.color === selectedColor);
+  const selectedColorName = selectedColorData ? getColorName(selectedColorData.image) : '';
 
   return (
     <div className="overflow-visible">
-      <div className="flex flex-wrap gap-3 overflow-visible justify-center">
+      <div className="flex flex-wrap gap-3 overflow-visible justify-center justify-center ">
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
-          const isSoldOut = isColorSoldOut(color);
+          const isSoldOut = quantity !== undefined && quantity === 0;
           
           return (
             <div
@@ -118,14 +101,13 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
                   </div>
                 )}
               </div>
-              {isSoldOut ? (
+              {isSelected && colorName && (
+                <span className="text-xs text-gray-700 font-medium mt-2 text-center font-inter">
+                  {colorName}
+                </span>
+              )}
+              {isSoldOut && (
                 <span className="text-[10px] text-red-600 font-medium mt-1">Sold Out</span>
-              ) : (
-                colorName && (
-                  <span className="text-xs text-gray-700 font-medium mt-2 text-center font-inter">
-                    {colorName}
-                  </span>
-                )
               )}
             </div>
           );

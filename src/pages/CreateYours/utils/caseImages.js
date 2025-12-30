@@ -1,20 +1,23 @@
 /**
- * Get case images including detail images from SmartCase folder
+ * Get case images array for a selected color and case
+ * Returns an array of image URLs including the main color image and detail images
+ * @param {Object} selectedColorData - The selected color data object with image property
+ * @param {Object} selectedCase - The selected case object with type property
+ * @returns {Array<string>} - Array of image URLs
  */
 export const getCaseImages = (selectedColorData, selectedCase) => {
   // Get the main color image
   const colorImage = selectedColorData?.image || selectedCase?.images?.[0] || '';
   
-  // Build images array from SmartCase folder
-  const smartCaseImages = [];
+  // Build images array
+  const caseImages = [];
   
-  // Add the main color image
+  // Add the main color image first
   if (colorImage) {
-    smartCaseImages.push(colorImage);
+    caseImages.push(colorImage);
   }
   
   // Add detail images based on case type
-  // These are common detail images that apply to all colors
   let detailImages = [];
   
   if (selectedCase?.type === 'economy') {
@@ -39,15 +42,10 @@ export const getCaseImages = (selectedColorData, selectedCase) => {
   // Add detail images if they exist
   detailImages.forEach(img => {
     if (img) {
-      smartCaseImages.push(img);
+      caseImages.push(img);
     }
   });
   
-  // If we have at least one image, return them; otherwise return empty array
-  return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [colorImage] : []);
+  // Return images array, or at least the color image if available
+  return caseImages.length > 0 ? caseImages : (colorImage ? [colorImage] : []);
 };
-
-
-
-
-
