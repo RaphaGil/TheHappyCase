@@ -46,3 +46,4 @@ export const FILTER_TO_TYPE = {
 // Pagination
 export const ITEMS_PER_PAGE = 20;
 
+

@@ -25,3 +25,4 @@ const SimplePagination = ({ currentPage, totalPages, onPageChange }) => {
 
 export default SimplePagination;
 
+

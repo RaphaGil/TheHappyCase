@@ -56,3 +56,4 @@ COMMENT ON COLUMN orders.shipping_address IS 'JSON object containing shipping ad
 COMMENT ON COLUMN orders.items IS 'JSON array of ordered items with details';
 COMMENT ON COLUMN orders.metadata IS 'Additional metadata from Stripe payment intent';
 
+

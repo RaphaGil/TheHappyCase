@@ -37,7 +37,10 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
           {/* Personalise Button Overlay - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center z-10 pb-6 md:pb-8">
             <button
-              onClick={() => navigate('/CreateYours')}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                navigate('/CreateYours');
+              }}
               className="px-8 py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 shadow-lg"
             >
               PERSONALISE
@@ -73,7 +76,10 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
           {/* Personalise Button Overlay - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center z-10 pb-6 md:pb-8">
             <button
-              onClick={() => navigate('/CreateYours')}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                navigate('/CreateYours');
+              }}
               className="px-8 py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 shadow-lg"
             >
               PERSONALISE

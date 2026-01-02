@@ -89,6 +89,11 @@ const CreateYours = () => {
     selectedCase: productsWithQuantities.cases.find(c => c.type === selectedCaseType)
   });
 
+  // Scroll to top when component mounts or route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [location.pathname]);
+
   // Update case and color when URL params change
   useEffect(() => {
     const caseParam = searchParams.get('case');
@@ -778,14 +783,14 @@ const CreateYours = () => {
         {/* Main Content Container - Side by side on desktop */}
         <div className={`flex flex-col ${isMobile ? '' : 'md:flex-row md:gap-8 lg:gap-12'} flex-1 overflow-hidden mt-0 ${isMobile ? '' : 'md:mt-12'}`}>
           {/* Canvas Section - Mobile: Top, Desktop: Left */}
-          <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'flex-1 justify-center' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
+          <div className={`flex flex-col flex-shrink-0 ${isMobile ? 'justify-start sm:flex-1 sm:justify-center' : 'md:w-1/2 md:flex-1 md:overflow-hidden md:px-0 md:py-0'} px-2 xs:px-3 sm:px-4 py-0 xs:py-1 sm:py-2 ${
               isCaseDropdownOpen || isCharmsDropdownOpen || isAddTextDropdownOpen
                 ? 'md:sticky md:top-0 md:self-start'
                 : ''
             }`}>
 
-            <div className="w-full h-full flex flex-col justify-center items-center md:justify-between">
-              <div className="w-[300px] h-[350px] md:h-[350px] relative md:mt-2" style={{isolation: 'isolate'}}>
+            <div className="w-full h-full flex flex-col justify-start xs:justify-start sm:justify-center items-center md:justify-between">
+              <div className="w-full max-w-[300px] aspect-[300/350] relative md:mt-2" style={{isolation: 'isolate'}}>
                 {/* Background Case Image - Always behind canvas */}
                 {selectedCaseImage && (
                   <div 
@@ -1040,7 +1045,7 @@ const CreateYours = () => {
                   {/* Choose Case Button */}
                   <button
                     onClick={() => setMobileCurrentStep('case')}
-                    className="py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
+                    className="py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
                   >
                     <FontAwesomeIcon 
                       icon={faBriefcase} 
@@ -1055,7 +1060,7 @@ const CreateYours = () => {
                   <button
                     onClick={() => setMobileCurrentStep('color')}
                     disabled={!selectedCaseType}
-                    className={`py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
+                    className={`py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
                       !selectedCaseType
                         ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
                         : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
@@ -1088,7 +1093,7 @@ const CreateYours = () => {
                       });
                     }}
                     disabled={!selectedCaseType || !selectedColor}
-                    className={`py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
+                    className={`py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
                       !selectedCaseType || !selectedColor
                         ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
                         : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
@@ -1118,7 +1123,7 @@ const CreateYours = () => {
                       setIsCharmsDropdownOpen(false);
                       setIsAddTextDropdownOpen(!isAddTextDropdownOpen);
                     }}
-                    className="py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
+                    className="py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
                   >
                     <FontAwesomeIcon 
                       icon={faFont} 

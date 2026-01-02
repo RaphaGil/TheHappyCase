@@ -169,6 +169,7 @@ const DesignIdeas = () => {
   };
 
   const handleCreateDesign = (idea) => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     navigate('/CreateYours');
   };
 
@@ -346,7 +347,10 @@ const DesignIdeas = () => {
             Start designing your custom passport case with our interactive creator!
           </p>
           <button
-            onClick={() => navigate('/CreateYours')}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'instant' });
+              navigate('/CreateYours');
+            }}
             className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-inter"
           >
             Start Creating Now

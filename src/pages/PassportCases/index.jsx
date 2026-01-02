@@ -804,6 +804,7 @@ const PassportCases = () => {
               <button
                 onClick={() => {
                   // Navigate to CreateYours with selected case and color
+                  window.scrollTo({ top: 0, behavior: 'instant' });
                   navigate(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
                 }}
                 className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"

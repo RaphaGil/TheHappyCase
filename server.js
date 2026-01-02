@@ -452,8 +452,13 @@ app.post("/api/save-order", async (req, res) => {
   try {
     const { paymentIntent, customerInfo, items } = req.body;
 
+    console.log("\n📦 Received order save request:");
+    console.log("  - Payment Intent ID:", paymentIntent?.id || "MISSING");
+    console.log("  - Customer Email:", customerInfo?.email || "MISSING");
+    console.log("  - Items Count:", items?.length || 0);
+
     if (!supabase) {
-      console.log("⚠️ Supabase not configured. Order not saved to database.");
+      console.error("❌ Supabase not configured. Order not saved to database.");
       return res.json({ 
         success: false, 
         message: "Supabase not configured. Order not saved to database." 
@@ -461,7 +466,20 @@ app.post("/api/save-order", async (req, res) => {
     }
 
     if (!paymentIntent || !customerInfo || !items || !Array.isArray(items)) {
-      return res.status(400).json({ error: "Missing required order information" });
+      console.error("❌ Missing required order information:");
+      console.error("  - paymentIntent:", !!paymentIntent);
+      console.error("  - customerInfo:", !!customerInfo);
+      console.error("  - items:", items ? (Array.isArray(items) ? items.length : "NOT ARRAY") : "MISSING");
+      return res.status(400).json({ 
+        success: false,
+        error: "Missing required order information",
+        details: {
+          hasPaymentIntent: !!paymentIntent,
+          hasCustomerInfo: !!customerInfo,
+          hasItems: !!items,
+          itemsIsArray: Array.isArray(items)
+        }
+      });
     }
 
     // Calculate totals
@@ -515,8 +533,12 @@ app.post("/api/save-order", async (req, res) => {
       .select();
 
     if (error) {
-      console.error("Error saving order to Supabase:", error);
+      console.error("❌ Error saving order to Supabase:", error);
+      console.error("  - Error Code:", error.code);
+      console.error("  - Error Message:", error.message);
+      console.error("  - Error Details:", error.details);
       return res.status(500).json({ 
+        success: false,
         error: error.message || "Failed to save order to database",
         details: error 
       });

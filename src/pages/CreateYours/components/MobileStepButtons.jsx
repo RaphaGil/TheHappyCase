@@ -4,12 +4,12 @@ import { faBriefcase, faPalette, faPlane } from '@fortawesome/free-solid-svg-ico
 
 const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseType, selectedColor }) => {
   return (
-    <div className="mb-4 flex justify-center">
+    <div className="mb-4 flex  justify-center">
       <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:gap-2.5 max-w-fit">
         {/* Choose Case Button */}
         <button
           onClick={() => setMobileCurrentStep('case')}
-          className="py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
+          className="py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover px-3 xs:px-4"
         >
           <FontAwesomeIcon 
             icon={faBriefcase} 
@@ -24,7 +24,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
         <button
           onClick={() => setMobileCurrentStep('color')}
           disabled={!selectedCaseType}
-          className={`py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
+          className={`py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
             !selectedCaseType
               ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'
@@ -58,7 +58,7 @@ const MobileStepButtons = ({ mobileCurrentStep, setMobileCurrentStep, selectedCa
             });
           }}
           disabled={!selectedCaseType || !selectedColor}
-          className={`py-2.5 flex flex-row items-center justify-center gap-1.5 xs:gap-2 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
+          className={`py-2.5 flex flex-col items-center justify-center gap-1 transition-all duration-200 touch-manipulation px-3 xs:px-4 ${
             !selectedCaseType || !selectedColor
               ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : 'bg-btn-primary-blue text-btn-primary-blue-text border border-btn-primary-blue-border hover:bg-btn-primary-blue-hover'

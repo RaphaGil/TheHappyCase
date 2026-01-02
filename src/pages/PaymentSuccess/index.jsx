@@ -20,6 +20,11 @@ const PaymentSuccess = () => {
     if (paymentIntent && customerInfo?.email && items && items.length > 0 && !orderSaved) {
       const saveOrderAndSendEmail = async () => {
         try {
+          console.log('💾 Attempting to save order to Supabase...');
+          console.log('  - Payment Intent:', paymentIntent?.id);
+          console.log('  - Customer Email:', customerInfo?.email);
+          console.log('  - Items:', items?.length || 0);
+          
           // First, save order to Supabase
           const saveOrderResponse = await fetch(getApiUrl('/api/save-order'), {
             method: 'POST',
@@ -33,12 +38,21 @@ const PaymentSuccess = () => {
             }),
           });
 
+          console.log('📤 Order save response status:', saveOrderResponse.status);
+          
           const saveOrderResult = await saveOrderResponse.json();
-          if (saveOrderResult.success) {
+          console.log('📥 Order save response:', saveOrderResult);
+          
+          if (saveOrderResponse.ok && saveOrderResult.success) {
             console.log('✅ Order saved to Supabase successfully:', saveOrderResult.order_id);
             setOrderSaved(true);
           } else {
-            console.error('❌ Failed to save order:', saveOrderResult.error || saveOrderResult.message);
+            console.error('❌ Failed to save order:', {
+              status: saveOrderResponse.status,
+              success: saveOrderResult.success,
+              error: saveOrderResult.error || saveOrderResult.message,
+              details: saveOrderResult.details
+            });
             // Continue with email even if order save fails
           }
 

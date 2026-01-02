@@ -12,6 +12,7 @@ function Hero() {
   const [buttonVisible, setButtonVisible] = useState(false);
   
   const handleStartDesigning = () => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     navigate('/CreateYours');
   };
   

@@ -91,3 +91,4 @@ export const getCharmName = (name) => {
   return formattedName.trim();
 };
 
+
