@@ -86,7 +86,7 @@ function App() {
   return (
     <CurrencyProvider>
       <CartProvider>
-        <Router basename="/TheHappyCase">
+        <Router>
           <AppContent />
         </Router>
       </CartProvider>
