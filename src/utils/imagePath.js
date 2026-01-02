@@ -3,8 +3,8 @@
  * 
  * Normalizes image paths to work in both development and production.
  * 
- * In development: `/images/...`
- * In production: Uses the path as-is (for GitHub Pages subdirectory support)
+ * Since the app is deployed to Netlify at root (homepage: "."), we always
+ * remove the /TheHappyCase/ prefix to use /images/... paths.
  */
 
 /**
@@ -15,22 +15,19 @@
 export const normalizeImagePath = (imagePath) => {
   if (!imagePath) return imagePath;
   
-  // In development, remove /TheHappyCase/ prefix if present
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  // Always remove /TheHappyCase/ prefix if present
+  // This works for both development and production (Netlify root deployment)
+  let normalizedPath = imagePath.replace(/^\/TheHappyCase\//, '/');
   
-  if (isDevelopment) {
-    // Remove /TheHappyCase/ prefix if it exists
-    return imagePath.replace(/^\/TheHappyCase\//, '/');
-  }
-  
-  // In production, use path as-is (for GitHub Pages subdirectory support)
-  // But also support PUBLIC_URL if set
+  // Support PUBLIC_URL if set (for custom base paths)
   const publicUrl = process.env.PUBLIC_URL || '';
-  if (publicUrl && imagePath.startsWith('/')) {
-    return `${publicUrl}${imagePath}`;
+  if (publicUrl && normalizedPath.startsWith('/')) {
+    // Remove trailing slash from publicUrl if present
+    const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl;
+    return `${cleanPublicUrl}${normalizedPath}`;
   }
   
-  return imagePath;
+  return normalizedPath;
 };
 
 /**
