@@ -1,6 +1,7 @@
 {
   "name": "thehappycase",
-  "homepage": "https://raphagil.github.io/TheHappyCase/",
+  "homepage": ".",
+
   "version": "0.1.0",
   "private": true,
   "dependencies": {
