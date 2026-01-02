@@ -35,9 +35,9 @@ export const getApiBaseUrl = () => {
     if (PRODUCTION_API_URL) {
       return PRODUCTION_API_URL;
     } else {
-      // Fallback: try to detect from window location (for custom domains)
-      // Or return empty string to use relative paths (won't work on GitHub Pages)
-      console.warn('⚠️ REACT_APP_API_URL not set. API calls may fail in production.');
+      // Fallback: return empty string to use relative paths
+      // This will fail in production (static sites can't proxy), but won't spam console
+      // The calling code should handle 404s gracefully
       return '';
     }
   }

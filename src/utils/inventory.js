@@ -47,22 +47,26 @@ const fetchInventoryFromSupabase = async () => {
           return quantities;
         }
       } else {
-        console.warn(`⚠️ Inventory API returned status ${response.status}: ${response.statusText}`);
+        // Only log warnings for non-404 errors (404 means backend not configured/deployed)
+        if (response.status !== 404) {
+          console.warn(`⚠️ Inventory API returned status ${response.status}: ${response.statusText}`);
+        }
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
       if (fetchError.name === 'AbortError') {
-        console.warn('⚠️ Inventory fetch timed out after 10 seconds. Server may not be running or taking too long to respond.');
-        console.warn('💡 Tip: Make sure the backend server is running: npm run server');
+        // Silently handle timeout - will fall back to localStorage
+        console.debug('Inventory fetch timed out, using localStorage fallback');
+      } else if (fetchError.message && fetchError.message.includes('Failed to fetch')) {
+        // Network errors in production likely mean backend not deployed - silently handle
+        console.debug('Backend server not available, using localStorage fallback');
       } else {
-        throw fetchError; // Re-throw non-timeout errors
+        throw fetchError; // Re-throw unexpected errors
       }
     }
   } catch (error) {
+    // Silently fall back to localStorage - this is expected when backend isn't configured
     console.debug('Failed to fetch inventory from Supabase, using localStorage fallback:', error.message);
-    if (error.message.includes('Failed to fetch') || error.message.includes('network')) {
-      console.warn('💡 Network error: Make sure the backend server is running on port 3001: npm run server');
-    }
   }
   
   return null;

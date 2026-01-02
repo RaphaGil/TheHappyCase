@@ -41,12 +41,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // --- Middleware ---
-// Production frontend URL (GitHub Pages)
+// Production frontend URLs
 const PRODUCTION_FRONTEND_URL = "https://raphagil.github.io";
+const NETLIFY_FRONTEND_URL = "https://thehappycasestore.netlify.app";
 
 const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL, PRODUCTION_FRONTEND_URL]
-  : ["http://localhost:3000", "http://127.0.0.1:3000", PRODUCTION_FRONTEND_URL];
+  ? [process.env.FRONTEND_URL, PRODUCTION_FRONTEND_URL, NETLIFY_FRONTEND_URL]
+  : ["http://localhost:3000", "http://127.0.0.1:3000", PRODUCTION_FRONTEND_URL, NETLIFY_FRONTEND_URL];
 
 app.use(
   cors({
@@ -56,7 +57,8 @@ app.use(
         allowedOrigins.includes(origin) ||
         origin.includes("localhost") ||
         origin.includes("127.0.0.1") ||
-        origin.startsWith("https://raphagil.github.io") // Allow GitHub Pages
+        origin.startsWith("https://raphagil.github.io") || // Allow GitHub Pages
+        origin.startsWith("https://thehappycasestore.netlify.app") // Allow Netlify
       ) {
         return callback(null, true);
       }
