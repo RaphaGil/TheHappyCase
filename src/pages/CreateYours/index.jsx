@@ -10,6 +10,7 @@ import Products from "../../data/products.json";
 import { useCart } from "../../context/CartContext";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
 import { createCompositeDesignImage } from "../../component/Canvas/utils/imageExport";
+import { normalizeImagePath } from "../../utils/imagePath";
 
 // Utils
 import { getProductsWithQuantities, getDefaultCaseAndColor } from "./utils/helpers";
@@ -796,7 +797,7 @@ const CreateYours = () => {
                   <div 
                     className="absolute inset-0 w-full h-full bg-contain bg-no-repeat"
                     style={{
-                      backgroundImage: `url(${selectedCaseImage})`,
+                      backgroundImage: `url(${normalizeImagePath(selectedCaseImage)})`,
                       zIndex: 0,
                       pointerEvents: 'none',
                       backgroundSize: '270px',

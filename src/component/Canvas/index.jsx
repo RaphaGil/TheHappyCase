@@ -4,6 +4,7 @@ import CanvasControls from './components/CanvasControls';
 import { useCanvasBorders } from './hooks/useCanvasBorders';
 import { useCanvasControls } from './hooks/useCanvasControls';
 import { exportCanvasAsDataURL, downloadCanvasImage } from './utils/imageExport';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 const Canvas = ({ 
   selectedCaseType, 
@@ -662,7 +663,7 @@ const Canvas = ({
       
       console.log('Adding pin to canvas:', pin.name, 'Size factor:', pinSizeFactor, 'Calculated size:', pinSize);
       
-      const imgInstance = await loadImageLegacy(pin.src, false, pinSize, pinSize);
+      const imgInstance = await loadImageLegacy(normalizeImagePath(pin.src), false, pinSize, pinSize);
       
       // Place the pin at a random position on the canvas
       // Account for the pin's size to ensure it stays within canvas bounds

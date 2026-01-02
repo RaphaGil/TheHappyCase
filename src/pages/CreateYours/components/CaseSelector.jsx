@@ -1,6 +1,7 @@
 import React from 'react';
 import { CASE_OPTIONS } from '../../../data/constants';
 import { getMaxAvailableQuantity } from '../../../utils/inventory';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, cart = [] }) => {
   // Get image for a case type
@@ -94,7 +95,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                     } ${soldOut ? 'opacity-50' : ''}`}
                   >
                     <img
-                      src={caseImage}
+                      src={normalizeImagePath(caseImage)}
                       alt={opt.label}
                       className="w-full h-full object-contain p-1 xs:p-1.5 sm:p-2 md:p-2.5 lg:p-3 xl:p-4"
                       loading="lazy"

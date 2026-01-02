@@ -3,6 +3,7 @@ import ColorSelector from '../../../component/ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../../data/constants';
 import { filterPinsByCategory } from '../../../data/filterHelpers';
 import { getMaxAvailableQuantity } from '../../../utils/inventory';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const MobileOverlay = ({
   mobileCurrentStep,
@@ -142,7 +143,7 @@ const MobileOverlay = ({
                       {caseImage && (
                         <div className="relative w-full aspect-square overflow-hidden ">
                           <img
-                            src={caseImage}
+                            src={normalizeImagePath(caseImage)}
                             alt={opt.label}
                             className={`w-full h-full object-contain p-0 xs:p-0.5 sm:p-1.5 md:p-3 lg:p-4 xl:p-5 ${soldOut ? 'opacity-50' : ''}`}
                             loading="lazy"
@@ -201,7 +202,7 @@ const MobileOverlay = ({
                           selectedCategory === cat.value ? 'bg-gray-100' : 'bg-white'
                         }`}>
                           <img
-                            src={cat.image}
+                            src={normalizeImagePath(cat.image)}
                             alt={cat.label}
                             className="w-full h-full object-contain"
                           />
@@ -372,7 +373,7 @@ const MobileOverlay = ({
                           >
                             <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
                               <img
-                                src={pin.src}
+                                src={normalizeImagePath(pin.src)}
                                 alt={pin.name}
                                 className={`max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`}
                               />
