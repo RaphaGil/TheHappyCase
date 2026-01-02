@@ -67,9 +67,6 @@ const getColorName = (image) => {
 };
 
 const ColorSelector = ({ colors, selectedColor, onSelect }) => {
-  const selectedColorData = colors.find(c => c.color === selectedColor);
-  const selectedColorName = selectedColorData ? getColorName(selectedColorData.image) : '';
-
   return (
     <div className="overflow-visible">
       <div className="flex flex-wrap gap-3 overflow-visible justify-center justify-center ">

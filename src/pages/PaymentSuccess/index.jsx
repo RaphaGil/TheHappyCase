@@ -9,7 +9,6 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
   const [orderSaved, setOrderSaved] = useState(false);
   const { paymentIntent, customerInfo, items } = location.state || {};
   const sessionId = searchParams.get('session_id');
@@ -72,7 +71,6 @@ const PaymentSuccess = () => {
           const emailResult = await emailResponse.json();
           if (emailResult.success) {
             console.log('✅ Order confirmation email sent successfully');
-            setEmailSent(true);
           } else {
             console.error('❌ Failed to send email:', emailResult.error || emailResult.message);
           }
