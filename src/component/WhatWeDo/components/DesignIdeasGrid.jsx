@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const DesignIdeasGrid = ({ images }) => {
   const [visibleImages, setVisibleImages] = useState(new Set());
@@ -37,7 +38,7 @@ const DesignIdeasGrid = ({ images }) => {
             >
               <div className="relative w-full aspect-square overflow-hidden sm:min-h-[300px] ">
                 <img
-                  src={image}
+                  src={normalizeImagePath(image)}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   alt={`Design Idea ${index + 1}`}
                   loading="lazy"

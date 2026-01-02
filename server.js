@@ -813,11 +813,34 @@ app.get("/api/inventory", async (req, res) => {
       });
     }
 
-    // Fetch all inventory items
-    const { data: items, error } = await supabase
-      .from('inventory_items')
-      .select('*')
-      .order('item_type, product_id');
+    // Fetch all inventory items with timeout protection
+    let items = null;
+    let error = null;
+    
+    try {
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout - Supabase query took too long')), 8000);
+      });
+
+      const queryPromise = supabase
+        .from('inventory_items')
+        .select('*')
+        .order('item_type, product_id');
+      
+      const result = await Promise.race([queryPromise, timeoutPromise]);
+      items = result.data;
+      error = result.error;
+    } catch (timeoutError) {
+      if (timeoutError.message.includes('timeout')) {
+        console.error("⏱️ Supabase query timed out after 8 seconds");
+        return res.status(504).json({ 
+          error: "Gateway Timeout",
+          message: "The inventory query took too long to respond. Please check your Supabase connection.",
+          details: timeoutError.message
+        });
+      }
+      throw timeoutError;
+    }
 
     if (error) {
       // If table doesn't exist, return empty structure

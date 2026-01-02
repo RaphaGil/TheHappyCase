@@ -11,28 +11,58 @@ let initializationWarningShown = false;
  */
 const fetchInventoryFromSupabase = async () => {
   try {
-    // Try to fetch from API (server endpoint)
-    const response = await fetch(getApiUrl('/api/inventory'));
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success && data.inventory) {
-        // Convert Supabase format to localStorage format
-        const quantities = {
-          cases: data.inventory.cases,
-          caseColors: data.inventory.caseColors,
-          pins: data.inventory.pins
-        };
-        
-        // Cache in localStorage for offline use
-        localStorage.setItem('productQuantities', JSON.stringify(quantities));
-        localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
-        
-        console.log('✅ Inventory loaded from Supabase inventory_items table');
-        return quantities;
+    // Try to fetch from API (server endpoint) with timeout
+    const apiUrl = getApiUrl('/api/inventory');
+    console.log('🔄 Fetching inventory from:', apiUrl);
+    
+    // Create an AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    try {
+      const response = await fetch(apiUrl, {
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.inventory) {
+          // Convert Supabase format to localStorage format
+          const quantities = {
+            cases: data.inventory.cases,
+            caseColors: data.inventory.caseColors,
+            pins: data.inventory.pins
+          };
+          
+          // Cache in localStorage for offline use
+          localStorage.setItem('productQuantities', JSON.stringify(quantities));
+          localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+          
+          console.log('✅ Inventory loaded from Supabase inventory_items table');
+          return quantities;
+        }
+      } else {
+        console.warn(`⚠️ Inventory API returned status ${response.status}: ${response.statusText}`);
+      }
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name === 'AbortError') {
+        console.warn('⚠️ Inventory fetch timed out after 10 seconds. Server may not be running or taking too long to respond.');
+        console.warn('💡 Tip: Make sure the backend server is running: npm run server');
+      } else {
+        throw fetchError; // Re-throw non-timeout errors
       }
     }
   } catch (error) {
     console.debug('Failed to fetch inventory from Supabase, using localStorage fallback:', error.message);
+    if (error.message.includes('Failed to fetch') || error.message.includes('network')) {
+      console.warn('💡 Network error: Make sure the backend server is running on port 3001: npm run server');
+    }
   }
   
   return null;
@@ -45,14 +75,35 @@ const fetchInventoryFromSupabase = async () => {
  */
 export const getItemQuantityFromSupabase = async (itemId) => {
   try {
-    const response = await fetch(getApiUrl('/api/inventory/items'));
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success && data.items) {
-        const item = data.items.find(i => i.item_id === itemId);
-        if (item) {
-          return item.qty_in_stock; // null means unlimited
+    const apiUrl = getApiUrl('/api/inventory/items');
+    
+    // Create an AbortController for timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    try {
+      const response = await fetch(apiUrl, {
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.items) {
+          const item = data.items.find(i => i.item_id === itemId);
+          if (item) {
+            return item.qty_in_stock; // null means unlimited
+          }
         }
+      }
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name !== 'AbortError') {
+        throw fetchError; // Re-throw non-timeout errors
       }
     }
   } catch (error) {

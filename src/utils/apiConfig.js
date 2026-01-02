@@ -52,12 +52,29 @@ export const getApiUrl = (endpoint) => {
   const baseUrl = getApiBaseUrl();
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
+  // In development, always use relative paths to leverage the proxy
+  if (isDevelopment && !baseUrl) {
+    // Use relative path (proxy in setupProxy.js will handle routing to http://localhost:3001)
+    return cleanEndpoint;
+  }
+  
   if (baseUrl) {
     // Remove trailing slash from base URL if present
     const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-    return `${cleanBaseUrl}${cleanEndpoint}`;
+    // Ensure production URLs use https (not http) for security
+    const finalUrl = `${cleanBaseUrl}${cleanEndpoint}`;
+    
+    // Warn if trying to use https://localhost in development (should use proxy instead)
+    if (isDevelopment && finalUrl.includes('localhost') && finalUrl.startsWith('https://')) {
+      console.warn('⚠️ Using HTTPS for localhost in development. Consider using relative paths with proxy instead.');
+    }
+    
+    return finalUrl;
   } else {
-    // Use relative path (works in dev with proxy, won't work in production)
+    // Fallback: use relative path
+    if (isDevelopment) {
+      console.warn('⚠️ No API base URL configured in development. Using relative path (proxy required).');
+    }
     return cleanEndpoint;
   }
 };

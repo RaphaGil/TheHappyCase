@@ -6,6 +6,7 @@ import Products from '../../data/products.json';
 import { useCart } from '../../context/CartContext';
 import AddToCartBtn from '../../component/AddToCartBtn';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 const PassportCases = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -261,9 +262,9 @@ const PassportCases = () => {
     );
   }
 
-  // Get the image for the selected color
+  // Get the image for the selected color (normalized)
   const selectedColorData = selectedCase.colors.find(c => c.color === selectedColor);
-  const currentImage = selectedDetailImage || selectedColorData?.image || selectedCase.images[currentImageIndex] || selectedCase.images[0];
+  const currentImage = normalizeImagePath(selectedDetailImage || selectedColorData?.image || selectedCase.images[currentImageIndex] || selectedCase.images[0]);
   
   // Get detail images from SmartCase folder (same as CreateYours page)
   const getDetailImagesForColor = () => {
@@ -273,9 +274,9 @@ const PassportCases = () => {
     // Build images array from SmartCase folder
     const smartCaseImages = [];
     
-    // Add the main color image
+    // Add the main color image (normalized)
     if (colorImage) {
-      smartCaseImages.push(colorImage);
+      smartCaseImages.push(normalizeImagePath(colorImage));
     }
     
     // Add detail images based on case type
@@ -300,15 +301,15 @@ const PassportCases = () => {
       ];
     }
     
-    // Add detail images if they exist
+    // Add detail images if they exist (normalized)
     detailImages.forEach(img => {
       if (img) {
-        smartCaseImages.push(img);
+        smartCaseImages.push(normalizeImagePath(img));
       }
     });
     
     // If we have at least one image, return them; otherwise return empty array
-    return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [colorImage] : []);
+    return smartCaseImages.length > 0 ? smartCaseImages : (colorImage ? [normalizeImagePath(colorImage)] : []);
   };
   
   const detailImages = getDetailImagesForColor();

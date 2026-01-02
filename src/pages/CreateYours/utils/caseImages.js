@@ -1,3 +1,5 @@
+import { normalizeImagePath } from '../../../utils/imagePath';
+
 /**
  * Get case images array for a selected color and case
  * Returns an array of image URLs including the main color image and detail images
@@ -12,9 +14,9 @@ export const getCaseImages = (selectedColorData, selectedCase) => {
   // Build images array
   const caseImages = [];
   
-  // Add the main color image first
+  // Add the main color image first (normalized)
   if (colorImage) {
-    caseImages.push(colorImage);
+    caseImages.push(normalizeImagePath(colorImage));
   }
   
   // Add detail images based on case type
@@ -39,13 +41,13 @@ export const getCaseImages = (selectedColorData, selectedCase) => {
     ];
   }
   
-  // Add detail images if they exist
+  // Add detail images if they exist (normalized)
   detailImages.forEach(img => {
     if (img) {
-      caseImages.push(img);
+      caseImages.push(normalizeImagePath(img));
     }
   });
   
   // Return images array, or at least the color image if available
-  return caseImages.length > 0 ? caseImages : (colorImage ? [colorImage] : []);
+  return caseImages.length > 0 ? caseImages : (colorImage ? [normalizeImagePath(colorImage)] : []);
 };

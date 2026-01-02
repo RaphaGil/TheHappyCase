@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Products from '../../data/products.json';
 import { useCurrency } from '../../context/CurrencyContext';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 const Items = () => {
   const { formatPrice } = useCurrency();
@@ -39,16 +40,16 @@ const Items = () => {
 const ProductCard = ({ item, displayName, formatPrice }) => {
   const [selectedColorData, setSelectedColorData] = useState(item.colors[0] || null);
   const [isHovered, setIsHovered] = useState(false);
-  const selectedImage = selectedColorData?.image || item.images[0];
+  const selectedImage = normalizeImagePath(selectedColorData?.image || item.images[0]);
   
   // For all case types, show inside image on hover - using same images as PassportCases page
   const getHoverImage = () => {
     if (item.type === 'firstclass') {
-      return '/TheHappyCase/images/FirstClassCase/firstclass.jpg';
+      return normalizeImagePath('/TheHappyCase/images/FirstClassCase/firstclass.jpg');
     } else if (item.type === 'economy') {
-      return '/TheHappyCase/images/SmartCase/economycaseinside.jpg';
+      return normalizeImagePath('/TheHappyCase/images/SmartCase/economycaseinside.jpg');
     } else if (item.type === 'business') {
-      return '/TheHappyCase/images/BusinessClassCase/businessclass.png';
+      return normalizeImagePath('/TheHappyCase/images/BusinessClassCase/businessclass.png');
     }
     
     return null;

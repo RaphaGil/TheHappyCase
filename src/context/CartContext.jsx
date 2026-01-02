@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { getMaxAvailableQuantity } from '../utils/inventory';
 import { areItemsIdentical } from '../utils/cartHelpers';
+
+const CART_STORAGE_KEY = 'happycase_cart';
 
 const CartContext = createContext();
 
@@ -97,6 +99,12 @@ const cartReducer = (state, action) => {
         items: state.items.filter((item, index) => index !== action.payload),
       };
     case 'CLEAR_CART':
+      // Clear localStorage when cart is cleared
+      try {
+        localStorage.removeItem(CART_STORAGE_KEY);
+      } catch (error) {
+        console.error('Error clearing cart from localStorage:', error);
+      }
       return {
         ...state,
         items: [],
@@ -195,12 +203,48 @@ const cartReducer = (state, action) => {
   }
 };
 
+// Load cart from localStorage on initialization
+const loadCartFromStorage = () => {
+  try {
+    const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+    if (storedCart) {
+      const parsedCart = JSON.parse(storedCart);
+      // Validate that it's an array
+      if (Array.isArray(parsedCart)) {
+        return parsedCart;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading cart from localStorage:', error);
+    // If there's an error, clear the corrupted data
+    localStorage.removeItem(CART_STORAGE_KEY);
+  }
+  return [];
+};
+
+// Initial state with cart loaded from localStorage
+const initialState = {
+  items: loadCartFromStorage(),
+  checkoutSession: null,
+  isDrawerOpen: false,
+};
+
 export const CartProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, {
-    items: [],
-    checkoutSession: null,
-    isDrawerOpen: false,
-  });
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  // Save cart to localStorage whenever items change
+  useEffect(() => {
+    try {
+      if (state.items && state.items.length > 0) {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
+      } else {
+        // Clear localStorage if cart is empty
+        localStorage.removeItem(CART_STORAGE_KEY);
+      }
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
+  }, [state.items]);
 
   const addToCart = (product) => {
     console.log('🛒 Adding item to cart:', {

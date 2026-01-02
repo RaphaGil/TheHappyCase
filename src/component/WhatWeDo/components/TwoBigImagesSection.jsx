@@ -1,10 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const TwoBigImagesSection = ({ image1, image2 }) => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
   const navigate = useNavigate();
+  const normalizedImage1 = normalizeImagePath(image1);
+  const normalizedImage2 = normalizeImagePath(image2);
 
   return (
     <div ref={sectionRef} className="w-full">
@@ -14,7 +17,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
           <div
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: `url(${image1})`,
+              backgroundImage: `url(${normalizedImage1})`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -22,7 +25,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
           >
             {/* Fallback img for SEO and accessibility */}
             <img
-              src={image1}
+              src={normalizedImage1}
               className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
               alt="Design idea"
               loading="lazy"
@@ -53,7 +56,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
           <div
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: `url(${image2})`,
+              backgroundImage: `url(${normalizedImage2})`,
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -61,7 +64,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
           >
             {/* Fallback img for SEO and accessibility */}
             <img
-              src={image2}
+              src={normalizedImage2}
               className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
               alt="Design idea"
               loading="lazy"

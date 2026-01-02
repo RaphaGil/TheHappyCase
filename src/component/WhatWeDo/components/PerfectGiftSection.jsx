@@ -1,9 +1,11 @@
 import React from 'react';
 import AnimatedTitle from '../../AnimatedTitle';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const PerfectGiftSection = ({ image }) => {
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
+  const normalizedImage = normalizeImagePath(image);
 
   return (
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch">
@@ -11,7 +13,7 @@ const PerfectGiftSection = ({ image }) => {
       <div 
         className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[650px] lg:h-[700px] xl:h-[750px] overflow-hidden bg-gray-100 flex items-start perfect-gift-bg"
         style={{
-          backgroundImage: `url(${image})`,
+          backgroundImage: `url(${normalizedImage})`,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -19,7 +21,7 @@ const PerfectGiftSection = ({ image }) => {
       >
         {/* Fallback img for SEO and accessibility */}
         <img
-          src={image}
+          src={normalizedImage}
           className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
           alt="Perfect Gift"
           loading="lazy"
