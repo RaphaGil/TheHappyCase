@@ -16,8 +16,8 @@ const WhatWeDo = () => {
 
       <div className="relative z-10 mt-12 md:mt-16">
         <TwoBigImagesSection 
-          image1="/TheHappyCase/images/designideas/designidea5.png"
-          image2="/TheHappyCase/images/designideas/designidea6.png"
+          image1="/images/designideas/designidea5.png"
+          image2="/images/designideas/designidea6.png"
         />
       </div>
     </section>

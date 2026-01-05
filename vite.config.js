@@ -12,9 +12,9 @@ export default defineConfig({
   plugins: [react()],
   
   // Base public path when served in production
-  // Use './' for relative paths (works for both root and subdirectory deployment)
-  // This ensures images work regardless of deployment location
-  base: './',
+  // Use '/' for root deployment (most common for GitHub Pages, Netlify, Vercel)
+  // If deploying to a subdirectory, change this to '/subdir/'
+  base: '/',
   
   // Explicitly set the root and public directory
   root: '.',

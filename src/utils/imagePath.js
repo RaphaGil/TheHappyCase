@@ -41,13 +41,8 @@ export const normalizeImagePath = (imagePath) => {
   
   // If path starts with /, handle based on base URL
   if (normalizedPath.startsWith('/')) {
-    // If base URL is './' or '.', we need relative paths in production
-    if ((baseUrl === './' || baseUrl === '.') && import.meta.env.PROD) {
-      // Convert absolute path to relative by removing leading slash
-      return normalizedPath.substring(1);
-    }
-    // If base URL is set and not '/' or './', prepend it
-    else if (baseUrl && baseUrl !== '/' && baseUrl !== './' && baseUrl !== '.') {
+    // If base URL is set and not '/', prepend it (for subdirectory deployments)
+    if (baseUrl && baseUrl !== '/' && baseUrl !== './' && baseUrl !== '.') {
       const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
       // Avoid double prefixing
       if (!normalizedPath.startsWith(cleanBaseUrl)) {
@@ -55,6 +50,7 @@ export const normalizeImagePath = (imagePath) => {
       }
     }
     // For root deployment (base: '/'), return path as-is
+    // This works because public folder assets are served at root
     return normalizedPath;
   }
   

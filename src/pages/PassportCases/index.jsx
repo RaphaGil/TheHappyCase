@@ -284,20 +284,20 @@ const PassportCases = () => {
     
     if (selectedCaseType === 'economy') {
       detailImages = [
-        '/TheHappyCase/images/SmartCase/economycaseinside.jpg',
-        '/TheHappyCase/images/SmartCase/economycaseclosure.jpg',
-        '/TheHappyCase/images/SmartCase/economycaseclosureinside.jpg'
+        '/images/SmartCase/economycaseinside.jpg',
+        '/images/SmartCase/economycaseclosure.jpg',
+        '/images/SmartCase/economycaseclosureinside.jpg'
       ];
     } else if (selectedCaseType === 'business') {
       detailImages = [
-        '/TheHappyCase/images/BusinessClassCase/businessclass.png',
-         '/TheHappyCase/images/BusinessClassCase/businessclass1.png'
+        '/images/BusinessClassCase/businessclass.png',
+         '/images/BusinessClassCase/businessclass1.png'
       ];
     } else if (selectedCaseType === 'firstclass') {
       detailImages = [
-        '/TheHappyCase/images/FirstClassCase/firstclass.jpg',
-        '/TheHappyCase/images/FirstClassCase/firstclass1.png',
-        '/TheHappyCase/images/FirstClassCase/firstclass2.png'
+        '/images/FirstClassCase/firstclass.jpg',
+        '/images/FirstClassCase/firstclass1.png',
+        '/images/FirstClassCase/firstclass2.png'
       ];
     }
     

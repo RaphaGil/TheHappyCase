@@ -45,11 +45,11 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
   // For all case types, show inside image on hover - using same images as PassportCases page
   const getHoverImage = () => {
     if (item.type === 'firstclass') {
-      return normalizeImagePath('/TheHappyCase/images/FirstClassCase/firstclass.jpg');
+      return normalizeImagePath('/images/FirstClassCase/firstclass.jpg');
     } else if (item.type === 'economy') {
-      return normalizeImagePath('/TheHappyCase/images/SmartCase/economycaseinside.jpg');
+      return normalizeImagePath('/images/SmartCase/economycaseinside.jpg');
     } else if (item.type === 'business') {
-      return normalizeImagePath('/TheHappyCase/images/BusinessClassCase/businessclass.png');
+      return normalizeImagePath('/images/BusinessClassCase/businessclass.png');
     }
     
     return null;

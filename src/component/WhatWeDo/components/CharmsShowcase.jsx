@@ -12,7 +12,7 @@ const CharmsShowcase = () => {
         <div className="group bg-pink-100 transition-all duration-500 ease-out hover:shadow-lg overflow-hidden relative">
           <div className="relative w-full aspect-square overflow-hidden ">
             <img
-              src={normalizeImagePath("/TheHappyCase/images/economygreencolorful.png")}
+              src={normalizeImagePath("/images/economygreencolorful.png")}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               alt="Colorful Charms"
               loading="lazy"
@@ -41,7 +41,7 @@ const CharmsShowcase = () => {
         <div className="group  bg-green-100 transition-all duration-500 ease-out hover:shadow-lg overflow-hidden relative">
           <div className="relative w-full aspect-square overflow-hidden">
             <img
-              src={normalizeImagePath("/TheHappyCase/images/firstclassbrownbronze.png")}
+              src={normalizeImagePath("/images/firstclassbrownbronze.png")}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               alt="Bronze Charms"
               loading="lazy"

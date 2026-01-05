@@ -7,11 +7,11 @@ export const pinHighlights = [
 
 // Design ideas images - all 8 images
 export const designIdeasImages = [
-  '/TheHappyCase/images/designideas/designidea.png',
-  '/TheHappyCase/images/designideas/designidea1.png',
-  '/TheHappyCase/images/designideas/designidea2.png',
-  '/TheHappyCase/images/designideas/designidea3.png',
-  '/TheHappyCase/images/designideas/designidea4.png',
+  '/images/designideas/designidea.png',
+  '/images/designideas/designidea1.png',
+  '/images/designideas/designidea2.png',
+  '/images/designideas/designidea3.png',
+  '/images/designideas/designidea4.png',
  
  
 ];
