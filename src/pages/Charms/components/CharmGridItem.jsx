@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCurrency } from '../../../context/CurrencyContext';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false, charmPrice }) => {
   const { formatPrice } = useCurrency();
@@ -13,7 +14,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
     >
       <div className={`aspect-square mb-3 ${pastelColors[colorIndex]} flex items-center justify-center overflow-hidden md:border ${pastelBorders[colorIndex]} relative`}>
         <img
-          src={charm.src}
+          src={normalizeImagePath(charm.src)}
           alt={charm.name}
           className={`w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80 ${isSoldOut ? 'opacity-50' : ''}`}
           loading="lazy"

@@ -1,6 +1,7 @@
 import React from 'react';
 import QuantityControls from './QuantityControls';
 import NoteSection from './NoteSection';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 // Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
 const getBaseCharmName = (name) => {
@@ -37,7 +38,7 @@ const CharmItem = ({
           <div className="relative flex-shrink-0">
             {item.image ? (
               <img
-                src={item.image}
+                src={normalizeImagePath(item.image)}
                 alt={displayName || 'Charm'}
                 className="w-20 h-20 object-contain rounded"
                 loading="lazy"

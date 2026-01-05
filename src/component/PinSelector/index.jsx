@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
+import { normalizeImagePath } from "../../utils/imagePath";
 
 // -----------------------------
 // Helpers
@@ -205,7 +206,7 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick }) => {
       <div className="relative" style={{ overflow: "visible" }}>
         <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
           <img
-            src={pin.src}
+            src={normalizeImagePath(pin.src)}
             alt={pin.name}
             className={`w-full h-full object-contain transition-all duration-200 rounded ${
               isSoldOut ? "opacity-50" : ""

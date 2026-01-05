@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, onRemove, errorMessage }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -53,14 +54,14 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
           <div className="relative flex-shrink-0 w-20 h-20 bg-gray-50 rounded-sm border border-gray-200 flex items-center justify-center overflow-visible">
             {item.image ? (
               <img
-                src={item.image}
+                src={normalizeImagePath(item.image)}
                 alt={item.name || "Charm"}
                 className="w-full h-full object-contain p-2"
                 loading="lazy"
               />
             ) : charm?.src ? (
               <img
-                src={charm.src}
+                src={normalizeImagePath(charm.src)}
                 alt={charm.name || "Charm"}
                 className="w-full h-full object-contain p-2"
                 loading="lazy"

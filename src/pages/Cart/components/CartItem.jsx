@@ -2,6 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { groupPinsByKey, getItemTotal } from "../../../data/helpers";
+import { normalizeImagePath } from "../../../utils/imagePath";
 
 // Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
 const getBaseCharmName = (name) => {
@@ -26,7 +27,7 @@ const CharmLineItem = ({ item, formatPrice, errorMessage }) => {
         <div className="relative flex-shrink-0">
           {item.image ? (
             <img
-              src={item.image}
+              src={normalizeImagePath(item.image)}
               alt={item.name || "Charm"}
               className="w-24 h-24 object-contain rounded"
               loading="lazy"
@@ -37,7 +38,7 @@ const CharmLineItem = ({ item, formatPrice, errorMessage }) => {
             />
           ) : item.pin?.src ? (
             <img
-              src={item.pin.src}
+              src={normalizeImagePath(item.pin.src)}
               alt={item.pin.name || "Charm"}
               className="w-24 h-24 object-contain rounded"
               loading="lazy"
@@ -182,7 +183,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
             <div className="flex items-start gap-2 flex-1 min-w-0">
               <div className="relative flex-shrink-0">
                 <img
-                  src={pin.src}
+                  src={normalizeImagePath(pin.src)}
                   alt={displayName || 'Charm'}
                   className="w-24 h-24 object-contain"
                   loading="lazy"

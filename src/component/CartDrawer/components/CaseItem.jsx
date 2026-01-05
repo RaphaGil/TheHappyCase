@@ -1,6 +1,7 @@
 import React from 'react';
 import QuantityControls from './QuantityControls';
 import NoteSection from './NoteSection';
+import { normalizeImagePath } from '../../../utils/imagePath';
 
 // Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
 const getBaseCharmName = (name) => {
@@ -129,7 +130,7 @@ const CaseItem = ({
               <div className="relative flex-shrink-0">
                 {groupedPin.src ? (
                   <img
-                    src={groupedPin.src}
+                    src={normalizeImagePath(groupedPin.src)}
                     alt={groupedPin.name || 'Charm'}
                     className="w-16 h-16 object-contain"
                     loading="lazy"
