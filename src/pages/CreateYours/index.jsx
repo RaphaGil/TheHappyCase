@@ -572,25 +572,63 @@ const CreateYours = () => {
     const caseImageToUse = selectedCaseImage || colorData?.image || selectedCase?.images?.[0];
     const finalCaseImage = caseImageToUse || '';
     
+    // Normalize the case image path for proper loading
+    const normalizedCaseImage = finalCaseImage ? normalizeImagePath(finalCaseImage) : '';
+    
     // Get canvas image data URL (contains the charms/design)
     let canvasImageDataURL = null;
     if (window.getDesignImageDataURL) {
       canvasImageDataURL = window.getDesignImageDataURL();
     }
     
+    console.log('🖼️ CreateYours - Image preparation:', {
+      hasCaseImage: !!normalizedCaseImage,
+      caseImagePath: normalizedCaseImage,
+      hasCanvasData: !!canvasImageDataURL,
+      canvasDataLength: canvasImageDataURL ? canvasImageDataURL.length : 0
+    });
+    
     // Create composite image combining case background with canvas design
-    let designImage = finalCaseImage; // Fallback to case image if composite fails
-    if (finalCaseImage && canvasImageDataURL) {
+    let designImage = normalizedCaseImage; // Fallback to normalized case image if composite fails
+    if (normalizedCaseImage && canvasImageDataURL) {
       try {
-        designImage = await createCompositeDesignImage(finalCaseImage, canvasImageDataURL, 300, 350);
+        console.log('🎨 Creating composite image...', {
+          caseImage: normalizedCaseImage.substring(0, 100),
+          canvasDataLength: canvasImageDataURL.length,
+          canvasDataPreview: canvasImageDataURL.substring(0, 100)
+        });
+        designImage = await createCompositeDesignImage(normalizedCaseImage, canvasImageDataURL, 300, 350);
+        
+        // Validate the composite image was created successfully
+        if (!designImage || !designImage.startsWith('data:image/')) {
+          console.warn('⚠️ Composite image creation returned invalid result, using case image fallback');
+          designImage = normalizedCaseImage;
+        } else {
+          console.log('✅ Composite image created successfully:', {
+            isDataURL: designImage.startsWith('data:image/'),
+            length: designImage.length,
+            preview: designImage.substring(0, 50) + '...'
+          });
+        }
       } catch (error) {
-        console.error('Error creating composite design image:', error);
-        // Fallback to case image if composite creation fails
-        designImage = finalCaseImage;
+        console.error('❌ Error creating composite design image:', error);
+        // Fallback to normalized case image if composite creation fails
+        designImage = normalizedCaseImage;
       }
     } else if (canvasImageDataURL) {
       // If no case image but we have canvas content, use canvas image
+      console.log('📝 Using canvas image only (no case image)');
       designImage = canvasImageDataURL;
+    } else if (normalizedCaseImage) {
+      // If no canvas content but we have case image, use case image
+      console.log('📦 Using case image only (no canvas content)');
+      designImage = normalizedCaseImage;
+    }
+    
+    // Final validation - ensure we have a valid image
+    if (!designImage || (typeof designImage === 'string' && designImage.trim().length === 0)) {
+      console.error('❌ No valid design image available, using case image fallback');
+      designImage = normalizedCaseImage || '';
     }
     
     // Ensure pins have all required properties including name and category
@@ -626,7 +664,7 @@ const CreateYours = () => {
       price: caseBasePrice,
       image: designImage, // Use the composite design image
       designImage: designImage, // Also set designImage property for cart display
-      caseImage: finalCaseImage, // Keep original case image reference
+      caseImage: normalizedCaseImage, // Keep normalized case image reference
       customDesign: true, // Mark as custom design to prevent grouping
       quantity: effectiveQuantity
     };
@@ -637,7 +675,14 @@ const CreateYours = () => {
       color: caseProduct.color,
       quantity: caseProduct.quantity,
       price: caseProduct.price,
-      id: caseProduct.id
+      id: caseProduct.id,
+      hasDesignImage: !!caseProduct.designImage,
+      designImageType: caseProduct.designImage ? (caseProduct.designImage.startsWith('data:') ? 'data URL' : 'file path') : 'none',
+      designImageLength: caseProduct.designImage ? caseProduct.designImage.length : 0,
+      hasCaseImage: !!caseProduct.caseImage,
+      caseImagePath: caseProduct.caseImage,
+      hasImage: !!caseProduct.image,
+      imagePath: caseProduct.image
     });
     
     addToCart(caseProduct);

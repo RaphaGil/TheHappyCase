@@ -68,13 +68,31 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
     const loadCaseImage = () => {
       if (!caseImageUrl) {
         // If no case image, just draw canvas content
+        console.log('⚠️ No case image URL provided, using canvas content only');
         drawCanvasContent();
         return;
       }
 
       const caseImg = new Image();
-      caseImg.crossOrigin = 'anonymous';
+      // Only set crossOrigin for external URLs, not for data URLs or same-origin images
+      if (!caseImageUrl.startsWith('data:') && !caseImageUrl.startsWith('blob:')) {
+        caseImg.crossOrigin = 'anonymous';
+      }
+      
+      // Add timeout to prevent hanging
+      const timeout = setTimeout(() => {
+        console.error('⏱️ Timeout loading case image:', caseImageUrl);
+        drawCanvasContent();
+      }, 10000); // 10 second timeout
+      
       caseImg.onload = () => {
+        clearTimeout(timeout);
+        console.log('✅ Case image loaded successfully:', {
+          width: caseImg.width,
+          height: caseImg.height,
+          src: caseImageUrl.substring(0, 50) + '...'
+        });
+        
         // Draw case image as background
         // Match the CSS background positioning: center 45%
         const caseImgAspect = caseImg.width / caseImg.height;
@@ -99,11 +117,18 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
         // Then draw canvas content on top (if available)
         drawCanvasContent();
       };
-      caseImg.onerror = () => {
-        console.error('Failed to load case image:', caseImageUrl);
+      caseImg.onerror = (error) => {
+        clearTimeout(timeout);
+        console.error('❌ Failed to load case image:', {
+          url: caseImageUrl,
+          error: error,
+          message: 'Will continue with canvas content only'
+        });
         // Continue with just canvas content
         drawCanvasContent();
       };
+      
+      console.log('🔄 Loading case image:', caseImageUrl);
       caseImg.src = caseImageUrl;
     };
 
@@ -111,12 +136,26 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
     const drawCanvasContent = () => {
       if (!canvasDataURL) {
         // If no canvas content, just resolve with case image (or white canvas if no case)
+        console.log('⚠️ No canvas data URL, resolving with case image or white canvas');
         resolve(compositeCanvas.toDataURL('image/png', 1));
         return;
       }
 
       const canvasImg = new Image();
+      
+      // Add timeout for canvas image loading
+      const timeout = setTimeout(() => {
+        console.error('⏱️ Timeout loading canvas content');
+        resolve(compositeCanvas.toDataURL('image/png', 1));
+      }, 10000);
+      
       canvasImg.onload = () => {
+        clearTimeout(timeout);
+        console.log('✅ Canvas content loaded successfully:', {
+          width: canvasImg.width,
+          height: canvasImg.height
+        });
+        
         // Draw canvas content centered, matching the canvas overlay positioning
         const canvasImgAspect = canvasImg.width / canvasImg.height;
         const containerAspect = width / height;
@@ -137,13 +176,21 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
         ctx.drawImage(canvasImg, drawX, drawY, drawWidth, drawHeight);
         
         // Export composite image
-        resolve(compositeCanvas.toDataURL('image/png', 1));
+        const finalDataURL = compositeCanvas.toDataURL('image/png', 1);
+        console.log('🎨 Composite image created:', {
+          isDataURL: finalDataURL.startsWith('data:image/'),
+          length: finalDataURL.length
+        });
+        resolve(finalDataURL);
       };
-      canvasImg.onerror = () => {
-        console.error('Failed to load canvas content');
+      canvasImg.onerror = (error) => {
+        clearTimeout(timeout);
+        console.error('❌ Failed to load canvas content:', error);
         // Resolve with just case image if available
         resolve(compositeCanvas.toDataURL('image/png', 1));
       };
+      
+      console.log('🔄 Loading canvas content...');
       canvasImg.src = canvasDataURL;
     };
 

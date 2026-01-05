@@ -102,7 +102,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
           <div className="relative flex-shrink-0">
             {item.designImage ? (
               <img
-                src={item.designImage}
+                src={normalizeImagePath(item.designImage)}
                 alt="Your Design"
                 className="w-24 h-18 object-contain rounded"
                 loading="lazy"
@@ -232,7 +232,7 @@ const StandaloneCase = ({ item, formatPrice, errorMessage }) => (
         <div className="relative flex-shrink-0">
           {item.designImage ? (
             <img
-              src={item.designImage}
+              src={normalizeImagePath(item.designImage)}
               alt="Your Design"
               className="w-24 h-18 object-contain rounded"
               loading="lazy"

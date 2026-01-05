@@ -16,6 +16,11 @@
 export const normalizeImagePath = (imagePath) => {
   if (!imagePath) return imagePath;
   
+  // Don't normalize data URLs (base64 images) - return as-is
+  if (imagePath.startsWith('data:image/') || imagePath.startsWith('data:application/')) {
+    return imagePath;
+  }
+  
   // Always remove /TheHappyCase/ prefix if present
   // This works for both development and production (root deployment)
   // Safari is stricter about paths, so normalization is important

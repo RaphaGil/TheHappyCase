@@ -28,11 +28,28 @@ import { CurrencyProvider } from './context/CurrencyContext';
 
 function AppContent() {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
-  const hideNavBar = location.pathname === '/checkout';
-  const hideNavBarOnMobile = location.pathname === '/CreateYours' || location.pathname === '/AddText';
-  const hideFooter = location.pathname === '/checkout' || location.pathname === '/AddText';
-  const hideFooterOnMobile = location.pathname === '/CreateYours';
+  // Normalize pathname to handle trailing slashes and base paths
+  // Remove trailing slashes and ensure we have a valid pathname
+  let pathname = location.pathname || '/';
+  pathname = pathname.replace(/\/+$/, '') || '/';
+  
+  // Ensure pathname starts with / for consistent matching
+  if (!pathname.startsWith('/')) {
+    pathname = '/' + pathname;
+  }
+  
+  const isHomePage = pathname === '/';
+  // Only hide navbar on checkout page
+  const hideNavBar = pathname === '/checkout';
+  // Hide navbar on mobile for CreateYours and AddText pages
+  const hideNavBarOnMobile = pathname === '/CreateYours' || pathname === '/AddText';
+  // Hide footer on checkout and AddText pages
+  const hideFooter = pathname === '/checkout' || pathname === '/AddText';
+  // Hide footer on mobile for CreateYours page
+  const hideFooterOnMobile = pathname === '/CreateYours';
+  
+  // Debug logging (useful for troubleshooting in deployment)
+  console.log('[App] Current pathname:', pathname, '| hideNavBar:', hideNavBar, '| hideFooter:', hideFooter);
 
   return (
     <div className="App bg-white min-h-screen">
@@ -68,6 +85,18 @@ function AppContent() {
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />
           <Route path="/about" element={<About />} />
+          {/* Catch-all route - redirect to home for unknown routes */}
+          <Route path="*" element={
+            <>
+              <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                  <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
+                  <p className="text-gray-600 mb-8">The page you're looking for doesn't exist.</p>
+                  <a href="/" className="text-blue-600 hover:underline">Return to Home</a>
+                </div>
+              </div>
+            </>
+          } />
         </Routes>
       </main>
       {!hideFooter && (

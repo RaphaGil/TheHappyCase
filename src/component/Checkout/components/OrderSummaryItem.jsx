@@ -218,7 +218,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
         <div className="relative flex-shrink-0 w-20 h-20 bg-gray-50 rounded-sm border border-gray-200 flex items-center justify-center overflow-visible">
           {item.designImage ? (
             <img
-              src={item.designImage}
+              src={normalizeImagePath(item.designImage)}
               alt="Custom Case Design"
               className="w-full h-full object-contain p-2 rounded-sm"
               loading="lazy"

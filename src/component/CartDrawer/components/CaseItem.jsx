@@ -44,11 +44,29 @@ const CaseItem = ({
       return acc;
     }, {})
   );
-  // Determine which image to show - prioritize case image if design image is not available or invalid
+  // Determine which image to show - prioritize design image (composite) if available, otherwise use case image
   const hasValidDesignImage = item.designImage && 
     typeof item.designImage === 'string' && 
     item.designImage.trim().length > 0;
+  // Use designImage if available (could be data URL or file path), otherwise fall back to caseImage/image
   const basePreview = hasValidDesignImage ? item.designImage : (item.caseImage || item.image);
+  
+  // Debug logging for image display
+  if (process.env.NODE_ENV === 'development' || item.customDesign) {
+    console.log('🖼️ CaseItem - Image display debug:', {
+      itemId: item.id,
+      itemName: item.caseName || item.name,
+      hasDesignImage: !!item.designImage,
+      designImageType: item.designImage ? (item.designImage.startsWith('data:') ? 'data URL' : 'file path') : 'none',
+      designImageLength: item.designImage ? item.designImage.length : 0,
+      hasCaseImage: !!item.caseImage,
+      caseImagePath: item.caseImage,
+      hasImage: !!item.image,
+      imagePath: item.image,
+      basePreview: basePreview ? (basePreview.startsWith('data:') ? 'data URL' : basePreview.substring(0, 50) + '...') : 'none',
+      customDesign: item.customDesign
+    });
+  }
 
   const basePrice = typeof item.basePrice === 'number' ? item.basePrice : 8;
   const charms = item.pinsDetails && item.pinsDetails.length
@@ -69,6 +87,28 @@ const CaseItem = ({
                   alt="Case preview"
                   className="w-20 h-22 object-contain rounded"
                   loading="lazy"
+                  onLoad={() => {
+                    if (item.customDesign) {
+                      console.log('✅ CaseItem - Image loaded successfully:', {
+                        itemId: item.id,
+                        srcType: basePreview.startsWith('data:') ? 'data URL' : 'file path'
+                      });
+                    }
+                  }}
+                  onError={(e) => {
+                    console.error('❌ CaseItem - Image failed to load:', {
+                      itemId: item.id,
+                      itemName: item.caseName || item.name,
+                      src: normalizeImagePath(basePreview),
+                      srcType: basePreview.startsWith('data:') ? 'data URL' : 'file path',
+                      srcLength: basePreview.length,
+                      hasDesignImage: !!item.designImage,
+                      hasCaseImage: !!item.caseImage,
+                      hasImage: !!item.image,
+                      customDesign: item.customDesign,
+                      error: e
+                    });
+                  }}
                 />
               ) : item.color ? (
                 <div

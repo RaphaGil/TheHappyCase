@@ -4,7 +4,9 @@ import AnimatedTitle from '../AnimatedTitle';
 // Defer slick carousel CSS - load asynchronously if needed
 // import 'slick-carousel/slick/slick.css'; 
 // import 'slick-carousel/slick/slick-theme.css';
-import videoSrc from '../../assets/videos/hero.mp4';
+
+// Use public path for video to ensure it works in deployment
+const videoSrc = '/assets/videos/hero.mp4';
 
 function Hero() {
   const videoRef = useRef(null);
@@ -93,7 +95,7 @@ function Hero() {
           }}
         >
           <source src={videoSrc} type="video/mp4" />
-          <source src="/video.mp4" type="video/mp4" />
+          <source src="/assets/videos/hero.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         

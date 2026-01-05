@@ -72,11 +72,16 @@ const cartReducer = (state, action) => {
         const addedItem = { ...newItem, quantity: newItem.quantity || 1 };
         const updatedCart = [...state.items, addedItem];
         console.log('✅ CartContext - Item successfully added to cart state:', {
-          item: addedItem,
+          item: {
+            ...addedItem,
+            designImage: addedItem.designImage ? (addedItem.designImage.startsWith('data:') ? `data URL (${addedItem.designImage.length} chars)` : addedItem.designImage) : 'none',
+            caseImage: addedItem.caseImage || 'none',
+            image: addedItem.image ? (addedItem.image.startsWith('data:') ? `data URL (${addedItem.image.length} chars)` : addedItem.image) : 'none'
+          },
           cartSize: updatedCart.length,
           allItemsInCart: updatedCart.map((item, idx) => ({
             itemNumber: idx + 1,
-            name: item.name,
+            name: item.name || item.caseName,
             type: item.type,
             category: item.category,
             quantity: item.quantity,
@@ -84,6 +89,9 @@ const cartReducer = (state, action) => {
             caseType: item.caseType,
             color: item.color,
             customDesign: item.customDesign,
+            hasDesignImage: !!item.designImage,
+            hasCaseImage: !!item.caseImage,
+            hasImage: !!item.image,
             pin: item.pin ? { name: item.pin.name, src: item.pin.src, category: item.pin.category } : null
           }))
         });
@@ -211,6 +219,21 @@ const loadCartFromStorage = () => {
       const parsedCart = JSON.parse(storedCart);
       // Validate that it's an array
       if (Array.isArray(parsedCart)) {
+        // Log cart items with image info for debugging
+        console.log('📦 Cart loaded from localStorage:', {
+          itemCount: parsedCart.length,
+          items: parsedCart.map((item, idx) => ({
+            index: idx,
+            id: item.id,
+            name: item.name || item.caseName,
+            customDesign: item.customDesign,
+            hasDesignImage: !!item.designImage,
+            designImageType: item.designImage ? (item.designImage.startsWith('data:') ? 'data URL' : 'file path') : 'none',
+            designImageLength: item.designImage ? item.designImage.length : 0,
+            hasCaseImage: !!item.caseImage,
+            hasImage: !!item.image
+          }))
+        });
         return parsedCart;
       }
     }
