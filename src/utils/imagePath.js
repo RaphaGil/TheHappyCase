@@ -31,7 +31,7 @@ export const normalizeImagePath = (imagePath) => {
   normalizedPath = normalizedPath.replace(/\/+/g, '/');
   
   // Support PUBLIC_URL if set (for custom base paths)
-  const publicUrl = process.env.PUBLIC_URL || '';
+  const publicUrl = import.meta.env.BASE_URL || '';
   if (publicUrl && normalizedPath.startsWith('/')) {
     // Remove trailing slash from publicUrl if present
     const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl;
@@ -46,8 +46,8 @@ export const normalizeImagePath = (imagePath) => {
  * @returns {string} Base path for images
  */
 export const getImageBasePath = () => {
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const publicUrl = process.env.PUBLIC_URL || '';
+  const isDevelopment = import.meta.env.DEV;
+  const publicUrl = import.meta.env.BASE_URL || '';
   
   if (isDevelopment) {
     return '';

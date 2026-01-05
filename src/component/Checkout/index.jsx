@@ -18,7 +18,7 @@ import ShippingInfoModal from './components/ShippingInfoModal';
 // Initialize Stripe with your publishable key
 // For demo purposes, we'll use a test key. In production, use your actual key
 const stripePromise = loadStripe(
-  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 
   'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
 );
 
@@ -445,7 +445,7 @@ const Checkout = () => {
   const [loading, setLoading] = useState(true);
   const [paymentError, setPaymentError] = useState(null);
   const hasInitializedRef = useRef(false);
-  const assetBasePath = process.env.PUBLIC_URL || '';
+  const assetBasePath = import.meta.env.BASE_URL || '';
   const cartIconSrc = `${assetBasePath}/images/cart.svg`;
 
   useEffect(() => {

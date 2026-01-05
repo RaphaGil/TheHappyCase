@@ -7,12 +7,12 @@
  * Production: Uses the full backend server URL
  * 
  * To set production backend URL:
- * 1. Set REACT_APP_API_URL environment variable during build
+ * 1. Set VITE_API_URL environment variable during build
  * 2. Or update the PRODUCTION_API_URL constant below
  */
 
 // Check if we're in development mode
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = import.meta.env.DEV;
 
 // Production backend URL - update this with your deployed backend URL
 // Examples:
@@ -20,7 +20,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 // - Railway: https://your-app.railway.app
 // - Render: https://your-app.onrender.com
 // - Vercel: https://your-app.vercel.app
-const PRODUCTION_API_URL = process.env.REACT_APP_API_URL || '';
+const PRODUCTION_API_URL = import.meta.env.VITE_API_URL || '';
 
 /**
  * Get the base URL for API calls
@@ -54,7 +54,7 @@ export const getApiUrl = (endpoint) => {
   
   // In development, always use relative paths to leverage the proxy
   if (isDevelopment && !baseUrl) {
-    // Use relative path (proxy in setupProxy.js will handle routing to http://localhost:3001)
+    // Use relative path (proxy in vite.config.js will handle routing to http://localhost:3001)
     return cleanEndpoint;
   }
   

@@ -49,7 +49,9 @@ function AppContent() {
   const hideFooterOnMobile = pathname === '/CreateYours';
   
   // Debug logging (useful for troubleshooting in deployment)
-  console.log('[App] Current pathname:', pathname, '| hideNavBar:', hideNavBar, '| hideFooter:', hideFooter);
+  if (import.meta.env.DEV) {
+    console.log('[App] Current pathname:', pathname, '| hideNavBar:', hideNavBar, '| hideFooter:', hideFooter);
+  }
 
   return (
     <div className="App bg-white min-h-screen">
