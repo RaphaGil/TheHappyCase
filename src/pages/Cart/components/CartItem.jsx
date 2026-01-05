@@ -113,7 +113,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
               />
             ) : item.caseImage || item.image ? (
               <img
-                src={item.caseImage || item.image}
+                src={normalizeImagePath(item.caseImage || item.image)}
                 alt="Case"
                 className="w-24 h-18 object-contain rounded"
                 loading="lazy"
@@ -243,7 +243,7 @@ const StandaloneCase = ({ item, formatPrice, errorMessage }) => (
             />
           ) : item.caseImage || item.image ? (
             <img
-              src={item.caseImage || item.image}
+              src={normalizeImagePath(item.caseImage || item.image)}
               alt={item.caseName || item.name || "Case"}
               className="w-24 h-18 object-contain rounded"
               loading="lazy"

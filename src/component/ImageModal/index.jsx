@@ -1,4 +1,5 @@
 import React from 'react';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selectedModalImage, setSelectedModalImage, onClose }) => {
   if (!show || !selectedCase || !caseImages || caseImages.length === 0) return null;
@@ -34,7 +35,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
           <div className="flex-1 flex items-center justify-center min-h-0 mb-4">
             <div className="relative  p-4 sm:p-6 md:p-8 flex items-center justify-center w-full h-full">
               <img
-                src={caseImages[selectedModalImage]}
+                src={normalizeImagePath(caseImages[selectedModalImage])}
                 alt={`${selectedCase.name} - View ${selectedModalImage + 1}`}
                 className="max-w-full max-h-full object-contain"
                 loading="lazy"
@@ -69,7 +70,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                     }`}
                   >
                     <img
-                      src={image}
+                      src={normalizeImagePath(image)}
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain p-1"
                       loading="lazy"

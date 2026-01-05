@@ -225,7 +225,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
             />
           ) : item.caseImage ? (
             <img 
-              src={item.caseImage} 
+              src={normalizeImagePath(item.caseImage)} 
               alt="Custom Case" 
               className="w-full h-full object-contain p-2 rounded-sm" 
               loading="lazy" 

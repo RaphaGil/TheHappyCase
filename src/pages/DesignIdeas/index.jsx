@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Products from '../../data/products.json';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 const DesignIdeas = () => {
   const navigate = useNavigate();
@@ -226,7 +227,7 @@ const DesignIdeas = () => {
                 <div className={`aspect-[3/4] ${pastelColors[colorIndex]} flex items-center justify-center overflow-hidden relative`}>
                   {idea.caseImage && (
                     <img
-                      src={idea.caseImage}
+                      src={normalizeImagePath(idea.caseImage)}
                       alt={idea.title}
                       className="w-full h-full object-contain"
                       loading="lazy"

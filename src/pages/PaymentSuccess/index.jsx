@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faHome, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import { getApiUrl } from '../../utils/apiConfig';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 const PaymentSuccess = () => {
   const location = useLocation();
@@ -207,7 +208,7 @@ const PaymentSuccess = () => {
                       <div className="flex items-start gap-4">
                         {(item.image || item.caseImage || item.designImage) && (
                           <img 
-                            src={item.designImage || item.caseImage || item.image} 
+                            src={normalizeImagePath(item.designImage || item.caseImage || item.image)} 
                             alt={item.name || item.caseName || 'Item'}
                             className="w-16 h-16 md:w-20 md:h-20 object-contain rounded"
                           />

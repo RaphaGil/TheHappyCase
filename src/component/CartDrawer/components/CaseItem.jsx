@@ -65,7 +65,7 @@ const CaseItem = ({
             <div className="relative flex-shrink-0">
               {basePreview ? (
                 <img
-                  src={basePreview}
+                  src={normalizeImagePath(basePreview)}
                   alt="Case preview"
                   className="w-20 h-22 object-contain rounded"
                   loading="lazy"

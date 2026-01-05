@@ -96,7 +96,7 @@ const CategorySelector = ({
             >
               <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
                 <img
-                  src={previewImage}
+                  src={normalizeImagePath(previewImage)}
                   alt={opt.label}
                   className="max-w-full max-h-full object-contain p-1"
                   loading="lazy"

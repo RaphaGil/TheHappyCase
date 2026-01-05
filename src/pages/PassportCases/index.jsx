@@ -499,7 +499,7 @@ const PassportCases = () => {
                 }}
               >
                 <img
-                  src={currentImage}
+                  src={normalizeImagePath(currentImage)}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
                   className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''}`}
                   loading="eager"
@@ -556,7 +556,7 @@ const PassportCases = () => {
                     } ${isSelectedColorSoldOut() ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <img
-                      src={image}
+                      src={normalizeImagePath(image)}
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain"
                       loading="lazy"
