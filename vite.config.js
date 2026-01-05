@@ -11,7 +11,9 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   plugins: [react()],
   
-  // Base public path when served in production (for GitHub Pages)
+  // Base public path when served in production
+  // Use './' for relative paths (works for both root and subdirectory deployment)
+  // This ensures images work regardless of deployment location
   base: './',
   
   // Explicitly set the root and public directory
