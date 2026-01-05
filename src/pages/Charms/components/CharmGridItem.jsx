@@ -18,6 +18,9 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
           alt={charm.name}
           className={`w-full h-full object-contain p-4 transition-opacity duration-200 group-hover:opacity-80 ${isSoldOut ? 'opacity-50' : ''}`}
           loading="lazy"
+          decoding="async"
+          width="200"
+          height="200"
           style={{
             transform: `scale(${charm.size !== undefined ? charm.size * 0.9 : 0.9})`
           }}
@@ -27,6 +30,12 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
             }
             if (e.target?.nextSibling) {
               e.target.nextSibling.style.display = 'flex';
+            }
+          }}
+          onLoad={(e) => {
+            // Force Safari to display the image
+            if (e.target) {
+              e.target.style.visibility = 'visible';
             }
           }}
         />

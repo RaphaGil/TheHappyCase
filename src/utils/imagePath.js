@@ -3,8 +3,9 @@
  * 
  * Normalizes image paths to work in both development and production.
  * 
- * Development: Removes /TheHappyCase/ prefix to use /images/... paths
- * Production: Keeps original path (works with both /TheHappyCase/images/... and /images/...)
+ * Since the app is deployed at root (homepage: "."), we always
+ * remove the /TheHappyCase/ prefix to use /images/... paths.
+ * This is especially important for Safari compatibility.
  */
 
 /**
@@ -15,26 +16,24 @@
 export const normalizeImagePath = (imagePath) => {
   if (!imagePath) return imagePath;
   
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  // Always remove /TheHappyCase/ prefix if present
+  // This works for both development and production (root deployment)
+  // Safari is stricter about paths, so normalization is important
+  let normalizedPath = imagePath.replace(/^\/TheHappyCase\//, '/');
   
-  // In development, remove /TheHappyCase/ prefix to use /images/... paths
-  // In production, keep the original path as it works correctly
-  if (isDevelopment) {
-    // Remove /TheHappyCase/ prefix if present for development
-    return imagePath.replace(/^\/TheHappyCase\//, '/');
-  }
+  // For Safari compatibility: ensure path is properly formatted
+  // Remove any double slashes and ensure proper encoding
+  normalizedPath = normalizedPath.replace(/\/+/g, '/');
   
-  // In production, return the path as-is
-  // This allows both /TheHappyCase/images/... and /images/... to work
   // Support PUBLIC_URL if set (for custom base paths)
   const publicUrl = process.env.PUBLIC_URL || '';
-  if (publicUrl && imagePath.startsWith('/')) {
+  if (publicUrl && normalizedPath.startsWith('/')) {
     // Remove trailing slash from publicUrl if present
     const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl;
-    return `${cleanPublicUrl}${imagePath}`;
+    return `${cleanPublicUrl}${normalizedPath}`;
   }
   
-  return imagePath;
+  return normalizedPath;
 };
 
 /**
