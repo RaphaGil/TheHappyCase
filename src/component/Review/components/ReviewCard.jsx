@@ -14,7 +14,7 @@ const ReviewCard = ({ review }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 sm:p-7 md:p-8 transition-all duration-300 hover:shadow-lg hover:border-gray-200 flex flex-col min-h-[320px] group">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 sm:p-7 md:p-8 transition-all duration-300 hover:shadow-lg hover:border-gray-200 flex flex-col h-full group">
       {/* Stars Rating */}
       <div className="flex items-center gap-2 mb-4 sm:mb-5">
         {renderStars(review.rating)}

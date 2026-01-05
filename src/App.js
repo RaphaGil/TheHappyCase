@@ -4,7 +4,7 @@ import Hero from './component/Hero';
 import WhatWeDo from './component/WhatWeDo';
 import Items from './component/Items';
 // import Review from './component/Reviews';
-import Reviews from './component/Review';
+
 import Footer from './component/Footer';
 import CartDrawer from './component/CartDrawer';
 
@@ -49,9 +49,7 @@ function AppContent() {
                   <Hero />  
                   <Items />
                   <WhatWeDo />
-                
-                  {/* <Review /> */}
-                  <Reviews />
+          
                 </>
               } />
           <Route path="/CreateYours" element={<CreateYours />} />

@@ -3,8 +3,8 @@
  * 
  * Normalizes image paths to work in both development and production.
  * 
- * Since the app is deployed to Netlify at root (homepage: "."), we always
- * remove the /TheHappyCase/ prefix to use /images/... paths.
+ * Development: Removes /TheHappyCase/ prefix to use /images/... paths
+ * Production: Keeps original path (works with both /TheHappyCase/images/... and /images/...)
  */
 
 /**
@@ -15,19 +15,26 @@
 export const normalizeImagePath = (imagePath) => {
   if (!imagePath) return imagePath;
   
-  // Always remove /TheHappyCase/ prefix if present
-  // This works for both development and production (Netlify root deployment)
-  let normalizedPath = imagePath.replace(/^\/TheHappyCase\//, '/');
+  const isDevelopment = process.env.NODE_ENV === 'development';
   
-  // Support PUBLIC_URL if set (for custom base paths)
-  const publicUrl = process.env.PUBLIC_URL || '';
-  if (publicUrl && normalizedPath.startsWith('/')) {
-    // Remove trailing slash from publicUrl if present
-    const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl;
-    return `${cleanPublicUrl}${normalizedPath}`;
+  // In development, remove /TheHappyCase/ prefix to use /images/... paths
+  // In production, keep the original path as it works correctly
+  if (isDevelopment) {
+    // Remove /TheHappyCase/ prefix if present for development
+    return imagePath.replace(/^\/TheHappyCase\//, '/');
   }
   
-  return normalizedPath;
+  // In production, return the path as-is
+  // This allows both /TheHappyCase/images/... and /images/... to work
+  // Support PUBLIC_URL if set (for custom base paths)
+  const publicUrl = process.env.PUBLIC_URL || '';
+  if (publicUrl && imagePath.startsWith('/')) {
+    // Remove trailing slash from publicUrl if present
+    const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl;
+    return `${cleanPublicUrl}${imagePath}`;
+  }
+  
+  return imagePath;
 };
 
 /**

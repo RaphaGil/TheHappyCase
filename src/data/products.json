@@ -203,7 +203,7 @@
       {
         "id": 1,
         "name": "Albania Flag",
-        "src": "/TheHappyCase/images/Flags/albania.png",
+        "src": "/images/Flags/albania.png",
         "price": 2,
         "size": 0.5,
         "continent": "europe"
