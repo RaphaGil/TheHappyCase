@@ -32,13 +32,19 @@ function Hero() {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      // Set playback rate to 0.5 (half speed) for slow motion effect
-      video.playbackRate = 0.5;
+      // Safari-specific: Set playback rate after video is loaded
+      const setPlaybackRate = () => {
+        if (video.readyState >= 2) {
+          video.playbackRate = 0.5;
+        }
+      };
       
       // Try to play once - if it fails, browser autoplay policy is blocking it
       // This is normal and expected in some browsers/situations
       const playVideo = async () => {
         try {
+          // Safari: Set playback rate before playing
+          setPlaybackRate();
           await video.play();
         } catch (error) {
           // Silently handle autoplay blocking - this is expected behavior
@@ -46,11 +52,25 @@ function Hero() {
         }
       };
       
+      // Safari: Wait for video to be ready before setting playback rate
+      video.addEventListener('loadedmetadata', setPlaybackRate, { once: true });
+      video.addEventListener('canplay', setPlaybackRate, { once: true });
+      
       if (video.readyState >= 2) {
         playVideo();
       } else {
+        // Safari: Use multiple events for better compatibility
         video.addEventListener('loadeddata', playVideo, { once: true });
-        return () => video.removeEventListener('loadeddata', playVideo);
+        video.addEventListener('canplay', playVideo, { once: true });
+        video.addEventListener('loadedmetadata', playVideo, { once: true });
+        
+        return () => {
+          video.removeEventListener('loadeddata', playVideo);
+          video.removeEventListener('canplay', playVideo);
+          video.removeEventListener('loadedmetadata', playVideo);
+          video.removeEventListener('loadedmetadata', setPlaybackRate);
+          video.removeEventListener('canplay', setPlaybackRate);
+        };
       }
     }
   }, []);
@@ -73,6 +93,14 @@ function Hero() {
           onError={(e) => {
             console.error('❌ Video error:', e);
             console.error('❌ Video src:', e.target.src);
+            console.error('❌ Video error details:', e.target.error);
+          }}
+          onLoadStart={() => {
+            // Safari: Ensure video starts loading
+            const video = videoRef.current;
+            if (video && video.readyState === 0) {
+              video.load();
+            }
           }}
           style={{ 
             zIndex: 1,
