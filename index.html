@@ -2,15 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/TheHappyCase/assets/logo.png" />
+    <link rel="icon" href="/assets/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="The Happy Case - Custom passport cases with personalized charms"
     />
-    <link rel="apple-touch-icon" href="/TheHappyCase/assets/logo.png" />
-    <link rel="manifest" href="/TheHappyCase/static/manifest-CYtEjORf.json">
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
+    <link rel="manifest" href="/static/manifest-CYtEjORf.json">
 
     
     <!-- Resource hints for better performance -->
@@ -41,17 +41,20 @@
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');
-          // Handle base path for subdirectory deployment
-          var basePath = '/TheHappyCase';
+          // Get base path from current pathname
+          // For subdirectory: /TheHappyCase -> basePath = /TheHappyCase
+          // For root: / -> basePath = ''
+          var pathParts = l.pathname.split('/').filter(function(p) { return p && p !== 'index.html'; });
+          var basePath = pathParts.length > 0 ? '/' + pathParts[0] : '';
           var newPath = basePath + decoded;
           window.history.replaceState(null, null, newPath + l.hash);
         }
       }(window.location))
     </script>
-    <script type="module" crossorigin src="/TheHappyCase/static/index-DS9DZqJo.js"></script>
-    <link rel="modulepreload" crossorigin href="/TheHappyCase/static/react-vendor-BOolIk9q.js">
-    <link rel="modulepreload" crossorigin href="/TheHappyCase/static/fabric-vendor-BAvO4K_6.js">
-    <link rel="stylesheet" crossorigin href="/TheHappyCase/static/index-C9VNAkvY.css">
+    <script type="module" crossorigin src="/static/index-BImyUqWn.js"></script>
+    <link rel="modulepreload" crossorigin href="/static/react-vendor-BOolIk9q.js">
+    <link rel="modulepreload" crossorigin href="/static/fabric-vendor-BAvO4K_6.js">
+    <link rel="stylesheet" crossorigin href="/static/index-C9VNAkvY.css">
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
