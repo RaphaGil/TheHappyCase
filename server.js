@@ -44,26 +44,51 @@ const PORT = process.env.PORT || 3001;
 // Production frontend URLs
 const PRODUCTION_FRONTEND_URL = "https://raphagil.github.io";
 const NETLIFY_FRONTEND_URL = "https://thehappycasestore.netlify.app";
+// Custom domain - support both www and non-www versions
+const CUSTOM_DOMAIN = process.env.CUSTOM_DOMAIN || "thehappycase.store";
+const CUSTOM_DOMAIN_WWW = `www.${CUSTOM_DOMAIN}`;
 
 const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL, PRODUCTION_FRONTEND_URL, NETLIFY_FRONTEND_URL]
-  : ["http://localhost:3000", "http://127.0.0.1:3000", PRODUCTION_FRONTEND_URL, NETLIFY_FRONTEND_URL];
+  ? [process.env.FRONTEND_URL, PRODUCTION_FRONTEND_URL, NETLIFY_FRONTEND_URL, `https://${CUSTOM_DOMAIN}`, `https://${CUSTOM_DOMAIN_WWW}`]
+  : ["http://localhost:3000", "http://127.0.0.1:3000", PRODUCTION_FRONTEND_URL, NETLIFY_FRONTEND_URL, `https://${CUSTOM_DOMAIN}`, `https://${CUSTOM_DOMAIN_WWW}`];
 
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      if (
-        allowedOrigins.includes(origin) ||
-        origin.includes("localhost") ||
-        origin.includes("127.0.0.1") ||
-        origin.startsWith("https://raphagil.github.io") || // Allow GitHub Pages
-        origin.startsWith("https://thehappycasestore.netlify.app") // Allow Netlify
-      ) {
+      
+      // Development origins
+      if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
         return callback(null, true);
       }
+      
+      // Check exact matches
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      
+      // Allow GitHub Pages
+      if (origin.startsWith("https://raphagil.github.io")) {
+        return callback(null, true);
+      }
+      
+      // Allow Netlify subdomain
+      if (origin.startsWith("https://thehappycasestore.netlify.app")) {
+        return callback(null, true);
+      }
+      
+      // Allow custom domain (both www and non-www)
+      if (origin === `https://${CUSTOM_DOMAIN}` || 
+          origin === `https://${CUSTOM_DOMAIN_WWW}` ||
+          origin === `http://${CUSTOM_DOMAIN}` ||
+          origin === `http://${CUSTOM_DOMAIN_WWW}`) {
+        return callback(null, true);
+      }
+      
+      // Log blocked origins for debugging
       console.log("⚠️ CORS blocked origin:", origin);
-      callback(null, true); // Allow all in dev (but log for production debugging)
+      // Allow all in dev (but log for production debugging)
+      callback(null, true);
     },
     credentials: true,
   })
