@@ -12,9 +12,9 @@ export default defineConfig({
   plugins: [react()],
   
   // Base public path when served in production
-  // Use '/' for root deployment (most common for GitHub Pages, Netlify, Vercel)
-  // If deploying to a subdirectory, change this to '/subdir/'
-  base: '/',
+  // Use '/TheHappyCase/' for GitHub Pages subdirectory deployment
+  // Change to '/' if deploying to root (username.github.io)
+  base: '/TheHappyCase/',
   
   // Explicitly set the root and public directory
   root: '.',

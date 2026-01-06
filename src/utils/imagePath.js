@@ -3,9 +3,9 @@
  * 
  * Normalizes image paths to work in both development and production.
  * 
- * Since the app is deployed at root (homepage: "."), we always
- * remove the /TheHappyCase/ prefix to use /images/... paths.
- * This is especially important for Safari compatibility.
+ * Handles base URL from Vite config (BASE_URL) to support both
+ * root and subdirectory deployments. Automatically prepends base path
+ * when needed for subdirectory deployments like /TheHappyCase/
  */
 
 /**
