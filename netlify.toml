@@ -1,0 +1,9 @@
+[build]
+  # Build command
+  command = "npm run build"
+  # Directory to publish (Vite outputs to 'build' directory)
+  publish = "build"
+
+# Note: SPA redirects are handled by public/_redirects file
+# The _redirects file contains: /*    /index.html   200
+
