@@ -124,7 +124,8 @@ function AppContent() {
 function App() {
   // Get base URL from Vite config for React Router basename
   const baseUrl = import.meta.env.BASE_URL || '/';
-  const basename = baseUrl === '/' ? '/' : baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  // React Router basename: empty string for root, or path without trailing slash for subdirectory
+  const basename = baseUrl === '/' ? '' : baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
   
   return (
     <CurrencyProvider>

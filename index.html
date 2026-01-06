@@ -41,8 +41,11 @@
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');
-          // Handle base path for subdirectory deployment
-          var basePath = '/TheHappyCase';
+          // Get base path from current pathname
+          // For subdirectory: /TheHappyCase -> basePath = /TheHappyCase
+          // For root: / -> basePath = ''
+          var pathParts = l.pathname.split('/').filter(function(p) { return p && p !== 'index.html'; });
+          var basePath = pathParts.length > 0 ? '/' + pathParts[0] : '';
           var newPath = basePath + decoded;
           window.history.replaceState(null, null, newPath + l.hash);
         }
