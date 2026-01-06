@@ -28,9 +28,19 @@ import { CurrencyProvider } from './context/CurrencyContext';
 
 function AppContent() {
   const location = useLocation();
-  // Normalize pathname to handle trailing slashes and base paths
-  // Remove trailing slashes and ensure we have a valid pathname
+  // Normalize pathname to handle trailing slashes, base paths, and GitHub Pages redirects
+  // Handle GitHub Pages SPA redirect format: /?/path -> /path
   let pathname = location.pathname || '/';
+  
+  // Handle GitHub Pages redirect query string (from 404.html)
+  // The redirect script in index.html should have already handled this,
+  // but we normalize here as a fallback
+  if (location.search && location.search.startsWith('?/')) {
+    const redirectPath = location.search.slice(2).split('&')[0].replace(/~and~/g, '&');
+    pathname = redirectPath || '/';
+  }
+  
+  // Remove trailing slashes and ensure we have a valid pathname
   pathname = pathname.replace(/\/+$/, '') || '/';
   
   // Ensure pathname starts with / for consistent matching
@@ -112,10 +122,14 @@ function AppContent() {
 }
 
 function App() {
+  // Get base URL from Vite config for React Router basename
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const basename = baseUrl === '/' ? '/' : baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  
   return (
     <CurrencyProvider>
       <CartProvider>
-        <Router>
+        <Router basename={basename}>
           <AppContent />
         </Router>
       </CartProvider>
