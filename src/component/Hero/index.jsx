@@ -26,29 +26,28 @@ function Hero() {
     }, 1700);
     return () => clearTimeout(timer);
   }, []);
-  // Force video to play when component mounts
+  // Try to play video when component mounts (browser may block autoplay)
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
+      // Set playback rate to 0.5 (half speed) for slow motion effect
+      video.playbackRate = 0.5;
+      
+      // Try to play once - if it fails, browser autoplay policy is blocking it
+      // This is normal and expected in some browsers/situations
       const playVideo = async () => {
         try {
-          // Set playback rate to 0.5 (half speed) for slow motion effect
-          video.playbackRate = 0.5;
           await video.play();
-          console.log('🎥 Video started playing automatically at 0.5x speed');
         } catch (error) {
-          console.error('❌ Autoplay failed:', error);
-          // Try again after a short delay
-          setTimeout(() => {
-            video.play().catch(e => console.error('❌ Second autoplay attempt failed:', e));
-          }, 1000);
+          // Silently handle autoplay blocking - this is expected behavior
+          // The video will still be visible, user can interact to play if needed
         }
       };
       
       if (video.readyState >= 2) {
         playVideo();
       } else {
-        video.addEventListener('loadeddata', playVideo);
+        video.addEventListener('loadeddata', playVideo, { once: true });
         return () => video.removeEventListener('loadeddata', playVideo);
       }
     }
@@ -69,24 +68,9 @@ function Hero() {
           loop
           preload="auto"
           className="w-full h-full object-cover"
-          onLoadStart={() => console.log('🎥 Video loading started')}
-          onCanPlay={() => {
-            console.log('🎥 Video can play');
-            // Try to play immediately when ready
-            if (videoRef.current) {
-              videoRef.current.play().catch(e => console.log('Play failed on canplay:', e));
-            }
-          }}
           onError={(e) => {
             console.error('❌ Video error:', e);
             console.error('❌ Video src:', e.target.src);
-          }}
-          onLoadedData={() => {
-            console.log('🎥 Video data loaded successfully');
-            // Try to play when data is loaded
-            if (videoRef.current) {
-              videoRef.current.play().catch(e => console.log('Play failed on loadeddata:', e));
-            }
           }}
           style={{ 
             zIndex: 1,
