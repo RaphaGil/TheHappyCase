@@ -5,8 +5,10 @@ import AnimatedTitle from '../AnimatedTitle';
 // import 'slick-carousel/slick/slick.css'; 
 // import 'slick-carousel/slick/slick-theme.css';
 
-// Use public path for video to ensure it works in deployment
-const videoSrc = '/assets/videos/hero.mp4';
+// Get base URL from Vite config for proper path resolution in deployment
+const baseUrl = import.meta.env.BASE_URL || '/';
+const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+const videoSrc = `${cleanBaseUrl}/assets/videos/hero.mp4`;
 
 function Hero() {
   const videoRef = useRef(null);
@@ -79,7 +81,6 @@ function Hero() {
           }}
         >
           <source src={videoSrc} type="video/mp4" />
-          <source src="/assets/videos/hero.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
