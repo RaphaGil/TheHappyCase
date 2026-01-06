@@ -1,5 +1,6 @@
 {
   "name": "thehappycase",
+  "homepage": "https://username.github.io/repository-name",
   "version": "0.1.0",
   "private": true,
   "type": "module",

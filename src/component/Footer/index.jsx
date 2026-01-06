@@ -118,10 +118,10 @@ function Footer() {
             {/* Mobile: Dropdown button */}
             <button
               onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-              className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2 font-inter "
+              className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 hover:text-gray-800 transition-colors duration-200 mb-2 font-bold "
             >
               {sectionVisible && (
-                <AnimatedTitle delay={100}>
+                <AnimatedTitle delay={100} className="font-bold">
                   Quick Links
                 </AnimatedTitle>
               )}
@@ -131,9 +131,9 @@ function Footer() {
               />
             </button>
             {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-light mb-2 font-inter ">
+            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900  mb-2 font-bold ">
               {sectionVisible && (
-                <AnimatedTitle delay={100}>
+                <AnimatedTitle delay={100} className="font-bold">
                   Quick Links
                 </AnimatedTitle>
               )}
@@ -193,10 +193,10 @@ function Footer() {
             {/* Mobile: Dropdown button */}
             <button
               onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
-              className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 font-light hover:text-gray-800 transition-colors duration-200 mb-2 font-inter"
+              className="md:hidden flex items-center justify-between w-full  uppercase tracking-wider text-gray-900 font-bold hover:text-gray-800 transition-colors duration-200 mb-2 "
             >
               {sectionVisible && (
-                <AnimatedTitle delay={200}>
+                <AnimatedTitle delay={200} className="font-bold">
                   Customer Service
                 </AnimatedTitle>
               )}
@@ -206,9 +206,9 @@ function Footer() {
               />
             </button>
             {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-light mb-2 font-inter">
+            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-bold mb-2 font-inter">
               {sectionVisible && (
-                <AnimatedTitle delay={200}>
+                <AnimatedTitle delay={200} className="font-bold">
                   Customer Service
                 </AnimatedTitle>
               )}
