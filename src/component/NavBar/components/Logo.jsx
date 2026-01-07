@@ -4,8 +4,16 @@ import { Link } from 'react-router-dom';
 const Logo = () => {
   return (
     <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
+      {/* Mobile: Logo Image */}
+      <img 
+        src="/assets/logo.png" 
+        alt="The Happy Case Logo" 
+        className="h-10 w-auto lg:hidden"
+      />
+      
+      {/* Desktop: Text Logo */}
       <div
-        className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-inter"
+        className="hidden lg:flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-inter"
       >
         <span className="text-[9px] font-light leading-tight text-gray-900 font-inter tracking-title uppercase">
           THE

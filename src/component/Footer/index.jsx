@@ -287,6 +287,21 @@ function Footer() {
               </p>
             </div>
           </div>
+          
+          {/* Developer Credit */}
+          <div className="text-center mt-4 pt-4 border-t border-gray-200">
+            <p className="text-caption text-gray-600 font-light font-inter">
+              Developed by{' '}
+              <a 
+                href="https://www.linkedin.com/in/raphaelagil/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-900 hover:text-blue-900 transition-colors duration-200 underline"
+              >
+                Raphaela Gil
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

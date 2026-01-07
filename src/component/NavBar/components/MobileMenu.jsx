@@ -35,7 +35,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </li>
@@ -49,7 +49,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       {/* Social Media Icons - Mobile */}
       <li className="pt-4 border-t border-gray-100">
         <div className="px-4">
-          <h3 className="text-caption uppercase tracking-wider text-gray-500 mb-3 font-thin font-inter">
+          <h3 className=" py-3 hover:text-gray-900  font-light  text-sm uppercase  ">
             Follow Us
           </h3>
           <SocialMediaIcons isMobile={true} />

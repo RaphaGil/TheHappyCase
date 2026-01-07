@@ -53,14 +53,14 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
             e.stopPropagation();
             toggleCurrencyDropdown();
           }}
-          className={`w-full text-left hover:text-gray-900 font-light transition-all duration-200 flex items-center justify-between text-xs uppercase tracking-wider font-inter ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
+          className={`w-full text-left hover:text-gray-900 font-light transition-all duration-200 flex items-center justify-between text-sm uppercase tracking-wider font-inter ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
           style={{color: '#6b7280'}}
         >
           <span>{getCurrencyDisplayWithFlag()}</span>
-          <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
+          <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-base transition-transform duration-200 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
         {isCurrencyDropdownOpen && (
-          <div className="bg-gray-50 border-t border-gray-100 transition-all duration-200 max-h-[70vh] overflow-y-auto w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-gray-50 border-t border-gray-100 transition-all duration-200 max-h-[70vh] overflow-y-auto w-full mt-1" onClick={(e) => e.stopPropagation()}>
             {mainCurrencies.map((curr) => (
               <button
                 key={curr.code}
@@ -68,15 +68,15 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                   e.stopPropagation();
                   handleCurrencySelect(curr.code);
                 }}
-                className={`w-full text-left px-8 py-2.5 text-xs transition-colors font-inter ${currency === curr.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'}`}
+                className={`w-full text-left px-8 py-2.5 text-sm transition-colors font-light font-inter ${currency === curr.code ? 'bg-gray-100' : 'hover:bg-gray-100'}`}
                 style={{color: currency === curr.code ? '#111827' : '#374151'}}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span>{curr.flag}</span>
+                    <span className="text-lg">{curr.flag}</span>
                     <span>{curr.symbol} {curr.code}</span>
                   </div>
-                  {curr.name !== 'Euro' && <span className="text-xs text-gray-500">{curr.name}</span>}
+                  {curr.name !== 'Euro' && <span className="text-sm text-gray-500 font-light">{curr.name}</span>}
                 </div>
               </button>
             ))}
@@ -88,13 +88,13 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                   e.stopPropagation();
                   setShowEuropeanCountries(!showEuropeanCountries);
                 }}
-                className={`w-full text-left px-8 py-2.5 text-xs transition-colors font-inter ${isEuropeanCurrency ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                className={`w-full text-left px-8 py-2.5 text-sm transition-colors font-light font-inter ${isEuropeanCurrency ? 'bg-gray-100' : 'hover:bg-gray-100'} flex items-center justify-between`}
                 style={{color: isEuropeanCurrency ? '#111827' : '#374151'}}
               >
                 <div className="flex items-center justify-between flex-1">
-                  <span className="text-xs text-gray-500">Other European Countries</span>
+                  <span className="text-sm text-gray-500 font-light">Other European Countries</span>
                 </div>
-                <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform duration-200 ${showEuropeanCountries ? 'rotate-180' : ''}`} />
+                <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-base transition-transform duration-200 ${showEuropeanCountries ? 'rotate-180' : ''}`} />
               </button>
               {showEuropeanCountries && (
                 <div className="pl-8 max-h-64 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
@@ -105,14 +105,14 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                         e.stopPropagation();
                         handleCurrencySelect(country.code);
                       }}
-                      className={`w-full text-left px-4 py-2 text-xs transition-colors font-inter ${currency === country.code ? 'bg-gray-100 font-medium' : 'hover:bg-gray-100'} flex items-center justify-between`}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors font-light font-inter ${currency === country.code ? 'bg-gray-100' : 'hover:bg-gray-100'} flex items-center justify-between`}
                       style={{color: currency === country.code ? '#111827' : '#374151'}}
                     >
                       <div className="flex items-center gap-2">
-                        <span>{country.flag}</span>
+                        <span className="text-lg">{country.flag}</span>
                         <span>{country.symbol} {country.code}</span>
                       </div>
-                      <span className="text-xs text-gray-500">{country.name}</span>
+                      <span className="text-sm text-gray-500 font-light">{country.name}</span>
                     </button>
                   ))}
                 </div>

@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faTiktok, faFacebook, faEtsy } from '@fortawesome/free-brands-svg-icons';
 
 const SocialMediaIcons = ({ isMobile = false }) => {
-  const iconSize = isMobile ? 'text-sm' : 'text-md';
+  const iconSize = isMobile ? 'text-xl' : 'text-md';
   const containerClass = isMobile 
-    ? 'flex' 
+    ? 'flex gap-4' 
     : 'hidden md:flex items-center gap-4';
 
   return (
@@ -14,7 +14,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         href="https://instagram.com/thehappycase.store"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${isMobile ? 'w-8 h-8 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
+        className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Follow us on Instagram"
       >
         <FontAwesomeIcon icon={faInstagram} className={iconSize} style={{color: '#E4405F'}} />
@@ -23,7 +23,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         href="https://tiktok.com/@thehappycase.store"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${isMobile ? 'w-8 h-8 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
+        className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Follow us on TikTok"
       >
         <FontAwesomeIcon icon={faTiktok} className={iconSize} style={{color: '#000000'}} />
@@ -32,7 +32,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         href="https://facebook.com/thehappycase"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${isMobile ? 'w-8 h-8 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
+        className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Follow us on Facebook"
       >
         <FontAwesomeIcon icon={faFacebook} className={iconSize} style={{color: '#1877F2'}} />
@@ -41,7 +41,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         href="https://www.etsy.com/shop/TheHappyCaseShop?ref=dashboard-header"
         target="_blank"
         rel="noopener noreferrer"
-        className={`${isMobile ? 'w-8 h-8 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
+        className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Visit our Etsy shop"
       >
         <FontAwesomeIcon icon={faEtsy} className={iconSize} style={{color: '#F45800'}} />
