@@ -53,7 +53,7 @@ const NavBar = () => {
         <NavigationLinks isMobile={false} />
         
         {/* Right side - Mobile Icons (Login, WhatsApp, Cart) */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center md:gap-2 md:hidden">
           <LoginIcon isMobile={true} />
           <WhatsAppIcon isMobile={true} />
           <CartIcon isMobile={true} />

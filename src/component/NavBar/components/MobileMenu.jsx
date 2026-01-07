@@ -71,19 +71,23 @@ const MobileMenu = ({ isOpen, onClose }) => {
       
       {/* Fixed bottom section - Follow Us and Currency */}
       <div 
-        className="flex-shrink-0 bg-white" 
-     
+        className="flex-shrink-0 bg-white " 
+        style={{
+          paddingBottom: 'max(1.5rem, calc(1.5rem + env(safe-area-inset-bottom)))',
+          position: 'sticky',
+          bottom: 0,
+        }}
       >
         {/* Social Media Icons - Mobile */}
         <div className="pt-4">
-          <div>
-            <p className="px-2 py-3 hover:text-gray-900 font-light text-sm uppercase">
+          <div className="px-4">
+            <p className="py-3 hover:text-gray-900 font-light text-sm uppercase">
               Follow Us
             </p>
             <SocialMediaIcons isMobile={true} />
           </div>
         </div>
-        
+      
         {/* Currency Selector - Mobile */}
         <div className="relative px-4 py-3 border-t border-gray-100">
           <CurrencySelector variant="mobile" onSelect={onClose} />
