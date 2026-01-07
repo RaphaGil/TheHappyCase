@@ -53,7 +53,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
           {/* Login Link */}
           <li>
             <Link
-              to="/authentication/code"
+              to="/login"
               onClick={onClose}
               className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
               style={{color: '#6b7280'}}

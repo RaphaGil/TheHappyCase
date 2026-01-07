@@ -3,6 +3,8 @@ import PromotionalBanner from './components/PromotionalBanner';
 import Logo from './components/Logo';
 import NavigationLinks from './components/NavigationLinks';
 import CartIcon from './components/CartIcon';
+import LoginIcon from './components/LoginIcon';
+import WhatsAppIcon from './components/WhatsAppIcon';
 import HamburgerButton from './components/HamburgerButton';
 import MobileMenu from './components/MobileMenu';
 
@@ -50,14 +52,22 @@ const NavBar = () => {
         {/* Navbar links - Desktop */}
         <NavigationLinks isMobile={false} />
         
-        {/* Right side - Mobile Icons (Cart) */}
-        <CartIcon isMobile={true} />
+        {/* Right side - Mobile Icons (Login, WhatsApp, Cart) */}
+        <div className="flex items-center gap-2 md:hidden">
+          <LoginIcon isMobile={true} />
+          <WhatsAppIcon isMobile={true} />
+          <CartIcon isMobile={true} />
+        </div>
 
         {/* Mobile Menu */}
         <MobileMenu isOpen={isOpen} onClose={closeMenu} />
 
-        {/* Cart Link - Desktop */}
-        <CartIcon isMobile={false} />
+        {/* Desktop Icons (Login, WhatsApp, Cart) */}
+        <div className="hidden md:flex items-center gap-2">
+          <LoginIcon isMobile={false} />
+          <WhatsAppIcon isMobile={false} />
+          <CartIcon isMobile={false} />
+        </div>
       </nav>
     </>
   );

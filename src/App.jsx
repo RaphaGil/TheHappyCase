@@ -23,6 +23,7 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import About from './pages/About';
 import AddText from './component/AddText';
 import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -97,6 +98,8 @@ function AppContent() {
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/shipping" element={<ShippingPolicy />} />
           <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/authentication/code" element={<Login />} />
           {/* Catch-all route - redirect to home for unknown routes */}
           <Route path="*" element={
             <>
