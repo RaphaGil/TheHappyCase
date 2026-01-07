@@ -16,7 +16,7 @@ const Items = () => {
 
   return (
     <section className="bg-white relative items-center justify-center py-20 md:py-24 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 ">
+      <div className="container  mx-auto  relative z-10 ">
         {/* Header Section */}
         <div className="text-center">
           <h2 className="text-title md:text-title-lg font-light text-gray-900 mb-3 font-inter tracking-title">
@@ -98,7 +98,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Color Selector */}
       {item.colors && item.colors.length > 0 && (
-        <div className="col-span-2 text-center flex justify-center flex-wrap gap-1.5 sm:gap-2 mt-1 md:mt-4">
+        <div className="col-span-2 text-center flex justify-center flex-wrap gap-1.5 sm:gap-2 mt-2 md:mt-4">
           {item.colors.map((colorData, i) => (
             <button
               key={i}
@@ -119,10 +119,10 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
 
       {/* Product Info */}
       <div className="text-center flex flex-col flex-grow">
-        <h3 className="font-thin text-lg text-gray-800 mb-2 mt-4 ">
+        <h3 className="font-thin text-lg text-gray-800 mb- mt-4 ">
           {displayName}
         </h3>
-        <p className="text-body-md text-gray-700 mb-6 font-bold font-inter">
+        <p className="text-body-md text-gray-700 mb-3 font-bold font-inter">
           {formatPrice(item.basePrice || 0)}
         </p>
         

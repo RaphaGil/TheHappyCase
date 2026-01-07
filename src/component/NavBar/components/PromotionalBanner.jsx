@@ -9,7 +9,7 @@ const PromotionalBanner = () => {
 
   // Promotional banner messages - reactive to currency changes
   const bannerMessages = useMemo(() => [
-    "🌍 SHIP WORLDWIDE FROM THE UK",
+    "🌍 SHIP TO EUROPE, USA, AND UK",
     // "🚚 FREE DELIVERY WHEN YOU SPEND " + formatPrice(50),
     "🔒 WEBSITE 100% SAFE",
     "❤️ MADE WITH LOVE ",

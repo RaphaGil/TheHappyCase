@@ -193,7 +193,7 @@ function Footer() {
             {/* Mobile: Dropdown button */}
             <button
               onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
-              className="md:hidden flex items-center justify-between w-full  uppercase tracking-wider text-gray-900 font-bold hover:text-gray-800 transition-colors duration-200 mb-2 "
+              className="md:hidden flex items-center justify-between w-full  uppercase tracking-wider text-gray-900 font-bold hover:text-gray-800 transition-colors duration-200 mb-2 text-caption  "
             >
               {sectionVisible && (
                 <AnimatedTitle delay={200} className="font-bold">

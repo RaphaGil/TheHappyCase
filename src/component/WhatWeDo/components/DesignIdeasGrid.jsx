@@ -6,7 +6,7 @@ const DesignIdeasGrid = ({ images }) => {
   const [visibleImages, setVisibleImages] = useState(new Set());
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
   
-  const imageTexts = ['Colorful Pins', 'Bronze Pins', 'Mix Them', 'Flags'];
+  const imageTexts = ['Colorful Charms', 'Bronze Charms', 'Mixed Charms', 'Flags'];
 
   useEffect(() => {
     if (!sectionVisible) return;

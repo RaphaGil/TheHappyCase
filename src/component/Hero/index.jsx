@@ -170,7 +170,7 @@ function Hero() {
             style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
             <AnimatedTitle delay={100}>
-              Custom Your Own 
+              Create Your Own Custom
             </AnimatedTitle>
           </h1>
           <h1 

@@ -14,7 +14,7 @@ const WhatsAppIcon = ({ isMobile = false }) => {
       className={`${isMobile ? 'flex md:hidden' : 'hidden md:flex'} items-center p-2 text-gray-500 hover:text-green-600 font-thin transition-colors z-10`}
       aria-label="Contact us on WhatsApp"
     >
-      <FontAwesomeIcon icon={faWhatsapp} className="w-6 h-6 opacity-75" />
+      <FontAwesomeIcon icon={faWhatsapp} className="w-6 h-6  " />
     </a>
   );
 };
