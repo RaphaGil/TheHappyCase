@@ -98,9 +98,9 @@ export default {
         // 128px
         
         // Semantic font sizes for typography
-        'title': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '0.05em' }],   // 36px - Main page titles (h1)
-        'title-lg': ['3rem', { lineHeight: '1.2', letterSpacing: '0.05em' }],      // 48px - Large hero titles
-        'title-xl': ['3.75rem', { lineHeight: '1.1', letterSpacing: '0.05em' }],   // 60px - Extra large hero titles
+        'title': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '0.05em' }],   // 30px - Main page titles (h1)
+        'title-lg': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '0.05em' }],      // 36px - Large hero titles
+        'title-xl': ['3rem', { lineHeight: '1.2', letterSpacing: '0.05em' }],   // 48px - Extra large hero titles
         'subtitle': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '0.05em' }], // 30px - Subtitles (h2)
         'subtitle-lg': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '0.05em' }], // 36px - Large subtitles
         'heading': ['1.5rem', { lineHeight: '2rem', letterSpacing: '0.05em' }],    // 24px - Section headings (h3)

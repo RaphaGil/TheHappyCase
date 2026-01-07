@@ -38,11 +38,11 @@ const PriceSummary = ({
               {/* Subtotal Price and Terms - Left */}
               <div className="flex flex-col gap-1.5">
                 {/* Total Price */}
-                <div className="flex flex-row items-center gap-1.5 mb-2">
-                  <h3 className={`text-[14px] xs:text-sm text-gray-500 font-light font-inter leading-none`}>
+                <div className="flex flex-row items-center gap-1.5 mb-1">
+                  <h3 className="text-[14px] xs:text-sm text-gray-400 font-light font-inter">
                     Total:
                   </h3>
-                  <h3 className={`text-md font-bold xs:text-base sm:text-lg text-gray-900  font-inter leading-none`}>
+                  <h3 className={`text-md font-bold xs:text-base sm:text-lg text-gray-900  font-inter leading-none mb-1`}>
                     {formatPrice(totalPrice)}
                   </h3>
                 </div>
@@ -140,7 +140,7 @@ const PriceSummary = ({
           <>
             {/* Desktop: Price on top */}
             <div className={`flex items-end flex-row mb-4 gap-2`}>
-              <h3 className={`text-sm text-gray-500 font-light font-inter `}>
+              <h3 className={`text-sm text-gray-400 font-light  `}>
                 Total: 
               </h3>
               <h3 className={`text-md font-bold text-gray-900 font-inter `}>
