@@ -1,4 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import NavigationLinks from './NavigationLinks';
 import SocialMediaIcons from './SocialMediaIcons';
 import CurrencySelector from './CurrencySelector';
@@ -26,7 +29,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       >
         <ul className="flex flex-col space-y-1 pb-4">
           {/* Logo and Close Button at the top */}
-          <li className="px-4 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+          <li className="px-4 py-4 flex items-center justify-between flex-shrink-0">
             <div onClick={onClose} className="scale-125">
               <Logo />
             </div>
@@ -46,6 +49,21 @@ const MobileMenu = ({ isOpen, onClose }) => {
               </svg>
             </button>
           </li>
+          
+          {/* Login Link */}
+          <li>
+            <Link
+              to="/authentication/code"
+              onClick={onClose}
+              className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
+              style={{color: '#6b7280'}}
+            >
+              <FontAwesomeIcon icon={faUser} className="text-sm" />
+              <span className="font-inter">
+                Log in or create an account
+              </span>
+            </Link>
+          </li>
             
           <NavigationLinks isMobile={true} onLinkClick={onClose} />
         </ul>
@@ -53,19 +71,15 @@ const MobileMenu = ({ isOpen, onClose }) => {
       
       {/* Fixed bottom section - Follow Us and Currency */}
       <div 
-        className="flex-shrink-0 border-t border-gray-100 bg-white" 
-        style={{
-          paddingBottom: 'max(1.5rem, calc(1.5rem + env(safe-area-inset-bottom)))',
-          position: 'sticky',
-          bottom: 0,
-        }}
+        className="flex-shrink-0 bg-white" 
+     
       >
         {/* Social Media Icons - Mobile */}
         <div className="pt-4">
-          <div className="px-4">
-            <h3 className="py-3 hover:text-gray-900 font-light text-sm uppercase">
+          <div>
+            <p className="px-2 py-3 hover:text-gray-900 font-light text-sm uppercase">
               Follow Us
-            </h3>
+            </p>
             <SocialMediaIcons isMobile={true} />
           </div>
         </div>
