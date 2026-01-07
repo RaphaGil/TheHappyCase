@@ -24,7 +24,7 @@ const Items = () => {
           </h2>
         </div>
       
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 w-full xl:max-w-7xl mx-auto items-stretch">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 w-full xl:max-w-7xl mx-auto items-stretch px-4 sm:px-6 lg:px-8">
           {Products.cases.map((item, index) => (
             <ProductCard key={index} item={item} displayName={caseDisplayNames[item.type] || item.name} formatPrice={formatPrice} />
           ))}
