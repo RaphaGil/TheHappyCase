@@ -164,7 +164,7 @@ const PassportCases = () => {
   const getColorName = (image) => {
     if (!image) return '';
     
-    const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
+    const filename = image.split('/').pop().replace('.webp', '').replace('.png', '').replace('.jpg', '').toLowerCase();
     
     // Remove case type prefixes
     let colorPart = filename
@@ -284,20 +284,20 @@ const PassportCases = () => {
     
     if (selectedCaseType === 'economy') {
       detailImages = [
-        '/images/SmartCase/economycaseinside.jpg',
-        '/images/SmartCase/economycaseclosure.jpg',
-        '/images/SmartCase/economycaseclosureinside.jpg'
+        '/images/SmartCase/economycaseinside.webp',
+        '/images/SmartCase/economycaseclosure.webp',
+        '/images/SmartCase/economycaseclosureinside.webp'
       ];
     } else if (selectedCaseType === 'business') {
       detailImages = [
-        '/images/BusinessClassCase/businessclass.png',
-         '/images/BusinessClassCase/businessclass1.png'
+        '/images/BusinessClassCase/businessclass.webp',
+         '/images/BusinessClassCase/businessclass1.webp'
       ];
     } else if (selectedCaseType === 'firstclass') {
       detailImages = [
-        '/images/FirstClassCase/firstclass.jpg',
-        '/images/FirstClassCase/firstclass1.png',
-        '/images/FirstClassCase/firstclass2.png'
+        '/images/FirstClassCase/firstclass.webp',
+        '/images/FirstClassCase/firstclass1.webp',
+        '/images/FirstClassCase/firstclass2.webp'
       ];
     }
     

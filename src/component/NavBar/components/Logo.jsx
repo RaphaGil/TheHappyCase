@@ -6,7 +6,7 @@ const Logo = () => {
     <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
       {/* Mobile: Logo Image */}
       <img 
-        src="/assets/logo.png" 
+        src="/assets/logo.webp" 
         alt="The Happy Case Logo" 
         className="h-10 w-auto lg:hidden"
         loading="lazy"

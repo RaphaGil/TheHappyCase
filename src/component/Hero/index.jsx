@@ -7,7 +7,7 @@ import { normalizeImagePath } from '../../utils/imagePath';
 // import 'slick-carousel/slick/slick-theme.css';
 
 // Use normalizeImagePath utility for proper path resolution in both dev and production
-const videoSrc = normalizeImagePath('/assets/videos/hero.mp4');
+const videoSrc = normalizeImagePath('/assets/videos/hero.webm');
 
 function Hero() {
   const videoRef = useRef(null);

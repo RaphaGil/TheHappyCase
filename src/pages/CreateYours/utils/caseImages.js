@@ -24,20 +24,20 @@ export const getCaseImages = (selectedColorData, selectedCase) => {
   
   if (selectedCase?.type === 'economy') {
     detailImages = [
-      '/images/SmartCase/economycaseinside.jpg',
-      '/images/SmartCase/economycaseclosure.jpg',
-      '/images/SmartCase/economycaseclosureinside.jpg'
+      '/images/SmartCase/economycaseinside.webp',
+      '/images/SmartCase/economycaseclosure.webp',
+      '/images/SmartCase/economycaseclosureinside.webp'
     ];
   } else if (selectedCase?.type === 'business') {
     detailImages = [
-      '/images/BusinessClassCase/businessclass.png',
-      '/images/BusinessClassCase/businessclass1.png'
+      '/images/BusinessClassCase/businessclass.webp',
+      '/images/BusinessClassCase/businessclass1.webp'
     ];
   } else if (selectedCase?.type === 'firstclass') {
     detailImages = [
-      '/images/FirstClassCase/firstclass.jpg',
-      '/images/FirstClassCase/firstclass1.png',
-      '/images/FirstClassCase/firstclass2.png'
+      '/images/FirstClassCase/firstclass.webp',
+      '/images/FirstClassCase/firstclass1.webp',
+      '/images/FirstClassCase/firstclass2.webp'
     ];
   }
   

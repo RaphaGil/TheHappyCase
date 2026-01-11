@@ -15,7 +15,7 @@ const DesignIdeas = () => {
         title: "Travel Collection",
         description: "Classic bronze travel charms",
         caseColor: "#b0582c",
-        caseImage: "/images/SmartCase/economycasebrown.png",
+        caseImage: "/images/SmartCase/economycasebrown.webp",
         pins: [
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('airplane')),
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('passport')),
@@ -27,7 +27,7 @@ const DesignIdeas = () => {
         title: "Landmarks Collection",
         description: "Iconic landmarks in bronze",
         caseColor: "#413f44",
-        caseImage: "/images/SmartCase/economycaseblack.png",
+        caseImage: "/images/SmartCase/economycaseblack.webp",
         pins: [
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('eiffel')),
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('bigben')),
@@ -39,7 +39,7 @@ const DesignIdeas = () => {
         title: "Nature & Symbols",
         description: "Elegant bronze nature charms",
         caseColor: "#59332e",
-        caseImage: "/images/SmartCase/economycasedarkbrown.png",
+        caseImage: "/images/SmartCase/economycasedarkbrown.webp",
         pins: [
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('heart')),
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('leaf')),
@@ -53,7 +53,7 @@ const DesignIdeas = () => {
         title: "Adventure Vibes",
         description: "Colorful adventure-themed pins",
         caseColor: "#f49f90",
-        caseImage: "/images/SmartCase/economycasepink.png",
+        caseImage: "/images/SmartCase/economycasepink.webp",
         pins: [
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('adventure')),
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('airplane')),
@@ -65,7 +65,7 @@ const DesignIdeas = () => {
         title: "Positive Energy",
         description: "Bright and happy colorful pins",
         caseColor: "#cb0025",
-        caseImage: "/images/SmartCase/economycasered.png",
+        caseImage: "/images/SmartCase/economycasered.webp",
         pins: [
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('be happy')),
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('dream big')),
@@ -77,7 +77,7 @@ const DesignIdeas = () => {
         title: "Travel Essentials",
         description: "Colorful travel accessories",
         caseColor: "#9cb4b8",
-        caseImage: "/images/SmartCase/economycaselightblue.png",
+        caseImage: "/images/SmartCase/economycaselightblue.webp",
         pins: [
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('camera')),
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('suitcase')),
@@ -91,7 +91,7 @@ const DesignIdeas = () => {
         title: "European Flags",
         description: "Show your European heritage",
         caseColor: "#1e40af",
-        caseImage: "/images/FirstClassCase/firstclasscasebrown.png",
+        caseImage: "/images/FirstClassCase/firstclasscasebrown.webp",
         pins: [
           Products.pins.flags.find(p => p.name.toLowerCase().includes('france')),
           Products.pins.flags.find(p => p.name.toLowerCase().includes('spain')),
@@ -103,7 +103,7 @@ const DesignIdeas = () => {
         title: "World Traveler",
         description: "Flags from around the world",
         caseColor: "#955a3c",
-        caseImage: "/images/FirstClassCase/firstclasscasebrown.png",
+        caseImage: "/images/FirstClassCase/firstclasscasebrown.webp",
         pins: [
           Products.pins.flags.find(p => p.name.toLowerCase().includes('brazil')),
           Products.pins.flags.find(p => p.name.toLowerCase().includes('portugal')),
@@ -115,7 +115,7 @@ const DesignIdeas = () => {
         title: "Pride & Unity",
         description: "Celebrate diversity with flags",
         caseColor: "#7c3aed",
-        caseImage: "/images/BusinessClassCase/businessclasscasepink.png",
+        caseImage: "/images/BusinessClassCase/businessclasscasepink.webp",
         pins: [
           Products.pins.flags.find(p => p.name.toLowerCase().includes('lgbtqia')),
           Products.pins.flags.find(p => p.name.toLowerCase().includes('rainbow')),
@@ -128,7 +128,7 @@ const DesignIdeas = () => {
         title: "Traveler's Dream",
         description: "Mix of bronze and colorful travel pins",
         caseColor: "#b0582c",
-        caseImage: "/images/SmartCase/economycasebrown.png",
+        caseImage: "/images/SmartCase/economycasebrown.webp",
         pins: [
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('airplane')),
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('adventure')),
@@ -140,7 +140,7 @@ const DesignIdeas = () => {
         title: "Nature & Culture",
         description: "Bronze nature with colorful accents",
         caseColor: "#413f44",
-        caseImage: "/images/SmartCase/economycaseblack.png",
+        caseImage: "/images/SmartCase/economycaseblack.webp",
         pins: [
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('heart')),
           Products.pins.colorful.find(p => p.name.toLowerCase().includes('heart')),
@@ -152,7 +152,7 @@ const DesignIdeas = () => {
         title: "Global Explorer",
         description: "Flags, landmarks, and travel pins",
         caseColor: "#f49f90",
-        caseImage: "/images/SmartCase/economycasepink.png",
+        caseImage: "/images/SmartCase/economycasepink.webp",
         pins: [
           Products.pins.flags.find(p => p.name.toLowerCase().includes('brazil')),
           Products.pins.bronze.find(p => p.name.toLowerCase().includes('globe')),

@@ -8,17 +8,17 @@ export const CASE_OPTIONS = [
   { 
     value: 'economy', 
     label: 'Economy - £8.00',
-    image: '/images/SmartCase/economycaselightpink.png'
+    image: '/images/SmartCase/economycaselightpink.webp'
   },
   { 
     value: 'business', 
     label: 'Business - £12.00',
-    image: '/images/BusinessClassCase/businessclasscasegray.png'
+    image: '/images/BusinessClassCase/businessclasscasegray.webp'
   },
   { 
     value: 'firstclass', 
     label: 'First Class - £12.00',
-    image: '/images/FirstClassCase/firstclasscasebrown.png'
+    image: '/images/FirstClassCase/firstclasscasebrown.webp'
   },
 ];
 
@@ -27,17 +27,17 @@ export const CATEGORY_OPTIONS = [
   { 
     value: 'bronze', 
     label: 'Bronze - £1.00',
-    image: '/images/BronzePins/airplane.png'
+    image: '/images/BronzePins/airplane.webp'
   },
   { 
     value: 'colorful', 
     label: 'Colorful - £2.00',
-    image: '/images/ColorfulPins/beagoodhuman.png'
+    image: '/images/ColorfulPins/beagoodhuman.webp'
   },
   { 
     value: 'flags', 
     label: 'Flags - £2.00',
-    image: '/images/Flags/albania.png'
+    image: '/images/Flags/albania.webp'
   },
 ];
 

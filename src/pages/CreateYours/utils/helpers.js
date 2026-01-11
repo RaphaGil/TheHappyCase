@@ -9,7 +9,7 @@ export const getColorName = (image) => {
   if (!image) return '';
   
   // Extract filename from path
-  const filename = image.split('/').pop().replace('.png', '').replace('.jpg', '').toLowerCase();
+  const filename = image.split('/').pop().replace('.webp', '').replace('.png', '').replace('.jpg', '').toLowerCase();
   
   // Remove case type prefixes (economycase, businessclasscase, firstclasscase, etc.)
   let colorPart = filename

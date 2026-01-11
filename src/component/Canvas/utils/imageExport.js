@@ -208,7 +208,7 @@ export const downloadCanvasImage = (fabricCanvas, boundaryRectRef, caseBorderRec
 
   // Create download link
   const link = document.createElement('a');
-  link.download = `passport-case-design-${Date.now()}.png`;
+  link.download = `passport-case-design-${Date.now()}.webp`;
   link.href = dataURL;
   
   // Trigger download

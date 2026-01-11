@@ -20,7 +20,7 @@ const About = () => {
           <div className="w-full max-w-xs mx-auto mb-12">
             <div className="aspect-square w-full rounded-full overflow-hidden">
               <img
-                src="/images/raphaela.jpg"
+                src="/images/raphaela.webp"
                 alt="Raphaela"
                 className="w-full h-full object-cover"
                 loading="lazy"
