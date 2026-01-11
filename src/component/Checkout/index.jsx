@@ -445,8 +445,6 @@ const Checkout = () => {
   const [loading, setLoading] = useState(true);
   const [paymentError, setPaymentError] = useState(null);
   const hasInitializedRef = useRef(false);
-  const assetBasePath = import.meta.env.BASE_URL || '';
-  const cartIconSrc = `${assetBasePath}/images/cart.svg`;
 
   useEffect(() => {
     // Don't redirect to cart if we're already on a different page (e.g., payment-success)
@@ -574,7 +572,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <CheckoutHeader cartIconSrc={cartIconSrc} />
+      <CheckoutHeader />
       <div className="flex-1 flex items-stretch bg-white py-10">
         <div className="flex-1 max-w-6xl mx-auto px-4 lg:px-6">
           <Elements stripe={stripePromise} options={options}>

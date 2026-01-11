@@ -2,11 +2,19 @@
 // Run with: node server.js
 // Install dependencies: npm install express stripe cors dotenv resend @supabase/supabase-js
 
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const { Resend } = require("resend");
-const { createClient } = require("@supabase/supabase-js");
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
+import Stripe from "stripe";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const Products = JSON.parse(readFileSync(join(__dirname, './src/data/products.json'), 'utf-8'));
 
 // --- Validate keys ---
 if (
@@ -19,7 +27,7 @@ if (
 }
 
 // ✅ Force modern Stripe API version that supports Embedded Checkout
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16",
 });
 
@@ -575,7 +583,6 @@ app.post("/api/save-order", async (req, res) => {
 
     // --- Update Inventory Items ---
     console.log("\n📦 Updating inventory_items table for purchased items...");
-    const Products = require('./src/data/products.json');
     const inventoryUpdates = [];
 
     items.forEach(item => {
@@ -889,7 +896,6 @@ app.get("/api/inventory", async (req, res) => {
     }
 
     // Transform items into the expected format
-    const Products = require('./src/data/products.json');
     
     // Initialize arrays with null values matching products.json structure
     const inventory = {
@@ -970,7 +976,6 @@ app.post("/api/inventory", async (req, res) => {
     }
 
     const { cases, caseColors, pins } = req.body;
-    const Products = require('./src/data/products.json');
     
     console.log("📊 Received data - cases:", cases?.length || 0, "caseColors:", caseColors?.length || 0, "pins:", pins ? Object.keys(pins).length : 0);
     console.log("📊 cases array:", cases ? `[${cases.slice(0, 3).join(', ')}...]` : 'null');
