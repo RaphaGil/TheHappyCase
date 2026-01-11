@@ -72,7 +72,7 @@ const ProductCard = ({ item, displayName, formatPrice }) => {
             alt={displayName}
             className={`w-full h-full object-contain transition-opacity duration-300 ${isHovered && hoverImage ? 'opacity-0' : 'opacity-100'}`}
             style={{ display: isHovered && hoverImage ? 'none' : 'block' }}
-            loading="eager"
+            loading="lazy"
             fetchPriority="high"
             decoding="async"
             width="400"

@@ -447,7 +447,7 @@ const PassportCases = () => {
         </div>
 
         {/* Case Type Selection - Minimalist Tabs */}
-        <div className="flex justify-center mb-12 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
+        <div className="flex justify-center mb-12  md:mx-0 md:px-0">
           <div className="flex gap-2 flex-nowrap">
             {productsWithQuantities.cases.map((caseItem) => {
               const isSoldOut = isCaseTypeSoldOut(caseItem.type);
@@ -502,7 +502,7 @@ const PassportCases = () => {
                   src={normalizeImagePath(currentImage)}
                   alt={`${selectedCase.name} - View ${currentImageIndex + 1}`}
                   className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''}`}
-                  loading="eager"
+                  loading="lazy"
                   fetchPriority="high"
                   decoding="async"
                   width="500"
@@ -584,7 +584,7 @@ const PassportCases = () => {
           <div className="space-y-4 sm:space-y-6 md:space-y-8  flex flex-col justify-between">
             
             {/* Color Selection */}
-            <div className="border-b border-gray-100  pb-2 sm:pb-3 mt-3">
+            <div className="pb-2 sm:pb-3 mt-3">
               <h3 className="text-sm uppercase tracking-wider text-gray-900 mt-6 mb-6 font-medium font-inter">Colours Available</h3>
               <div className="grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 gap-2 sm:gap-1.5 md:gap-2">
                 {selectedCase.colors.map((colorOption, index) => {

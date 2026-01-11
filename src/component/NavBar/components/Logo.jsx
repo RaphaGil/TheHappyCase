@@ -9,6 +9,7 @@ const Logo = () => {
         src="/assets/logo.png" 
         alt="The Happy Case Logo" 
         className="h-10 w-auto lg:hidden"
+        loading="lazy"
       />
       
       {/* Desktop: Text Logo */}
