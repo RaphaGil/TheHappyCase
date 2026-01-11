@@ -2,7 +2,7 @@ import React from 'react';
 
 const CharmTypeTabs = ({ charmTypes, selectedType, onTypeChange }) => {
   return (
-    <div className="flex justify-center mb-6 overflow-x-auto -mx-4 px-6 md:mx-0 md:px-0">
+    <div className="flex justify-center mb-6  px-6 md:mx-0 md:px-0">
       <div className="flex gap-2 border-b border-gray-200 flex-nowrap justify-center">
         {charmTypes.map(({ value, label }) => (
           <button
