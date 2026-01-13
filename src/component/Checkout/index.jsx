@@ -530,7 +530,7 @@ const Checkout = () => {
   if (paymentError) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
-        <CheckoutHeader cartIconSrc={cartIconSrc} />
+        <CheckoutHeader />
         <div className="flex-1 flex items-center justify-center bg-white py-10">
           <div className="max-w-md mx-auto px-4 text-center">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">

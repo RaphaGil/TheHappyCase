@@ -33,7 +33,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server.js",
-    "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
+    "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },

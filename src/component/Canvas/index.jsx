@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as fabric from 'fabric';
 import CanvasControls from './components/CanvasControls';
-import { useCanvasBorders } from './hooks/useCanvasBorders';
-import { useCanvasControls } from './hooks/useCanvasControls';
-import { exportCanvasAsDataURL, downloadCanvasImage } from './utils/imageExport';
+import { useCanvasBorders } from '../../hooks/canvas/useCanvasBorders';
+import { useCanvasControls } from '../../hooks/canvas/useCanvasControls';
+import { exportCanvasAsDataURL, downloadCanvasImage } from '../../utils/canvas/imageExport';
 import { normalizeImagePath } from '../../utils/imagePath';
 
 const Canvas = ({ 

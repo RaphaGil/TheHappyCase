@@ -41,8 +41,8 @@ const DesignIdeasGrid = ({ images }) => {
                   src={normalizeImagePath(image)}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   alt={`Design Idea ${index + 1}`}
-                  loading="lazy"
-                  fetchPriority={index < 2 ? "high" : "low"}
+                  loading={index < 2 ? "eager" : "lazy"}
+                  fetchPriority={index < 2 ? "high" : "auto"}
                   decoding="async"
                   width="400"
                   height="400"

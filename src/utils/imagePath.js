@@ -72,3 +72,4 @@ export const getImageBasePath = () => {
   return publicUrl;
 };
 
+

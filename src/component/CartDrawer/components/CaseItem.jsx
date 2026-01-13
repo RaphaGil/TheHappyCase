@@ -87,6 +87,7 @@ const CaseItem = ({
                   alt="Case preview"
                   className="w-20 h-22 object-contain rounded"
                   loading="lazy"
+                  sizes="80px"
                   onLoad={() => {
                     if (item.customDesign) {
                       console.log('✅ CaseItem - Image loaded successfully:', {
@@ -174,6 +175,7 @@ const CaseItem = ({
                     alt={groupedPin.name || 'Charm'}
                     className="w-16 h-16 object-contain"
                     loading="lazy"
+                    sizes="64px"
                   />
                 ) : (
                   <div className="w-8 h-8 rounded bg-gray-200" />

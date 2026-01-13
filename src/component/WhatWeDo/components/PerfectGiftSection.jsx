@@ -39,21 +39,19 @@ const PerfectGiftSection = ({ image }) => {
   return (
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch">
       {/* Image - Full width on mobile, left side on larger screens */}
-      <div 
-        className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[650px] lg:h-[700px] xl:h-[750px] overflow-hidden bg-gray-100"
-        style={{
-          backgroundImage: `url(${normalizedImage})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
+      <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[650px] lg:h-[700px] xl:h-[750px] overflow-hidden bg-gray-100">
         <img
           src={normalizedImage}
-          className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover"
           alt="Perfect Gift"
           loading="lazy"
-          aria-hidden="true"
+          fetchPriority="low"
+          decoding="async"
+          width="1200"
+          height="800"
+          onError={(e) => {
+            e.target.style.display = 'none';
+          }}
         />
         
         {/* Mobile overlay with text */}

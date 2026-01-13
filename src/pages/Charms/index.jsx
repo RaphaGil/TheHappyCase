@@ -6,16 +6,16 @@ import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { filterPinsByCategory } from '../../data/filterHelpers';
 
 // Components
-import CharmTypeTabs from './components/CharmTypeTabs';
-import SubCategoryTabs from './components/SubCategoryTabs';
-import SearchBar from './components/SearchBar';
-import ResultsCount from './components/ResultsCount';
-import CharmGridItemWithInventory from './components/CharmGridItemWithInventory';
-import SimplePagination from './components/SimplePagination';
-import EmptyState from './components/EmptyState';
+import CharmTypeTabs from '../../component/Charms/CharmTypeTabs';
+import SubCategoryTabs from '../../component/Charms/SubCategoryTabs';
+import SearchBar from '../../component/Charms/SearchBar';
+import ResultsCount from '../../component/Charms/ResultsCount';
+import CharmGridItemWithInventory from '../../component/Charms/CharmGridItemWithInventory';
+import SimplePagination from '../../component/Charms/SimplePagination';
+import EmptyState from '../../component/Charms/EmptyState';
 
 // Utils
-import { getProductsWithQuantities, getCharmPrice, getCharmCategory, getCharmName } from './utils/helpers';
+import { getProductsWithQuantities, getCharmPrice, getCharmCategory, getCharmName } from '../../utils/charms/helpers';
 import {
   CHARM_TYPES,
   FLAGS_CATEGORIES,
@@ -23,7 +23,7 @@ import {
   COLORFUL_CATEGORIES,
   FILTER_TO_TYPE,
   ITEMS_PER_PAGE
-} from './utils/constants';
+} from '../../utils/charms/constants';
 
 const Charms = () => {
   const [searchParams, setSearchParams] = useSearchParams();

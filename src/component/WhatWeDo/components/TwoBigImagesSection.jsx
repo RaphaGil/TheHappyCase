@@ -13,29 +13,20 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
     <div ref={sectionRef} className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
         {/* First Image */}
-        <div className="relative w-full  h-[400px] sm:h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-gray-100">
-          <div
-            className="absolute inset-0 w-full h-full"
-            style={{
-              backgroundImage: `url(${normalizedImage1})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+        <div className="relative w-full h-[400px] sm:h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-gray-100">
+          <img
+            src={normalizedImage1}
+            className="absolute inset-0 w-full h-full object-cover"
+            alt="Design idea"
+            loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            width="1200"
+            height="800"
+            onError={(e) => {
+              e.target.style.display = 'none';
             }}
-          >
-            {/* Fallback img for SEO and accessibility */}
-            <img
-              src={normalizedImage1}
-              className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
-              alt="Design idea"
-              loading="lazy"
-              fetchPriority="low"
-              decoding="async"
-              width="1200"
-              height="800"
-              aria-hidden="true"
-            />
-          </div>
+          />
           
           {/* Personalise Button Overlay - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center z-10 pb-6 md:pb-8">
@@ -53,28 +44,19 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
 
         {/* Second Image */}
         <div className="relative w-full h-[400px] sm:h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-gray-100">
-          <div
-            className="absolute inset-0 w-full h-full"
-            style={{
-              backgroundImage: `url(${normalizedImage2})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
+          <img
+            src={normalizedImage2}
+            className="absolute inset-0 w-full h-full object-cover"
+            alt="Design idea"
+            loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            width="1200"
+            height="800"
+            onError={(e) => {
+              e.target.style.display = 'none';
             }}
-          >
-            {/* Fallback img for SEO and accessibility */}
-            <img
-              src={normalizedImage2}
-              className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
-              alt="Design idea"
-              loading="lazy"
-              fetchPriority="low"
-              decoding="async"
-              width="1200"
-              height="800"
-              aria-hidden="true"
-            />
-          </div>
+          />
           
           {/* Personalise Button Overlay - Bottom */}
           <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center z-10 pb-6 md:pb-8">

@@ -42,6 +42,7 @@ const CharmItem = ({
                 alt={displayName || 'Charm'}
                 className="w-20 h-20 object-contain rounded"
                 loading="lazy"
+                sizes="80px"
               />
             ) : (
               <div className="w-20 h-20 rounded bg-gray-50 border border-gray-200 flex items-center justify-center">

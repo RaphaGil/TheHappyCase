@@ -19,8 +19,8 @@ const RefundPolicy = () => {
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-4"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 py-16">
-          <div className="bg-white rounded-lg  p-8 md:p-12">
+        <div className="max-w-4xl mx-auto md:px-6 py-16">
+          <div className="bg-white rounded-lg  md:p-12">
             <div className="prose prose-lg max-w-none">
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8 rounded">
                 <p className="text-gray-700 text-body-lg leading-relaxed mb-4 font-inter">

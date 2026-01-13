@@ -1,6 +1,6 @@
 import React from 'react';
 import Products from '../../data/products.json';
-import CharmsPage from '../../pages/Charms/components/CharmsPage';
+import CharmsPage from '../Charms/CharmsPage';
 import { filterFlags } from '../../data/filterFunctions';
 
 const Flags = () => {
