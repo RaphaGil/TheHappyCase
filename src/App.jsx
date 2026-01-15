@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import NavBar from './component/NavBar';
 import Hero from './component/Hero';
 import WhatWeDo from './component/WhatWeDo';
-import Items from './component/Items';
+
 // import Review from './component/Reviews';
 
 import Footer from './component/Footer';
@@ -89,7 +89,7 @@ function AppContent() {
             <Route path="/" element={
                   <>
                     <Hero />  
-                    <Items />
+                
                     <WhatWeDo />
             
                   </>
@@ -102,8 +102,10 @@ function AppContent() {
             <Route path="/Flags" element={<Flags />} />
             <Route path="/ColorfulCharms" element={<ColorfulCharms />} />
             <Route path="/BronzeCharms" element={<BronzeCharms />} />
-            <Route path="/PassportCases" element={<PassportCases />} />
-            <Route path="/Charms" element={<Charms />} />
+            <Route path="/PassportCases/:type" element={<PassportCases />} />
+            <Route path="/PassportCases" element={<Navigate to="/PassportCases/Economy" replace />} />
+            <Route path="/Charms/:type" element={<Charms />} />
+            <Route path="/Charms" element={<Navigate to="/Charms/Colorful" replace />} />
         
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/returns" element={<RefundPolicy />} />

@@ -10,6 +10,15 @@ module.exports = function(app) {
       logLevel: 'debug',
     })
   );
+  app.use(
+    '/get-orders',
+    createProxyMiddleware({
+      target: 'http://localhost:3001',
+      changeOrigin: true,
+      secure: false,
+      logLevel: 'debug',
+    })
+  );
 };
 
 

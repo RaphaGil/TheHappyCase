@@ -157,12 +157,24 @@ const Dashboard = () => {
 
     try {
       const res = await fetch(getApiUrl('/get-orders?limit=100'));
+      
+      // Check if response is HTML (404 page from dev server) instead of JSON
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        throw new Error('Backend server returned HTML (likely 404). Is the server running on port 3001?');
+      }
+      
       const data = await res.json();
 
-      if (data.success) setOrders(data.orders || []);
-      else setOrdersError(data.error || 'Failed to fetch orders');
-    } catch {
-      setOrdersError('Failed to fetch orders.');
+      if (data.success) {
+        setOrders(data.orders || []);
+        console.log(`✅ Loaded ${data.orders?.length || 0} orders from Supabase`);
+      } else {
+        setOrdersError(data.error || 'Failed to fetch orders');
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setOrdersError(error.message || 'Failed to fetch orders. Make sure the backend server is running.');
     } finally {
       setLoadingOrders(false);
     }
@@ -346,6 +358,7 @@ const Dashboard = () => {
             orders={orders}
             loadingOrders={loadingOrders}
             ordersError={ordersError}
+            onRefresh={fetchOrders}
           />
         )}
       </div>

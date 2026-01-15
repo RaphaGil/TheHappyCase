@@ -40,6 +40,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/get-orders': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
   

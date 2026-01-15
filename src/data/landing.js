@@ -17,10 +17,10 @@ export const Wedo = {
     },
     {
       images: [
-        '/images/designideas/designidea.webp',
-        '/images/designideas/designidea1.webp',
-        '/images/designideas/designidea2.webp',
-        '/images/designideas/designidea3.webp',
+        '/images/Designideas/designidea.webp',
+        '/images/Designideas/designidea1.webp',
+        '/images/Designideas/designidea2.webp',
+        '/images/Designideas/designidea3.webp',
       ],
       text: "40+ Design Ideas",
     },

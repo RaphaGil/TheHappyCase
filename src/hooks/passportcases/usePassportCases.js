@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
 import { 
-  filterToType, 
   getProductsWithQuantities, 
   getDetailImagesForColor,
   getColorName,
@@ -13,13 +12,31 @@ import {
   isCaseTypeSoldOut as checkCaseTypeSoldOut
 } from '../../utils/passportcases/helpers';
 
+// Map URL path parameter to internal case type
+const PATH_TO_TYPE = {
+  'Economy': 'economy',
+  'Business': 'business',
+  'FirstClass': 'firstclass',
+  'economy': 'economy',
+  'business': 'business',
+  'firstclass': 'firstclass'
+};
+
+// Map internal case type to URL path parameter
+const TYPE_TO_PATH = {
+  'economy': 'Economy',
+  'business': 'Business',
+  'firstclass': 'FirstClass'
+};
+
 export const usePassportCases = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filterParam = searchParams.get('filter');
+  const { type: pathType } = useParams();
+  const navigate = useNavigate();
   const { addToCart, cart } = useCart();
   
-  const initialCaseType = filterParam && filterToType[filterParam.toLowerCase()] 
-    ? filterToType[filterParam.toLowerCase()] 
+  // Convert URL path parameter to internal case type
+  const initialCaseType = pathType && PATH_TO_TYPE[pathType] 
+    ? PATH_TO_TYPE[pathType] 
     : 'economy';
   
   const [selectedCaseType, setSelectedCaseType] = useState(initialCaseType);
@@ -45,13 +62,16 @@ export const usePassportCases = () => {
     return checkCaseTypeSoldOut(caseType, cart);
   };
   
-  // Update case type when filter param changes
+  // Update case type when URL path parameter changes
   useEffect(() => {
-    if (filterParam && filterToType[filterParam.toLowerCase()]) {
-      const newType = filterToType[filterParam.toLowerCase()];
+    if (pathType && PATH_TO_TYPE[pathType]) {
+      const newType = PATH_TO_TYPE[pathType];
       setSelectedCaseType(newType);
+    } else if (!pathType) {
+      // If no path type, default to economy
+      setSelectedCaseType('economy');
     }
-  }, [filterParam]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pathType]); // eslint-disable-line react-hooks/exhaustive-deps
   
   // Initialize selectedColor on component mount
   useEffect(() => {
@@ -93,14 +113,9 @@ export const usePassportCases = () => {
     setSelectedCaseType(type);
     setSelectedDetailImage(null); // Reset detail image when case type changes
     setQuantity(1); // Reset quantity when case type changes
-    // Update URL with filter parameter
-    const typeToFilter = {
-      'economy': 'economy',
-      'business': 'business',
-      'firstclass': 'firstclass'
-    };
-    const filterValue = typeToFilter[type] || 'economy';
-    setSearchParams({ filter: filterValue });
+    // Navigate to the new path based on the case type
+    const pathType = TYPE_TO_PATH[type] || 'Economy';
+    navigate(`/PassportCases/${pathType}`, { replace: true });
     // Set first available color as default (prefer non-sold-out colors)
     const productsWithQuantities = getProductsWithQuantities();
     const caseData = productsWithQuantities.cases.find(c => c.type === type);

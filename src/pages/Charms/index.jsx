@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import InventoryAlertModal from '../../component/InventoryAlertModal';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
@@ -21,17 +21,32 @@ import {
   FLAGS_CATEGORIES,
   BRONZE_CATEGORIES,
   COLORFUL_CATEGORIES,
-  FILTER_TO_TYPE,
   ITEMS_PER_PAGE
 } from '../../utils/charms/constants';
 
+// Map URL path parameter to internal charm type
+const PATH_TO_TYPE = {
+  'Bronze': 'bronze',
+  'Colorful': 'colorful',
+  'flags': 'flags',
+  'Flags': 'flags'
+};
+
+// Map internal charm type to URL path parameter
+const TYPE_TO_PATH = {
+  'bronze': 'Bronze',
+  'colorful': 'Colorful',
+  'flags': 'flags'
+};
+
 const Charms = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filterParam = searchParams.get('filter');
+  const { type: pathType } = useParams();
+  const navigate = useNavigate();
   const { addToCart, cart } = useCart();
   
-  const initialCharmType = filterParam && FILTER_TO_TYPE[filterParam.toLowerCase()] 
-    ? FILTER_TO_TYPE[filterParam.toLowerCase()] 
+  // Convert URL path parameter to internal charm type
+  const initialCharmType = pathType && PATH_TO_TYPE[pathType] 
+    ? PATH_TO_TYPE[pathType] 
     : 'colorful';
   
   const [selectedCharmType, setSelectedCharmType] = useState(initialCharmType);
@@ -107,13 +122,16 @@ const Charms = () => {
     return filteredCharms.slice(startIndex, endIndex);
   }, [filteredCharms, currentPage]);
 
-  // Update charm type when filter param changes
+  // Update charm type when URL path parameter changes
   useEffect(() => {
-    if (filterParam && FILTER_TO_TYPE[filterParam.toLowerCase()]) {
-      const newType = FILTER_TO_TYPE[filterParam.toLowerCase()];
+    if (pathType && PATH_TO_TYPE[pathType]) {
+      const newType = PATH_TO_TYPE[pathType];
       setSelectedCharmType(newType);
+    } else if (!pathType) {
+      // If no path type, default to colorful
+      setSelectedCharmType('colorful');
     }
-  }, [filterParam]);
+  }, [pathType]);
 
   const handleCharmTypeChange = useCallback((type) => {
     setSelectedCharmType(type);
@@ -123,8 +141,10 @@ const Charms = () => {
     setBronzeCurrentPage(1);
     setColorfulCurrentPage(1);
     setFlagsCurrentPage(1);
-    setSearchParams({ filter: type });
-  }, [setSearchParams]);
+    // Navigate to the new path based on the charm type
+    const pathType = TYPE_TO_PATH[type] || 'Colorful';
+    navigate(`/Charms/${pathType}`, { replace: true });
+  }, [navigate]);
 
   const handleAddToCart = useCallback((charm) => {
     const product = {

@@ -1,11 +1,20 @@
+// React & Router
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+
+// Stripe
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+
+// Contexts
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
+
+// Utils
 import { createPaymentIntent } from '../../utils/mockPaymentAPI';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
+
+// Components
 import InternationalNote from '../InternationalNote';
 import CheckoutHeader from './components/CheckoutHeader';
 import LoadingState from './components/LoadingState';
@@ -15,8 +24,7 @@ import OrderSummary from './components/OrderSummary';
 import MobileOrderSummary from './components/MobileOrderSummary';
 import ShippingInfoModal from './components/ShippingInfoModal';
 
-// Initialize Stripe with your publishable key
-// For demo purposes, we'll use a test key. In production, use your actual key
+// --- Constants ---
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 
   'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
@@ -35,16 +43,24 @@ const SHIPPING_LABELS = {
 };
 
 const DEFAULT_SHIPPING_RATE = 12;
-
 const EUROPEAN_COUNTRIES = new Set(['FR', 'DE', 'ES', 'IT']);
 const EUROPEAN_VAT_RATE = 0.2;
 
+const CURRENCY_MULTIPLIERS = {
+  'jpy': 1,  // Japanese Yen doesn't use decimals
+  'krw': 1,  // South Korean Won doesn't use decimals
+  'vnd': 1,  // Vietnamese Dong doesn't use decimals
+};
+
 const CheckoutForm = () => {
+  // --- Hooks ---
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
   const { cart, getTotalPrice, clearCart, incrementItemQty, decrementItemQty, removeFromCart } = useCart();
   const { formatPrice } = useCurrency();
-  const navigate = useNavigate();
+
+  // --- State ---
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [paymentElementReady, setPaymentElementReady] = useState(false);
@@ -52,9 +68,7 @@ const CheckoutForm = () => {
   const [showMobileSummary, setShowMobileSummary] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authenticatedEmail, setAuthenticatedEmail] = useState('');
-  const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
-  const errorTimeoutsRef = useRef({}); // Track timeouts for each error
-  const isNavigatingToSuccessRef = useRef(false); // Track if we're navigating to success page
+  const [itemErrors, setItemErrors] = useState({});
   const [customerInfo, setCustomerInfo] = useState({
     email: '',
     name: '',
@@ -68,47 +82,46 @@ const CheckoutForm = () => {
     },
   });
 
+  // --- Refs ---
+  const errorTimeoutsRef = useRef({});
+  const isNavigatingToSuccessRef = useRef(false);
+
+  // --- Computed Values ---
   const subtotal = getTotalPrice();
   const selectedCountry = customerInfo.address.country;
-  const shippingCost =
-    cart.length === 0
-      ? 0
-      : SHIPPING_RATES[selectedCountry] ?? DEFAULT_SHIPPING_RATE;
+  const shippingCost = cart.length === 0
+    ? 0
+    : SHIPPING_RATES[selectedCountry] ?? DEFAULT_SHIPPING_RATE;
   const shippingLabel = SHIPPING_LABELS[selectedCountry] || 'International';
   const applyEuropeanVat = EUROPEAN_COUNTRIES.has(selectedCountry);
   const vatAmount = applyEuropeanVat ? subtotal * EUROPEAN_VAT_RATE : 0;
-  const showInternationalNote =
-    selectedCountry && selectedCountry.toUpperCase() !== 'GB' && cart.length > 0;
+  const showInternationalNote = selectedCountry && selectedCountry.toUpperCase() !== 'GB' && cart.length > 0;
   const totalWithShipping = subtotal + vatAmount + shippingCost;
 
+  // --- Effects ---
   // Auto-clear error messages after 3 seconds
   useEffect(() => {
     const timeouts = errorTimeoutsRef.current;
     
     Object.keys(itemErrors).forEach((itemKey) => {
-      // Clear any existing timeout for this item
       if (timeouts[itemKey]) {
         clearTimeout(timeouts[itemKey]);
       }
       
-      // Set new timeout to clear error after 3 seconds
       timeouts[itemKey] = setTimeout(() => {
         setItemErrors(prev => {
           const newErrors = { ...prev };
-          // Handle both string errors (old format) and object errors (new format)
           if (typeof newErrors[itemKey] === 'string') {
             delete newErrors[itemKey];
           } else if (newErrors[itemKey] && typeof newErrors[itemKey] === 'object') {
-            // Clear all errors for this item after timeout
             delete newErrors[itemKey];
           }
           return newErrors;
         });
         delete timeouts[itemKey];
-      }, 3000); // 3 seconds
+      }, 3000);
     });
 
-    // Cleanup function to clear timeouts when component unmounts
     return () => {
       Object.values(timeouts).forEach(timeout => {
         clearTimeout(timeout);
@@ -116,7 +129,19 @@ const CheckoutForm = () => {
     };
   }, [itemErrors]);
 
-  // Handle increment with inventory check
+  // Redirect if cart is empty
+  useEffect(() => {
+    if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
+      navigate('/cart');
+    }
+  }, [cart, navigate]);
+
+  // Reset payment element ready state when elements change
+  useEffect(() => {
+    setPaymentElementReady(false);
+  }, [elements]);
+
+  // --- Handlers ---
   const handleIncrementWithCheck = (itemId) => {
     console.log('🔄 handleIncrementWithCheck called:', { itemId, cartLength: cart.length, cartItems: cart.map((i, idx) => ({ index: idx, id: i.id, name: i.name || i.caseName, type: i.type })) });
     

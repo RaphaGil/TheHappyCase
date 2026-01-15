@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import AnimatedTitle from '../../AnimatedTitle';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 
@@ -58,7 +57,7 @@ const PerfectGiftSection = ({ image }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 md:hidden flex items-center justify-center z-10">
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center space-y-4 sm:space-y-5">
             <h2 className="text-subtitle-lg font-light text-white mb-4 sm:mb-5 font-inter tracking-title" style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)'}}>
-              {sectionVisible && <AnimatedTitle delay={100}>{title}</AnimatedTitle>}
+              {title}
             </h2>
             <p className="text-lg text-white leading-relaxed font-light font-inter px-2 sm:px-4 mb-6" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'}}>
               {description}
@@ -103,7 +102,7 @@ const PerfectGiftSection = ({ image }) => {
       <div className="hidden md:flex md:w-1/2 items-center justify-center bg-white">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16 space-y-6 lg:space-y-8">
           <h2 className="text-subtitle-lg md:text-title font-light text-gray-900 mb-6 font-inter tracking-title">
-            {sectionVisible && <AnimatedTitle delay={100}>{title}</AnimatedTitle>}
+            {title}
           </h2>
           <p className="text-lg lg:text-xl xl:text-2xl text-gray-700 leading-relaxed font-light font-inter">
             {description}

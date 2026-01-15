@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AnimatedTitle from '../AnimatedTitle';
 import { normalizeImagePath } from '../../utils/imagePath';
 // Defer slick carousel CSS - load asynchronously if needed
 // import 'slick-carousel/slick/slick.css'; 
@@ -169,17 +168,13 @@ function Hero() {
             className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white font-inter tracking-title"
             style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
-            <AnimatedTitle delay={100}>
-              Create Your Own Custom
-            </AnimatedTitle>
+            Create Your Own Custom
           </h1>
           <h1 
             className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white mb-4 font-inter tracking-title"
             style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
-            <AnimatedTitle delay={300}>
-              Passport Case
-            </AnimatedTitle>
+            Passport Case
           </h1>
           <button 
             onClick={handleStartDesigning}

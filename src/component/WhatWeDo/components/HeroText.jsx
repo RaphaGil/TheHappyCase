@@ -1,6 +1,5 @@
 import React from 'react';
 import PinHighlightRotator from './PinHighlightRotator';
-import AnimatedTitle from '../../AnimatedTitle';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 
 const HeroText = ({ pinHighlights }) => {
@@ -11,19 +10,7 @@ const HeroText = ({ pinHighlights }) => {
       <h1 
         className="text-title font-light text-gray-900 mb-6 font-inter tracking-title"
       >
-        {sectionVisible && (
-          <>
-            <AnimatedTitle delay={100}>
-              Design Your
-            </AnimatedTitle>
-            <AnimatedTitle delay={300}>
-              Unique Passport Case with
-            </AnimatedTitle>
-            <AnimatedTitle delay={500}>
-              <PinHighlightRotator pinHighlights={pinHighlights} />
-            </AnimatedTitle>
-          </>
-        )}
+        Design Your Unique Passport Case with <PinHighlightRotator pinHighlights={pinHighlights} />
       </h1>
     </div>
   );

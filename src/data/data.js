@@ -7,11 +7,11 @@ export const pinHighlights = [
 
 // Design ideas images - all 8 images
 export const designIdeasImages = [
-  '/images/designideas/designidea.webp',
-  '/images/designideas/designidea1.webp',
-  '/images/designideas/designidea2.webp',
-  '/images/designideas/designidea3.webp',
-  '/images/designideas/designidea4.webp',
+  '/images/Designideas/designidea.webp',
+  '/images/Designideas/designidea1.webp',
+  '/images/Designideas/designidea2.webp',
+  '/images/Designideas/designidea3.webp',
+  '/images/Designideas/designidea4.webp',
  
  
 ];
