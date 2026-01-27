@@ -35,7 +35,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             onChange={onInputChange}
             required
             placeholder="your.email@example.com"
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            style={{ fontSize: '16px' }}
           />
           <p className="mt-1 text-xs text-gray-500 font-light font-inter">
             We'll send your order confirmation to this email
@@ -79,7 +80,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.name}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            style={{ fontSize: '16px' }}
           />
           </div>
           <div>
@@ -92,7 +94,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.surname}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            style={{ fontSize: '16px' }}
           />
           </div>
     
@@ -110,7 +113,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           value={customerInfo.address.line1}
           onChange={onInputChange}
           required
-          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
+          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+          style={{ fontSize: '16px' }}
         />
       </div>
 
@@ -124,6 +128,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           value={customerInfo.address.line2}
           onChange={onInputChange}
           className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+          style={{ fontSize: '16px' }}
         />
       </div>
 
@@ -138,7 +143,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.address.city}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            style={{ fontSize: '16px' }}
           />
         </div>
         
@@ -152,7 +158,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.address.postal_code}
             onChange={onInputChange}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-sm"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            style={{ fontSize: '16px' }}
           />
         </div>
         
@@ -164,7 +171,8 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             name="address.country"
             value={customerInfo.address.country}
             onChange={onInputChange}
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 font-light font-inter text-sm"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 font-light font-inter text-base"
+            style={{ fontSize: '16px' }}
           >
             <option value="GB">United Kingdom</option>
             <option value="US">United States</option>

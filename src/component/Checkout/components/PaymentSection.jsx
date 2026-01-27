@@ -6,52 +6,61 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
   const paymentElementRef = useRef(null);
 
   useEffect(() => {
-    if (!expressCheckoutRef.current) return;
-
-    const moveExpressButtons = () => {
-      const paymentElement = document.querySelector('[data-testid="payment-element"]');
-      if (!paymentElement) return;
-
-      const firstChild = paymentElement.querySelector('> div:first-child');
-      if (!firstChild) return;
-
-      // Find Apple Pay and Google Pay buttons
-      const expressButtons = firstChild.querySelectorAll(
-        '[data-testid="payment-request-button"], ' +
-        'iframe[title*="Apple Pay"], ' +
-        'iframe[title*="Google Pay"], ' +
-        'iframe[title*="PayPal"]'
-      );
-
-      if (expressButtons.length > 0 && expressCheckoutRef.current) {
-        // Clear loading message
-        const loadingMsg = expressCheckoutRef.current.querySelector('.text-gray-500');
-        if (loadingMsg) {
-          loadingMsg.remove();
-        }
-
-        // Move buttons (not clone) to express checkout container
-        expressButtons.forEach((button) => {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'express-checkout-button-wrapper';
-          wrapper.style.width = '100%';
-          expressCheckoutRef.current.appendChild(wrapper);
-          wrapper.appendChild(button);
-        });
-      }
-    };
-
     if (paymentElementReady) {
-      // Try immediately
-      setTimeout(moveExpressButtons, 100);
+      const openCardPayment = () => {
+        const paymentElement = document.querySelector('[data-testid="payment-element"]');
+        if (!paymentElement) return;
+
+        // Find card payment tab/button
+        const cardTab = paymentElement.querySelector(
+          '[role="tab"][aria-label*="Card"], ' +
+          '[role="tab"][aria-label*="card"], ' +
+          'button[aria-label*="Card"], ' +
+          'button[aria-label*="card"], ' +
+          '[data-testid*="card"][role="tab"], ' +
+          '[aria-label*="Credit"], ' +
+          '[aria-label*="Debit"]'
+        );
+
+        if (cardTab) {
+          // Check if it's already expanded
+          const isExpanded = cardTab.getAttribute('aria-expanded') === 'true';
+          
+          if (!isExpanded) {
+            // Click to expand
+            cardTab.click();
+          }
+          
+          // Ensure it stays expanded
+          cardTab.setAttribute('aria-expanded', 'true');
+          
+          // Find the corresponding panel and ensure it's visible
+          const panelId = cardTab.getAttribute('aria-controls');
+          if (panelId) {
+            const panel = document.getElementById(panelId);
+            if (panel) {
+              panel.setAttribute('aria-hidden', 'false');
+              panel.style.display = 'block';
+            }
+          }
+        }
+      };
+
+      // Try to open card payment after a short delay to ensure PaymentElement is fully rendered
+      setTimeout(openCardPayment, 200);
       
-      // Also watch for changes
-      const observer = new MutationObserver(moveExpressButtons);
+      // Also watch for changes and ensure card stays open
+      const observer = new MutationObserver(() => {
+        setTimeout(openCardPayment, 100);
+      });
+      
       const paymentElement = document.querySelector('[data-testid="payment-element"]');
       if (paymentElement) {
         observer.observe(paymentElement, {
           childList: true,
           subtree: true,
+          attributes: true,
+          attributeFilter: ['aria-expanded', 'aria-hidden']
         });
       }
 

@@ -391,6 +391,28 @@ button[data-testid] {
   margin-bottom: 12px !important;
 }
 
+/* Ensure card payment option is always expanded */
+
+[data-testid="payment-element"] [role="tab"][aria-label*="Card"][aria-expanded="false"],
+[data-testid="payment-element"] [role="tab"][aria-label*="card"][aria-expanded="false"],
+[data-testid="payment-element"] button[aria-label*="Card"][aria-expanded="false"],
+[data-testid="payment-element"] button[aria-label*="card"][aria-expanded="false"] {
+  /* Ensure card tab shows as expanded */
+  border-bottom: 2px solid #3b82f6 !important;
+}
+
+/* Ensure card payment panel is visible */
+[data-testid="payment-element"] [role="tabpanel"][aria-labelledby*="card"],
+[data-testid="payment-element"] [role="tabpanel"][aria-labelledby*="Card"],
+[data-testid="payment-element"] [id*="card-panel"],
+[data-testid="payment-element"] [id*="Card-panel"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
 /* Mobile-specific adjustments */
 @media (max-width: 640px) {
   .stripe-checkout-container {
