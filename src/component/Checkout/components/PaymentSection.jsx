@@ -78,14 +78,10 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
             )}
           </div>
         </div>
-        <div className="relative flex items-center my-4 sm:my-5">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="px-3 sm:px-4 text-xs sm:text-sm text-gray-500 font-light font-inter">or</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div>
+   
       </div>
 
-      {/* Payment Element - Apple Pay, Google Pay, PayPal, Clearpay, and other payment methods */}
+      {/* Payment Element - Klarna, Clearpay, and other payment methods (Apple Pay & Google Pay shown above) */}
       <div ref={paymentElementRef} className="p-3 sm:p-4 border border-gray-200 rounded-sm overflow-hidden">
         {!paymentElementReady && (
           <div className="mb-2 text-xs sm:text-sm text-gray-500 font-light font-inter">

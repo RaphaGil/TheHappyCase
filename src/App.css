@@ -121,9 +121,12 @@ html {
   border-radius: 6px !important;
 }
 
-/* Hide express checkout buttons from PaymentElement container */
+/* Show express checkout buttons in PaymentElement container */
 [data-testid="payment-element"] > div:first-child {
-  display: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
 }
 
 /* Style express checkout buttons (Apple Pay, Google Pay, PayPal) */
@@ -308,6 +311,20 @@ button[aria-label*="paypal"] {
   margin-bottom: 12px !important;
 }
 
+/* Ensure Klarna tab/button is visible in accordion */
+[role="tab"][aria-label*="Klarna"],
+[role="tab"][aria-label*="klarna"],
+[role="button"][aria-label*="Klarna"],
+[role="button"][aria-label*="klarna"],
+button[aria-label*="Klarna"],
+button[aria-label*="klarna"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  margin-bottom: 12px !important;
+}
+
 /* Ensure Clearpay tab/button is visible in accordion */
 [role="tab"][aria-label*="Clearpay"],
 [role="tab"][aria-label*="clearpay"],
@@ -333,6 +350,25 @@ button[data-testid] {
   display: block !important;
   margin-bottom: 12px !important;
   min-height: 44px !important; /* iOS touch target */
+}
+
+/* Klarna button styling - ensure it's visible */
+[data-testid="payment-element"] [data-testid*="klarna"],
+[data-testid="payment-element"] [role="button"][aria-label*="Klarna"],
+[data-testid="payment-element"] [role="button"][aria-label*="klarna"],
+[data-testid="payment-element"] button[aria-label*="Klarna"],
+[data-testid="payment-element"] button[aria-label*="klarna"],
+[data-testid="payment-element"] [role="tab"][aria-label*="Klarna"],
+[data-testid="payment-element"] [role="tab"][aria-label*="klarna"],
+[data-testid="payment-element"] [id*="klarna"],
+[data-testid="payment-element"] [class*="klarna"] {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  min-height: 44px !important;
+  border-radius: 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 /* Klarna, Clearpay and other payment method options */
