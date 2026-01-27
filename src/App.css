@@ -65,3 +65,266 @@ html {
   transform: translateY(-2px) !important;
   box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4) !important;
 }
+
+/* Express Checkout Section Styling */
+.express-checkout-container {
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Express Checkout Buttons - Apple Pay, Google Pay, PayPal */
+/* Stripe PaymentElement renders these buttons at the top - style them in column */
+[data-testid="payment-element"] {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* First child container holds express checkout buttons */
+[data-testid="payment-element"] > div:first-child {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+  width: 100% !important;
+}
+
+/* Style express checkout buttons (Apple Pay, Google Pay, PayPal) */
+[data-testid="payment-element"] [data-testid="payment-request-button"],
+[data-testid="payment-element"] button[data-testid*="apple"],
+[data-testid="payment-element"] button[data-testid*="google"],
+[data-testid="payment-element"] button[data-testid*="paypal"],
+[data-testid="payment-element"] iframe[title*="Apple Pay"],
+[data-testid="payment-element"] iframe[title*="Google Pay"],
+[data-testid="payment-element"] iframe[title*="PayPal"],
+[data-testid="payment-element"] iframe[name*="__privateStripeFrame"],
+[data-testid="payment-element"] > div:first-child > div {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  min-height: 44px !important; /* iOS touch target */
+  border-radius: 8px !important;
+}
+
+/* PayPal button styling - PayPal appears in accordion */
+[data-testid="payment-element"] [data-testid*="paypal"],
+[data-testid="payment-element"] [role="button"][aria-label*="PayPal"],
+[data-testid="payment-element"] button[aria-label*="PayPal"],
+[data-testid="payment-element"] [role="tab"][aria-label*="PayPal"],
+[data-testid="payment-element"] button:has-text("PayPal"),
+[data-testid="payment-element"] [id*="paypal"],
+[data-testid="payment-element"] [class*="paypal"] {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  min-height: 44px !important;
+  border-radius: 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Clearpay button styling - Clearpay appears in accordion */
+[data-testid="payment-element"] [data-testid*="clearpay"],
+[data-testid="payment-element"] [role="button"][aria-label*="Clearpay"],
+[data-testid="payment-element"] [role="button"][aria-label*="ClearPay"],
+[data-testid="payment-element"] button[aria-label*="Clearpay"],
+[data-testid="payment-element"] button[aria-label*="ClearPay"],
+[data-testid="payment-element"] [role="tab"][aria-label*="Clearpay"],
+[data-testid="payment-element"] [role="tab"][aria-label*="ClearPay"],
+[data-testid="payment-element"] button:has-text("Clearpay"),
+[data-testid="payment-element"] button:has-text("ClearPay"),
+[data-testid="payment-element"] [id*="clearpay"],
+[data-testid="payment-element"] [class*="clearpay"] {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  min-height: 44px !important;
+  border-radius: 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure all payment method buttons are visible */
+[data-testid="payment-element"] button,
+[data-testid="payment-element"] [role="button"],
+[data-testid="payment-element"] [role="tab"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Apple Pay and Google Pay buttons - ensure they're visible and prominent */
+[data-testid="payment-element"] [data-testid="payment-request-button"],
+[data-testid="payment-element"] iframe[title*="Apple"],
+[data-testid="payment-element"] iframe[title*="Google"],
+[data-testid="payment-element"] iframe[title*="Apple Pay"],
+[data-testid="payment-element"] iframe[title*="Google Pay"],
+[data-testid="payment-element"] iframe[name*="apple"],
+[data-testid="payment-element"] iframe[name*="google"],
+[data-testid="payment-element"] button[data-testid*="apple"],
+[data-testid="payment-element"] button[data-testid*="google"],
+[data-testid="payment-element"] [class*="ApplePayButton"],
+[data-testid="payment-element"] [class*="GooglePayButton"],
+[data-testid="payment-element"] [id*="apple-pay"],
+[data-testid="payment-element"] [id*="google-pay"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: 44px !important;
+  margin-bottom: 12px !important;
+  border-radius: 8px !important;
+}
+
+/* Ensure Apple Pay and Google Pay are shown at the top of PaymentElement */
+[data-testid="payment-element"] > div:first-child [data-testid="payment-request-button"],
+[data-testid="payment-element"] > div:first-child iframe {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  margin-bottom: 12px !important;
+}
+
+/* Responsive Stripe PaymentElement Styling */
+/* Ensure PaymentElement container is responsive */
+[data-testid="payment-element"] {
+  width: 100% !important;
+}
+
+/* Make Stripe payment form fields responsive */
+.StripeElement,
+.StripeElement--focus,
+.StripeElement--invalid {
+  width: 100% !important;
+  padding: 12px !important;
+  font-size: 16px !important; /* Prevents zoom on iOS */
+}
+
+/* Payment method accordion layout - column display */
+/* Stripe PaymentElement accordion layout styles */
+[data-testid="payment-element"] > div {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+/* Payment method options in column */
+[role="tablist"],
+[role="group"],
+[data-testid="payment-method-list"] {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+[role="tab"],
+[role="button"][data-testid],
+[data-testid="payment-method-option"] {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  margin-bottom: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure PayPal tab/button is visible in accordion */
+[role="tab"][aria-label*="PayPal"],
+[role="tab"][aria-label*="paypal"],
+[role="button"][aria-label*="PayPal"],
+[role="button"][aria-label*="paypal"],
+button[aria-label*="PayPal"],
+button[aria-label*="paypal"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  margin-bottom: 12px !important;
+}
+
+/* Ensure Clearpay tab/button is visible in accordion */
+[role="tab"][aria-label*="Clearpay"],
+[role="tab"][aria-label*="clearpay"],
+[role="tab"][aria-label*="ClearPay"],
+[role="button"][aria-label*="Clearpay"],
+[role="button"][aria-label*="clearpay"],
+[role="button"][aria-label*="ClearPay"],
+button[aria-label*="Clearpay"],
+button[aria-label*="clearpay"],
+button[aria-label*="ClearPay"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  margin-bottom: 12px !important;
+}
+
+/* Ensure payment method buttons (Apple Pay, Google Pay, Klarna) are full width and stacked */
+[data-testid="payment-request-button"],
+[data-testid="payment-method-button"],
+button[data-testid] {
+  width: 100% !important;
+  display: block !important;
+  margin-bottom: 12px !important;
+  min-height: 44px !important; /* iOS touch target */
+}
+
+/* Klarna, Clearpay and other payment method options */
+[data-testid*="klarna"],
+[data-testid*="clearpay"],
+[data-testid*="card"],
+[data-testid*="link"],
+[data-testid*="apple"],
+[data-testid*="google"] {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: 12px !important;
+}
+
+/* Accordion sections */
+[role="region"],
+[data-testid="payment-method-section"] {
+  width: 100% !important;
+  margin-bottom: 12px !important;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+  .stripe-checkout-container {
+    min-height: 300px !important;
+  }
+  
+  .stripe-checkout-container iframe {
+    min-height: 350px !important;
+  }
+  
+  .StripeElement,
+  .StripeElement--focus,
+  .StripeElement--invalid {
+    padding: 10px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+  
+  [role="tab"] {
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+  }
+  
+  /* Ensure payment buttons are full width on mobile */
+  .stripe-checkout-container button[type="submit"],
+  .stripe-checkout-container [data-testid="hosted-payment-submit-button"] {
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Make wallet buttons (Apple Pay, Google Pay) responsive */
+  [data-testid="payment-request-button"] {
+    width: 100% !important;
+    min-height: 44px !important; /* iOS touch target minimum */
+  }
+}
