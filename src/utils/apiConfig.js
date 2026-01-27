@@ -3,21 +3,29 @@
  * 
  * Determines the base URL for API calls based on environment.
  * 
- * Development: Uses http://localhost:3001
+ * Development: Uses Netlify Functions (relative paths - Netlify Dev handles routing)
  * Production: Uses https://api.thehappycase.shop
  * 
  * To override production URL:
  * Set VITE_API_URL environment variable during build
+ * 
+ * Netlify Functions:
+ * - Development: Use relative paths (e.g., '/api/create-payment-intent')
+ *   Netlify Dev will route to http://localhost:8888/.netlify/functions/...
+ * - Production: Use full URL or relative paths
+ *   Netlify will route to /.netlify/functions/... or /api/...
  */
 
 // API URL based on environment
+// In development, use empty string for relative paths (Netlify Functions)
+// In production, use the API server URL
 const API_URL = import.meta.env.PROD
   ? (import.meta.env.VITE_API_URL || 'https://api.thehappycase.shop')
-  : 'http://localhost:3001';
+  : ''; // Empty string = use relative paths (Netlify Functions via Netlify Dev)
 
 /**
  * Get the base URL for API calls
- * @returns {string} Base URL for API requests
+ * @returns {string} Base URL for API requests (empty string in dev for Netlify Functions)
  */
 export const getApiBaseUrl = () => {
   return API_URL;
@@ -26,13 +34,20 @@ export const getApiBaseUrl = () => {
 /**
  * Get the full API URL for a given endpoint
  * @param {string} endpoint - API endpoint (e.g., '/api/inventory' or 'api/inventory')
- * @returns {string} Full API URL
+ * @returns {string} Full API URL or relative path for Netlify Functions
  */
 export const getApiUrl = (endpoint) => {
   // Ensure endpoint starts with /
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  // Combine base URL with endpoint
+  // In development (empty API_URL), use relative paths for Netlify Functions
+  // Netlify Dev will automatically route these to the appropriate function
+  // Example: '/api/create-payment-intent' -> handled by Netlify Dev
+  if (!API_URL) {
+    return cleanEndpoint;
+  }
+  
+  // In production, combine base URL with endpoint
   return `${API_URL}${cleanEndpoint}`;
 };
 
