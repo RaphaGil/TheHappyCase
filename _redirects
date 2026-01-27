@@ -1,4 +1,6 @@
-/*    /index.html   200
-
-# Redirect API routes to Netlify Functions
+# API routes must come BEFORE the catch-all SPA rule
+# Rewrite API routes to Netlify Functions (200 = rewrite, not redirect)
 /api/create-payment-intent    /.netlify/functions/create-payment-intent    200
+
+# SPA catch-all - must be last
+/*    /index.html   200
