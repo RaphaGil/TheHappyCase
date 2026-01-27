@@ -1,6 +1,28 @@
 const Stripe = require("stripe");
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Helper function to get Stripe instance with validation
+const getStripeInstance = () => {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  
+  // Validate key exists
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY environment variable is not set. Please configure it in Netlify environment variables.");
+  }
+  
+  // Validate key format (should start with sk_test_ or sk_live_)
+  if (!secretKey.startsWith("sk_test_") && !secretKey.startsWith("sk_live_")) {
+    throw new Error("Invalid STRIPE_SECRET_KEY format. Key must start with 'sk_test_' (test mode) or 'sk_live_' (live mode).");
+  }
+  
+  // Remove any whitespace that might have been accidentally added
+  const cleanKey = secretKey.trim();
+  
+  try {
+    return new Stripe(cleanKey);
+  } catch (error) {
+    throw new Error(`Failed to initialize Stripe: ${error.message}`);
+  }
+};
 
 exports.handler = async (event) => {
   // Handle CORS preflight
@@ -28,6 +50,8 @@ exports.handler = async (event) => {
   }
 
   try {
+    // Initialize Stripe with validation
+    const stripe = getStripeInstance();
     const { amount, currency, items, customerInfo } = JSON.parse(event.body || "{}");
 
     // Validate required fields
@@ -145,13 +169,27 @@ exports.handler = async (event) => {
     };
   } catch (err) {
     console.error("Error creating payment intent:", err);
+    
+    // Provide more helpful error messages
+    let errorMessage = err.message;
+    
+    // Check for common Stripe API key errors
+    if (err.message && err.message.includes("Invalid API Key")) {
+      errorMessage = "Invalid Stripe API key. Please check your STRIPE_SECRET_KEY in Netlify environment variables. Make sure it starts with 'sk_test_' (test mode) or 'sk_live_' (live mode) and has no extra spaces or characters.";
+    } else if (err.message && err.message.includes("No API key provided")) {
+      errorMessage = "Stripe API key is missing. Please set STRIPE_SECRET_KEY in Netlify environment variables.";
+    } else if (err.message && err.message.includes("STRIPE_SECRET_KEY")) {
+      // Keep the validation error message as-is
+      errorMessage = err.message;
+    }
+    
     return {
       statusCode: 500,
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: errorMessage }),
     };
   }
 };
