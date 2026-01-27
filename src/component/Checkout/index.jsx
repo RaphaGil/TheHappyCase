@@ -618,6 +618,8 @@ const Checkout = () => {
           clientSecretLength: result?.client_secret?.length
         });
 
+        console.log("Client Secret received:", result.client_secret);
+
         setOptions({
           clientSecret: result.client_secret,
           appearance: {
