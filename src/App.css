@@ -100,57 +100,30 @@ html {
   flex-direction: column !important;
 }
 
-/* First child container holds express checkout buttons - style to match express checkout */
-[data-testid="payment-element"] > div:first-child {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  gap: 10px !important;
-  margin-bottom: 24px !important;
+/* Express checkout button wrapper styling */
+.express-checkout-button-wrapper {
+  width: 100%;
+  display: block;
+}
+
+.express-checkout-container [data-testid="payment-request-button"],
+.express-checkout-container iframe[title*="Apple Pay"],
+.express-checkout-container iframe[title*="Google Pay"],
+.express-checkout-container iframe[title*="PayPal"],
+.express-checkout-container iframe,
+.express-checkout-container .express-checkout-button-wrapper iframe,
+.express-checkout-container .express-checkout-button-wrapper [data-testid="payment-request-button"] {
   width: 100% !important;
-  padding: 20px !important;
-  background: white !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 4px !important;
-  position: relative !important;
-}
-
-/* Add "Express Checkout" label */
-[data-testid="payment-element"] > div:first-child::before {
-  content: "Express Checkout" !important;
+  min-height: 48px !important;
   display: block !important;
-  grid-column: 1 / -1 !important;
-  text-align: center !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: #374151 !important;
-  margin-bottom: 16px !important;
-  font-family: 'Inter', sans-serif !important;
-  letter-spacing: 0.025em !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  border-radius: 6px !important;
 }
 
-/* Add separator after express checkout */
-[data-testid="payment-element"] > div:first-child::after {
-  content: "" !important;
-  display: block !important;
-  grid-column: 1 / -1 !important;
-  margin-top: 20px !important;
-  padding-top: 20px !important;
-  border-top: 1px solid #e5e7eb !important;
-  position: relative !important;
-}
-
-@media (min-width: 640px) {
-  [data-testid="payment-element"] > div:first-child {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 12px !important;
-  }
-}
-
-@media (min-width: 1024px) {
-  [data-testid="payment-element"] > div:first-child {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px !important;
-  }
+/* Hide express checkout buttons from PaymentElement container */
+[data-testid="payment-element"] > div:first-child {
+  display: none !important;
 }
 
 /* Style express checkout buttons (Apple Pay, Google Pay, PayPal) */
