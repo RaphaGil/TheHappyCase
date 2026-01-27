@@ -4,24 +4,22 @@
  * Determines the base URL for API calls based on environment.
  * 
  * Development: Uses Netlify Functions (relative paths - Netlify Dev handles routing)
- * Production: Uses https://api.thehappycase.shop
+ * Production: Uses Netlify Functions (relative paths - Netlify routes /api/* to functions)
  * 
- * To override production URL:
- * Set VITE_API_URL environment variable during build
+ * To override and use external API in production:
+ * Set VITE_API_URL environment variable during build (e.g., VITE_API_URL=https://api.thehappycase.shop)
  * 
  * Netlify Functions:
  * - Development: Use relative paths (e.g., '/api/create-payment-intent')
  *   Netlify Dev will route to http://localhost:8888/.netlify/functions/...
- * - Production: Use full URL or relative paths
- *   Netlify will route to /.netlify/functions/... or /api/...
+ * - Production: Use relative paths (e.g., '/api/create-payment-intent')
+ *   Netlify will route /api/* to /.netlify/functions/* automatically
  */
 
 // API URL based on environment
-// In development, use empty string for relative paths (Netlify Functions)
-// In production, use the API server URL
-const API_URL = import.meta.env.PROD
-  ? (import.meta.env.VITE_API_URL || 'https://api.thehappycase.shop')
-  : ''; // Empty string = use relative paths (Netlify Functions via Netlify Dev)
+// Use empty string for relative paths (Netlify Functions) unless VITE_API_URL is explicitly set
+// This allows Netlify to route /api/* requests to the appropriate Netlify Functions
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 /**
  * Get the base URL for API calls

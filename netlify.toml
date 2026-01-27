@@ -1,4 +1,8 @@
+
+
 [build]
+  functions = "netlify/functions"
+
   # Build command
   command = "npm run build"
   # Directory to publish (Vite outputs to 'build' directory)
