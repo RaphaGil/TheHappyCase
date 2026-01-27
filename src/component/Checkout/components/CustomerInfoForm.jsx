@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authenticatedEmail, onSignIn, onSignOut }) => {
   const navigate = useNavigate();
+  const [showLoginDropdown, setShowLoginDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowLoginDropdown(false);
+      }
+    };
+
+    if (showLoginDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLoginDropdown]);
   
   const handleSignInClick = () => {
+    setShowLoginDropdown(true);
+  };
+
+  const handleConfirmLogin = () => {
+    setShowLoginDropdown(false);
     // Navigate to login page with return URL to come back to checkout
     navigate('/login?redirect=/checkout');
+  };
+
+  const handleCancelLogin = () => {
+    setShowLoginDropdown(false);
   };
   
   return (
@@ -16,17 +44,46 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
       </h3>
       {!isAuthenticated ? (
         <div>
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center justify-between mb-1.5 relative">
             <label className="block text-sm text-gray-500 font-light font-inter">
               Email Address *
             </label>
-            <button
-              type="button"
-              onClick={handleSignInClick}
-              className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter underline"
-            >
-              Sign In
-            </button>
+            <div ref={dropdownRef} className="relative">
+              <button
+                type="button"
+                onClick={handleSignInClick}
+                className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter underline"
+              >
+                Sign In
+              </button>
+              
+              {/* Login Confirmation Dropdown */}
+              {showLoginDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-sm shadow-lg z-50">
+                  <div className="p-3">
+                    <p className="text-sm text-gray-700 font-light font-inter mb-3">
+                      Do you want to sign in?
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={handleConfirmLogin}
+                        className="flex-1 px-3 py-1.5 text-xs uppercase tracking-wider font-light font-inter bg-black text-white hover:bg-gray-800 transition-colors"
+                      >
+                        Yes
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCancelLogin}
+                        className="flex-1 px-3 py-1.5 text-xs uppercase tracking-wider font-light font-inter border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        No
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <input
             type="email"

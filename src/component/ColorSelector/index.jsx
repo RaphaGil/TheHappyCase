@@ -123,12 +123,12 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
               {colorName && (
                 <span className={`text-xs font-medium mt-2 text-center font-inter ${
                   isSelected ? 'text-gray-900' : 'text-gray-700'
-                } ${isSoldOut ? 'opacity-50' : ''}`}>
+                } ${isSoldOut ? 'text-white ' : ''}`}>
                   {colorName}
                 </span>
               )}
               {isSoldOut && (
-                <span className="text-[10px] text-red-600 font-medium mt-1">Sold Out</span>
+                <span className="text-[10px] -mt-4 text-red-600 font-medium ">Sold Out</span>
               )}
             </div>
           );

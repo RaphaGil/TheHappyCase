@@ -131,8 +131,8 @@ const Login = () => {
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
-    if (!code || code.length !== 8) {
-      setError('Please enter the 8-digit code');
+    if (!code || code.length !== 6) {
+      setError('Please enter the 6-digit code');
       return;
     }
 
@@ -275,7 +275,7 @@ const Login = () => {
           <form onSubmit={handleVerifyCode} className="space-y-6">
             <div>
               <p className="text-sm text-gray-600 font-light font-inter mb-4 text-center">
-                We've sent a 8-digit verification code to <strong>{email}</strong>. Please enter it below.
+                We've sent a 6-digit verification code to <strong>{email}</strong>. Please enter it below.
               </p>
               <label className="block text-sm text-gray-700 mb-2 font-light font-inter">
                 Verification Code *
@@ -284,12 +284,12 @@ const Login = () => {
                 type="text"
                 value={code}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '').slice(0, 8);
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 6);
                   setCode(value);
                   setError('');
                 }}
-                placeholder="00000000"
-                maxLength={8}
+                placeholder="000000"
+                maxLength={6}
                 autoFocus
                 className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-2xl text-center tracking-widest"
                 required
@@ -298,7 +298,7 @@ const Login = () => {
 
             <button
               type="submit"
-              disabled={loading || code.length !== 8}
+              disabled={loading || code.length !== 6}
               className="w-full px-4 py-3 text-sm uppercase tracking-wider font-light font-inter bg-gray-900 text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Verifying...' : 'Verify Code'}

@@ -32,10 +32,10 @@ const ColorSelection = ({
                 title={colorSoldOut ? 'Sold Out' : colorName || `Color ${index + 1}`}
               />
               {colorSoldOut ? (
-                <span className="text-[9px] text-red-600 font-medium text-center">Sold Out</span>
+                <span className="text-[9px] mt-1 text-red-600 font-medium text-center">Sold Out</span>
               ) : (
                 colorName && (
-                  <span className="text-[10px] sm:text-[9px] text-gray-700 font-medium text-center mt-0.5 font-inter leading-tight">
+                  <span className="text-[10px] sm:text-[9px] text-gray-700 font-medium text-center mt-1 font-inter leading-tight">
                     {colorName}
                   </span>
                 )
