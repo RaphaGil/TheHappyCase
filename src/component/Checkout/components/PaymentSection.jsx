@@ -64,22 +64,6 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
         Payment
       </h3>
       
-      {/* Express Checkout Section */}
-      <div className="express-checkout-wrapper">
-        <div className="p-4 sm:p-5 border border-gray-200 rounded-sm bg-white">
-          <p className="text-xs sm:text-sm text-gray-700 font-medium font-inter mb-4 text-center">
-            Express Checkout
-          </p>
-          <div ref={expressCheckoutRef} className="express-checkout-container min-h-[60px]">
-            {!paymentElementReady && (
-              <div className="text-xs sm:text-sm text-gray-500 font-light font-inter italic text-center py-4">
-                Express checkout options will appear here when available
-              </div>
-            )}
-          </div>
-        </div>
-   
-      </div>
 
       {/* Payment Element - Klarna, Clearpay, and other payment methods (Apple Pay & Google Pay shown above) */}
       <div ref={paymentElementRef} className="p-3 sm:p-4 border border-gray-200 rounded-sm overflow-hidden">
