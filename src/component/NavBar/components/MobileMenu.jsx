@@ -1,19 +1,118 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faChartLine, faShoppingBag, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import NavigationLinks from './NavigationLinks';
 import SocialMediaIcons from './SocialMediaIcons';
 import CurrencySelector from './CurrencySelector';
 import Logo from './Logo';
 
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+
+const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
+
 const MobileMenu = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [userEmail, setUserEmail] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleSignOut = () => {
+    // Clear localStorage
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userId'); // Clear user ID
+    
+    // Sign out from Supabase if available
+    if (supabase) {
+      supabase.auth.signOut().catch(err => {
+        console.error('Error signing out from Supabase:', err);
+      });
+    }
+    
+    // Reset state
+    setIsLoggedIn(false);
+    setUserEmail(null);
+    setIsAuthorized(false);
+    
+    // Close menu and navigate to home
+    onClose();
+    navigate('/');
+  };
+
+  // Check login state whenever menu opens or component mounts
+  useEffect(() => {
+    const checkLoginState = () => {
+      // Check localStorage for logged-in user
+      const emailFromStorage = typeof window !== 'undefined' ? localStorage.getItem('userEmail') : null;
+      const loggedInFromStorage = typeof window !== 'undefined' ? localStorage.getItem('isLoggedIn') === 'true' : false;
+      
+      if (emailFromStorage && loggedInFromStorage) {
+        setUserEmail(emailFromStorage);
+        setIsLoggedIn(true);
+      } else {
+        setUserEmail(null);
+        setIsLoggedIn(false);
+      }
+
+      if (!supabase) {
+        setCheckingAuth(false);
+        setIsAuthorized(false);
+        return;
+      }
+
+      // Check if user is authenticated with authorized email
+      supabase.auth.getUser().then(({ data, error }) => {
+        setCheckingAuth(false);
+        
+        if (!error && data?.user) {
+          // Use Supabase email if available, otherwise use localStorage
+          const email = data.user?.email || emailFromStorage;
+          setUserEmail(email);
+          setIsLoggedIn(true);
+
+          const userEmailLower = email?.toLowerCase().trim();
+          const authorizedEmail = AUTHORIZED_EMAIL.toLowerCase().trim();
+          
+          setIsAuthorized(userEmailLower === authorizedEmail);
+        } else if (emailFromStorage && loggedInFromStorage) {
+          // Fallback to localStorage email
+          const emailLower = emailFromStorage.toLowerCase().trim();
+          const authorizedEmail = AUTHORIZED_EMAIL.toLowerCase().trim();
+          setIsAuthorized(emailLower === authorizedEmail);
+        } else {
+          setIsAuthorized(false);
+        }
+      });
+    };
+
+    // Check on mount and whenever menu opens
+    checkLoginState();
+
+    // Also listen for storage changes (when user logs in/out in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'userEmail' || e.key === 'isLoggedIn') {
+        checkLoginState();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [isOpen]); // Re-check when menu opens
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="flex flex-col fixed left-0 top-0 w-[70%] bg-white border-r border-gray-100 font-light z-50 shadow-lg font-inter"
+      className="flex flex-col fixed left-0 top-0 w-[70%] bg-white border-r border-gray-100 font-light z-50 shadow-xl font-inter"
       style={{
         height: '100vh',
         maxHeight: '100vh',
@@ -50,20 +149,76 @@ const MobileMenu = ({ isOpen, onClose }) => {
             </button>
           </li>
           
-          {/* Login Link */}
+          {/* Login/User Area - Yellow background */}
           <li>
-            <Link
-              to="/login"
-              onClick={onClose}
-              className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
-              style={{color: '#6b7280'}}
-            >
-              <FontAwesomeIcon icon={faUser} className="text-sm" />
-              <span className="font-inter">
-                Log in or create an account
-              </span>
-            </Link>
+            {isLoggedIn && userEmail ? (
+              // Logged in: Show email, My Orders, and Sign Out in yellow area
+              <div className="bg-yellow-100 border-b border-gray-100">
+                {/* User Email */}
+                <div className="px-4 py-3 flex items-center gap-3">
+                  <FontAwesomeIcon icon={faUser} className="text-sm" style={{color: '#6b7280'}} />
+                  <span className="font-inter text-sm" style={{color: '#6b7280'}}>
+                    {userEmail}
+                  </span>
+                </div>
+                
+                {/* My Orders Link */}
+                <Link
+                  to="/my-orders"
+                  onClick={onClose}
+                  className="px-4 py-3 hover:underline font-light transition-colors text-sm tracking-wider flex items-center gap-3 border-t border-yellow-200"
+                  style={{color: '#6b7280'}}
+                >
+                  <FontAwesomeIcon icon={faShoppingBag} className="text-sm" />
+                  <span className="font-inter">
+                    My Orders
+                  </span>
+                </Link>
+                
+                {/* Sign Out Button */}
+                <button
+                  onClick={handleSignOut}
+                  className="w-full px-4 py-3 hover:underline font-light transition-colors text-sm tracking-wider flex items-center gap-3 text-left"
+                  style={{color: '#6b7280'}}
+                >
+                  <FontAwesomeIcon icon={faRightFromBracket} className="text-sm" />
+                  <span className="font-inter">
+                    Sign Out
+                  </span>
+                </button>
+              </div>
+            ) : (
+              // Not logged in: Show login link
+              <Link
+                to="/login"
+                onClick={onClose}
+                className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
+                style={{color: '#6b7280'}}
+              >
+                <FontAwesomeIcon icon={faUser} className="text-sm" />
+                <span className="font-inter">
+                  Log in or create an account
+                </span>
+              </Link>
+            )}
           </li>
+
+          {/* Dashboard Link - Only show if authorized */}
+          {!checkingAuth && isAuthorized && (
+            <li>
+              <Link
+                to="/dashboard"
+                onClick={onClose}
+                className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-blue-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
+                style={{color: '#6b7280'}}
+              >
+                <FontAwesomeIcon icon={faChartLine} className="text-sm" />
+                <span className="font-inter">
+                  Dashboard
+                </span>
+              </Link>
+            </li>
+          )}
             
           <NavigationLinks isMobile={true} onLinkClick={onClose} />
         </ul>

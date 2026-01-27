@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,6 +23,17 @@ const Login = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
+    // Check if user is already logged in - keep them logged in
+    const userEmail = localStorage.getItem('userEmail');
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLoggedIn && userEmail) {
+      // User is already logged in, redirect to My Orders or requested page
+      const redirectTo = searchParams.get('redirect') || '/my-orders';
+      navigate(redirectTo, { replace: true });
+      return;
+    }
+    
     // If email is in URL, automatically send code
     if (initialEmail) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,26 +41,41 @@ const Login = () => {
         handleSendCodeAutomatically(initialEmail);
       }
     }
-  }, []);
+  }, [navigate, searchParams, initialEmail]);
 
   const handleSendCodeAutomatically = async (emailToUse) => {
     setLoading(true);
     setError('');
     
     try {
-      // In production, call your API endpoint here to send the code
-      // await sendVerificationCode(emailToUse);
-      
-      // Simulate sending code
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please check your environment variables.');
+      }
+
+      // Send OTP email using Supabase (code instead of magic link)
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: emailToUse,
+        options: {
+          emailRedirectTo: null
+        }
+      });
+
+      if (error) {
+        console.error('❌ Error sending OTP:', error);
+        setError(error.message || 'Failed to send verification code. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ OTP sent successfully:', data);
       setLoading(false);
       setStep('code');
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
+      console.error('❌ Exception sending OTP:', err);
       setLoading(false);
-      setError('Failed to send verification code. Please try again.');
+      setError(err.message || 'Failed to send verification code. Please try again.');
     }
   };
 
@@ -66,26 +98,41 @@ const Login = () => {
     setSuccess(false);
 
     try {
-      // In production, call your API endpoint here to send the code
-      // await sendVerificationCode(email);
-      
-      // Simulate sending code
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please check your environment variables.');
+      }
+
+      // Send OTP email using Supabase (code instead of magic link)
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: {
+          emailRedirectTo: null
+        }
+      });
+
+      if (error) {
+        console.error('❌ Error sending OTP:', error);
+        setError(error.message || 'Failed to send verification code. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ OTP sent successfully:', data);
       setLoading(false);
       setStep('code');
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
+      console.error('❌ Exception sending OTP:', err);
       setLoading(false);
-      setError('Failed to send verification code. Please try again.');
+      setError(err.message || 'Failed to send verification code. Please try again.');
     }
   };
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
-    if (!code || code.length !== 6) {
-      setError('Please enter the 6-digit code');
+    if (!code || code.length !== 8) {
+      setError('Please enter the 8-digit code');
       return;
     }
 
@@ -93,24 +140,54 @@ const Login = () => {
     setError('');
     setSuccess(false);
 
-    // Simulate code verification (in production, this would call an API)
-    setTimeout(() => {
-      setLoading(false);
-      // In production, verify the code with the backend
-      // const isValid = await verifyCode(email, code);
-      // For demo purposes, accept any 6-digit code
-      if (code.length === 6) {
-        // Store user session (in production, handle this properly)
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        // Redirect to dashboard or previous page
-        const redirectTo = searchParams.get('redirect') || '/dashboard';
-        navigate(redirectTo);
-      } else {
-        setError('Invalid code. Please try again.');
+    try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please check your environment variables.');
       }
-    }, 1000);
+
+      // Verify OTP code with Supabase
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token: code.trim(),
+        type: 'email',
+      });
+
+      if (error) {
+        console.error('❌ Error verifying OTP:', error);
+        setError(error.message || 'Invalid code. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ OTP verified successfully:', data);
+
+      // Get the authenticated user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error('❌ Error getting user:', userError);
+        setError('Failed to get user information. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      // Store user session in localStorage
+      const userEmail = user.email || email;
+      localStorage.setItem('userEmail', userEmail);
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userId', user.id); // Store user ID for order saving
+      
+      console.log('✅ User logged in:', userEmail);
+      console.log('✅ User ID:', user.id);
+
+      // Redirect to My Orders page (or previous page if redirected from another route)
+      const redirectTo = searchParams.get('redirect') || '/my-orders';
+      navigate(redirectTo);
+    } catch (err) {
+      console.error('❌ Exception verifying OTP:', err);
+      setError(err.message || 'Invalid code. Please try again.');
+      setLoading(false);
+    }
   };
 
   const handleResendCode = () => {
@@ -198,7 +275,7 @@ const Login = () => {
           <form onSubmit={handleVerifyCode} className="space-y-6">
             <div>
               <p className="text-sm text-gray-600 font-light font-inter mb-4 text-center">
-                We've sent a 6-digit verification code to <strong>{email}</strong>. Please enter it below.
+                We've sent a 8-digit verification code to <strong>{email}</strong>. Please enter it below.
               </p>
               <label className="block text-sm text-gray-700 mb-2 font-light font-inter">
                 Verification Code *
@@ -207,12 +284,12 @@ const Login = () => {
                 type="text"
                 value={code}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 8);
                   setCode(value);
                   setError('');
                 }}
-                placeholder="000000"
-                maxLength={6}
+                placeholder="00000000"
+                maxLength={8}
                 autoFocus
                 className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-2xl text-center tracking-widest"
                 required
@@ -221,7 +298,7 @@ const Login = () => {
 
             <button
               type="submit"
-              disabled={loading || code.length !== 6}
+              disabled={loading || code.length !== 8}
               className="w-full px-4 py-3 text-sm uppercase tracking-wider font-light font-inter bg-gray-900 text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Verifying...' : 'Verify Code'}
@@ -247,15 +324,7 @@ const Login = () => {
           </form>
         )}
 
-        {/* Back to Home */}
-        <div className="mt-8 text-center">
-          <button
-            onClick={() => navigate('/')}
-            className="text-sm text-gray-500 hover:text-gray-700 font-light font-inter"
-          >
-            ← Back to Home
-          </button>
-        </div>
+     
       </div>
     </div>
   );

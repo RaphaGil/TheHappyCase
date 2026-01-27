@@ -4,6 +4,7 @@ import Logo from './components/Logo';
 import NavigationLinks from './components/NavigationLinks';
 import CartIcon from './components/CartIcon';
 import LoginIcon from './components/LoginIcon';
+import DashboardIcon from './components/DashboardIcon';
 import WhatsAppIcon from './components/WhatsAppIcon';
 import HamburgerButton from './components/HamburgerButton';
 import MobileMenu from './components/MobileMenu';
@@ -59,12 +60,22 @@ const NavBar = () => {
           <CartIcon isMobile={true} />
         </div>
 
+        {/* Dark Overlay - Only show when menu is open */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+            onClick={closeMenu}
+            aria-label="Close menu"
+          />
+        )}
+
         {/* Mobile Menu */}
         <MobileMenu isOpen={isOpen} onClose={closeMenu} />
 
-        {/* Desktop Icons (Login, WhatsApp, Cart) */}
+        {/* Desktop Icons (Login, Dashboard, WhatsApp, Cart) */}
         <div className="hidden md:flex items-center gap-2">
           <LoginIcon isMobile={false} />
+          <DashboardIcon isMobile={false} />
           <WhatsAppIcon isMobile={false} />
           <CartIcon isMobile={false} />
         </div>

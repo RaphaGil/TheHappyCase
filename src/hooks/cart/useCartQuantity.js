@@ -1,6 +1,7 @@
 import { useCart } from '../../context/CartContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { canIncrementStandaloneCharm, canIncrementCustomDesign, createCharmProduct } from '../../utils/cart/inventoryChecks';
+import { getColorName } from '../../utils/createyours/helpers';
 
 /**
  * Hook to handle cart quantity changes with inventory checks
@@ -49,7 +50,12 @@ export const useCartQuantity = (cart, errorHandlers) => {
     if (!canIncrementCase) {
       // Case is out of stock
       const itemName = item.caseName || item.name || 'Passport Case';
-      const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
+      // Get human-readable color name from hex code or image path
+      const colorName = item.color 
+        ? getColorName(item.color, item.caseImage || item.case_image || item.image) 
+        : '';
+      const colorText = colorName ? ` in ${colorName}` : '';
+      const errorMessage = `Oops! We don't have any more ${itemName}${colorText} in stock right now, so you can't add more to your basket.`;
       setItemError(itemId || index, {
         case: errorMessage,
         charms: {}

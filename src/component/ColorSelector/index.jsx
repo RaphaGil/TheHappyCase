@@ -1,4 +1,5 @@
 import React from "react";
+import { getMaxAvailableQuantity } from '../../utils/inventory';
 
 // Helper function to extract color name from image filename
 const getColorName = (image) => {
@@ -66,14 +67,35 @@ const getColorName = (image) => {
   return colorPart || 'Color';
 };
 
-const ColorSelector = ({ colors, selectedColor, onSelect }) => {
+const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] }) => {
+  // Helper function to check if a color is sold out (considering cart inventory)
+  const isColorSoldOut = (color) => {
+    if (!caseType || !color) {
+      // Fallback to checking quantity property if caseType not provided
+      const colorData = colors.find(c => c.color === color);
+      return colorData?.quantity !== undefined && colorData.quantity === 0;
+    }
+    
+    // Check available inventory considering cart (items in basket)
+    const productForInventory = {
+      caseType: caseType,
+      color: color,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+    // If maxAvailable is null (unlimited) or > 0, color is available
+    return maxAvailable !== null && maxAvailable === 0;
+  };
+
   return (
     <div className="overflow-visible">
-      <div className="flex flex-wrap gap-3 overflow-visible justify-center justify-center ">
+      <div className="flex flex-wrap gap-3 overflow-visible justify-center">
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
-          const isSoldOut = quantity !== undefined && quantity === 0;
+          // Check if sold out considering cart inventory
+          const isSoldOut = isColorSoldOut(color);
           
           return (
             <div
@@ -98,8 +120,10 @@ const ColorSelector = ({ colors, selectedColor, onSelect }) => {
                   </div>
                 )}
               </div>
-              {isSelected && colorName && (
-                <span className="text-xs text-gray-700 font-medium mt-2 text-center font-inter">
+              {colorName && (
+                <span className={`text-xs font-medium mt-2 text-center font-inter ${
+                  isSelected ? 'text-gray-900' : 'text-gray-700'
+                } ${isSoldOut ? 'opacity-50' : ''}`}>
                   {colorName}
                 </span>
               )}

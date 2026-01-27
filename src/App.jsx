@@ -27,6 +27,8 @@ const ShippingPolicy = lazy(() => import('./pages/ShippingPolicy'));
 const About = lazy(() => import('./pages/About'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
+const MyOrders = lazy(() => import('./pages/MyOrders'));
+
 
 // Loading fallback component
 const PageLoader = () => (
@@ -89,9 +91,8 @@ function AppContent() {
             <Route path="/" element={
                   <>
                     <Hero />  
-                
                     <WhatWeDo />
-            
+      
                   </>
                 } />
             <Route path="/CreateYours" element={<CreateYours />} />
@@ -108,6 +109,7 @@ function AppContent() {
             <Route path="/Charms" element={<Navigate to="/Charms/Colorful" replace />} />
         
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/my-orders" element={<MyOrders />} />
             <Route path="/returns" element={<RefundPolicy />} />
             <Route path="/refund-policy" element={<RefundPolicy />} />
             <Route path="/shipping" element={<ShippingPolicy />} />

@@ -1,73 +1,142 @@
 import { Products, getProductsWithQuantities } from '../shared/products';
 
 /**
- * Helper function to extract color name from image filename
+ * Helper function to get color name from hex code or image filename
+ * @param {string} colorHexOrImage - Hex color code (e.g., "#d17956") OR image path/filename
+ * @param {string} imagePath - Image path/filename (optional, only used if first param is hex)
+ * @returns {string} - Formatted color name
+ */
+export const getColorName = (colorHexOrImage, imagePath = null) => {
+  // Handle backward compatibility: if only one parameter is passed and it's not a hex code, treat it as image path
+  let colorHex = null;
+  let image = imagePath;
+  
+  if (!imagePath && colorHexOrImage && !colorHexOrImage.startsWith('#')) {
+    // Old usage: getColorName(image) - treat first param as image
+    image = colorHexOrImage;
+    colorHex = null;
+  } else {
+    // New usage: getColorName(hex, image) or getColorName(hex)
+    colorHex = colorHexOrImage && colorHexOrImage.startsWith('#') ? colorHexOrImage : null;
+    image = imagePath || (colorHexOrImage && !colorHexOrImage.startsWith('#') ? colorHexOrImage : null);
+  }
+  
+  // First, try to extract color name from image path if available
+  if (image) {
+    const filename = image.split('/').pop().replace(/\.(webp|png|jpg)$/i, '').toLowerCase();
+    
+    // Remove case type prefixes
+    let colorPart = filename
+      .replace(/^economycase/i, '')
+      .replace(/^businessclasscase/i, '')
+      .replace(/^firstclasscase/i, '')
+      .replace(/^smartcase/i, '')
+      .replace(/^premiumcase/i, '')
+      .replace(/^firstclass/i, '');
+    
+    // Color name mappings
+    const colorMap = {
+      'lightpink': 'Light Pink',
+      'lightblue': 'Light Blue',
+      'lightbrown': 'Light Brown',
+      'darkbrown': 'Dark Brown',
+      'darkblue': 'Dark Blue',
+      'jeansblue': 'Jeans Blue',
+      'brickred': 'Brick Red',
+      'ligthpink': 'Light Pink', // Handle typo
+      'navyblue': 'Navy Blue',
+      'gray': 'Gray',
+      'grey': 'Gray',
+      'black': 'Black',
+      'brown': 'Brown',
+      'red': 'Red',
+      'pink': 'Pink',
+      'blue': 'Blue',
+      'green': 'Green',
+      'purple': 'Purple',
+      'yellow': 'Yellow',
+      'orange': 'Orange',
+      'darkpink': 'Dark Pink'
+    };
+    
+    // Check exact match
+    if (colorMap[colorPart]) {
+      return colorMap[colorPart];
+    }
+    
+    // Format camelCase or common patterns
+    colorPart = colorPart
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2')
+      .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/)
+      .filter(word => word.length > 0)
+      .join(' ')
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (colorMap[word]) return colorMap[word];
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(' ');
+    
+    if (colorPart && colorPart !== 'Color') {
+      return colorPart;
+    }
+  }
+  
+  // If no image path or extraction failed, try hex code mapping
+  if (colorHex) {
+    // Normalize hex code
+    const hex = colorHex.toLowerCase().replace('#', '');
+    
+    // Hex to color name mappings based on products.json
+    const hexToColorMap = {
+      '#f49f90': 'Light Pink',
+      '#cb0025': 'Red',
+      '#9cb4b8': 'Light Blue',
+      '#627386': 'Jeans Blue',
+      '#3a4763': 'Dark Blue',
+      '#c96e50': 'Light Brown',
+      '#b0582c': 'Brown',
+      '#59332e': 'Dark Brown',
+      '#506258': 'Green',
+      '#89837e': 'Gray',
+      '#413f44': 'Black',
+      '#c8b593': 'Gray',
+      '#da8ca6': 'Light Pink',
+      '#daaf49': 'Yellow',
+      '#d33d72': 'Pink',
+      '#c49154': 'Brown',
+      '#36312b': 'Black',
+      '#d17956': 'Brown',
+      '#c76f82': 'Brick Red',
+      '#adcfa8': 'Green',
+      '#ab8b72': 'Dark Pink',
+      '#bfa29c': 'Pink',
+      '#a799ab': 'Purple',
+      '#afab9b': 'Gray',
+      '#5f6074': 'Navy Blue',
+      '#768695': 'Blue',
+      '#cea55c': 'Light Brown',
+      '#272a34': 'Black'
+    };
+    
+    if (hexToColorMap[colorHex.toLowerCase()]) {
+      return hexToColorMap[colorHex.toLowerCase()];
+    }
+  }
+  
+  // Fallback: return the hex code if no match found (better than showing nothing)
+  return colorHex || '';
+};
+
+/**
+ * Helper function to extract color name from image filename (backward compatibility)
  * @param {string} image - Image path/filename
  * @returns {string} - Formatted color name
  */
-export const getColorName = (image) => {
-  if (!image) return '';
-  
-  // Extract filename from path
-  const filename = image.split('/').pop().replace('.webp', '').replace('.png', '').replace('.jpg', '').toLowerCase();
-  
-  // Remove case type prefixes (economycase, businessclasscase, firstclasscase, etc.)
-  let colorPart = filename
-    .replace(/^economycase/i, '')
-    .replace(/^businessclasscase/i, '')
-    .replace(/^firstclasscase/i, '')
-    .replace(/^smartcase/i, '')
-    .replace(/^premiumcase/i, '')
-    .replace(/^firstclass/i, '');
-  
-  // Handle common color name patterns
-  const colorMap = {
-    'lightpink': 'Light Pink',
-    'lightblue': 'Light Blue',
-    'lightbrown': 'Light Brown',
-    'darkbrown': 'Dark Brown',
-    'darkblue': 'Dark Blue',
-    'jeansblue': 'Jeans Blue',
-    'brickred': 'Brick Red',
-    'ligthpink': 'Light Pink', // Handle typo
-    'navyblue': 'Navy Blue',
-    'gray': 'Gray',
-    'grey': 'Gray',
-    'black': 'Black',
-    'brown': 'Brown',
-    'red': 'Red',
-    'pink': 'Pink',
-    'blue': 'Blue',
-    'green': 'Green',
-    'purple': 'Purple',
-    'yellow': 'Yellow',
-    'orange': 'Orange'
-  };
-  
-  // Check if exact match exists
-  if (colorMap[colorPart]) {
-    return colorMap[colorPart];
-  }
-  
-  // Try to split camelCase or find common patterns
-  // Split on common word boundaries
-  colorPart = colorPart
-    .replace(/([a-z])([A-Z])/g, '$1 $2') // camelCase
-    .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2') // prefixes
-    .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/) // split on capitals or prefixes
-    .filter(word => word.length > 0)
-    .join(' ')
-    .toLowerCase()
-    .split(' ')
-    .map(word => {
-      // Check if word is in color map
-      if (colorMap[word]) return colorMap[word];
-      // Capitalize first letter
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    })
-    .join(' ');
-  
-  return colorPart || 'Color';
+export const getColorNameFromImage = (image) => {
+  return getColorName(null, image);
 };
 
 // Re-export getProductsWithQuantities for backward compatibility

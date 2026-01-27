@@ -1,6 +1,7 @@
 import { getMaxAvailableQuantity } from '../inventory';
 import { normalizeImagePath } from '../imagePath';
 import { createCompositeDesignImage } from '../canvas/imageExport';
+import { getColorName } from './helpers';
 
 /**
  * Validate case inventory before adding to cart
@@ -14,7 +15,10 @@ export const validateCaseInventory = (selectedCaseType, selectedColor, cart, qua
   
   const caseName = selectedCase?.name || 'Passport Case';
   const colorData = selectedCase?.colors?.find(c => c.color === selectedColor);
-  const colorName = colorData?.color || selectedColor || '';
+  // Get human-readable color name from hex code or image path
+  const colorName = colorData 
+    ? getColorName(colorData.color, colorData.image) 
+    : (selectedColor ? getColorName(selectedColor) : '');
   
   // Validate case quantity against inventory
   if (maxAvailableCase !== null && maxAvailableCase === 0) {

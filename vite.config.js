@@ -36,14 +36,42 @@ export default defineConfig({
     open: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true,
         secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, res) => {
+            console.error('❌ Proxy error:', err.message);
+            if (res && !res.headersSent) {
+              res.writeHead(500, {
+                'Content-Type': 'application/json',
+              });
+              res.end(JSON.stringify({ 
+                error: 'Proxy error: Backend server may not be running on port 3001',
+                details: err.message 
+              }));
+            }
+          });
+        },
       },
       '/get-orders': {
-        target: 'http://localhost:3001',
+        target: 'http://127.0.0.1:3001',
         changeOrigin: true,
         secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, res) => {
+            console.error('❌ Proxy error:', err.message);
+            if (res && !res.headersSent) {
+              res.writeHead(500, {
+                'Content-Type': 'application/json',
+              });
+              res.end(JSON.stringify({ 
+                error: 'Proxy error: Backend server may not be running on port 3001',
+                details: err.message 
+              }));
+            }
+          });
+        },
       },
     },
   },

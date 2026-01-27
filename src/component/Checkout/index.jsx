@@ -99,6 +99,54 @@ const CheckoutForm = () => {
   const totalWithShipping = subtotal + vatAmount + shippingCost;
 
   // --- Effects ---
+  // Check authentication status on mount and when returning from login
+  useEffect(() => {
+    const checkAuth = () => {
+      const userEmail = localStorage.getItem('userEmail');
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      
+      if (isLoggedIn && userEmail) {
+        setIsAuthenticated(true);
+        setAuthenticatedEmail(userEmail);
+        // Auto-fill email in customer info if empty
+        setCustomerInfo(prev => {
+          if (!prev.email) {
+            return {
+              ...prev,
+              email: userEmail
+            };
+          }
+          return prev;
+        });
+      } else {
+        setIsAuthenticated(false);
+        setAuthenticatedEmail('');
+      }
+    };
+    
+    checkAuth();
+    
+    // Check auth when window gains focus (user returns from login page)
+    const handleFocus = () => {
+      checkAuth();
+    };
+    
+    // Also listen for storage changes (when user logs in/out in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'userEmail' || e.key === 'isLoggedIn') {
+        checkAuth();
+      }
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); // Run once on mount
+  
   // Auto-clear error messages after 3 seconds
   useEffect(() => {
     const timeouts = errorTimeoutsRef.current;
@@ -299,6 +347,10 @@ const CheckoutForm = () => {
             paymentIntent,
             customerInfo,
             items: cartItemsCopy,
+            shippingCost,
+            vatAmount,
+            totalWithShipping,
+            subtotal,
           } 
         });
       } else if (paymentIntent && paymentIntent.status === 'requires_action') {
@@ -317,6 +369,10 @@ const CheckoutForm = () => {
             paymentIntent,
             customerInfo,
             items: cartItemsCopy,
+            shippingCost,
+            vatAmount,
+            totalWithShipping,
+            subtotal,
           } 
         });
       }
@@ -368,6 +424,7 @@ const CheckoutForm = () => {
           onSignOut={() => {
             setIsAuthenticated(false);
             setAuthenticatedEmail('');
+            localStorage.removeItem('userId'); // Clear user ID
           }}
         />
 
@@ -488,6 +545,18 @@ const Checkout = () => {
       try {
         hasInitializedRef.current = true;
         setLoading(true);
+        setPaymentError(null); // Clear any previous errors
+        
+        console.log('🚀 Starting payment initialization...');
+        console.log('📦 Cart details:', {
+          itemCount: cart.length,
+          items: cart.map(item => ({
+            id: item.id,
+            name: item.name || item.caseName,
+            quantity: item.quantity,
+            price: item.price || item.totalPrice
+          }))
+        });
         
         // Get total price in GBP, then convert to selected currency
         const totalPriceGBP = getTotalPrice();
@@ -504,19 +573,35 @@ const Checkout = () => {
         const amount = Math.round(totalPriceInCurrency * multiplier);
         const currencyCode = currency.toLowerCase();
         
-        console.log('💳 Creating payment intent:', {
+        console.log('💳 Payment intent calculation:', {
           totalPriceGBP,
           totalPriceInCurrency,
           currency: currencyCode,
           amount,
-          multiplier
+          multiplier,
+          cartLength: cart.length
         });
         
-        const result = await createPaymentIntent({
+        const paymentData = {
           amount,
           currency: currencyCode,
           items: cart,
           customerInfo: {},
+        };
+        
+        console.log('📤 Sending payment intent request:', {
+          url: 'POST /api/create-payment-intent',
+          amount,
+          currency: currencyCode,
+          itemCount: cart.length,
+          hasItems: Array.isArray(cart) && cart.length > 0
+        });
+        
+        const result = await createPaymentIntent(paymentData);
+        
+        console.log('✅ Payment intent created successfully:', {
+          hasClientSecret: !!result?.client_secret,
+          clientSecretLength: result?.client_secret?.length
         });
 
         setOptions({
@@ -534,13 +619,38 @@ const Checkout = () => {
             },
           },
         });
-        setPaymentError(null); // Clear any previous errors
+        console.log('✅ Payment options initialized successfully');
       } catch (err) {
-        console.error('Failed to initialize payment options:', err);
-        setPaymentError(err.message || 'Failed to initialize payment. Please ensure the backend server is running.');
+        console.error('❌ Failed to initialize payment options');
+        console.error('❌ Error type:', err?.constructor?.name || typeof err);
+        console.error('❌ Error message:', err?.message);
+        console.error('❌ Error stack:', err?.stack);
+        console.error('❌ Full error object:', {
+          name: err?.name,
+          message: err?.message,
+          cause: err?.cause,
+          ...(err?.response && {
+            response: {
+              status: err.response.status,
+              statusText: err.response.statusText,
+              data: err.response.data
+            }
+          })
+        });
+        
+        // More detailed error message
+        let errorMessage = 'Failed to initialize payment. ';
+        if (err?.message) {
+          errorMessage += err.message;
+        } else {
+          errorMessage += 'Please ensure the backend server is running on port 3001.';
+        }
+        
+        setPaymentError(errorMessage);
         hasInitializedRef.current = false; // Allow retry on error
       } finally {
         setLoading(false);
+        console.log('🏁 Payment initialization completed');
       }
     };
 

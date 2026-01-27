@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const ShippingPolicy = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Scroll to top when component mounts or route changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen bg-white py-12 md:py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,16 +42,16 @@ const ShippingPolicy = () => {
               >
               Shipping Times
             </h2>
-            <p className="text-sm text-gray-700 leading-relaxed mb-4 font-inter">
+            <p className="text-body-sm text-gray-700 leading-relaxed mb-4 font-inter">
               Once your order has been processed and shipped, delivery times vary by location:
             </p>
-            <ul className="list-disc list-inside text-sm text-gray-700 leading-relaxed space-y-2 ml-4 mb-4 font-inter">
-              <li><strong>UK:</strong> 2-3 business days</li>
-              <li><strong>Europe:</strong> 5-10 business days</li>
-              <li><strong>USA & Canada:</strong> 7-14 business days</li>
-              <li><strong>Rest of World:</strong> 10-21 business days</li>
+            <ul className="list-disc list-inside text-body-sm text-gray-700 leading-relaxed space-y-2 ml-4 mb-4 font-inter">
+              <li><strong>UK:</strong> 3-4 business days</li>
+              <li><strong>Europe:</strong> 7-14 business days</li>
+              <li><strong>USA & Canada:</strong> 9-18 business days</li>
+              {/* <li><strong>Rest of World:</strong> 10-21 business days</li> */}
             </ul>
-            <p className="text-sm text-gray-700 leading-relaxed mt-4 font-inter">
+            <p className="text-body-sm text-gray-700 leading-relaxed mt-4 font-inter">
               <strong>Please note:</strong> Unfortunately, delivery delays can happen due to the carrier. While we do our best to ensure timely delivery, factors beyond our control such as weather, customs processing, or carrier issues may cause delays. We appreciate your patience and understanding.
             </p>
           </div>

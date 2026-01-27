@@ -1,4 +1,5 @@
 import { getMaxAvailableQuantity } from '../inventory';
+import { getColorName } from '../createyours/helpers';
 
 /**
  * Count standalone charms already in cart (excluding current item)
@@ -148,9 +149,15 @@ export const canIncrementCustomDesign = (item, cart, itemId, index) => {
   const canIncrementCase = maxAvailable === null || maxAvailable > 0;
   
   if (!canIncrementCase) {
+    const itemName = item.caseName || item.name || 'Passport Case';
+    // Get human-readable color name from hex code or image path
+    const colorName = item.color 
+      ? getColorName(item.color, item.caseImage || item.case_image || item.image) 
+      : '';
+    const colorText = colorName ? ` in ${colorName}` : '';
     return {
       canIncrement: false,
-      errorMessage: `Oops! We don't have any more ${item.caseName || item.name || 'Passport Case'} in stock right now, so you can't add more to your basket.`,
+      errorMessage: `Oops! We don't have any more ${itemName}${colorText} in stock right now, so you can't add more to your basket.`,
       errorType: 'case'
     };
   }

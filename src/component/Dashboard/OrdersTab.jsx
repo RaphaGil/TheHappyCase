@@ -5,6 +5,9 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('all');
   const [updatingOrders, setUpdatingOrders] = useState(new Set());
+  const [dispatchModal, setDispatchModal] = useState(null); // { orderId, currentDispatched }
+  const [trackingNumber, setTrackingNumber] = useState('');
+  const [trackingLink, setTrackingLink] = useState('');
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -30,20 +33,56 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
   };
 
-  const handleDispatchedToggle = async (orderId, currentDispatched) => {
-    const newDispatched = !currentDispatched;
+  const handleDispatchedToggle = (orderId, currentDispatched) => {
+    const order = orders.find(o => o.order_id === orderId);
+    // If dispatching (turning on) or editing, show modal to enter/edit tracking info
+    if (!currentDispatched) {
+      setTrackingNumber(order?.tracking?.tracking_number || '');
+      setTrackingLink(order?.metadata?.tracking_link || '');
+      setDispatchModal({ orderId, currentDispatched });
+    } else {
+      // If undispatching (turning off), show confirmation or update directly
+      if (window.confirm('Are you sure you want to mark this order as not dispatched? This will clear tracking information.')) {
+        handleDispatchedUpdate(orderId, false, '', '');
+      }
+    }
+  };
+
+  const handleEditTracking = (orderId) => {
+    const order = orders.find(o => o.order_id === orderId);
+    setTrackingNumber(order?.tracking?.tracking_number || '');
+    setTrackingLink(order?.tracking?.tracking_link || '');
+    setDispatchModal({ orderId, currentDispatched: isDispatched(order) });
+  };
+
+  const handleDispatchedUpdate = async (orderId, dispatched, trackingNumber, trackingLink) => {
     setUpdatingOrders(prev => new Set(prev).add(orderId));
 
     try {
       const apiUrl = getApiUrl(`/api/orders/${orderId}/dispatched`);
-      console.log('Updating dispatched status:', { orderId, dispatched: newDispatched, apiUrl });
+      console.log('Updating dispatched status:', { 
+        orderId, 
+        dispatched, 
+        tracking_number: trackingNumber,
+        tracking_link: trackingLink,
+        apiUrl 
+      });
+
+      // Always send tracking fields (even if empty) so server can handle them properly
+      const requestBody = {
+        dispatched,
+        tracking_number: trackingNumber ? trackingNumber.trim() : '',
+        tracking_link: trackingLink ? trackingLink.trim() : ''
+      };
+
+      console.log('📤 Sending dispatch update:', requestBody);
 
       const response = await fetch(apiUrl, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ dispatched: newDispatched }),
+        body: JSON.stringify(requestBody),
       });
 
       // Check if response is HTML (404 page from dev server) instead of JSON
@@ -66,6 +105,11 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
       const data = await response.json();
       console.log('✅ Dispatched status updated:', data);
       
+      // Close modal and reset form
+      setDispatchModal(null);
+      setTrackingNumber('');
+      setTrackingLink('');
+      
       // Update local orders state
       if (onRefresh) {
         onRefresh();
@@ -80,6 +124,20 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
         next.delete(orderId);
         return next;
       });
+    }
+  };
+
+  const handleDispatchSubmit = () => {
+    if (dispatchModal) {
+      // If editing, preserve the current dispatched status; if new, set to dispatched
+      const order = orders.find(o => o.order_id === dispatchModal.orderId);
+      const shouldBeDispatched = dispatchModal.currentDispatched !== false ? true : false;
+      handleDispatchedUpdate(
+        dispatchModal.orderId,
+        shouldBeDispatched,
+        trackingNumber,
+        trackingLink
+      );
     }
   };
 
@@ -277,6 +335,16 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
         const isExpanded = expandedOrder === order.order_id;
         const items = order.items || [];
         const shippingAddress = order.shipping_address || {};
+        // Debug: Log tracking info to see what we're getting
+        if (order.tracking && (order.tracking.tracking_number || order.tracking.tracking_link)) {
+          console.log('Order tracking info:', {
+            orderId: order.order_id,
+            tracking: order.tracking,
+            tracking_number: order.tracking.tracking_number,
+            tracking_link: order.tracking.tracking_link,
+            dispatched: order.metadata?.dispatched
+          });
+        }
 
         return (
           <div
@@ -325,6 +393,38 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                       {formatCurrency(order.total_amount, order.currency)}
                     </div>
                   </div>
+                  {/* Tracking Information - Visible in Header */}
+                  {(order.tracking?.tracking_number || order.tracking?.tracking_link) && (
+                    <div className="mt-3 pt-3 border-t border-gray-200">
+                      <div className="flex flex-wrap items-center gap-4 text-sm">
+                        {order.tracking?.tracking_number && (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-gray-700">Tracking #:</span>
+                            <span className="text-gray-900 font-mono text-xs bg-gray-100 px-2 py-1 rounded">
+                              {order.tracking.tracking_number}
+                            </span>
+                          </div>
+                        )}
+                        {order.tracking?.tracking_link && (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-gray-700">Track:</span>
+                            <a
+                              href={order.tracking.tracking_link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                              View Tracking
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   <div className="mt-2 text-sm text-gray-500">
                     {items.length} item(s) • {order.customer_email}
                   </div>
@@ -379,6 +479,63 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             {/* Expanded Details */}
             {isExpanded && (
               <div className="border-t bg-gray-50 p-6">
+                {/* Dispatch Information - Prominent Section */}
+                {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.metadata?.dispatched_at) && (
+                  <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold mb-3 text-gray-900 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Dispatch Information
+                    </h4>
+                    <div className="space-y-3">
+                      {order.metadata?.dispatched_at && (
+                        <div className="text-sm">
+                          <span className="font-medium text-gray-700">Dispatched Date:</span>{' '}
+                          <span className="text-gray-900">
+                            {formatDate(order.metadata.dispatched_at)}
+                          </span>
+                        </div>
+                      )}
+                      {order.tracking?.tracking_number && (
+                        <div className="text-sm">
+                          <span className="font-medium text-gray-700">Tracking Number:</span>{' '}
+                          <span className="text-gray-900 font-mono bg-white px-2 py-1 rounded border border-blue-200">
+                            {order.tracking.tracking_number}
+                          </span>
+                        </div>
+                      )}
+                      {order.tracking?.tracking_link && (
+                        <div className="text-sm">
+                          <span className="font-medium text-gray-700">Tracking Link:</span>{' '}
+                          <a
+                            href={order.tracking.tracking_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1 break-all"
+                          >
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            <span className="break-all">{order.tracking.tracking_link}</span>
+                          </a>
+                        </div>
+                      )}
+                      <div className="pt-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditTracking(order.order_id);
+                          }}
+                          className="px-3 py-1.5 text-xs text-gray-700 hover:text-gray-900 border border-gray-300 rounded hover:bg-white transition-colors"
+                          disabled={updatingOrders.has(order.order_id)}
+                        >
+                          {isDispatched(order) ? 'Edit Tracking Info' : 'Add/Edit Tracking Info'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Customer Information */}
                   <div>
@@ -543,14 +700,6 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                           {order.order_id}
                         </code>
                       </div>
-                      {isDispatched(order) && order.metadata?.dispatched_at && (
-                        <div className="mt-1">
-                          <span className="font-medium">Dispatched:</span>{' '}
-                          <span className="text-blue-600">
-                            {formatDate(order.metadata.dispatched_at)}
-                          </span>
-                        </div>
-                      )}
                     </div>
                     <div className="text-right">
                       <div className="text-sm text-gray-600">Total Amount</div>
@@ -565,6 +714,73 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
           </div>
         );
       })}
+
+      {/* Dispatch Modal */}
+      {dispatchModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              {dispatchModal.currentDispatched ? 'Edit Tracking Information' : 'Dispatch Order'}
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              {dispatchModal.currentDispatched 
+                ? 'Update tracking information for this dispatched order:'
+                : 'Enter tracking information for this order (optional):'}
+            </p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tracking Number
+                </label>
+                <input
+                  type="text"
+                  value={trackingNumber}
+                  onChange={(e) => setTrackingNumber(e.target.value)}
+                  placeholder="e.g., 1Z999AA10123456784"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tracking Link
+                </label>
+                <input
+                  type="url"
+                  value={trackingLink}
+                  onChange={(e) => setTrackingLink(e.target.value)}
+                  placeholder="https://tracking.example.com/..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setDispatchModal(null);
+                  setTrackingNumber('');
+                  setTrackingLink('');
+                }}
+                className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                disabled={updatingOrders.has(dispatchModal.orderId)}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDispatchSubmit}
+                disabled={updatingOrders.has(dispatchModal.orderId)}
+                className="px-4 py-2 text-sm bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {updatingOrders.has(dispatchModal.orderId) 
+                  ? (dispatchModal.currentDispatched ? 'Updating...' : 'Dispatching...')
+                  : (dispatchModal.currentDispatched ? 'Update Tracking' : 'Dispatch Order')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

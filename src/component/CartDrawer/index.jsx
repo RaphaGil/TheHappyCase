@@ -3,6 +3,7 @@ import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { areItemsIdentical } from '../../utils/cartHelpers';
+import { getColorName } from '../../utils/createyours/helpers';
 import CartDrawerHeader from './components/CartDrawerHeader';
 import EmptyCart from './components/EmptyCart';
 import CartItem from './components/CartItem';
@@ -230,7 +231,12 @@ const CartDrawer = () => {
     } else if (maxAvailable <= 0) {
       // Case is out of stock - no more can be added
       const itemName = item.caseName || item.name || 'Passport Case';
-      const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
+      // Get human-readable color name from hex code or image path
+      const colorName = item.color 
+        ? getColorName(item.color, item.caseImage || item.case_image || item.image) 
+        : '';
+      const colorText = colorName ? ` in ${colorName}` : '';
+      const errorMessage = `Oops! We don't have any more ${itemName}${colorText} in stock right now, so you can't add more to your basket.`;
       setItemErrors(prev => ({
         ...prev,
         [itemId]: {

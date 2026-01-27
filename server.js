@@ -14,7 +14,33 @@ import { dirname, join } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const Products = JSON.parse(readFileSync(join(__dirname, './src/data/products.json'), 'utf-8'));
+
+// Load Products.json with error handling
+let Products;
+try {
+  const productsPath = join(__dirname, './src/data/products.json');
+  const productsContent = readFileSync(productsPath, 'utf-8');
+  Products = JSON.parse(productsContent);
+  console.log('✅ Products.json loaded successfully');
+  console.log(`   - Cases: ${Products?.cases?.length || 0}`);
+  console.log(`   - Pins flags: ${Products?.pins?.flags?.length || 0}`);
+  console.log(`   - Pins colorful: ${Products?.pins?.colorful?.length || 0}`);
+  console.log(`   - Pins bronze: ${Products?.pins?.bronze?.length || 0}`);
+} catch (error) {
+  console.error('\n❌ ========== CRITICAL ERROR LOADING PRODUCTS.JSON ==========');
+  console.error('Error loading products.json:', error.message);
+  console.error('Error path:', join(__dirname, './src/data/products.json'));
+  console.error('============================================================\n');
+  // Set Products to empty structure to prevent crashes
+  Products = {
+    cases: [],
+    pins: {
+      flags: [],
+      colorful: [],
+      bronze: []
+    }
+  };
+}
 
 // --- Validate keys ---
 if (
@@ -176,15 +202,54 @@ app.post("/create-checkout-session", async (req, res) => {
 
 // --- Create Payment Intent for Payment Element ---
 app.post("/api/create-payment-intent", async (req, res) => {
+  // Ensure we always send JSON responses
+  const sendErrorResponse = (status, errorMessage) => {
+    if (!res.headersSent) {
+      res.status(status).json({ error: errorMessage });
+    } else {
+      console.error('⚠️ Cannot send error response - headers already sent');
+    }
+  };
+
+  console.log('\n📥 POST /api/create-payment-intent request received');
+  
   try {
+    // Log request details safely
+    try {
+      console.log('   Request body:', JSON.stringify(req.body, null, 2));
+    } catch (logError) {
+      console.log('   Request body: (unable to stringify)', req.body);
+    }
     const { amount, currency, items, customerInfo } = req.body || {};
+    
+    console.log('   Parsed request data:', {
+      amount,
+      currency,
+      itemCount: Array.isArray(items) ? items.length : 'not an array',
+      hasCustomerInfo: !!customerInfo,
+      customerEmail: customerInfo?.email || 'N/A'
+    });
+
+    // Validate Stripe is configured
+    if (!stripe) {
+      console.error('❌ Stripe is not configured!');
+      return sendErrorResponse(500, "Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.");
+    }
 
     if (!amount || amount <= 0) {
-      return res.status(400).json({ error: "Amount must be greater than 0" });
+      console.error('❌ Invalid amount:', amount);
+      return sendErrorResponse(400, "Amount must be greater than 0");
     }
 
     const resolvedCurrency = (currency || "gbp").toLowerCase();
     const roundedAmount = Math.round(amount);
+    
+    console.log('   Processed values:', {
+      originalAmount: amount,
+      roundedAmount,
+      originalCurrency: currency,
+      resolvedCurrency
+    });
 
     // Stripe minimum amounts by currency (in smallest currency unit)
     const minimumAmounts = {
@@ -200,6 +265,13 @@ app.post("/api/create-payment-intent", async (req, res) => {
     };
 
     const minimumAmount = minimumAmounts[resolvedCurrency] || 30; // Default to 30
+    
+    console.log('   Amount validation:', {
+      roundedAmount,
+      minimumAmount,
+      currency: resolvedCurrency,
+      isValid: roundedAmount >= minimumAmount
+    });
 
     if (roundedAmount < minimumAmount) {
       const currencySymbols = {
@@ -217,12 +289,27 @@ app.post("/api/create-payment-intent", async (req, res) => {
       const minDisplay = (minimumAmount / 100).toFixed(2);
       const currentDisplay = (roundedAmount / 100).toFixed(2);
       
-      return res.status(400).json({ 
-        error: `Amount is too small. Minimum amount is ${symbol}${minDisplay}. Your amount is ${symbol}${currentDisplay}.` 
+      console.error('❌ Amount too small:', {
+        roundedAmount,
+        minimumAmount,
+        currentDisplay: `${symbol}${currentDisplay}`,
+        minDisplay: `${symbol}${minDisplay}`
       });
+      
+      return sendErrorResponse(400, `Amount is too small. Minimum amount is ${symbol}${minDisplay}. Your amount is ${symbol}${currentDisplay}.`);
     }
 
-    console.log(`💳 Creating payment intent: ${roundedAmount} ${resolvedCurrency.toUpperCase()}`);
+    console.log(`💳 Creating payment intent with Stripe: ${roundedAmount} ${resolvedCurrency.toUpperCase()}`);
+    console.log('   Payment intent params:', {
+      amount: roundedAmount,
+      currency: resolvedCurrency,
+      receipt_email: customerInfo?.email || 'not provided',
+      metadata: {
+        item_count: Array.isArray(items) ? items.length : 0,
+        customer_email: customerInfo?.email || "",
+        customer_name: customerInfo?.name || "",
+      }
+    });
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: roundedAmount,
@@ -238,25 +325,63 @@ app.post("/api/create-payment-intent", async (req, res) => {
       },
     });
 
-    console.log(`✅ Payment intent created: ${paymentIntent.id}`);
+    console.log(`✅ Payment intent created successfully: ${paymentIntent.id}`);
+    console.log('   Response:', {
+      paymentIntentId: paymentIntent.id,
+      hasClientSecret: !!paymentIntent.client_secret,
+      status: paymentIntent.status
+    });
 
-    res.json({ clientSecret: paymentIntent.client_secret });
+    if (!res.headersSent) {
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } else {
+      console.error('⚠️ Cannot send success response - headers already sent');
+    }
   } catch (error) {
-    console.error("❌ Error creating payment intent:", error);
+    console.error("❌ Error creating payment intent");
+    console.error("   Error name:", error?.name);
+    console.error("   Error type:", error?.type);
+    console.error("   Error message:", error?.message);
+    console.error("   Error code:", error?.code);
+    console.error("   Error statusCode:", error?.statusCode);
+    console.error("   Full error:", error);
+    if (error?.stack) {
+      console.error("   Stack trace:", error.stack);
+    }
     
     // Provide more helpful error messages
     let errorMessage = error.message || "Failed to create payment intent";
     
     if (error.type === 'StripeInvalidRequestError') {
+      console.error("   ⚠️ Stripe invalid request error detected");
       // Stripe-specific errors
       if (error.message.includes('minimum')) {
         errorMessage = error.message;
       } else if (error.message.includes('currency')) {
         errorMessage = `Invalid currency: ${error.message}`;
+      } else if (error.message.includes('api_key')) {
+        errorMessage = "Stripe API key error. Please check STRIPE_SECRET_KEY configuration.";
       }
+    } else if (error.type === 'StripeAuthenticationError') {
+      console.error("   ⚠️ Stripe authentication error detected");
+      errorMessage = "Stripe authentication failed. Please check your Stripe API key.";
+    } else if (error.type === 'StripeAPIError') {
+      console.error("   ⚠️ Stripe API error detected");
+      errorMessage = `Stripe API error: ${error.message}`;
+    } else if (error instanceof TypeError) {
+      console.error("   ⚠️ TypeError detected - possible undefined/null reference");
+      errorMessage = `Type error: ${error.message}`;
+    } else if (error instanceof ReferenceError) {
+      console.error("   ⚠️ ReferenceError detected - possible undefined variable");
+      errorMessage = `Reference error: ${error.message}`;
     }
     
-    res.status(500).json({ error: errorMessage });
+    console.error("   Sending error response:", {
+      status: 500,
+      error: errorMessage
+    });
+    
+    sendErrorResponse(500, errorMessage);
   }
 });
 
@@ -282,13 +407,17 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       return sendErrorResponse(400, 'Request body is required');
     }
     
-    const { paymentIntent, customerInfo, items } = req.body;
+    const { paymentIntent, customerInfo, items, shippingCost, vatAmount, subtotal, totalWithShipping } = req.body;
 
     console.log('📧 Email request details:');
     console.log('   - Payment Intent ID:', paymentIntent?.id || 'MISSING');
     console.log('   - Customer Email:', customerInfo?.email || 'MISSING');
     console.log('   - Customer Name:', customerInfo?.name || 'MISSING');
     console.log('   - Items Count:', items?.length || 0);
+    console.log('   - Shipping Cost:', shippingCost || 'N/A');
+    console.log('   - VAT Amount:', vatAmount || 'N/A');
+    console.log('   - Subtotal:', subtotal || 'N/A');
+    console.log('   - Total with Shipping:', totalWithShipping || 'N/A');
     console.log('   - Request body keys:', Object.keys(req.body || {}));
 
     if (!customerInfo?.email) {
@@ -311,23 +440,75 @@ app.post("/api/send-order-confirmation", async (req, res) => {
 
     console.log(`✅ Email address validated: ${customerInfo.email}`);
 
+    // Calculate amounts - use passed values or calculate from items and customer info
+    const calculatedSubtotal = subtotal !== undefined ? subtotal : (items?.reduce((sum, item) => sum + (item.totalPrice || item.price || 0) * (item.quantity || 1), 0) || 0);
+    
+    // Calculate shipping if not provided (fallback for Stripe redirects or old requests)
+    let calculatedShipping = shippingCost || 0;
+    if (!shippingCost && customerInfo?.address?.country && items?.length > 0) {
+      const SHIPPING_RATES = {
+        GB: 3,
+        US: 16,
+        FR: 7,
+      };
+      const DEFAULT_SHIPPING_RATE = 12;
+      const country = customerInfo.address.country.toUpperCase();
+      calculatedShipping = SHIPPING_RATES[country] ?? DEFAULT_SHIPPING_RATE;
+      console.log(`   Calculated shipping from country ${country}: £${calculatedShipping}`);
+    }
+    
+    // Calculate VAT if not provided (fallback for Stripe redirects or old requests)
+    let calculatedVat = vatAmount || 0;
+    if (!vatAmount && customerInfo?.address?.country) {
+      const EUROPEAN_COUNTRIES = new Set(['FR', 'DE', 'ES', 'IT']);
+      const EUROPEAN_VAT_RATE = 0.2;
+      const country = customerInfo.address.country.toUpperCase();
+      if (EUROPEAN_COUNTRIES.has(country)) {
+        calculatedVat = calculatedSubtotal * EUROPEAN_VAT_RATE;
+        console.log(`   Calculated VAT for European country ${country}: £${calculatedVat.toFixed(2)}`);
+      }
+    }
+    
     // Calculate total
-    const totalAmount = items?.reduce((sum, item) => sum + (item.totalPrice || item.price || 0) * (item.quantity || 1), 0) || 0;
+    const totalAmount = totalWithShipping !== undefined 
+      ? totalWithShipping 
+      : calculatedSubtotal + calculatedVat + calculatedShipping;
+    
+    console.log(`📊 Order totals:`);
+    console.log(`   - Subtotal: £${calculatedSubtotal.toFixed(2)}`);
+    console.log(`   - Shipping: £${calculatedShipping.toFixed(2)}`);
+    console.log(`   - VAT: £${calculatedVat.toFixed(2)}`);
+    console.log(`   - Total: £${totalAmount.toFixed(2)}`);
+    
     const orderId = paymentIntent?.id || `order-${Date.now()}`;
     
-    // Try to fetch saved order to get Supabase Storage image URLs
+    // Try to fetch saved order to get Supabase Storage image URLs and order totals
     let savedOrderItems = null;
+    let savedOrderTotals = null;
     if (supabase && orderId) {
       try {
         const { data: savedOrder } = await supabase
           .from('orders')
-          .select('items')
+          .select('items, total_amount, shipping_address')
           .eq('order_id', orderId)
           .maybeSingle();
         
-        if (savedOrder && savedOrder.items && Array.isArray(savedOrder.items)) {
-          savedOrderItems = savedOrder.items;
-          console.log(`✅ Found saved order with ${savedOrderItems.length} items (using Supabase Storage URLs)`);
+        if (savedOrder) {
+          if (savedOrder.items && Array.isArray(savedOrder.items)) {
+            savedOrderItems = savedOrder.items;
+            console.log(`✅ Found saved order with ${savedOrderItems.length} items (using Supabase Storage URLs)`);
+          }
+          
+          // Try to get shipping info from saved order metadata or calculate from address
+          if (savedOrder.total_amount && savedOrder.shipping_address) {
+            // We can use the saved total_amount, but we still need to calculate breakdown
+            // The order might have shipping included in total_amount, but we don't store breakdown separately
+            // So we'll still calculate from address if not provided
+            savedOrderTotals = {
+              total_amount: savedOrder.total_amount
+            };
+            console.log(`✅ Found saved order total: £${savedOrder.total_amount}`);
+          }
         }
       } catch (fetchError) {
         console.warn('⚠️ Could not fetch saved order for images:', fetchError.message);
@@ -559,7 +740,23 @@ app.post("/api/send-order-confirmation", async (req, res) => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #e5e7eb;">Total:</td>
+                  <td colspan="2" style="padding: 8px 12px; text-align: right; border-top: 2px solid #e5e7eb; color: #6b7280;">Subtotal:</td>
+                  <td style="padding: 8px 12px; text-align: right; border-top: 2px solid #e5e7eb;">£${calculatedSubtotal.toFixed(2)}</td>
+                </tr>
+                ${calculatedShipping > 0 ? `
+                <tr>
+                  <td colspan="2" style="padding: 8px 12px; text-align: right; color: #6b7280;">Shipping:</td>
+                  <td style="padding: 8px 12px; text-align: right;">£${calculatedShipping.toFixed(2)}</td>
+                </tr>
+                ` : ''}
+                ${calculatedVat > 0 ? `
+                <tr>
+                  <td colspan="2" style="padding: 8px 12px; text-align: right; color: #6b7280;">VAT:</td>
+                  <td style="padding: 8px 12px; text-align: right;">£${calculatedVat.toFixed(2)}</td>
+                </tr>
+                ` : ''}
+                <tr>
+                  <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #e5e7eb; font-size: 16px;">Total:</td>
                   <td style="padding: 12px; text-align: right; font-weight: bold; font-size: 18px; border-top: 2px solid #e5e7eb;">£${totalAmount.toFixed(2)}</td>
                 </tr>
               </tfoot>
@@ -609,6 +806,9 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       });
     }
 
+    // Define email subject (change this to update the email title)
+    const emailSubject = `Thank you for your order`;
+
     // Configure Resend email service
     const resendApiKey = process.env.RESEND_API_KEY;
     const placeholderKey = 're_iV7Ucv7i_M6Bbi2iwk9HFxBzfNSsJqJWY';
@@ -620,10 +820,15 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       console.log('⚠️ ORDER CONFIRMATION EMAIL (Resend API key not configured or using placeholder)');
       console.log('='.repeat(60));
       console.log(`To: ${customerInfo.email}`);
-      console.log(`Subject: Order Confirmation - ${orderId}`);
+      console.log(`Subject: ${emailSubject}`);
       console.log('---');
       console.log(`Order ID: ${orderId}`);
       console.log(`Order Date: ${orderDate}`);
+      console.log(`Subtotal: £${calculatedSubtotal.toFixed(2)}`);
+      console.log(`Shipping: £${calculatedShipping.toFixed(2)}`);
+      if (calculatedVat > 0) {
+        console.log(`VAT: £${calculatedVat.toFixed(2)}`);
+      }
       console.log(`Total: £${totalAmount.toFixed(2)}`);
       console.log(`Items: ${items?.length || 0}`);
       console.log('='.repeat(60));
@@ -671,7 +876,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       console.log(`API Key starts with 're_': ${resendApiKey.startsWith('re_')}`);
       console.log(`From: ${fromEmail}`);
       console.log(`To: ${customerInfo.email}`);
-      console.log(`Subject: Order Confirmation - ${orderId}`);
+      console.log(`Subject: ${emailSubject}`);
       console.log(`HTML length: ${emailHtml.length} characters`);
       
       // Validate API key format
@@ -687,7 +892,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       const { data, error } = await resend.emails.send({
         from: `The Happy Case <${fromEmail}>`,
         to: customerInfo.email,
-        subject: `Order Confirmation - ${orderId}`,
+        subject: emailSubject,
         html: emailHtml,
       });
       
@@ -758,7 +963,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       console.log('EMAIL SEND FAILED - Email details logged:');
       console.log(`To: ${customerInfo.email}`);
       console.log(`From: ${fromEmail}`);
-      console.log(`Subject: Order Confirmation - ${orderId}`);
+      console.log(`Subject: ${emailSubject}`);
       console.log(`Error: ${emailError.message}`);
       console.log('='.repeat(60));
       
@@ -1017,17 +1222,41 @@ async function uploadImageToStorage(imageData, orderId, itemId, imageType) {
 
 // --- Save Order to Supabase ---
 app.post("/api/save-order", async (req, res) => {
+  console.log('📥 POST /api/save-order request received');
+  
+  // Track if response has been sent
+  let responseSent = false;
+  
   // Ensure we always return JSON, even if there's an unhandled error
   const sendErrorResponse = (status, error, details) => {
-    if (!res.headersSent) {
-      res.status(status).json({
-        success: false,
-        error: error || 'Unknown error',
-        details: details
-      });
+    if (!responseSent && !res.headersSent) {
+      try {
+        responseSent = true;
+        const errorResponse = {
+          success: false,
+          error: error || 'Unknown error',
+          message: error || 'An error occurred while saving the order'
+        };
+        
+        if (details) {
+          if (process.env.NODE_ENV === 'development') {
+            errorResponse.details = details;
+          }
+        }
+        
+        res.status(status).json(errorResponse);
+        console.log(`✅ Error response sent: ${status}`, error);
+        return true;
+      } catch (sendError) {
+        console.error('❌ Error in sendErrorResponse:', sendError);
+        responseSent = false;
+        return false;
+      }
     }
+    return false;
   };
 
+  // Wrap everything in try-catch to ensure response is always sent
   try {
     // Validate request body exists
     if (!req.body) {
@@ -1035,20 +1264,25 @@ app.post("/api/save-order", async (req, res) => {
       return sendErrorResponse(400, 'Request body is required');
     }
 
-    const { paymentIntent, customerInfo, items } = req.body;
+    const { paymentIntent, customerInfo, items, userId } = req.body;
 
     console.log("\n📦 Received order save request:");
     console.log("  - Payment Intent ID:", paymentIntent?.id || "MISSING");
     console.log("  - Customer Email:", customerInfo?.email || "MISSING");
+    console.log("  - User ID:", userId || "N/A");
     console.log("  - Items Count:", items?.length || 0);
     console.log("  - Request body keys:", Object.keys(req.body || {}));
 
     if (!supabase) {
       console.error("❌ Supabase not configured. Order not saved to database.");
-      return res.json({ 
-        success: false, 
-        message: "Supabase not configured. Order not saved to database." 
-      });
+      if (!responseSent && !res.headersSent) {
+        responseSent = true;
+        return res.json({ 
+          success: false, 
+          message: "Supabase not configured. Order not saved to database." 
+        });
+      }
+      return;
     }
 
     if (!paymentIntent || !customerInfo || !items || !Array.isArray(items)) {
@@ -1088,7 +1322,29 @@ app.post("/api/save-order", async (req, res) => {
       return sendErrorResponse(400, "Error calculating total amount", { error: calcError.message });
     }
     // Validate and generate order ID
+    if (!paymentIntent.id) {
+      console.error("❌ Payment Intent ID is missing");
+      return sendErrorResponse(400, "Payment Intent ID is required", {
+        paymentIntent: paymentIntent ? Object.keys(paymentIntent) : null
+      });
+    }
     const orderId = paymentIntent.id;
+    
+    // Validate order ID format (should be a string and not too long for VARCHAR(255))
+    if (typeof orderId !== 'string') {
+      console.error("❌ Payment Intent ID is not a string:", typeof orderId, orderId);
+      return sendErrorResponse(400, "Payment Intent ID must be a string", {
+        receivedType: typeof orderId,
+        receivedValue: orderId
+      });
+    }
+    if (orderId.length > 255) {
+      console.error("❌ Payment Intent ID is too long:", orderId.length, "characters (max 255)");
+      return sendErrorResponse(400, "Payment Intent ID is too long (max 255 characters)", {
+        length: orderId.length
+      });
+    }
+    console.log(`✅ Order ID validated: ${orderId} (${orderId.length} chars)`);
 
     // Generate order date
     const orderDate = paymentIntent.created 
@@ -1120,13 +1376,17 @@ app.post("/api/save-order", async (req, res) => {
 
     // If order exists, return early (before uploading images)
     if (existingOrder) {
-      return res.json({ 
-        success: true, 
-        message: "Order already exists (idempotent)",
-        order_id: orderId,
-        data: existingOrder,
-        alreadyExists: true
-      });
+      if (!responseSent && !res.headersSent) {
+        responseSent = true;
+        return res.json({ 
+          success: true, 
+          message: "Order already exists (idempotent)",
+          order_id: orderId,
+          data: existingOrder,
+          alreadyExists: true
+        });
+      }
+      return;
     }
 
     // Upload images to Supabase Storage and prepare items with image URLs
@@ -1230,6 +1490,7 @@ app.post("/api/save-order", async (req, res) => {
       currency: (paymentIntent.currency || 'gbp').toLowerCase(), // VARCHAR(10) DEFAULT 'gbp'
       status: paymentIntent.status || 'succeeded', // VARCHAR(50) DEFAULT 'succeeded'
       order_date: orderDate, // TIMESTAMPTZ NOT NULL
+      user_id: userId ?? null, // UUID - Supabase auth user ID (nullable)
       shipping_address: customerInfo.address ? { // JSONB
         line1: customerInfo.address.line1,
         line2: customerInfo.address.line2 || null,
@@ -1239,18 +1500,27 @@ app.post("/api/save-order", async (req, res) => {
         state: customerInfo.address.state || null,
       } : null,
       items: itemsWithImages, // JSONB NOT NULL - contains items with Supabase Storage image URLs
-      metadata: paymentIntent.metadata || {}, // JSONB
+      metadata: {
+        ...(paymentIntent.metadata || {}),
+        dispatched: false,
+        dispatched_at: null,
+      }, // JSONB - tracking info is stored in separate tracking table
       // created_at and updated_at are auto-generated by database
     };
 
     // Save to Supabase
     console.log(`\n💾 Inserting new order ${orderId}...`);
     console.log(`   Payment Intent ID: ${paymentIntent.id}`);
+    console.log(`   Order ID: ${orderId} (type: ${typeof orderId}, length: ${orderId.length})`);
     console.log(`   Customer Email: ${customerInfo.email}`);
+    console.log(`   User ID: ${userId ?? 'N/A'}`);
     console.log(`   Total Amount: £${totalAmount.toFixed(2)}`);
     console.log(`   Items Count: ${itemsWithImages.length}`);
     console.log(`   Images uploaded: ${itemsWithImages.filter(item => item.case_image || item.design_image).length} items have images`);
+    console.log(`   Order Data Keys: ${Object.keys(orderData).join(', ')}`);
+    console.log(`   Order ID in data: ${orderData.order_id} (type: ${typeof orderData.order_id})`);
     
+    // Insert order with user_id (null if user not authenticated)
     const { data, error } = await supabase
       .from('orders')
       .insert([orderData])
@@ -1261,10 +1531,22 @@ app.post("/api/save-order", async (req, res) => {
       console.error("  - Error Code:", error.code);
       console.error("  - Error Message:", error.message);
       console.error("  - Error Details:", error.details);
+      console.error("  - Error Hint:", error.hint);
+      console.error("  - Order ID that failed:", orderId);
+      console.error("  - Order ID type:", typeof orderId);
+      console.error("  - Order ID length:", orderId?.length);
+      
+      // Check if it's an ID-related error
+      if (error.message?.includes('order_id') || error.message?.includes('duplicate') || error.code === '23505') {
+        console.error("  🚨 ID-RELATED ERROR DETECTED");
+        console.error("     This might be a duplicate order_id or invalid ID format");
+      }
+      
       return res.status(500).json({ 
         success: false,
         error: error.message || "Failed to save order to database",
-        details: error 
+        details: error,
+        orderId: orderId
       });
     }
 
@@ -1439,35 +1721,209 @@ app.post("/api/save-order", async (req, res) => {
       console.log(`  ℹ️ No inventory items to update`);
     }
 
+    // Ensure response is sent with proper error handling
+    if (!responseSent && !res.headersSent) {
+      try {
+        responseSent = true;
+        const successResponse = { 
+          success: true, 
+          message: "Order saved successfully",
+          order_id: orderId,
+          data: data,
+          inventoryUpdated: Object.keys(groupedUpdates).length
+        };
+        res.json(successResponse);
+        console.log('✅ Success response sent for order:', orderId);
+      } catch (jsonError) {
+        console.error('❌ Error sending success response:', jsonError);
+        responseSent = false;
+        // Try to send error response instead
+        if (!res.headersSent) {
+          sendErrorResponse(500, 'Failed to send response', { originalError: jsonError.message });
+        }
+      }
+    } else {
+      console.warn('⚠️ Response already sent, skipping success response');
+    }
+  } catch (error) {
+    console.error("❌ Error saving order:", error);
+    console.error("❌ Error name:", error.name);
+    console.error("❌ Error message:", error.message);
+    if (error.stack) {
+      console.error("❌ Error stack:", error.stack);
+    }
+    
+    // Ensure error response is sent
+    if (!responseSent && !res.headersSent) {
+      if (!sendErrorResponse(500, error.message || "Failed to save order", {
+        errorName: error.name,
+        errorStack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      })) {
+        // Fallback if sendErrorResponse failed
+        try {
+          const errorResponse = {
+            success: false,
+            error: error.message || "Failed to save order",
+            message: error.message || "An error occurred while saving the order"
+          };
+          res.status(500).json(errorResponse);
+          console.log('✅ Fallback error response sent');
+        } catch (fallbackError) {
+          console.error('❌ Critical: Failed to send fallback error response:', fallbackError);
+          if (!res.headersSent) {
+            try {
+              res.status(500).type('text/plain').send('Error: Failed to save order');
+              console.log('✅ Plain text error response sent');
+            } catch (finalError) {
+              console.error('❌ CRITICAL: Completely failed to send any response:', finalError);
+            }
+          }
+        }
+      }
+    } else {
+      console.warn('⚠️ Cannot send error response - already sent or headers sent');
+    }
+  }
+});
+
+// --- Get Order by Payment Intent ID ---
+app.get("/api/orders", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(503).json({ 
+        success: false,
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable order fetching."
+      });
+    }
+
+    const { payment_intent_id, order_id } = req.query;
+
+    if (!payment_intent_id && !order_id) {
+      return res.status(400).json({ 
+        success: false,
+        error: "payment_intent_id or order_id query parameter is required"
+      });
+    }
+
+    let query = supabase.from('orders').select('*');
+
+    if (payment_intent_id) {
+      query = query.eq('payment_intent_id', payment_intent_id);
+    } else if (order_id) {
+      query = query.eq('order_id', order_id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Error fetching order from Supabase:", error);
+      return res.status(500).json({ 
+        success: false,
+        error: error.message || "Failed to fetch order",
+        details: error 
+      });
+    }
+
+    if (!data || data.length === 0) {
+      return res.json({ 
+        success: false,
+        order: null,
+        message: "Order not found"
+      });
+    }
+
+    // Fetch tracking data for this order
+    const order = data[0];
+    let trackingData = null;
+    if (order.order_id) {
+      const { data: tracking, error: trackingError } = await supabase
+        .from('tracking')
+        .select('*')
+        .eq('order_id', order.order_id)
+        .single();
+
+      if (!trackingError && tracking) {
+        trackingData = tracking;
+      }
+    }
+
+    // Merge tracking data with order
+    const orderWithTracking = {
+      ...order,
+      tracking: trackingData
+    };
+
     res.json({ 
-      success: true, 
-      message: "Order saved successfully",
-      order_id: orderId,
-      data: data,
-      inventoryUpdated: Object.keys(groupedUpdates).length
+      success: true,
+      order: orderWithTracking
     });
   } catch (error) {
-    console.error("Error saving order:", error);
-    console.error("Error stack:", error.stack);
-    sendErrorResponse(500, error.message || "Failed to save order", {
-      errorName: error.name,
-      errorStack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    console.error("Error in /api/orders:", error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message || "Failed to fetch order"
     });
   }
 });
 
 // --- Get Orders from Supabase ---
 app.get("/get-orders", async (req, res) => {
-  try {
-    if (!supabase) {
-      return res.status(503).json({ 
-        error: "Supabase not configured",
-        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable order fetching."
+  console.log('📥 GET /get-orders request received');
+  console.log('📥 Request URL:', req.url);
+  console.log('📥 Request method:', req.method);
+  
+  // Ensure we only send one response
+  let responseSent = false;
+  const sendResponse = (status, data) => {
+    if (!responseSent && !res.headersSent) {
+      try {
+        // Ensure data is valid
+        if (!data || typeof data !== 'object') {
+          console.error('❌ Invalid data passed to sendResponse:', data);
+          data = { success: false, error: 'Invalid response data' };
+        }
+        
+        responseSent = true;
+        res.status(status).json(data);
+        console.log(`✅ Response sent: ${status}`, data?.success !== undefined ? `success: ${data.success}` : '');
+        return true;
+      } catch (sendError) {
+        console.error('❌ Error in sendResponse:', sendError);
+        console.error('❌ Send error details:', {
+          message: sendError.message,
+          stack: sendError.stack
+        });
+        responseSent = false; // Reset so we can try again
+        return false;
+      }
+    } else {
+      console.warn('⚠️ Attempted to send response but already sent:', {
+        responseSent,
+        headersSent: res.headersSent
       });
     }
+    return false;
+  };
+  
+  // Wrap everything in a try-catch to ensure we always send a response
+  try {
+    if (!supabase) {
+      console.error('❌ Supabase not configured');
+      if (sendResponse(503, { 
+        success: false,
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable order fetching."
+      })) {
+        return;
+      }
+    }
 
-    const { limit = 100, offset = 0, status, email } = req.query;
+    const { limit = 100, offset = 0, status, email, user_id } = req.query;
+    console.log('📥 Query params:', { limit, offset, status, email, user_id });
 
+    console.log('📥 Building Supabase query...');
+    // Fetch orders first
     let query = supabase
       .from('orders')
       .select('*')
@@ -1479,36 +1935,373 @@ app.get("/get-orders", async (req, res) => {
       query = query.eq('status', status);
     }
 
-    // Filter by email if provided
-    if (email) {
+    // Filter by user_id if provided (preferred method)
+    if (user_id) {
+      console.log('👤 Filtering orders by user_id:', user_id);
+      query = query.eq('user_id', user_id);
+    } 
+    // Filter by email if provided (fallback for compatibility)
+    else if (email) {
+      console.log('📧 Filtering orders by email:', email);
       query = query.eq('customer_email', email);
+    } else {
+      console.log('📊 No user_id or email filter - returning ALL orders from all emails');
     }
 
-    const { data, error } = await query;
+    console.log('📥 Executing Supabase query...');
+    let data, error;
+    try {
+      const result = await query;
+      data = result.data;
+      error = result.error;
+    } catch (queryError) {
+      console.error('❌ Exception during Supabase query execution:', queryError);
+      console.error('❌ Query error details:', {
+        name: queryError.name,
+        message: queryError.message,
+        stack: queryError.stack
+      });
+      error = queryError;
+      data = null;
+    }
+    
+    console.log('📥 Query result:', { 
+      dataLength: data?.length, 
+      hasError: !!error,
+      errorMessage: error?.message,
+      errorCode: error?.code,
+      dataIsNull: data === null,
+      dataIsUndefined: data === undefined
+    });
 
     if (error) {
-      console.error("Error fetching orders from Supabase:", error);
-      return res.status(500).json({ 
-        error: error.message || "Failed to fetch orders",
-        details: error 
-      });
+      console.error("❌ Error fetching orders from Supabase:", error);
+      console.error("❌ Error code:", error.code);
+      console.error("❌ Error message:", error.message);
+      console.error("❌ Error details:", error.details);
+      console.error("❌ Error hint:", error.hint);
+      
+      const errorMessage = error.message || "Failed to fetch orders from database";
+      const errorResponse = {
+        success: false,
+        error: errorMessage,
+        message: errorMessage
+      };
+      
+      // Add helpful details
+      if (error.code === '42P01') {
+        errorResponse.error = "Database table 'orders' does not exist. Please run the database migration.";
+        errorResponse.message = "Database table 'orders' does not exist. Please run the database migration.";
+      } else if (error.code === 'PGRST116') {
+        errorResponse.error = "No rows returned (table might be empty or query returned no results)";
+        errorResponse.message = "No orders found";
+      }
+      
+      if (process.env.NODE_ENV === 'development') {
+        errorResponse.details = {
+          code: error.code,
+          hint: error.hint,
+          details: error.details
+        };
+      }
+      
+      if (sendResponse(500, errorResponse)) {
+        console.log('✅ Error response sent for Supabase query error');
+        return;
+      } else {
+        console.error('❌ Failed to send error response via sendResponse, trying direct send');
+        // Fallback: try to send directly
+        if (!res.headersSent) {
+          try {
+            res.status(500).json(errorResponse);
+            console.log('✅ Error response sent directly');
+            return;
+          } catch (directError) {
+            console.error('❌ Failed to send error response directly:', directError);
+          }
+        }
+      }
     }
 
-    // Get total count for pagination
-    const { count: totalCount } = await supabase
-      .from('orders')
-      .select('*', { count: 'exact', head: true });
+    // Ensure data is always an array, even if null/undefined
+    const ordersData = Array.isArray(data) ? data : (data ? [data] : []);
 
-    res.json({ 
-      success: true,
-      orders: data || [],
-      total: totalCount || 0,
-      limit: parseInt(limit),
-      offset: parseInt(offset)
+    // Fetch tracking data separately and merge with orders
+    let trackingMap = {};
+    if (ordersData && ordersData.length > 0) {
+      const orderIds = ordersData.map(order => order.order_id).filter(id => id); // Filter out null/undefined
+      console.log('📦 Fetching tracking data for orders:', orderIds.length);
+      
+      if (orderIds.length > 0) {
+        try {
+          const { data: trackingData, error: trackingError } = await supabase
+            .from('tracking')
+            .select('*')
+            .in('order_id', orderIds);
+
+          if (trackingError) {
+            // Check if error is because table doesn't exist (code 42P01)
+            if (trackingError.code === '42P01' || trackingError.message?.includes('does not exist')) {
+              console.warn("⚠️ Tracking table does not exist yet. Run SUPABASE_TRACKING_SCHEMA.sql to create it.");
+            } else {
+              console.warn("⚠️ Error fetching tracking data (continuing without it):", trackingError);
+            }
+          } else {
+            // Create a map of order_id -> tracking data
+            trackingMap = {};
+            (trackingData || []).forEach(tracking => {
+              trackingMap[tracking.order_id] = tracking;
+            });
+            console.log(`✅ Loaded tracking data for ${Object.keys(trackingMap).length} orders`);
+          }
+        } catch (trackingException) {
+          console.warn("⚠️ Exception fetching tracking data (continuing without it):", trackingException);
+          // Continue without tracking data - orders will still be returned
+        }
+      } else {
+        console.log('📦 No valid order IDs to fetch tracking data for');
+      }
+    }
+
+    // Get total count for pagination (with error handling)
+    let totalCount = 0;
+    try {
+      const { count, error: countError } = await supabase
+        .from('orders')
+        .select('*', { count: 'exact', head: true });
+      
+      if (countError) {
+        console.warn("Warning: Failed to get order count:", countError);
+        // Continue without count rather than failing
+      } else {
+        totalCount = count || 0;
+      }
+    } catch (countErr) {
+      console.warn("Warning: Exception getting order count:", countErr);
+      // Continue without count
+    }
+
+    // Sanitize orders data to ensure it's JSON serializable
+    // This handles cases where metadata or items might contain non-serializable data
+    const sanitizedOrders = ordersData.map(order => {
+      try {
+        // Ensure metadata is a plain object (Supabase returns JSONB as object)
+        let sanitizedMetadata = {};
+        if (order.metadata) {
+          if (typeof order.metadata === 'object' && !Array.isArray(order.metadata)) {
+            // Try to create a clean copy, but handle circular references
+            try {
+              sanitizedMetadata = JSON.parse(JSON.stringify(order.metadata));
+            } catch (e) {
+              // If JSON.stringify fails (circular ref), just use the object as-is
+              // Supabase JSONB should already be serializable
+              sanitizedMetadata = order.metadata;
+            }
+          } else if (typeof order.metadata === 'string') {
+            // If it's a string, try to parse it
+            try {
+              sanitizedMetadata = JSON.parse(order.metadata);
+            } catch (e) {
+              sanitizedMetadata = {};
+            }
+          }
+        }
+
+        // Ensure items is an array
+        let sanitizedItems = [];
+        if (order.items) {
+          if (Array.isArray(order.items)) {
+            try {
+              sanitizedItems = JSON.parse(JSON.stringify(order.items));
+            } catch (e) {
+              // If serialization fails, use as-is (should be fine from Supabase)
+              sanitizedItems = order.items;
+            }
+          } else if (typeof order.items === 'string') {
+            try {
+              sanitizedItems = JSON.parse(order.items);
+            } catch (e) {
+              sanitizedItems = [];
+            }
+          }
+        }
+
+        // Get tracking data from the map we created earlier
+        const trackingData = trackingMap[order.order_id] || null;
+
+        // Return sanitized order with all original fields
+        const sanitizedOrder = {
+          ...order,
+          metadata: sanitizedMetadata,
+          items: sanitizedItems,
+          tracking: trackingData
+        };
+
+        return sanitizedOrder;
+      } catch (sanitizeError) {
+        console.warn(`Warning: Failed to sanitize order ${order?.order_id || 'unknown'}:`, sanitizeError);
+        // Return order with safe defaults if sanitization fails
+        return {
+          ...order,
+          metadata: order.metadata || {},
+          items: Array.isArray(order.items) ? order.items : [],
+          tracking: trackingMap[order.order_id] || null
+        };
+      }
     });
+
+    const response = { 
+      success: true,
+      orders: sanitizedOrders || [],
+      total: totalCount || 0,
+      limit: parseInt(limit) || 100,
+      offset: parseInt(offset) || 0
+    };
+
+    console.log(`✅ Returning ${sanitizedOrders?.length || 0} orders (total: ${totalCount || 0})`);
+    
+    // Ensure response is always sent with proper error handling
+    try {
+      // Validate response before sending
+      if (!response || typeof response !== 'object') {
+        console.error('❌ Invalid response object:', response);
+        throw new Error('Invalid response object');
+      }
+      
+      // Ensure response has required fields
+      if (response.success === undefined) {
+        response.success = true;
+      }
+      if (!response.orders) {
+        response.orders = [];
+      }
+      
+      if (sendResponse(200, response)) {
+        console.log('✅ Response sent successfully');
+      } else {
+        console.warn("⚠️ Response already sent, skipping");
+        // Double-check if response was actually sent
+        if (!res.headersSent && !responseSent) {
+          console.log('⚠️ Attempting to send response directly...');
+          try {
+            res.status(200).json(response);
+            console.log('✅ Response sent directly');
+          } catch (directError) {
+            console.error('❌ Failed to send response directly:', directError);
+          }
+        }
+      }
+    } catch (responseError) {
+      console.error("❌ Error sending response:", responseError);
+      console.error("❌ Response error details:", {
+        name: responseError.name,
+        message: responseError.message,
+        stack: responseError.stack
+      });
+      // Last resort: try to send a plain text response
+      if (!res.headersSent) {
+        try {
+          const safeResponse = {
+            success: true,
+            orders: sanitizedOrders || [],
+            total: totalCount || 0,
+            limit: parseInt(limit) || 100,
+            offset: parseInt(offset) || 0
+          };
+          res.status(200).type('application/json').send(JSON.stringify(safeResponse));
+          console.log('✅ Fallback response sent');
+        } catch (fallbackError) {
+          console.error("❌ Critical: Failed to send fallback response:", fallbackError);
+          if (!res.headersSent) {
+            try {
+              res.status(500).type('text/plain').send('Error: Failed to send response');
+              console.log('✅ Basic error response sent');
+            } catch (finalError) {
+              console.error("❌ CRITICAL: Completely failed to send any response:", finalError);
+            }
+          }
+        }
+      }
+    }
   } catch (error) {
-    console.error("Error fetching orders:", error);
-    res.status(500).json({ error: error.message || "Failed to fetch orders" });
+    console.error("❌ Error in /get-orders endpoint:", error);
+    console.error("Error name:", error.name);
+    console.error("Error message:", error.message);
+    if (error.stack) {
+      console.error("Error stack:", error.stack);
+    }
+    
+    // Ensure we always return valid JSON
+    if (!res.headersSent && !responseSent) {
+      try {
+        const errorResponse = { 
+          success: false,
+          error: error.message || "Failed to fetch orders",
+          message: error.message || "An error occurred while fetching orders"
+        };
+        
+        // Add details in development
+        if (process.env.NODE_ENV === 'development') {
+          errorResponse.details = {
+            name: error.name,
+            stack: error.stack,
+            ...(error.code && { code: error.code })
+          };
+        }
+        
+        res.status(500).json(errorResponse);
+        console.log('✅ Error response sent to client');
+      } catch (jsonError) {
+        // If even JSON.stringify fails, send plain text
+        console.error("❌ Critical: Failed to send JSON error response:", jsonError);
+        console.error("❌ JSON error details:", jsonError.message);
+        if (!res.headersSent) {
+          try {
+            // Build a safe error message - ensure it's always non-empty
+            let errorMessage = "Failed to fetch orders";
+            try {
+              if (error?.message) {
+                errorMessage = String(error.message);
+              } else if (error?.toString) {
+                errorMessage = String(error.toString());
+              } else if (typeof error === 'string') {
+                errorMessage = error;
+              }
+            } catch (e) {
+              errorMessage = "An unknown error occurred";
+            }
+            
+            // Ensure we have a non-empty message
+            if (!errorMessage || errorMessage.trim() === '') {
+              errorMessage = "Internal server error occurred";
+            }
+            
+            const plainTextResponse = `Error: ${errorMessage}`;
+            console.log('📤 Sending plain text error response:', plainTextResponse);
+            res.status(500).type('text/plain').send(plainTextResponse);
+            console.log('✅ Plain text error response sent successfully');
+          } catch (plainTextError) {
+            console.error("❌ Critical: Failed to send plain text error response:", plainTextError);
+            console.error("❌ Plain text error details:", plainTextError.message);
+            // Last resort - send a basic error (this should never fail)
+            if (!res.headersSent) {
+              try {
+                const basicError = 'Error: Internal server error occurred';
+                res.status(500).type('text/plain').send(basicError);
+                console.log('✅ Basic error response sent:', basicError);
+              } catch (finalError) {
+                console.error("❌ CRITICAL: Completely failed to send any error response:", finalError);
+                // At this point, we've exhausted all options
+              }
+            }
+          }
+        }
+      }
+    } else {
+      console.warn("⚠️ Response already sent, cannot send error response");
+      console.warn("⚠️ Headers sent:", res.headersSent);
+      console.warn("⚠️ Response sent flag:", responseSent);
+    }
   }
 });
 
@@ -1526,6 +2319,8 @@ async function handleDispatchedUpdate(req, res) {
   console.log('🔄 Handling dispatched status update:', {
     orderId: req.params.orderId,
     dispatched: req.body?.dispatched,
+    tracking_number: req.body?.tracking_number,
+    tracking_link: req.body?.tracking_link,
     method: req.method
   });
   
@@ -1538,7 +2333,16 @@ async function handleDispatchedUpdate(req, res) {
     }
 
     const { orderId } = req.params;
-    const { dispatched } = req.body;
+    const { dispatched, tracking_number, tracking_link } = req.body;
+
+    console.log('📦 Received tracking data:', {
+      tracking_number: tracking_number,
+      tracking_link: tracking_link,
+      tracking_number_type: typeof tracking_number,
+      tracking_link_type: typeof tracking_link,
+      tracking_number_length: tracking_number?.length,
+      tracking_link_length: tracking_link?.length
+    });
 
     if (typeof dispatched !== 'boolean') {
       return res.status(400).json({ 
@@ -1555,40 +2359,132 @@ async function handleDispatchedUpdate(req, res) {
       .single();
 
     if (fetchError || !currentOrder) {
+      console.error("❌ Order not found:", { orderId, fetchError });
       return res.status(404).json({ 
         error: "Order not found",
-        message: `Order ${orderId} does not exist`
+        message: `Order ${orderId} does not exist`,
+        details: fetchError
       });
     }
 
-    // Update metadata with dispatched status
+    // Ensure metadata is an object (Supabase JSONB might return as object or string)
+    let existingMetadata = {};
+    if (currentOrder.metadata) {
+      if (typeof currentOrder.metadata === 'string') {
+        try {
+          existingMetadata = JSON.parse(currentOrder.metadata);
+        } catch (e) {
+          console.warn("⚠️ Failed to parse metadata string, using empty object:", e);
+          existingMetadata = {};
+        }
+      } else if (typeof currentOrder.metadata === 'object' && currentOrder.metadata !== null) {
+        existingMetadata = currentOrder.metadata;
+      }
+    }
+
+    // Process tracking info - handle empty strings, null, undefined
+    // If tracking_number is provided and not empty after trim, use it; otherwise set to null
+    const processedTrackingNumber = (tracking_number && typeof tracking_number === 'string' && tracking_number.trim().length > 0)
+      ? tracking_number.trim()
+      : null;
+    
+    // If tracking_link is provided and not empty after trim, use it; otherwise set to null
+    const processedTrackingLink = (tracking_link && typeof tracking_link === 'string' && tracking_link.trim().length > 0)
+      ? tracking_link.trim()
+      : null;
+
+    console.log('📦 Processed tracking data:', {
+      processedTrackingNumber,
+      processedTrackingLink,
+      original_tracking_number: tracking_number,
+      original_tracking_link: tracking_link
+    });
+
+    // Update metadata with dispatched status (keep tracking info separate in tracking table)
+    // Always explicitly set dispatched and dispatched_at to ensure they're saved correctly
     const updatedMetadata = {
-      ...(currentOrder.metadata || {}),
-      dispatched: dispatched,
-      dispatched_at: dispatched ? new Date().toISOString() : null
+      ...existingMetadata,
+      dispatched: dispatched === true, // Ensure it's always a boolean
+      dispatched_at: dispatched === true ? new Date().toISOString() : null, // Explicitly set to null when false
     };
 
-    const { data, error } = await supabase
+    // Remove tracking fields from metadata (they're now in tracking table)
+    delete updatedMetadata.tracking_number;
+    delete updatedMetadata.tracking_link;
+
+    console.log('📦 Final metadata to save:', JSON.stringify(updatedMetadata, null, 2));
+
+    // Validate metadata is serializable
+    try {
+      JSON.stringify(updatedMetadata);
+    } catch (validationError) {
+      console.error("❌ Metadata validation failed:", validationError);
+      return res.status(400).json({ 
+        error: "Invalid metadata",
+        message: "Metadata contains non-serializable data",
+        details: validationError.message
+      });
+    }
+
+    // Update order metadata (dispatched status only)
+    const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .update({ 
-        metadata: updatedMetadata,
-        updated_at: new Date().toISOString()
+        metadata: updatedMetadata
       })
       .eq('order_id', orderId)
       .select();
 
-    if (error) {
-      console.error("Error updating order dispatched status:", error);
+    if (orderError) {
+      console.error("❌ Error updating order dispatched status:", orderError);
+      console.error("   Error code:", orderError.code);
+      console.error("   Error message:", orderError.message);
+      console.error("   Error details:", JSON.stringify(orderError, null, 2));
+      console.error("   Order ID:", orderId);
       return res.status(500).json({ 
-        error: error.message || "Failed to update order",
-        details: error 
+        error: orderError.message || "Failed to update order",
+        code: orderError.code,
+        details: orderError,
+        hint: orderError.hint || "Check server logs for more details"
       });
     }
+
+    // Upsert tracking information to tracking table
+    const trackingData = {
+      order_id: orderId,
+      tracking_number: processedTrackingNumber,
+      tracking_link: processedTrackingLink,
+    };
+
+    console.log('📦 Saving tracking data to tracking table:', trackingData);
+
+    const { data: trackingResult, error: trackingError } = await supabase
+      .from('tracking')
+      .upsert(trackingData, {
+        onConflict: 'order_id',
+        ignoreDuplicates: false
+      })
+      .select()
+      .single();
+
+    if (trackingError) {
+      console.error("❌ Error saving tracking information:", trackingError);
+      // Don't fail the whole request if tracking save fails, but log it
+      console.warn("⚠️ Order metadata updated but tracking info failed to save");
+    } else {
+      console.log('✅ Tracking information saved:', trackingResult);
+    }
+
+    // Combine order and tracking data for response
+    const responseOrder = {
+      ...orderData[0],
+      tracking: trackingResult || null
+    };
 
     console.log(`✅ Order ${orderId} marked as ${dispatched ? 'dispatched' : 'not dispatched'}`);
     res.json({ 
       success: true,
-      order: data[0],
+      order: responseOrder,
       message: `Order ${dispatched ? 'marked as dispatched' : 'marked as not dispatched'}`
     });
   } catch (error) {
@@ -1617,12 +2513,100 @@ app.get("/session-status", async (req, res) => {
 
 // --- Get Inventory from Supabase (New Structure: inventory_items) ---
 app.get("/api/inventory", async (req, res) => {
-  try {
-    if (!supabase) {
-      return res.status(503).json({ 
-        error: "Supabase not configured",
-        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory fetching."
+  console.log("📥 GET /api/inventory - Request received");
+  
+  // Helper to send JSON error response
+  const sendError = (status, error, message, details) => {
+    if (res.headersSent) {
+      console.warn("⚠️ Cannot send error - headers already sent");
+      return;
+    }
+    
+    try {
+      // If details has success: true, send it as success response
+      if (details && details.success === true) {
+        res.status(200).json(details);
+        console.log(`✅ Sent success response via sendError`);
+        return;
+      }
+      
+      const errorResponse = { 
+        success: false,
+        error: error || "Unknown error",
+        message: message || "An error occurred"
+      };
+      
+      // Only add details if it's safe to serialize
+      if (details !== undefined) {
+        try {
+          JSON.stringify(details);
+          errorResponse.details = details;
+        } catch (e) {
+          console.warn("⚠️ Details not serializable, omitting from response");
+        }
+      }
+      
+      res.status(status || 500).json(errorResponse);
+      console.log(`✅ Sent error response: ${status} - ${error || 'Unknown'}`);
+    } catch (jsonError) {
+      console.error("❌ Failed to send JSON error:", jsonError);
+      console.error("   JSON error details:", {
+        message: jsonError.message,
+        name: jsonError.name
       });
+      
+      if (!res.headersSent) {
+        try {
+          const plainText = `Error: ${error || 'Unknown error'}\nMessage: ${message || ''}\n`;
+          res.status(status || 500)
+            .type('text/plain')
+            .set('Content-Length', Buffer.byteLength(plainText))
+            .send(plainText);
+          console.log(`✅ Sent error response as plain text`);
+        } catch (plainError) {
+          console.error("❌ Critical: Even plain text send failed:", plainError);
+        }
+      }
+    }
+  };
+
+  try {
+    // Check Supabase configuration
+    if (!supabase) {
+      return sendError(503, "Supabase not configured", 
+        "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory fetching.");
+    }
+
+    // Validate Products structure
+    if (!Products || !Products.cases || !Products.pins) {
+      console.error("❌ Products structure is invalid:", {
+        hasProducts: !!Products,
+        hasCases: !!(Products && Products.cases),
+        hasPins: !!(Products && Products.pins)
+      });
+      return sendError(500, "Products data not loaded",
+        "The products.json file could not be loaded or has an invalid structure.",
+        process.env.NODE_ENV === 'development' ? {
+          hasProducts: !!Products,
+          hasCases: !!(Products && Products.cases),
+          hasPins: !!(Products && Products.pins)
+        } : undefined);
+    }
+
+    // Validate Products.pins structure
+    if (!Products.pins.flags || !Products.pins.colorful || !Products.pins.bronze) {
+      console.error("❌ Products.pins structure is invalid:", {
+        hasFlags: !!(Products.pins && Products.pins.flags),
+        hasColorful: !!(Products.pins && Products.pins.colorful),
+        hasBronze: !!(Products.pins && Products.pins.bronze)
+      });
+      return sendError(500, "Products pins data not loaded",
+        "The products.json pins structure is invalid.",
+        process.env.NODE_ENV === 'development' ? {
+          hasFlags: !!(Products.pins && Products.pins.flags),
+          hasColorful: !!(Products.pins && Products.pins.colorful),
+          hasBronze: !!(Products.pins && Products.pins.bronze)
+        } : undefined);
     }
 
     // Fetch all inventory items with timeout protection
@@ -1639,25 +2623,51 @@ app.get("/api/inventory", async (req, res) => {
         .select('*')
         .order('item_type, product_id');
       
-      const result = await Promise.race([queryPromise, timeoutPromise]);
-      items = result.data;
-      error = result.error;
-    } catch (timeoutError) {
-      if (timeoutError.message.includes('timeout')) {
-        console.error("⏱️ Supabase query timed out after 8 seconds");
-        return res.status(504).json({ 
-          error: "Gateway Timeout",
-          message: "The inventory query took too long to respond. Please check your Supabase connection.",
-          details: timeoutError.message
-        });
+      let result;
+      try {
+        result = await Promise.race([queryPromise, timeoutPromise]);
+      } catch (raceError) {
+        // Handle race errors (timeout or other Promise.race issues)
+        if (raceError.message && raceError.message.includes('timeout')) {
+          console.error("⏱️ Supabase query timed out after 8 seconds");
+          return sendError(504,
+            "Gateway Timeout",
+            "The inventory query took too long to respond. Please check your Supabase connection.",
+            {
+              timeout: raceError.message
+            }
+          );
+        }
+        // If it's not a timeout, it might be a query error - check if result exists
+        if (raceError.data !== undefined || raceError.error !== undefined) {
+          // This might be the Supabase response with error
+          result = raceError;
+        } else {
+          throw raceError;
+        }
       }
-      throw timeoutError;
-    }
 
-    if (error) {
-      // If table doesn't exist, return empty structure
-      if (error.code === 'PGRST116' || error.code === '42P01') {
-        return res.json({
+      // Extract data and error from result
+      if (result && typeof result === 'object') {
+        items = result.data;
+        error = result.error;
+      } else {
+        console.error("❌ Unexpected result type:", typeof result, result);
+        throw new Error('Unexpected query result format');
+      }
+    } catch (queryError) {
+      console.error("❌ Error in Supabase query:", queryError);
+      console.error("   Error type:", typeof queryError);
+      console.error("   Error message:", queryError.message);
+      if (queryError.error) {
+        console.error("   Supabase error:", queryError.error);
+      }
+      
+      // Check if it's a table doesn't exist error
+      if (queryError.code === 'PGRST116' || queryError.code === '42P01' || 
+          (queryError.error && (queryError.error.code === 'PGRST116' || queryError.error.code === '42P01'))) {
+        console.log("ℹ️ Table doesn't exist, returning empty structure");
+        return sendError(200, null, null, {
           success: true,
           inventory: {
             cases: null,
@@ -1670,7 +2680,38 @@ app.get("/api/inventory", async (req, res) => {
           }
         });
       }
+      
+      throw queryError;
+    }
+
+    if (error) {
+      console.error("❌ Supabase query returned error:", error);
+      // If table doesn't exist, return empty structure
+      if (error.code === 'PGRST116' || error.code === '42P01') {
+        console.log("ℹ️ Table doesn't exist (error code), returning empty structure");
+        if (!res.headersSent) {
+          return res.json({
+            success: true,
+            inventory: {
+              cases: null,
+              caseColors: null,
+              pins: {
+                flags: null,
+                colorful: null,
+                bronze: null
+              }
+            }
+          });
+        }
+        return;
+      }
       throw error;
+    }
+
+    // Ensure items is an array
+    if (!Array.isArray(items)) {
+      console.error("❌ Items is not an array:", typeof items, items);
+      items = [];
     }
 
     // Transform items into the expected format
@@ -1678,11 +2719,17 @@ app.get("/api/inventory", async (req, res) => {
     // Initialize arrays with null values matching products.json structure
     const inventory = {
       cases: Products.cases.map(() => null),
-      caseColors: Products.cases.map(caseItem => caseItem.colors.map(() => null)),
+      caseColors: Products.cases.map(caseItem => {
+        if (!caseItem || !Array.isArray(caseItem.colors)) {
+          console.warn("⚠️ Case item missing colors array:", caseItem);
+          return [];
+        }
+        return caseItem.colors.map(() => null);
+      }),
       pins: {
-        flags: Products.pins.flags.map(() => null),
-        colorful: Products.pins.colorful.map(() => null),
-        bronze: Products.pins.bronze.map(() => null)
+        flags: Products.pins.flags ? Products.pins.flags.map(() => null) : [],
+        colorful: Products.pins.colorful ? Products.pins.colorful.map(() => null) : [],
+        bronze: Products.pins.bronze ? Products.pins.bronze.map(() => null) : []
       }
     };
 
@@ -1726,31 +2773,133 @@ app.get("/api/inventory", async (req, res) => {
       }
     });
 
-    res.json({ 
-      success: true,
-      inventory: inventory
-    });
+    // Send success response with error handling
+    if (!res.headersSent) {
+      try {
+        // Ensure inventory data is serializable
+        const responseData = { 
+          success: true,
+          inventory: inventory
+        };
+        
+        // Test serialization before sending
+        JSON.stringify(responseData);
+        
+        res.json(responseData);
+        console.log('✅ Inventory sent successfully');
+      } catch (jsonError) {
+        console.error("❌ Failed to send JSON success response:", jsonError);
+        console.error("Error details:", {
+          message: jsonError.message,
+          name: jsonError.name,
+          stack: jsonError.stack
+        });
+        
+        if (!res.headersSent) {
+          try {
+            // Try to send a minimal error response
+            const errorResponse = {
+              success: false,
+              error: "Failed to serialize inventory response",
+              message: jsonError.message || "Unknown serialization error"
+            };
+            res.status(500).json(errorResponse);
+            console.log('✅ Sent error response as JSON');
+          } catch (fallbackError) {
+            console.error("❌ Even fallback JSON failed:", fallbackError);
+            if (!res.headersSent) {
+              try {
+                res.status(500)
+                  .type('text/plain')
+                  .send(`Error: Failed to serialize inventory response\nDetails: ${jsonError.message || 'Unknown error'}\n`);
+                console.log('✅ Sent error response as plain text');
+              } catch (plainError) {
+                console.error("❌ Critical: All response methods failed:", plainError);
+              }
+            }
+          }
+        }
+      }
+    } else {
+      console.warn('⚠️ Response already sent, skipping inventory JSON response');
+    }
   } catch (error) {
-    console.error("Error fetching inventory from Supabase:", error);
-    res.status(500).json({ 
-      error: error.message || "Failed to fetch inventory",
-      details: error 
-    });
+    console.error("\n❌ ========== ERROR FETCHING INVENTORY ==========");
+    console.error("Error message:", error.message);
+    console.error("Error name:", error.name);
+    console.error("Error stack:", error.stack);
+    if (error.code) {
+      console.error("Error code:", error.code);
+    }
+    if (error.details) {
+      console.error("Error details:", error.details);
+    }
+    console.error("==============================================\n");
+    
+    // Always send JSON error response (unless headers already sent)
+    sendError(500, 
+      error.message || "Failed to fetch inventory",
+      "An error occurred while fetching inventory from Supabase.",
+      process.env.NODE_ENV === 'development' ? {
+        errorName: error.name,
+        errorCode: error.code,
+        stack: error.stack
+      } : undefined
+    );
   }
 });
 
 // --- Update Inventory in Supabase (New Structure: inventory_items) ---
 app.post("/api/inventory", async (req, res) => {
+  // Helper to send JSON error response
+  const sendError = (status, error, message, details) => {
+    if (!res.headersSent) {
+      try {
+        res.status(status).json({ 
+          success: false,
+          error: error,
+          message: message,
+          details: details
+        });
+      } catch (jsonError) {
+        console.error("Failed to send JSON error:", jsonError);
+        if (!res.headersSent) {
+          res.status(status).type('text/plain').send(
+            `Error: ${error}\nMessage: ${message || ''}\n`
+          );
+        }
+      }
+    }
+  };
+
   console.log("📥 POST /api/inventory - Request received");
-  console.log("📦 Request body:", JSON.stringify(req.body, null, 2));
+  try {
+    console.log("📦 Request body:", JSON.stringify(req.body, null, 2));
+  } catch (logError) {
+    console.error("❌ Failed to log request body:", logError);
+    console.log("📦 Request body exists:", !!req.body);
+  }
   
   try {
+    // Validate Supabase
     if (!supabase) {
       console.error("❌ Supabase client not initialized");
-      return res.status(503).json({ 
-        error: "Supabase not configured",
-        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory updates."
-      });
+      return sendError(503, "Supabase not configured",
+        "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory updates.");
+    }
+
+    // Validate Products structure
+    if (!Products || !Products.cases || !Products.pins) {
+      console.error("❌ Products structure is invalid for POST /api/inventory");
+      return sendError(500, "Products data not loaded",
+        "The products.json file could not be loaded or has an invalid structure.");
+    }
+
+    // Validate Products.pins structure
+    if (!Products.pins.flags || !Products.pins.colorful || !Products.pins.bronze) {
+      console.error("❌ Products.pins structure is invalid for POST /api/inventory");
+      return sendError(500, "Products pins data not loaded",
+        "The products.json pins structure is invalid.");
     }
 
     const { cases, caseColors, pins } = req.body;
@@ -2070,12 +3219,15 @@ app.post("/api/inventory", async (req, res) => {
       console.error("❌ Error message:", error.message);
       console.error("❌ Error details:", JSON.stringify(error, null, 2));
       console.error("❌ Error hint:", error.hint);
-      return res.status(500).json({ 
-        error: "Failed to save inventory items",
-        details: error.message,
-        code: error.code,
-        hint: error.hint
-      });
+      return sendError(500,
+        "Failed to save inventory items",
+        error.message || "Error saving inventory to Supabase",
+        {
+          code: error.code,
+          hint: error.hint,
+          details: error.details
+        }
+      );
     }
 
     // Verify the upsert actually worked
@@ -2225,23 +3377,57 @@ app.post("/api/inventory", async (req, res) => {
     console.log(`✅ Timestamp: ${new Date().toISOString()}`);
     console.log("=".repeat(60));
 
-    res.json({ 
-      success: true,
-      message: `Inventory saved successfully (${successful} items saved with all correct information)`,
-      updatedCount: successful,
-      totalItems: uniqueItems.length,
-      inventory: data || [],
-      persisted: true,
-      deploymentReady: true,
-      savedAt: new Date().toISOString(),
-      note: "All data is saved to Supabase inventory_items table and will persist after deployment"
-    });
+    // Send success response with error handling
+    if (!res.headersSent) {
+      try {
+        res.json({ 
+          success: true,
+          message: `Inventory saved successfully (${successful} items saved with all correct information)`,
+          updatedCount: successful,
+          totalItems: uniqueItems.length,
+          inventory: data || [],
+          persisted: true,
+          deploymentReady: true,
+          savedAt: new Date().toISOString(),
+          note: "All data is saved to Supabase inventory_items table and will persist after deployment"
+        });
+        console.log('✅ POST /api/inventory - Success response sent');
+      } catch (jsonError) {
+        console.error("❌ Failed to send JSON success response:", jsonError);
+        sendError(500,
+          "Failed to serialize response",
+          "Inventory was saved but failed to send response",
+          {
+            savedCount: successful
+          }
+        );
+      }
+    } else {
+      console.warn('⚠️ POST /api/inventory - Response already sent, skipping success response');
+    }
   } catch (error) {
-    console.error("Error updating inventory in Supabase:", error);
-    res.status(500).json({ 
-      error: error.message || "Failed to update inventory",
-      details: error 
-    });
+    console.error("\n❌ ========== ERROR UPDATING INVENTORY ==========");
+    console.error("Error message:", error.message);
+    console.error("Error name:", error.name);
+    console.error("Error stack:", error.stack);
+    if (error.code) {
+      console.error("Error code:", error.code);
+    }
+    if (error.details) {
+      console.error("Error details:", error.details);
+    }
+    console.error("================================================\n");
+    
+    // Use sendError helper to ensure JSON response
+    sendError(500,
+      error.message || "Failed to update inventory",
+      "An error occurred while updating inventory in Supabase.",
+      process.env.NODE_ENV === 'development' ? {
+        errorName: error.name,
+        errorCode: error.code,
+        stack: error.stack
+      } : undefined
+    );
   }
 });
 
@@ -2321,18 +3507,57 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error('\n❌ ========== FINAL ERROR HANDLER ==========');
   console.error('Unhandled error:', err);
+  console.error('Error message:', err?.message);
+  console.error('Error name:', err?.name);
+  console.error('Error stack:', err?.stack);
   console.error('Request path:', req.path);
   console.error('Request method:', req.method);
+  if (err?.code) {
+    console.error('Error code:', err.code);
+  }
   console.error('==========================================\n');
   
   if (!res.headersSent) {
-    res.status(500).json({
-      success: false,
-      error: err.message || 'Internal server error',
-      errorName: err.name,
-      path: req.path
-    });
+    try {
+      res.status(500).json({
+        success: false,
+        error: err.message || 'Internal server error',
+        errorName: err.name,
+        errorCode: err.code,
+        path: req.path
+      });
+    } catch (jsonError) {
+      // If JSON.stringify fails, send plain text
+      console.error('Failed to send JSON error response:', jsonError);
+      res.status(500).type('text/plain').send(
+        `Error: ${err.message || 'Internal server error'}\n` +
+        `Path: ${req.path}\n` +
+        `Check server console for details.`
+      );
+    }
+  } else {
+    console.error('⚠️ Response already sent, cannot send error response');
   }
+});
+
+// Handle uncaught exceptions and unhandled promise rejections
+process.on('uncaughtException', (error) => {
+  console.error('\n❌ ========== UNCAUGHT EXCEPTION ==========');
+  console.error('Uncaught Exception:', error);
+  console.error('Stack:', error.stack);
+  console.error('==========================================\n');
+  // Don't exit - let the server continue running
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('\n❌ ========== UNHANDLED PROMISE REJECTION ==========');
+  console.error('Unhandled Rejection at:', promise);
+  console.error('Reason:', reason);
+  if (reason && typeof reason === 'object' && reason.stack) {
+    console.error('Stack:', reason.stack);
+  }
+  console.error('==================================================\n');
+  // Don't exit - let the server continue running
 });
 
 app.listen(PORT, () => {

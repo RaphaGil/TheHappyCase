@@ -18,6 +18,17 @@ const fetchInventoryFromSupabase = async () => {
     // Create an AbortController for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const safeParseJSON = async (response) => {
+      const contentType = response.headers.get('content-type');
+    
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        throw new Error(`Expected JSON, got: ${text}`);
+      }
+    
+      return response.json();
+    };
+    
     
     try {
       const response = await fetch(apiUrl, {
@@ -30,7 +41,8 @@ const fetchInventoryFromSupabase = async () => {
       clearTimeout(timeoutId);
       
       if (response.ok) {
-        const data = await response.json();
+        const data = await safeParseJSON(response);
+
         if (data.success && data.inventory) {
           // Convert Supabase format to localStorage format
           const quantities = {

@@ -32,7 +32,7 @@ function Footer() {
             </div>
             <p className="text-gray-900 text-body-sm leading-relaxed font-light pt-2 font-inter">
               Creating personalized passport cases that bring joy to your travels. 
-              Made with love and attention to detail.
+      
             </p>
             <div className="flex flex-col gap-3 pt-2">
             <p className="text-body-sm text-gray-900 font-light font-inter">Follow us!</p>

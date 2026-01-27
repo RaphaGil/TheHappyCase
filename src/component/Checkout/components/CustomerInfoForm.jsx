@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import SignInModal from './SignInModal';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authenticatedEmail, onSignIn, onSignOut }) => {
-  const [showSignInModal, setShowSignInModal] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleSignInClick = () => {
+    // Navigate to login page with return URL to come back to checkout
+    navigate('/login?redirect=/checkout');
+  };
+  
   return (
     <div className="space-y-4 ">
         <h3 className="text-md uppercase tracking-wider text-gray-900 mb-4 font-bold font-inter">
@@ -16,7 +22,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             </label>
             <button
               type="button"
-              onClick={() => setShowSignInModal(true)}
+              onClick={handleSignInClick}
               className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter underline"
             >
               Sign In
@@ -171,18 +177,6 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           </select>
         </div>
       </div>
-
-      <SignInModal
-        show={showSignInModal}
-        onClose={() => setShowSignInModal(false)}
-        initialEmail={customerInfo.email}
-        onVerified={(email) => {
-          onSignIn(email);
-          setShowSignInModal(false);
-          // Auto-fill email in customer info
-          onInputChange({ target: { name: 'email', value: email } });
-        }}
-      />
     </div>
   );
 };

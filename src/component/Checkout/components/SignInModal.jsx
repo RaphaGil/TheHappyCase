@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
+
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(initialEmail);
   const [code, setCode] = useState('');
   const [step, setStep] = useState(initialEmail ? 'code' : 'email'); // 'email' or 'code'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (show) {
@@ -17,30 +21,11 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
         setEmail(initialEmail);
         setCode('');
         setError('');
+        setSuccess(false);
         // Automatically send code if email is provided
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (emailRegex.test(initialEmail)) {
-          setLoading(true);
-          // Simulate sending code and redirect
-          setTimeout(() => {
-            setLoading(false);
-            // Build query parameters for redirect
-            const params = new URLSearchParams();
-            params.set('email', initialEmail);
-            
-            // Preserve existing query parameters if they exist
-            const clientId = searchParams.get('client_id');
-            const redirectUri = searchParams.get('redirect_uri');
-            const locale = searchParams.get('locale') || 'en-GL';
-            
-            if (clientId) params.set('client_id', clientId);
-            if (redirectUri) params.set('redirect_uri', redirectUri);
-            if (locale) params.set('locale', locale);
-            
-            // Close modal and redirect to authentication code page
-            onClose();
-            navigate(`/authentication/code?${params.toString()}`);
-          }, 1000);
+          handleSendCodeAutomatically(initialEmail);
         } else {
           setStep('email');
         }
@@ -49,6 +34,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
         setStep('email');
         setCode('');
         setError('');
+        setSuccess(false);
       }
     } else {
       // Reset form when modal closes
@@ -56,9 +42,47 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
       setCode('');
       setStep('email');
       setError('');
+      setSuccess(false);
       setLoading(false);
     }
-  }, [show, initialEmail, navigate, searchParams, onClose]);
+  }, [show, initialEmail, onClose]);
+
+  const handleSendCodeAutomatically = async (emailToUse) => {
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+    
+    try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please check your environment variables.');
+      }
+
+      // Send OTP email using Supabase (code instead of magic link)
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: emailToUse,
+        options: {
+          emailRedirectTo: null
+        }
+      });
+
+      if (error) {
+        console.error('❌ Error sending OTP:', error);
+        setError(error.message || 'Failed to send verification code. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ OTP sent successfully:', data);
+      setLoading(false);
+      setStep('code');
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      console.error('❌ Exception sending OTP:', err);
+      setLoading(false);
+      setError(err.message || 'Failed to send verification code. Please try again.');
+    }
+  };
 
   const handleSendCode = async (e) => {
     e.preventDefault();
@@ -76,61 +100,101 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
 
     setLoading(true);
     setError('');
+    setSuccess(false);
 
     try {
-      // In production, call your API endpoint here to send the code
-      // await sendVerificationCode(email);
-      
-      // Simulate sending code
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Build query parameters for redirect
-      const params = new URLSearchParams();
-      params.set('email', email);
-      
-      // Preserve existing query parameters if they exist
-      const clientId = searchParams.get('client_id');
-      const redirectUri = searchParams.get('redirect_uri');
-      const locale = searchParams.get('locale') || 'en-GL';
-      
-      if (clientId) params.set('client_id', clientId);
-      if (redirectUri) params.set('redirect_uri', redirectUri);
-      if (locale) params.set('locale', locale);
-      
-      // Close modal first
-      onClose();
-      
-      // Redirect to authentication code page
-      navigate(`/authentication/code?${params.toString()}`, { replace: true });
-    } catch (err) {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please check your environment variables.');
+      }
+
+      // Send OTP email using Supabase (code instead of magic link)
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: {
+          emailRedirectTo: null
+        }
+      });
+
+      if (error) {
+        console.error('❌ Error sending OTP:', error);
+        setError(error.message || 'Failed to send verification code. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ OTP sent successfully:', data);
       setLoading(false);
-      setError('Failed to send verification code. Please try again.');
+      setStep('code');
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err) {
+      console.error('❌ Exception sending OTP:', err);
+      setLoading(false);
+      setError(err.message || 'Failed to send verification code. Please try again.');
     }
   };
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
-    if (!code || code.length !== 6) {
-      setError('Please enter the 6-digit code');
+    if (!code || code.length !== 8) {
+      setError('Please enter the 8-digit code');
       return;
     }
 
     setLoading(true);
     setError('');
+    setSuccess(false);
 
-    // Simulate code verification (in production, this would call an API)
-    setTimeout(() => {
-      setLoading(false);
-      // In production, verify the code with the backend
-      // const isValid = await verifyCode(email, code);
-      // For demo purposes, accept any 6-digit code
-      if (code.length === 6) {
-        onVerified(email);
-        onClose();
-      } else {
-        setError('Invalid code. Please try again.');
+    try {
+      if (!supabase) {
+        throw new Error('Supabase is not configured. Please check your environment variables.');
       }
-    }, 1000);
+
+      // Verify OTP code with Supabase
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token: code.trim(),
+        type: 'email',
+      });
+
+      if (error) {
+        console.error('❌ Error verifying OTP:', error);
+        setError(error.message || 'Invalid code. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('✅ OTP verified successfully:', data);
+
+      // Get the authenticated user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error('❌ Error getting user:', userError);
+        setError('Failed to get user information. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      // Get user email (use authenticated email or fallback to input email)
+      const userEmail = user.email || email;
+      
+      // Store user session in localStorage
+      localStorage.setItem('userEmail', userEmail);
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userId', user.id); // Store user ID for order saving
+      
+      console.log('✅ User logged in:', userEmail);
+      console.log('✅ User ID:', user.id);
+
+      // Call onVerified callback with the email
+      onVerified(userEmail);
+      onClose();
+    } catch (err) {
+      console.error('❌ Exception verifying OTP:', err);
+      setError(err.message || 'Invalid code. Please try again.');
+      setLoading(false);
+    }
   };
 
   const handleResendCode = () => {
@@ -166,6 +230,24 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
           </button>
         </div>
 
+        {/* Success Message */}
+        {success && step === 'code' && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800 font-light font-inter">
+              Verification code sent to <strong>{email}</strong>
+            </p>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-800 font-light font-inter">
+              {error}
+            </p>
+          </div>
+        )}
+
         {/* Email Step */}
         {step === 'email' && (
           <form onSubmit={handleSendCode} className="space-y-4">
@@ -181,16 +263,11 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
                   setError('');
                 }}
                 placeholder="your.email@example.com"
+                autoFocus
                 className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
                 required
               />
             </div>
-
-            {error && (
-              <div className="text-sm text-red-600 font-inter">
-                {error}
-              </div>
-            )}
 
             <div className="flex gap-3">
               <button
@@ -216,7 +293,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
           <form onSubmit={handleVerifyCode} className="space-y-4">
             <div>
               <p className="text-sm text-gray-600 font-light font-inter mb-4">
-                We've sent a 6-digit verification code to <strong>{email}</strong>. Please enter it below.
+                We've sent an 8-digit verification code to <strong>{email}</strong>. Please enter it below.
               </p>
               <label className="block text-base text-gray-500 mb-1.5 font-light font-inter">
                 Verification Code *
@@ -225,12 +302,13 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
                 type="text"
                 value={code}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                  // Only allow digits and limit to 8 characters
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 8);
                   setCode(value);
                   setError('');
                 }}
-                placeholder="000000"
-                maxLength={6}
+                placeholder="00000000"
+                maxLength={8}
                 autoFocus
                 className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base text-center text-2xl tracking-widest"
                 required
@@ -246,7 +324,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
             <div className="flex flex-col gap-3">
               <button
                 type="submit"
-                disabled={loading || code.length !== 6}
+                disabled={loading || !code || code.length !== 8}
                 className="w-full px-4 py-2 text-sm uppercase tracking-wider font-light font-inter bg-black text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Verifying...' : 'Verify Code'}
