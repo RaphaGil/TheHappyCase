@@ -25,8 +25,18 @@ import MobileOrderSummary from './components/MobileOrderSummary';
 import ShippingInfoModal from './components/ShippingInfoModal';
 
 // --- Constants ---
+// Get Stripe publishable key from environment
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
+// Validate Stripe key format
+if (!stripePublishableKey) {
+  console.warn('⚠️ VITE_STRIPE_PUBLISHABLE_KEY is not set. Payment Element may not load correctly.');
+} else if (!stripePublishableKey.startsWith('pk_')) {
+  console.warn('⚠️ Invalid Stripe publishable key format. Key should start with "pk_"');
+}
+
 const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 
+  stripePublishableKey || 
   'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
 );
 
@@ -433,6 +443,10 @@ const CheckoutForm = () => {
           paymentElementReady={paymentElementReady}
           error={error}
           onPaymentReady={() => setPaymentElementReady(true)}
+          onPaymentError={(errorMessage) => {
+            console.error('Payment Element load error:', errorMessage);
+            setError(errorMessage);
+          }}
         />
 
         <button
@@ -703,6 +717,31 @@ const Checkout = () => {
 
   if (!options) {
     return <LoadingState />;
+  }
+
+  // Validate Stripe key is set and not the placeholder
+  const isPlaceholderKey = stripePublishableKey === 'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890';
+  if (!stripePublishableKey || isPlaceholderKey) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <CheckoutHeader />
+        <div className="flex-1 flex items-center justify-center bg-white py-10">
+          <div className="max-w-md mx-auto px-4 text-center">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-yellow-900 mb-3" style={{fontFamily: "'Poppins', sans-serif"}}>
+                Stripe Configuration Missing
+              </h2>
+              <p className="text-yellow-700 mb-4 font-inter">
+                Please set VITE_STRIPE_PUBLISHABLE_KEY in your environment variables.
+              </p>
+              <p className="text-sm text-yellow-600 font-inter">
+                The Stripe publishable key is required to process payments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

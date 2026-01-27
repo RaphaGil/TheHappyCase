@@ -1,7 +1,7 @@
 import React from 'react';
 import { PaymentElement } from '@stripe/react-stripe-js';
 
-const PaymentSection = ({ paymentElementReady, error, onPaymentReady }) => {
+const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentError }) => {
   return (
     <div className="space-y-4">
       <h3 className="text-md uppercase tracking-wider text-gray-900 mb-4 font-bold font-inter">
@@ -52,6 +52,12 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady }) => {
             },
           }}
           onReady={onPaymentReady}
+          onError={(error) => {
+            console.error('❌ Payment Element error:', error);
+            if (onPaymentError) {
+              onPaymentError(error.message || 'Failed to load payment form. Please refresh the page.');
+            }
+          }}
         />
       </div>
       
