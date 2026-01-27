@@ -179,12 +179,23 @@ html {
 
 /* Ensure Apple Pay and Google Pay are shown at the top of PaymentElement */
 [data-testid="payment-element"] > div:first-child [data-testid="payment-request-button"],
-[data-testid="payment-element"] > div:first-child iframe {
+[data-testid="payment-element"] > div:first-child iframe,
+[data-testid="payment-element"] > div:first-child > div {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   width: 100% !important;
   margin-bottom: 12px !important;
+}
+
+/* Make sure wallet buttons container is visible */
+[data-testid="payment-element"] > div:first-child {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+  padding-bottom: 16px !important;
+  border-bottom: 1px solid #e5e7eb !important;
 }
 
 /* Responsive Stripe PaymentElement Styling */
