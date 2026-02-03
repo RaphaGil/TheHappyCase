@@ -236,18 +236,60 @@ Tailwind is configured in `tailwind.config.js` with custom colors, fonts, and br
 
 2. **Environment Variables**
    Set the following in Netlify dashboard:
-   - `STRIPE_SECRET_KEY`
-   - `VITE_STRIPE_PUBLISHABLE_KEY`
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-   - `SUPABASE_URL`
-   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `STRIPE_SECRET_KEY` - Stripe secret key for payment processing
+   - `VITE_STRIPE_PUBLISHABLE_KEY` - Stripe publishable key for frontend
+   - `VITE_SUPABASE_URL` - Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
+   - `SUPABASE_URL` - Supabase project URL (for serverless functions)
+   - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (for serverless functions)
 
-3. **Redirects**
+3. **Netlify Functions**
+   The following serverless functions are available:
+   - `/api/create-payment-intent` - Creates Stripe payment intents
+   - `/api/inventory` - Fetches inventory from Supabase (NEW - required for production stock management)
+
+4. **Redirects**
    The `public/_redirects` file handles SPA routing:
    ```
    /*    /index.html   200
    ```
+
+### Important: Inventory Management in Production
+
+**The inventory system works differently in development vs production:**
+
+- **Development**: Inventory is fetched from the Express server (`server.js`) running on port 3001
+- **Production**: Inventory is fetched from the Netlify Function (`netlify/functions/inventory.js`)
+
+**To ensure stock shows correctly in production:**
+
+1. **Deploy the inventory function**: The `netlify/functions/inventory.js` function must be deployed
+2. **Set Supabase environment variables**: Make sure `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are set in Netlify
+3. **Update inventory in Supabase**: Use the Dashboard (`/dashboard`) to update stock levels in the `inventory_items` table
+4. **Clear browser cache**: Users may need to clear localStorage or wait 5 minutes for cache to expire
+
+**If stock doesn't update in production:**
+- Check that the `/api/inventory` endpoint is accessible (should return JSON)
+- Verify Supabase environment variables are set correctly in Netlify
+- Check Netlify function logs for errors
+- Ensure the `inventory_items` table exists in Supabase
+
+### Real-time Inventory Updates
+
+The Passport Cases page uses **Supabase Realtime** to receive instant updates when inventory changes:
+
+- **Automatic Updates**: When inventory is updated in Dashboard or Supabase, Passport Cases page updates within 1-2 seconds
+- **No Refresh Needed**: Changes appear automatically without page refresh
+- **Works Everywhere**: Updates even if Dashboard is closed
+
+**Setup Required:**
+1. Enable Realtime in Supabase Dashboard: **Database** → **Replication** → Enable for `inventory_items` table
+2. See `SUPABASE_REALTIME_SETUP.md` for detailed setup instructions
+
+**Fallback:** If Realtime is not enabled, the system falls back to:
+- Event-based updates (when Dashboard is open)
+- 5-minute cache refresh
+- Manual page refresh
 
 ### GitHub Pages Deployment
 
@@ -330,6 +372,20 @@ See the SQL schema files in the root directory for complete schema definitions.
 4. **Build errors**
    - Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
    - Check Node.js version (requires v18+)
+
+5. **Inventory not showing correctly in production**
+   - **Problem**: Items show as "in stock" in production but are out of stock in Supabase
+   - **Cause**: The `/api/inventory` endpoint is not accessible in production (Express server not deployed)
+   - **Solution**: 
+     - Ensure `netlify/functions/inventory.js` is deployed
+     - Verify `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are set in Netlify environment variables
+     - Test the endpoint: `https://your-site.netlify.app/api/inventory` (should return JSON)
+     - Check Netlify function logs for errors
+     - Clear browser localStorage: `localStorage.removeItem('productQuantities')`
+     - Wait 5 minutes for cache to expire, or manually refresh inventory
+   - **Development vs Production**:
+     - Development: Uses Express server on `localhost:3001/api/inventory`
+     - Production: Uses Netlify Function on `/api/inventory`
 
 ## 📚 Additional Resources
 

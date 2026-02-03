@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import Products from '../../data/products.json';
 import { getApiUrl } from '../../utils/apiConfig';
 import DashboardTabs from '../../component/Dashboard/DashboardTabs';
 import InventoryTab from '../../component/Dashboard/InventoryTab';
 import OrdersTab from '../../component/Dashboard/OrdersTab';
+import { getSupabaseClient } from '../../utils/supabaseClient';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Get shared Supabase client instance
+const supabase = getSupabaseClient();
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -484,6 +482,15 @@ const Dashboard = () => {
           
           // Mark as loaded from Supabase
           setInventorySource('supabase');
+          
+          // Broadcast inventory update event so other pages can refresh their cache
+          window.dispatchEvent(new CustomEvent('inventoryUpdated', {
+            detail: { 
+              timestamp: Date.now(),
+              updatedCount: data.updatedCount 
+            }
+          }));
+          console.log('📢 Broadcasted inventoryUpdated event to refresh other pages');
         }
         
         setSaved(true);

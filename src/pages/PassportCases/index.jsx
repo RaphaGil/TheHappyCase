@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PassportCasesHeader from '../../component/PassportCases/components/PassportCasesHeader';
 import LoadingState from '../../component/PassportCases/components/LoadingState';
 import CaseTypeTabs from '../../component/PassportCases/components/CaseTypeTabs';
@@ -9,8 +9,16 @@ import ProductInfo from '../../component/PassportCases/components/ProductInfo';
 import PriceAndCTA from '../../component/PassportCases/components/PriceAndCTA';
 import { usePassportCases } from '../../hooks/passportcases/usePassportCases';
 import { getCaseDisplayName, getColorName } from '../../utils/passportcases/helpers';
+import { refreshInventoryFromSupabase } from '../../utils/inventory';
+import { getSupabaseClient } from '../../utils/supabaseClient';
+
+// Get shared Supabase client instance
+const supabase = getSupabaseClient();
 
 const PassportCases = () => {
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [inventoryUpdateTrigger, setInventoryUpdateTrigger] = useState(0);
+  
   const {
     selectedCaseType,
     selectedColor,
@@ -33,6 +41,94 @@ const PassportCases = () => {
     isColorSoldOut,
     isCaseTypeSoldOut,
   } = usePassportCases();
+
+  // Force refresh inventory on page load to ensure we have latest data
+  useEffect(() => {
+    const forceRefreshOnLoad = async () => {
+      console.log('🔄 Force refreshing inventory on page load...');
+      try {
+        await refreshInventoryFromSupabase();
+        console.log('✅ Inventory refreshed on page load');
+        setRefreshKey(prev => prev + 1);
+      } catch (error) {
+        console.error('❌ Failed to refresh inventory on load:', error);
+      }
+    };
+    forceRefreshOnLoad();
+  }, []); // Run once on mount
+
+  // Listen for real-time inventory updates from Supabase
+  useEffect(() => {
+    if (!supabase) {
+      console.warn('⚠️ Supabase not configured, real-time updates disabled');
+      return;
+    }
+
+    console.log('🔔 Setting up Supabase Realtime subscription for inventory_items...');
+
+    // Subscribe to changes in inventory_items table
+    const channel = supabase
+      .channel('inventory-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'inventory_items'
+        },
+        async (payload) => {
+          console.log('📢 Inventory change detected:', payload.eventType, payload);
+          
+          // Refresh cache immediately when inventory changes
+          try {
+            await refreshInventoryFromSupabase();
+            console.log('✅ Inventory cache refreshed from Supabase Realtime');
+            // Force component re-render to use updated cache
+            setRefreshKey(prev => prev + 1);
+            // Trigger hook update by updating timestamp
+            setInventoryUpdateTrigger(Date.now());
+            // Dispatch custom event for hook to listen
+            window.dispatchEvent(new CustomEvent('inventoryUpdated', {
+              detail: { timestamp: Date.now() }
+            }));
+          } catch (error) {
+            console.error('❌ Failed to refresh inventory cache:', error);
+          }
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Subscribed to inventory_items changes');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Error subscribing to inventory_items changes');
+        } else {
+          console.log('🔄 Subscription status:', status);
+        }
+      });
+
+    // Also listen for Dashboard events (fallback if Realtime not enabled)
+    const handleInventoryUpdate = async (event) => {
+      console.log('🔄 Inventory updated in Dashboard, refreshing cache...', event.detail);
+      try {
+        await refreshInventoryFromSupabase();
+        console.log('✅ Inventory cache refreshed');
+        setRefreshKey(prev => prev + 1);
+        // Trigger hook update
+        setInventoryUpdateTrigger(Date.now());
+      } catch (error) {
+        console.error('❌ Failed to refresh inventory cache:', error);
+      }
+    };
+
+    window.addEventListener('inventoryUpdated', handleInventoryUpdate);
+    
+    // Cleanup
+    return () => {
+      console.log('🧹 Cleaning up inventory subscriptions...');
+      supabase.removeChannel(channel);
+      window.removeEventListener('inventoryUpdated', handleInventoryUpdate);
+    };
+  }, []);
 
   if (!selectedCase || !selectedCase.images || selectedCase.images.length === 0) {
     return <LoadingState />;

@@ -253,12 +253,39 @@ export const getMaxAvailableQuantity = (item, cart) => {
       }
     }
 
-    // If no quantity limit found in Supabase, return null (unlimited)
-    // Note: We no longer fall back to products.json quantities - Supabase is the source of truth
-    if (maxQuantity === null || maxQuantity === undefined) {
-      return null;
+    // Debug logging for specific color (Light Pink)
+    if (item.color === '#f49f90' || item.color.toLowerCase().includes('pink')) {
+      console.log('🔍 [DEBUG] Light Pink inventory check:', {
+        caseType: item.caseType,
+        color: item.color,
+        maxQuantity: maxQuantity,
+        caseIndex: Products.cases.findIndex(c => c.type === item.caseType),
+        hasCaseColors: !!(quantities && quantities.caseColors),
+        quantities: quantities ? {
+          caseColors: quantities.caseColors?.[Products.cases.findIndex(c => c.type === item.caseType)],
+          cases: quantities.cases?.[Products.cases.findIndex(c => c.type === item.caseType)]
+        } : null
+      });
     }
 
+    // Check if item exists in Supabase inventory_items table
+    // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
+    if (maxQuantity === null || maxQuantity === undefined) {
+      return null; // Item not in Supabase - unlimited stock
+    }
+
+    // If item exists in Supabase and qty is 0, show sold out immediately
+    // This check happens BEFORE considering cart items
+    if (maxQuantity === 0) {
+      console.log(`⚠️ [SOLD OUT] Item exists in Supabase but qty is 0:`, {
+        caseType: item.caseType,
+        color: item.color,
+        maxQuantity: maxQuantity
+      });
+      return 0; // Sold out - item exists in Supabase but qty is 0
+    }
+
+    // If item exists in Supabase and qty > 0, subtract items already in cart
     // Count how many items with same caseType+color are already in cart
     // (Inventory is shared across all pin combinations for the same case+color)
     const alreadyInCart = cart.reduce((total, cartItem) => {
@@ -269,8 +296,10 @@ export const getMaxAvailableQuantity = (item, cart) => {
       return total;
     }, 0);
 
-    // Return how many MORE can be added
+    // Calculate: Supabase qty - cart items
     const available = maxQuantity - alreadyInCart;
+    
+    // If available === 0, show sold out (all items are in cart)
     return Math.max(0, available);
   }
 
@@ -306,12 +335,19 @@ export const getMaxAvailableQuantity = (item, cart) => {
       }
     }
 
-    // If no quantity limit found in Supabase, return null (unlimited)
-    // Note: We no longer fall back to products.json quantities - Supabase is the source of truth
+    // Check if item exists in Supabase inventory_items table
+    // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
-      return null;
+      return null; // Item not in Supabase - unlimited stock
     }
 
+    // If item exists in Supabase and qty is 0, show sold out immediately
+    // This check happens BEFORE considering cart items
+    if (maxQuantity === 0) {
+      return 0; // Sold out - item exists in Supabase but qty is 0
+    }
+
+    // If item exists in Supabase and qty > 0, subtract items already in cart
     // Count how many identical items are already in cart
     const alreadyInCart = cart.reduce((total, cartItem) => {
       if (areItemsIdentical(item, cartItem)) {
@@ -320,8 +356,10 @@ export const getMaxAvailableQuantity = (item, cart) => {
       return total;
     }, 0);
 
-    // Return how many MORE can be added
+    // Calculate: Supabase qty - cart items
     const available = maxQuantity - alreadyInCart;
+    
+    // If available === 0, show sold out (all items are in cart)
     return Math.max(0, available);
   }
 

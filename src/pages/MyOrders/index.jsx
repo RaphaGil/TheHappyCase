@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '../../utils/supabaseClient';
 import { getApiUrl } from '../../utils/apiConfig';
 import OrderItem from '../../component/PaymentSucess/OrderItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Get shared Supabase client instance
+const supabase = getSupabaseClient();
 
 const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 

@@ -134,15 +134,16 @@ export const getDetailImagesForColor = (selectedCaseType, selectedColorData, sel
 export const isSelectedColorSoldOut = (selectedCase, selectedCaseType, selectedColor, cart) => {
   if (!selectedCase || !selectedColor) return false;
   
-  // Check available inventory considering cart (items in basket)
-  // getMaxAvailableQuantity returns how many MORE can be added to the basket
+  // Check available inventory:
+  // 1. First checks Supabase qty - if 0, shows sold out immediately
+  // 2. Then calculates: Supabase qty - cart items - if 0, shows sold out
   const productForInventory = {
     caseType: selectedCaseType,
     color: selectedColor,
   };
   const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
   
-  // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+  // If maxAvailable === 0, item is sold out (either Supabase qty is 0, or all items are in cart)
   // If maxAvailable is null (unlimited) or > 0, color is available
   return maxAvailable !== null && maxAvailable === 0;
 };
@@ -151,14 +152,16 @@ export const isSelectedColorSoldOut = (selectedCase, selectedCaseType, selectedC
 export const isColorSoldOut = (selectedCase, selectedCaseType, color, cart) => {
   if (!selectedCase || !color) return false;
   
-  // Check available inventory considering cart (items in basket)
+  // Check available inventory:
+  // 1. First checks Supabase qty - if 0, shows sold out immediately
+  // 2. Then calculates: Supabase qty - cart items - if 0, shows sold out
   const productForInventory = {
     caseType: selectedCaseType,
     color: color,
   };
   const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
   
-  // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
+  // If maxAvailable === 0, item is sold out (either Supabase qty is 0, or all items are in cart)
   // If maxAvailable is null (unlimited) or > 0, color is available
   return maxAvailable !== null && maxAvailable === 0;
 };

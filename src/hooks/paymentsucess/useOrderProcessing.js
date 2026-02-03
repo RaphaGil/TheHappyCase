@@ -1,14 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import { getApiUrl } from '../../utils/apiConfig';
+import { getSupabaseClient } from '../../utils/supabaseClient';
 
 const SESSION_STORAGE_KEY = 'thehappycase_order_data';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Get shared Supabase client instance
+const supabase = getSupabaseClient();
 
 /**
  * Hook to handle order processing (saving to Supabase and sending confirmation email)

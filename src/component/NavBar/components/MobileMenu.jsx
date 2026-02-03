@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faChartLine, faShoppingBag, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import NavigationLinks from './NavigationLinks';
 import SocialMediaIcons from './SocialMediaIcons';
 import CurrencySelector from './CurrencySelector';
 import Logo from './Logo';
+import { getSupabaseClient } from '../../../utils/supabaseClient';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+// Get shared Supabase client instance
+const supabase = getSupabaseClient();
 
 const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 

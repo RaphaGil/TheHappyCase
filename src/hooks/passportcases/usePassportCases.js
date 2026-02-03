@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
@@ -45,9 +45,63 @@ export const usePassportCases = () => {
   const [isSpecificationsOpen, setIsSpecificationsOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [quantityError, setQuantityError] = useState('');
+  const [inventoryRefreshKey, setInventoryRefreshKey] = useState(0);
 
-  const productsWithQuantities = getProductsWithQuantities();
+  // Make productsWithQuantities reactive - re-compute when inventoryRefreshKey changes
+  // This ensures it updates when localStorage cache is refreshed
+  // Also read timestamp directly to trigger updates
+  const cacheTimestamp = typeof window !== 'undefined' 
+    ? localStorage.getItem('productQuantitiesTimestamp') 
+    : null;
+  
+  const productsWithQuantities = useMemo(() => {
+    console.log('🔄 Re-computing productsWithQuantities, refreshKey:', inventoryRefreshKey, 'timestamp:', cacheTimestamp);
+    return getProductsWithQuantities();
+  }, [inventoryRefreshKey, cacheTimestamp]);
+  
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+  
+  // Listen for inventory updates and refresh
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'productQuantities' || e.key === null) {
+        // Inventory cache was updated, force re-render
+        console.log('🔄 Storage event detected, refreshing products...');
+        setInventoryRefreshKey(prev => prev + 1);
+      }
+    };
+
+    // Listen for storage events (from other tabs/windows)
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also listen for custom inventory update event
+    const handleInventoryUpdate = (event) => {
+      console.log('🔄 Inventory update event received, refreshing products...', event.detail);
+      setInventoryRefreshKey(prev => prev + 1);
+    };
+    window.addEventListener('inventoryUpdated', handleInventoryUpdate);
+    
+    // Poll localStorage timestamp to catch updates (fallback for same-tab updates)
+    // Storage events only fire for cross-tab updates, not same-tab
+    let lastKnownTimestamp = localStorage.getItem('productQuantitiesTimestamp');
+    const pollInterval = setInterval(() => {
+      const currentTimestamp = localStorage.getItem('productQuantitiesTimestamp');
+      if (currentTimestamp && currentTimestamp !== lastKnownTimestamp) {
+        console.log('🔄 Cache timestamp changed, refreshing products...', {
+          old: lastKnownTimestamp,
+          new: currentTimestamp
+        });
+        lastKnownTimestamp = currentTimestamp;
+        setInventoryRefreshKey(prev => prev + 1);
+      }
+    }, 2000); // Check every 2 seconds (less aggressive)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('inventoryUpdated', handleInventoryUpdate);
+      clearInterval(pollInterval);
+    };
+  }, []);
   
   // Helper functions for inventory checks
   const isSelectedColorSoldOut = () => {
