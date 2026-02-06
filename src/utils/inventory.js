@@ -56,7 +56,6 @@ const fetchInventoryFromSupabase = async () => {
       };
       
       try {
-        console.log(`🌐 Fetching inventory from: ${apiUrl}`);
         const response = await fetch(apiUrl, {
           signal: controller.signal,
           headers: {
@@ -66,16 +65,8 @@ const fetchInventoryFromSupabase = async () => {
         
         clearTimeout(timeoutId);
         
-        console.log(`📡 Inventory API response status: ${response.status} ${response.statusText}`);
-        
         if (response.ok) {
           const data = await safeParseJSON(response);
-          console.log('✅ Inventory API response received:', {
-            success: data.success,
-            hasInventory: !!data.inventory,
-            hasCases: !!(data.inventory && data.inventory.cases),
-            hasCaseColors: !!(data.inventory && data.inventory.caseColors)
-          });
 
           if (data.success && data.inventory) {
             // Convert Supabase format to quantities format
@@ -96,38 +87,9 @@ const fetchInventoryFromSupabase = async () => {
               ))
             );
             
-            if (!hasInventoryData) {
-              console.warn('⚠️ ============================================');
-              console.warn('⚠️ INVENTORY CONFIGURATION ISSUE DETECTED');
-              console.warn('⚠️ ============================================');
-              console.warn('⚠️ The API returned success but all quantities are null.');
-              console.warn('⚠️ This means:');
-              console.warn('⚠️   1. Supabase environment variables may not be set in Netlify');
-              console.warn('⚠️   2. OR the inventory_items table is empty');
-              console.warn('⚠️   3. OR Supabase is not properly configured');
-              console.warn('⚠️');
-              console.warn('⚠️ RESULT: All items will show as "Unlimited" stock');
-              console.warn('⚠️');
-              console.warn('⚠️ TO FIX:');
-              console.warn('⚠️   1. Check Netlify environment variables:');
-              console.warn('⚠️      - SUPABASE_URL');
-              console.warn('⚠️      - SUPABASE_SERVICE_ROLE_KEY');
-              console.warn('⚠️   2. Ensure inventory_items table exists in Supabase');
-              console.warn('⚠️   3. Add inventory data to the table');
-              console.warn('⚠️ ============================================');
-              // Still set cache so we don't keep fetching, but log warning
-            }
-            
             // Update in-memory cache
             inventoryCache = quantities;
             inventoryCacheTimestamp = Date.now();
-            
-            console.log('💾 Inventory cache updated:', {
-              timestamp: new Date(inventoryCacheTimestamp).toISOString(),
-              casesCount: quantities.cases ? quantities.cases.length : 0,
-              caseColorsCount: quantities.caseColors ? quantities.caseColors.length : 0,
-              hasInventoryData: hasInventoryData
-            });
             
             // Dispatch custom events to notify listeners of cache update
             // Dispatch both event names for backward compatibility
@@ -141,11 +103,6 @@ const fetchInventoryFromSupabase = async () => {
             isInitializing = false;
             
             return quantities;
-          } else {
-            console.warn('⚠️ Inventory API response missing success or inventory data:', {
-              success: data.success,
-              hasInventory: !!data.inventory
-            });
           }
         } else if (response.status === 404) {
           // If 404, try direct function URL as fallback (in case redirect rule isn't working)
@@ -218,16 +175,9 @@ const fetchInventoryFromSupabase = async () => {
           }
         }
         
-        if (fetchError.name === 'AbortError') {
-          console.warn('⚠️ Inventory fetch timed out');
-        } else if (fetchError.message && fetchError.message.includes('Failed to fetch')) {
-          console.warn('⚠️ Failed to fetch inventory from API');
-        } else {
-          console.error('❌ Error fetching inventory:', fetchError.message);
-        }
+        // Silently handle errors
       }
     } catch (error) {
-      console.error('❌ Error in fetchInventoryFromSupabase:', error.message);
       isInitializing = false; // Clear flag on error
     } finally {
       // Clear the promise so next fetch can proceed
@@ -280,7 +230,7 @@ export const getItemQuantityFromSupabase = async (itemId) => {
       }
     }
   } catch (error) {
-    console.error('❌ Error fetching item quantity:', error.message);
+    // Silently handle errors
   }
   return null;
 };
@@ -316,8 +266,8 @@ export const getMaxAvailableQuantity = (item, cart) => {
   
   if (isStale && !isInitializing) {
     // Fetch fresh data in background (fire and forget) - but not if we're already initializing
-    fetchInventoryFromSupabase().catch(err => {
-      console.warn('⚠️ Background inventory fetch failed:', err.message);
+    fetchInventoryFromSupabase().catch(() => {
+      // Silently handle errors
     });
   }
 
@@ -329,11 +279,6 @@ export const getMaxAvailableQuantity = (item, cart) => {
   // 1. Cache hasn't loaded yet (should be handled by waiting for inventoryInitialized)
   // 2. No items in Supabase inventory table (unlimited stock)
   if (!quantities) {
-    // Only log warning if we're not in the middle of initialization
-    if (!isInitializing) {
-      console.warn(`⚠️ getMaxAvailableQuantity: Cache is empty for ${item.caseType || item.type || 'item'} - returning null (unlimited)`);
-      console.warn(`   This may mean inventory hasn't loaded yet or Supabase is not configured`);
-    }
     return null; // No inventory data yet, return unlimited
   }
   
@@ -362,11 +307,6 @@ export const getMaxAvailableQuantity = (item, cart) => {
         if (colorIndex !== -1 && quantities.caseColors[caseIndex][colorIndex] !== null && quantities.caseColors[caseIndex][colorIndex] !== undefined) {
           const stock = quantities.caseColors[caseIndex][colorIndex]; // This is qty_in_stock from Supabase
           maxQuantity = stock;
-          
-          console.log(`📊 Inventory Check - ${caseData.name} (${item.caseType}, ${item.color}):`);
-          console.log(`   Reading from cache: quantities.caseColors[${caseIndex}][${colorIndex}]`);
-          console.log(`   qty_in_stock from Supabase: ${stock}`);
-          console.log(`   Stock value type: ${stock === null ? 'null (unlimited)' : typeof stock}`);
         }
       }
     }
@@ -379,27 +319,18 @@ export const getMaxAvailableQuantity = (item, cart) => {
       if (caseIndex !== -1 && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
         const stock = quantities.cases[caseIndex]; // This is qty_in_stock from Supabase
         maxQuantity = stock;
-        
-        console.log(`📊 Inventory Check (fallback) - ${caseData.name} (${item.caseType}):`);
-        console.log(`   Reading from cache: quantities.cases[${caseIndex}]`);
-        console.log(`   qty_in_stock from Supabase: ${stock}`);
       }
     }
 
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
-      console.log(`   → Item not in Supabase inventory_items table → Returning null (unlimited stock)`);
       return null; // Item not in Supabase - unlimited stock
     }
-
-    // maxQuantity here IS the qty_in_stock value from Supabase
-    console.log(`   → qty_in_stock from Supabase: ${maxQuantity}`);
 
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
-      console.log(`   → qty_in_stock is 0 → Returning 0 (SOLD OUT)`);
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
 
@@ -414,18 +345,11 @@ export const getMaxAvailableQuantity = (item, cart) => {
       return total;
     }, 0);
 
-    console.log(`   → Items already in cart: ${alreadyInCart}`);
-
     // Calculate: Supabase qty_in_stock - cart items
     const available = maxQuantity - alreadyInCart;
     
-    console.log(`   → Available = qty_in_stock (${maxQuantity}) - cart (${alreadyInCart}) = ${available}`);
-    
     // If available === 0, show sold out (all items are in cart)
-    const result = Math.max(0, available);
-    console.log(`   → Final result: ${result} ${result === 0 ? '(SOLD OUT)' : 'available'}`);
-    
-    return result;
+    return Math.max(0, available);
   }
 
   // Handle charm items - get quantity from Supabase inventory_items table

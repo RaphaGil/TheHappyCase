@@ -4,6 +4,11 @@ import NavBar from './component/NavBar';
 import Hero from './component/Hero';
 import WhatWeDo from './component/WhatWeDo';
 
+// Import test inventory function for debugging (only in development)
+if (import.meta.env.DEV) {
+  import('./utils/testInventoryFunction.js');
+}
+
 // import Review from './component/Reviews';
 
 import Footer from './component/Footer';

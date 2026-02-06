@@ -55,51 +55,17 @@ export const usePassportCases = () => {
   useEffect(() => {
     const initializeInventory = async () => {
       try {
-        console.log('🔄 PassportCases: Initializing inventory from Supabase...');
-        const quantities = await refreshInventoryFromSupabase();
-        
-        if (quantities) {
-          console.log('✅ PassportCases: Inventory initialized successfully');
-          console.log('   Cases:', quantities.cases ? 'Loaded' : 'Unlimited');
-          console.log('   Case Colors:', quantities.caseColors ? 'Loaded' : 'Unlimited');
-        } else {
-          console.warn('⚠️ PassportCases: Inventory fetch returned null/undefined');
-        }
+        await refreshInventoryFromSupabase();
         
         // Verify cache is populated
         const cached = getCachedInventory();
         if (cached) {
-          // Check if cache has actual data (not just null values)
-          const hasData = (
-            (cached.cases && Array.isArray(cached.cases) && cached.cases.some(qty => qty !== null)) ||
-            (cached.caseColors && Array.isArray(cached.caseColors) && cached.caseColors.some(arr => arr && arr.some(qty => qty !== null))) ||
-            (cached.pins && (
-              (cached.pins.flags && cached.pins.flags.some(qty => qty !== null)) ||
-              (cached.pins.colorful && cached.pins.colorful.some(qty => qty !== null)) ||
-              (cached.pins.bronze && cached.pins.bronze.some(qty => qty !== null))
-            ))
-          );
-          
-          if (hasData) {
-            console.log('✅ PassportCases: Cache verified - inventory data available');
-          } else {
-            console.warn('⚠️ PassportCases: Cache exists but contains only null values');
-            console.warn('   This means Supabase is not configured or inventory_items table is empty');
-            console.warn('   All items will show as "Unlimited" stock');
-          }
           setInventoryLoaded(true);
         } else {
-          console.warn('⚠️ PassportCases: Cache is empty after fetch - inventory may not be configured');
           // Still mark as loaded to allow page to render
           setInventoryLoaded(true);
         }
       } catch (error) {
-        console.error('❌ PassportCases: Error initializing inventory:', error);
-        console.error('   Error details:', {
-          message: error.message,
-          name: error.name,
-          stack: error.stack
-        });
         // Mark as loaded even on error to allow page to render
         setInventoryLoaded(true);
       }
@@ -139,52 +105,6 @@ export const usePassportCases = () => {
     }
   }, [selectedCaseType, selectedColor, selectedCase]);
 
-  // Log inventory quantities for all passport case items (only after inventory is loaded)
-  useEffect(() => {
-    if (!inventoryLoaded) {
-      console.log('📦 Passport Cases Inventory: Waiting for inventory to load...');
-      return;
-    }
-    
-    const quantities = getCachedInventory();
-    if (quantities) {
-      console.log('📦 Passport Cases Inventory Quantities:');
-      console.log('=====================================');
-      
-      Products.cases.forEach((caseItem, caseIndex) => {
-        console.log(`\n${caseItem.name} (${caseItem.type}):`);
-        
-        // Log case-level quantity if available
-        if (quantities.cases && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
-          console.log(`  Case-level quantity: ${quantities.cases[caseIndex]}`);
-        } else {
-          console.log(`  Case-level quantity: Unlimited`);
-        }
-        
-        // Log color-level quantities
-        if (quantities.caseColors && quantities.caseColors[caseIndex]) {
-          console.log(`  Color quantities:`);
-          caseItem.colors.forEach((color, colorIndex) => {
-            const colorQty = quantities.caseColors[caseIndex][colorIndex];
-            const productForInventory = {
-              caseType: caseItem.type,
-              color: color.color,
-            };
-            const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-            const status = maxAvailable === null ? 'Unlimited' : maxAvailable === 0 ? 'SOLD OUT' : `${maxAvailable} available`;
-            console.log(`    - ${color.color}: ${colorQty !== null && colorQty !== undefined ? colorQty : 'Unlimited'} (${status})`);
-          });
-        } else {
-          console.log(`  Color quantities: Unlimited for all colors`);
-        }
-      });
-      
-      console.log('\n=====================================');
-    } else {
-      console.warn('⚠️ Passport Cases Inventory: Cache is empty - inventory may not be configured in Supabase');
-      console.warn('   This means all items will show as "Unlimited" stock');
-    }
-  }, [cart, inventoryLoaded]); // Re-log when cart changes or inventory loads
   
   // Get the image for the selected color (normalized)
   const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
@@ -229,15 +149,6 @@ export const usePassportCases = () => {
       return;
     }
     
-    const productForInventory = {
-      caseType: selectedCaseType,
-      color: color,
-    };
-    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    console.log(`🎨 Color changed - ${selectedCase?.name || 'Passport Case'} (${selectedCaseType}, ${color}):`);
-    console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
-    
     setSelectedColor(color);
     setSelectedDetailImage(null); // Reset detail image when color changes
     setQuantity(1); // Reset quantity when color changes
@@ -258,10 +169,6 @@ export const usePassportCases = () => {
       color: selectedColor,
     };
     const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    console.log(`🛒 Adding to cart - ${selectedCase?.name || 'Passport Case'} (${selectedCaseType}, ${selectedColor}):`);
-    console.log(`   Requested quantity: ${quantity}`);
-    console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
     
     // Check if this case already exists in cart
     const existingItemIndex = cart.findIndex(item => 
@@ -351,10 +258,6 @@ export const usePassportCases = () => {
       color: selectedColor,
     };
     const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    console.log(`➕ Increment quantity - ${selectedCase?.name || 'Passport Case'} (${selectedCaseType}, ${selectedColor}):`);
-    console.log(`   Current quantity: ${quantity}`);
-    console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
     
     if (maxAvailable === null || maxAvailable > quantity) {
       setQuantity(quantity + 1);

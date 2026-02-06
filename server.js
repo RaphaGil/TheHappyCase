@@ -3011,11 +3011,9 @@ app.get("/api/inventory", async (req, res) => {
     const bronzePins = items.filter(item => item.item_type === 'pin_bronze');
 
     // Process case colors - match by case ID and color
-    console.log(`📦 Processing ${caseItems.length} case color items from Supabase inventory_items table`);
-    caseItems.forEach((item, idx) => {
+    caseItems.forEach((item) => {
       try {
         const stock = item.qty_in_stock; // Read qty_in_stock from Supabase (production)
-        console.log(`   Case Item ${idx + 1}: item_id="${item.item_id}", product_id=${item.product_id}, color="${item.color}", qty_in_stock=${stock} (type: ${typeof stock})`);
         
         const caseIndex = Products.cases.findIndex(c => c.id === item.product_id);
         if (caseIndex !== -1) {
@@ -3024,16 +3022,11 @@ app.get("/api/inventory", async (req, res) => {
             const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
             if (colorIndex !== -1 && inventory.caseColors[caseIndex]) {
               inventory.caseColors[caseIndex][colorIndex] = stock; // Use qty_in_stock value
-              console.log(`     ✓ Mapped to: ${caseData.name} (index ${caseIndex}), color index ${colorIndex} → qty_in_stock=${stock}`);
-            } else {
-              console.warn(`     ⚠️ Color "${item.color}" not found in ${caseData.name} colors`);
             }
           }
-        } else {
-          console.warn(`     ⚠️ Case with product_id=${item.product_id} not found in Products.cases`);
         }
       } catch (itemError) {
-        console.warn(`⚠️ Error processing case item ${item.product_id}:`, itemError.message);
+        // Silently handle errors
       }
     });
 
