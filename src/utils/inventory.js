@@ -56,6 +56,7 @@ const fetchInventoryFromSupabase = async () => {
       };
       
       try {
+        console.log('[INVENTORY] 🔍 Fetching inventory from:', apiUrl);
         const response = await fetch(apiUrl, {
           signal: controller.signal,
           headers: {
@@ -65,8 +66,19 @@ const fetchInventoryFromSupabase = async () => {
         
         clearTimeout(timeoutId);
         
+        console.log('[INVENTORY] 📡 Response status:', response.status, response.statusText);
+        
         if (response.ok) {
           const data = await safeParseJSON(response);
+          console.log('[INVENTORY] ✅ Received inventory data:', {
+            success: data.success,
+            hasInventory: !!data.inventory,
+            casesLength: data.inventory?.cases?.length,
+            caseColorsLength: data.inventory?.caseColors?.length,
+            pinsFlagsLength: data.inventory?.pins?.flags?.length,
+            pinsColorfulLength: data.inventory?.pins?.colorful?.length,
+            pinsBronzeLength: data.inventory?.pins?.bronze?.length
+          });
 
           if (data.success && data.inventory) {
             // Convert Supabase format to quantities format
@@ -75,6 +87,19 @@ const fetchInventoryFromSupabase = async () => {
               caseColors: data.inventory.caseColors,
               pins: data.inventory.pins
             };
+            
+            // Log sold out items for debugging
+            if (quantities.caseColors) {
+              quantities.caseColors.forEach((colorArray, caseIndex) => {
+                if (colorArray) {
+                  colorArray.forEach((qty, colorIndex) => {
+                    if (qty === 0) {
+                      console.log(`[INVENTORY] 🚫 SOLD OUT - Case ${caseIndex}, Color ${colorIndex}: qty = 0`);
+                    }
+                  });
+                }
+              });
+            }
             
             // Check if we actually have inventory data (not just null values)
             const hasInventoryData = (
@@ -86,6 +111,13 @@ const fetchInventoryFromSupabase = async () => {
                 (quantities.pins.bronze && quantities.pins.bronze.some(qty => qty !== null))
               ))
             );
+            
+            console.log('[INVENTORY] 📊 Inventory summary:', {
+              hasInventoryData,
+              cacheTimestamp: Date.now(),
+              cases: quantities.cases?.slice(0, 5), // First 5 for preview
+              caseColorsPreview: quantities.caseColors?.slice(0, 2).map(arr => arr?.slice(0, 3)) // Preview
+            });
             
             // Update in-memory cache
             inventoryCache = quantities;
@@ -138,8 +170,15 @@ const fetchInventoryFromSupabase = async () => {
         clearTimeout(timeoutId);
         isInitializing = false; // Mark initialization as complete even on error
         
+        console.error('[INVENTORY] ❌ Error fetching inventory:', {
+          message: fetchError.message,
+          name: fetchError.name,
+          apiUrl
+        });
+        
         // If HTML response detected, try direct function URL as fallback
         if (fetchError.message === 'HTML_RESPONSE_FALLBACK') {
+          console.log('[INVENTORY] 🔄 Trying fallback URL (HTML response detected)');
           const functionUrl = apiUrl.replace('/api/inventory', '/.netlify/functions/inventory');
           try {
             const directController = new AbortController();
@@ -292,10 +331,14 @@ export const getMaxAvailableQuantity = (item, cart) => {
   if (item.caseType && item.color) {
     // Find the case in Products
     const caseData = Products.cases.find(c => c.type === item.caseType);
-    if (!caseData) return null;
+    if (!caseData) {
+      console.log('[SOLD_OUT_CHECK] ⚠️ Case not found:', item.caseType);
+      return null;
+    }
 
     // Get color-specific quantity from Supabase (via in-memory cache)
     let maxQuantity = null;
+    let source = 'none';
 
     // Primary: Get from caseColors array (from Supabase inventory_items table)
     if (quantities && quantities.caseColors) {
@@ -307,6 +350,7 @@ export const getMaxAvailableQuantity = (item, cart) => {
         if (colorIndex !== -1 && quantities.caseColors[caseIndex][colorIndex] !== null && quantities.caseColors[caseIndex][colorIndex] !== undefined) {
           const stock = quantities.caseColors[caseIndex][colorIndex]; // This is qty_in_stock from Supabase
           maxQuantity = stock;
+          source = `caseColors[${caseIndex}][${colorIndex}]`;
         }
       }
     }
@@ -319,18 +363,31 @@ export const getMaxAvailableQuantity = (item, cart) => {
       if (caseIndex !== -1 && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
         const stock = quantities.cases[caseIndex]; // This is qty_in_stock from Supabase
         maxQuantity = stock;
+        source = `cases[${caseIndex}]`;
       }
     }
 
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
+      console.log('[SOLD_OUT_CHECK] ♾️ Unlimited stock:', {
+        caseType: item.caseType,
+        color: item.color,
+        reason: 'Not in Supabase inventory'
+      });
       return null; // Item not in Supabase - unlimited stock
     }
 
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
+      console.log('[SOLD_OUT_CHECK] 🚫 SOLD OUT (Supabase qty = 0):', {
+        caseType: item.caseType,
+        color: item.color,
+        source,
+        maxQuantity,
+        cartItems: cart.length
+      });
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
 
@@ -347,6 +404,16 @@ export const getMaxAvailableQuantity = (item, cart) => {
 
     // Calculate: Supabase qty_in_stock - cart items
     const available = maxQuantity - alreadyInCart;
+    
+    console.log('[SOLD_OUT_CHECK] 📦 Stock check:', {
+      caseType: item.caseType,
+      color: item.color,
+      source,
+      supabaseQty: maxQuantity,
+      alreadyInCart,
+      available,
+      isSoldOut: available === 0
+    });
     
     // If available === 0, show sold out (all items are in cart)
     return Math.max(0, available);
@@ -387,12 +454,23 @@ export const getMaxAvailableQuantity = (item, cart) => {
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
+      console.log('[SOLD_OUT_CHECK] ♾️ Unlimited stock (charm/pin):', {
+        category,
+        pinName,
+        reason: 'Not in Supabase inventory'
+      });
       return null; // Item not in Supabase - unlimited stock
     }
 
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
+      console.log('[SOLD_OUT_CHECK] 🚫 SOLD OUT (Supabase qty = 0) - charm/pin:', {
+        category,
+        pinName,
+        maxQuantity,
+        cartItems: cart.length
+      });
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
 
@@ -407,6 +485,15 @@ export const getMaxAvailableQuantity = (item, cart) => {
 
     // Calculate: Supabase qty - cart items
     const available = maxQuantity - alreadyInCart;
+    
+    console.log('[SOLD_OUT_CHECK] 📦 Stock check (charm/pin):', {
+      category,
+      pinName,
+      supabaseQty: maxQuantity,
+      alreadyInCart,
+      available,
+      isSoldOut: available === 0
+    });
     
     // If available === 0, show sold out (all items are in cart)
     return Math.max(0, available);

@@ -174,6 +174,23 @@ exports.handler = async (event) => {
       console.error('❌ Items is not an array:', typeof items, items);
       items = [];
     }
+    
+    console.log(`[SUPABASE_INVENTORY] 📦 Fetched ${items.length} items from Supabase inventory_items table`);
+    
+    // Log summary of items by type
+    const itemsByType = items.reduce((acc, item) => {
+      acc[item.item_type] = (acc[item.item_type] || 0) + 1;
+      return acc;
+    }, {});
+    console.log('[SUPABASE_INVENTORY] 📊 Items by type:', itemsByType);
+    
+    // Log items with qty_in_stock = 0
+    const soldOutItems = items.filter(item => item.qty_in_stock === 0);
+    if (soldOutItems.length > 0) {
+      console.log(`[SUPABASE_INVENTORY] 🚫 Found ${soldOutItems.length} sold out items (qty_in_stock = 0):`, 
+        soldOutItems.map(item => ({ item_id: item.item_id, name: item.name, qty_in_stock: item.qty_in_stock }))
+      );
+    }
 
     // Transform items into the expected format
     // Initialize arrays with null values matching products.json structure
@@ -209,15 +226,29 @@ exports.handler = async (event) => {
         const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
         if (colorIndex !== -1) {
           inventory.caseColors[caseIndex][colorIndex] = stock; // Use qty_in_stock value
+          
+          // Log sold out items for debugging
+          if (stock === 0) {
+            console.log(`[SUPABASE_INVENTORY] 🚫 SOLD OUT - Case ID ${item.product_id} (index ${caseIndex}), Color ${item.color} (index ${colorIndex}): qty_in_stock = 0`);
+          }
+        } else {
+          console.warn(`[SUPABASE_INVENTORY] ⚠️ Color not found: ${item.color} for case ID ${item.product_id}`);
         }
+      } else {
+        console.warn(`[SUPABASE_INVENTORY] ⚠️ Case not found: product_id ${item.product_id}`);
       }
     });
+    
+    console.log(`[SUPABASE_INVENTORY] 📊 Processed ${caseItems.length} case color items from Supabase`);
 
     // Process pins - map by product_id
     flagPins.forEach(item => {
       const index = Products.pins.flags.findIndex(p => p.id === item.product_id);
       if (index !== -1) {
         inventory.pins.flags[index] = item.qty_in_stock;
+        if (item.qty_in_stock === 0) {
+          console.log(`[SUPABASE_INVENTORY] 🚫 SOLD OUT - Flag pin ID ${item.product_id} (index ${index}): qty_in_stock = 0`);
+        }
       }
     });
 
@@ -225,6 +256,9 @@ exports.handler = async (event) => {
       const index = Products.pins.colorful.findIndex(p => p.id === item.product_id);
       if (index !== -1) {
         inventory.pins.colorful[index] = item.qty_in_stock;
+        if (item.qty_in_stock === 0) {
+          console.log(`[SUPABASE_INVENTORY] 🚫 SOLD OUT - Colorful pin ID ${item.product_id} (index ${index}): qty_in_stock = 0`);
+        }
       }
     });
 
@@ -232,9 +266,32 @@ exports.handler = async (event) => {
       const index = Products.pins.bronze.findIndex(p => p.id === item.product_id);
       if (index !== -1) {
         inventory.pins.bronze[index] = item.qty_in_stock;
+        if (item.qty_in_stock === 0) {
+          console.log(`[SUPABASE_INVENTORY] 🚫 SOLD OUT - Bronze pin ID ${item.product_id} (index ${index}): qty_in_stock = 0`);
+        }
       }
     });
+    
+    console.log(`[SUPABASE_INVENTORY] 📊 Processed pins: ${flagPins.length} flags, ${colorfulPins.length} colorful, ${bronzePins.length} bronze`);
 
+    // Log final inventory structure summary
+    const soldOutCount = {
+      cases: inventory.cases.filter(qty => qty === 0).length,
+      caseColors: inventory.caseColors.reduce((sum, arr) => sum + (arr?.filter(qty => qty === 0).length || 0), 0),
+      pinsFlags: inventory.pins.flags.filter(qty => qty === 0).length,
+      pinsColorful: inventory.pins.colorful.filter(qty => qty === 0).length,
+      pinsBronze: inventory.pins.bronze.filter(qty => qty === 0).length
+    };
+    
+    console.log('[SUPABASE_INVENTORY] ✅ Final inventory structure:', {
+      cases: inventory.cases.length,
+      caseColors: inventory.caseColors.length,
+      pinsFlags: inventory.pins.flags.length,
+      pinsColorful: inventory.pins.colorful.length,
+      pinsBronze: inventory.pins.bronze.length,
+      soldOutCount
+    });
+    
     // Return success response
     return sendResponse(200, {
       success: true,
