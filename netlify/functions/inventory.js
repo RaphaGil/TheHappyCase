@@ -1,3 +1,16 @@
+/**
+ * PRODUCTION Inventory Netlify Function
+ * 
+ * This function runs in PRODUCTION on Netlify and connects to PRODUCTION Supabase database.
+ * 
+ * Environment Variables Required (set in Netlify Dashboard):
+ * - SUPABASE_URL: Production Supabase project URL (e.g., https://[project-id].supabase.co)
+ * - SUPABASE_SERVICE_ROLE_KEY: Production Supabase service role key
+ * 
+ * This function fetches inventory from the PRODUCTION inventory_items table.
+ * DO NOT use development/test Supabase credentials here.
+ */
+
 const { createClient } = require('@supabase/supabase-js');
 const { readFileSync } = require('fs');
 const { join } = require('path');
@@ -59,12 +72,14 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Check Supabase configuration
+    // Check Supabase configuration for PRODUCTION
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-      console.warn('⚠️ Supabase not configured, returning empty inventory structure');
+      console.error('❌ PRODUCTION: Supabase credentials not configured in Netlify environment variables');
+      console.error('   Missing: SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY');
+      console.error('   Action: Set these in Netlify Dashboard → Site settings → Environment variables');
       return sendResponse(200, {
         success: true,
         inventory: {
@@ -79,7 +94,28 @@ exports.handler = async (event) => {
       });
     }
 
-    // Initialize Supabase client
+    // Validate that we're using PRODUCTION Supabase (not localhost or test URLs)
+    const isProductionUrl = supabaseUrl.startsWith('https://') && 
+                           !supabaseUrl.includes('localhost') && 
+                           !supabaseUrl.includes('127.0.0.1') &&
+                           supabaseUrl.includes('.supabase.co');
+    
+    if (!isProductionUrl) {
+      console.error('❌ PRODUCTION: Invalid Supabase URL detected - must be a production Supabase URL');
+      console.error(`   Current URL: ${supabaseUrl.substring(0, 50)}...`);
+      console.error('   Expected format: https://[project-id].supabase.co');
+      console.error('   Action: Update SUPABASE_URL in Netlify environment variables with production URL');
+    }
+
+    // Log which Supabase instance we're connecting to (safely, without exposing full URL)
+    const urlParts = supabaseUrl.split('.');
+    const projectId = urlParts.length > 0 ? urlParts[0].replace('https://', '') : 'unknown';
+    console.log('✅ PRODUCTION: Connecting to Supabase inventory database');
+    console.log(`   Project ID: ${projectId.substring(0, 8)}...`);
+    console.log(`   URL: ${supabaseUrl.substring(0, 40)}...`);
+    console.log(`   Service Role Key: ${supabaseKey ? '✅ Set' : '❌ Missing'} (${supabaseKey?.length || 0} chars)`);
+
+    // Initialize Supabase client for PRODUCTION
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Validate Products structure
@@ -175,7 +211,7 @@ exports.handler = async (event) => {
       items = [];
     }
     
-    console.log(`[SUPABASE_INVENTORY] 📦 Fetched ${items.length} items from Supabase inventory_items table`);
+    console.log(`[SUPABASE_INVENTORY] ✅ PRODUCTION: Successfully fetched ${items.length} items from PRODUCTION Supabase inventory_items table`);
     
     // Log summary of items by type
     const itemsByType = items.reduce((acc, item) => {
@@ -374,7 +410,9 @@ exports.handler = async (event) => {
     return sendResponse(200, responseBody);
 
   } catch (error) {
-    console.error('\n❌ ========== ERROR FETCHING INVENTORY ==========');
+    console.error('\n❌ ========== PRODUCTION ERROR FETCHING INVENTORY ==========');
+    console.error('Environment: PRODUCTION (Netlify Function)');
+    console.error('Supabase URL:', process.env.SUPABASE_URL ? `${process.env.SUPABASE_URL.substring(0, 40)}...` : 'NOT SET');
     console.error('Error message:', error.message);
     console.error('Error name:', error.name);
     if (error.stack) {
@@ -383,7 +421,7 @@ exports.handler = async (event) => {
     if (error.code) {
       console.error('Error code:', error.code);
     }
-    console.error('==============================================\n');
+    console.error('==============================================================\n');
 
     return sendResponse(500, {
       success: false,
