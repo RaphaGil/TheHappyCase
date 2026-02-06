@@ -121,6 +121,18 @@ exports.handler = async (event) => {
       if (result && typeof result === 'object') {
         items = result.data;
         error = result.error;
+        
+        console.log(`📥 Fetched ${items ? items.length : 0} items from Supabase inventory_items table`);
+        if (items && items.length > 0) {
+          console.log(`   Sample item structure:`, {
+            item_id: items[0].item_id,
+            product_id: items[0].product_id,
+            item_type: items[0].item_type,
+            color: items[0].color,
+            qty_in_stock: items[0].qty_in_stock, // This is the key field from Supabase
+            qty_in_stock_type: typeof items[0].qty_in_stock
+          });
+        }
       } else {
         throw new Error('Unexpected query result format');
       }
@@ -200,14 +212,23 @@ exports.handler = async (event) => {
     const bronzePins = items.filter(item => item.item_type === 'pin_bronze');
 
     // Process case colors - match by case ID and color
-    caseItems.forEach(item => {
+    console.log(`📦 Processing ${caseItems.length} case color items from Supabase inventory_items table`);
+    caseItems.forEach((item, idx) => {
+      const stock = item.qty_in_stock; // Read qty_in_stock from Supabase
+      console.log(`   Case Item ${idx + 1}: item_id="${item.item_id}", product_id=${item.product_id}, color="${item.color}", qty_in_stock=${stock}`);
+      
       const caseIndex = Products.cases.findIndex(c => c.id === item.product_id);
       if (caseIndex !== -1) {
         const caseData = Products.cases[caseIndex];
         const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
         if (colorIndex !== -1) {
-          inventory.caseColors[caseIndex][colorIndex] = item.qty_in_stock;
+          inventory.caseColors[caseIndex][colorIndex] = stock; // Use qty_in_stock value
+          console.log(`     ✓ Mapped to: ${caseData.name} (index ${caseIndex}), color index ${colorIndex} → qty_in_stock=${stock}`);
+        } else {
+          console.warn(`     ⚠️ Color "${item.color}" not found in ${caseData.name} colors`);
         }
+      } else {
+        console.warn(`     ⚠️ Case with product_id=${item.product_id} not found in Products.cases`);
       }
     });
 

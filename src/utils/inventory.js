@@ -337,7 +337,13 @@ export const getMaxAvailableQuantity = (item, cart) => {
         // Check if value exists (including 0, which means sold out)
         // null/undefined means item not in Supabase (unlimited)
         if (colorIndex !== -1 && quantities.caseColors[caseIndex][colorIndex] !== null && quantities.caseColors[caseIndex][colorIndex] !== undefined) {
-          maxQuantity = quantities.caseColors[caseIndex][colorIndex];
+          const stock = quantities.caseColors[caseIndex][colorIndex]; // This is qty_in_stock from Supabase
+          maxQuantity = stock;
+          
+          console.log(`📊 Inventory Check - ${caseData.name} (${item.caseType}, ${item.color}):`);
+          console.log(`   Reading from cache: quantities.caseColors[${caseIndex}][${colorIndex}]`);
+          console.log(`   qty_in_stock from Supabase: ${stock}`);
+          console.log(`   Stock value type: ${stock === null ? 'null (unlimited)' : typeof stock}`);
         }
       }
     }
@@ -348,19 +354,29 @@ export const getMaxAvailableQuantity = (item, cart) => {
       // Check if value exists (including 0, which means sold out)
       // null/undefined means item not in Supabase (unlimited)
       if (caseIndex !== -1 && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
-        maxQuantity = quantities.cases[caseIndex];
+        const stock = quantities.cases[caseIndex]; // This is qty_in_stock from Supabase
+        maxQuantity = stock;
+        
+        console.log(`📊 Inventory Check (fallback) - ${caseData.name} (${item.caseType}):`);
+        console.log(`   Reading from cache: quantities.cases[${caseIndex}]`);
+        console.log(`   qty_in_stock from Supabase: ${stock}`);
       }
     }
 
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
+      console.log(`   → Item not in Supabase inventory_items table → Returning null (unlimited stock)`);
       return null; // Item not in Supabase - unlimited stock
     }
+
+    // maxQuantity here IS the qty_in_stock value from Supabase
+    console.log(`   → qty_in_stock from Supabase: ${maxQuantity}`);
 
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
+      console.log(`   → qty_in_stock is 0 → Returning 0 (SOLD OUT)`);
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
 
@@ -375,11 +391,18 @@ export const getMaxAvailableQuantity = (item, cart) => {
       return total;
     }, 0);
 
-    // Calculate: Supabase qty - cart items
+    console.log(`   → Items already in cart: ${alreadyInCart}`);
+
+    // Calculate: Supabase qty_in_stock - cart items
     const available = maxQuantity - alreadyInCart;
     
+    console.log(`   → Available = qty_in_stock (${maxQuantity}) - cart (${alreadyInCart}) = ${available}`);
+    
     // If available === 0, show sold out (all items are in cart)
-    return Math.max(0, available);
+    const result = Math.max(0, available);
+    console.log(`   → Final result: ${result} ${result === 0 ? '(SOLD OUT)' : 'available'}`);
+    
+    return result;
   }
 
   // Handle charm items - get quantity from Supabase inventory_items table
