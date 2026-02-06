@@ -38,14 +38,21 @@ export const getApiUrl = (endpoint) => {
   // Ensure endpoint starts with /
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  // In development (empty API_URL), use relative paths for Netlify Functions
-  // Netlify Dev will automatically route these to the appropriate function
-  // Example: '/api/create-payment-intent' -> handled by Netlify Dev
+  // In development mode, always use relative paths so Vite proxy works
+  // This allows Vite dev server to proxy /api/* requests to Express server on port 3001
+  const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === 'development';
+  
+  if (isDevelopment) {
+    // Use relative path - Vite proxy will handle routing to Express server
+    return cleanEndpoint;
+  }
+  
+  // In production, use API_URL if set, otherwise use relative paths for Netlify Functions
   if (!API_URL) {
     return cleanEndpoint;
   }
   
-  // In production, combine base URL with endpoint
+  // In production with API_URL set, combine base URL with endpoint
   return `${API_URL}${cleanEndpoint}`;
 };
 

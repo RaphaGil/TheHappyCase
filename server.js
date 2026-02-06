@@ -2614,10 +2614,12 @@ app.get("/api/inventory", async (req, res) => {
     let error = null;
     
     try {
+      // Create a timeout promise that rejects after 8 seconds
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Request timeout - Supabase query took too long')), 8000);
       });
 
+      // Create the Supabase query promise
       const queryPromise = supabase
         .from('inventory_items')
         .select('*')
@@ -2625,9 +2627,10 @@ app.get("/api/inventory", async (req, res) => {
       
       let result;
       try {
+        // Race the query against the timeout
         result = await Promise.race([queryPromise, timeoutPromise]);
       } catch (raceError) {
-        // Handle race errors (timeout or other Promise.race issues)
+        // Handle timeout errors
         if (raceError.message && raceError.message.includes('timeout')) {
           console.error("⏱️ Supabase query timed out after 8 seconds");
           return sendError(504,
@@ -2638,16 +2641,12 @@ app.get("/api/inventory", async (req, res) => {
             }
           );
         }
-        // If it's not a timeout, it might be a query error - check if result exists
-        if (raceError.data !== undefined || raceError.error !== undefined) {
-          // This might be the Supabase response with error
-          result = raceError;
-        } else {
-          throw raceError;
-        }
+        // Re-throw other errors to be handled below
+        throw raceError;
       }
 
-      // Extract data and error from result
+      // Extract data and error from Supabase result
+      // Supabase queries return { data, error } objects
       if (result && typeof result === 'object') {
         items = result.data;
         error = result.error;
@@ -2662,10 +2661,13 @@ app.get("/api/inventory", async (req, res) => {
       if (queryError.error) {
         console.error("   Supabase error:", queryError.error);
       }
+      if (queryError.code) {
+        console.error("   Error code:", queryError.code);
+      }
       
       // Check if it's a table doesn't exist error
-      if (queryError.code === 'PGRST116' || queryError.code === '42P01' || 
-          (queryError.error && (queryError.error.code === 'PGRST116' || queryError.error.code === '42P01'))) {
+      const errorCode = queryError.code || (queryError.error && queryError.error.code);
+      if (errorCode === 'PGRST116' || errorCode === '42P01') {
         console.log("ℹ️ Table doesn't exist, returning empty structure");
         return sendError(200, null, null, {
           success: true,
@@ -2681,6 +2683,7 @@ app.get("/api/inventory", async (req, res) => {
         });
       }
       
+      // Re-throw to be caught by outer catch block
       throw queryError;
     }
 
@@ -2709,8 +2712,8 @@ app.get("/api/inventory", async (req, res) => {
     }
 
     // Ensure items is an array
-    if (!Array.isArray(items)) {
-      console.error("❌ Items is not an array:", typeof items, items);
+    if (!items || !Array.isArray(items)) {
+      console.warn("⚠️ Items is not an array or is null/undefined, using empty array:", typeof items);
       items = [];
     }
 
@@ -2741,35 +2744,53 @@ app.get("/api/inventory", async (req, res) => {
 
     // Process case colors - match by case ID and color
     caseItems.forEach(item => {
-      const caseIndex = Products.cases.findIndex(c => c.id === item.product_id);
-      if (caseIndex !== -1) {
-        const caseData = Products.cases[caseIndex];
-        const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
-        if (colorIndex !== -1) {
-          inventory.caseColors[caseIndex][colorIndex] = item.qty_in_stock;
+      try {
+        const caseIndex = Products.cases.findIndex(c => c.id === item.product_id);
+        if (caseIndex !== -1) {
+          const caseData = Products.cases[caseIndex];
+          if (caseData && Array.isArray(caseData.colors)) {
+            const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
+            if (colorIndex !== -1 && inventory.caseColors[caseIndex]) {
+              inventory.caseColors[caseIndex][colorIndex] = item.qty_in_stock;
+            }
+          }
         }
+      } catch (itemError) {
+        console.warn(`⚠️ Error processing case item ${item.product_id}:`, itemError.message);
       }
     });
 
     // Process pins - map by product_id
     flagPins.forEach(item => {
-      const index = Products.pins.flags.findIndex(p => p.id === item.product_id);
-      if (index !== -1) {
-        inventory.pins.flags[index] = item.qty_in_stock;
+      try {
+        const index = Products.pins.flags.findIndex(p => p.id === item.product_id);
+        if (index !== -1 && inventory.pins.flags) {
+          inventory.pins.flags[index] = item.qty_in_stock;
+        }
+      } catch (itemError) {
+        console.warn(`⚠️ Error processing flag pin ${item.product_id}:`, itemError.message);
       }
     });
 
     colorfulPins.forEach(item => {
-      const index = Products.pins.colorful.findIndex(p => p.id === item.product_id);
-      if (index !== -1) {
-        inventory.pins.colorful[index] = item.qty_in_stock;
+      try {
+        const index = Products.pins.colorful.findIndex(p => p.id === item.product_id);
+        if (index !== -1 && inventory.pins.colorful) {
+          inventory.pins.colorful[index] = item.qty_in_stock;
+        }
+      } catch (itemError) {
+        console.warn(`⚠️ Error processing colorful pin ${item.product_id}:`, itemError.message);
       }
     });
 
     bronzePins.forEach(item => {
-      const index = Products.pins.bronze.findIndex(p => p.id === item.product_id);
-      if (index !== -1) {
-        inventory.pins.bronze[index] = item.qty_in_stock;
+      try {
+        const index = Products.pins.bronze.findIndex(p => p.id === item.product_id);
+        if (index !== -1 && inventory.pins.bronze) {
+          inventory.pins.bronze[index] = item.qty_in_stock;
+        }
+      } catch (itemError) {
+        console.warn(`⚠️ Error processing bronze pin ${item.product_id}:`, itemError.message);
       }
     });
 
