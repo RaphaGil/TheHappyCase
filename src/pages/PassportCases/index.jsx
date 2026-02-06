@@ -45,13 +45,11 @@ const PassportCases = () => {
   // Force refresh inventory on page load to ensure we have latest data
   useEffect(() => {
     const forceRefreshOnLoad = async () => {
-      console.log('🔄 Force refreshing inventory on page load...');
       try {
         await refreshInventoryFromSupabase();
-        console.log('✅ Inventory refreshed on page load');
         setRefreshKey(prev => prev + 1);
       } catch (error) {
-        console.error('❌ Failed to refresh inventory on load:', error);
+        // Silently handle errors
       }
     };
     forceRefreshOnLoad();
@@ -60,11 +58,8 @@ const PassportCases = () => {
   // Listen for real-time inventory updates from Supabase
   useEffect(() => {
     if (!supabase) {
-      console.warn('⚠️ Supabase not configured, real-time updates disabled');
       return;
     }
-
-    console.log('🔔 Setting up Supabase Realtime subscription for inventory_items...');
 
     // Subscribe to changes in inventory_items table
     const channel = supabase
@@ -77,12 +72,9 @@ const PassportCases = () => {
           table: 'inventory_items'
         },
         async (payload) => {
-          console.log('📢 Inventory change detected:', payload.eventType, payload);
-          
           // Refresh cache immediately when inventory changes
           try {
             await refreshInventoryFromSupabase();
-            console.log('✅ Inventory cache refreshed from Supabase Realtime');
             // Force component re-render to use updated cache
             setRefreshKey(prev => prev + 1);
             // Trigger hook update by updating timestamp
@@ -92,31 +84,21 @@ const PassportCases = () => {
               detail: { timestamp: Date.now() }
             }));
           } catch (error) {
-            console.error('❌ Failed to refresh inventory cache:', error);
+            // Silently handle errors
           }
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Subscribed to inventory_items changes');
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Error subscribing to inventory_items changes');
-        } else {
-          console.log('🔄 Subscription status:', status);
-        }
-      });
+      .subscribe();
 
     // Also listen for Dashboard events (fallback if Realtime not enabled)
     const handleInventoryUpdate = async (event) => {
-      console.log('🔄 Inventory updated in Dashboard, refreshing cache...', event.detail);
       try {
         await refreshInventoryFromSupabase();
-        console.log('✅ Inventory cache refreshed');
         setRefreshKey(prev => prev + 1);
         // Trigger hook update
         setInventoryUpdateTrigger(Date.now());
       } catch (error) {
-        console.error('❌ Failed to refresh inventory cache:', error);
+        // Silently handle errors
       }
     };
 
@@ -124,7 +106,6 @@ const PassportCases = () => {
     
     // Cleanup
     return () => {
-      console.log('🧹 Cleaning up inventory subscriptions...');
       supabase.removeChannel(channel);
       window.removeEventListener('inventoryUpdated', handleInventoryUpdate);
     };

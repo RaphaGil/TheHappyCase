@@ -13,20 +13,30 @@ const fetchInventoryFromSupabase = async () => {
   try {
     // Try to fetch from API (server endpoint) with timeout
     const apiUrl = getApiUrl('/api/inventory');
-    console.log('🔄 Fetching inventory from:', apiUrl);
     
     // Create an AbortController for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
     const safeParseJSON = async (response) => {
       const contentType = response.headers.get('content-type');
+      const text = await response.text();
     
+      // Check if response is HTML (likely SPA fallback or 404 page)
       if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        throw new Error(`Expected JSON, got: ${text}`);
+        // If it's HTML, it means the API route wasn't found (Netlify Function not deployed/routed)
+        if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<html')) {
+          // Return special marker to trigger fallback to direct function URL
+          throw new Error('HTML_RESPONSE_FALLBACK');
+        }
+        throw new Error(`Expected JSON, got: ${text.substring(0, 100)}...`);
       }
     
-      return response.json();
+      // Parse JSON from the text we already read
+      try {
+        return JSON.parse(text);
+      } catch (parseError) {
+        throw new Error(`Failed to parse JSON response: ${parseError.message}`);
+      }
     };
     
     
@@ -55,30 +65,82 @@ const fetchInventoryFromSupabase = async () => {
           localStorage.setItem('productQuantities', JSON.stringify(quantities));
           localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
           
-          console.log('✅ Inventory loaded from Supabase inventory_items table');
           return quantities;
         }
-      } else {
-        // Only log warnings for non-404 errors (404 means backend not configured/deployed)
-        if (response.status !== 404) {
-          console.warn(`⚠️ Inventory API returned status ${response.status}: ${response.statusText}`);
+      } else if (response.status === 404) {
+        // If 404, try direct function URL as fallback (in case redirect rule isn't working)
+        const functionUrl = apiUrl.replace('/api/inventory', '/.netlify/functions/inventory');
+        try {
+          const directResponse = await fetch(functionUrl, {
+            signal: controller.signal,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (directResponse.ok) {
+            const data = await safeParseJSON(directResponse);
+            if (data.success && data.inventory) {
+              const quantities = {
+                cases: data.inventory.cases,
+                caseColors: data.inventory.caseColors,
+                pins: data.inventory.pins
+              };
+              localStorage.setItem('productQuantities', JSON.stringify(quantities));
+              localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+              return quantities;
+            }
+          }
+        } catch (directError) {
+          // Fall through to error handling
         }
       }
     } catch (fetchError) {
       clearTimeout(timeoutId);
+      
+      // If HTML response detected, try direct function URL as fallback
+      if (fetchError.message === 'HTML_RESPONSE_FALLBACK') {
+        const functionUrl = apiUrl.replace('/api/inventory', '/.netlify/functions/inventory');
+        try {
+          const directController = new AbortController();
+          const directTimeoutId = setTimeout(() => directController.abort(), 10000);
+          
+          const directResponse = await fetch(functionUrl, {
+            signal: directController.signal,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          clearTimeout(directTimeoutId);
+          
+          if (directResponse.ok) {
+            const data = await safeParseJSON(directResponse);
+            if (data.success && data.inventory) {
+              const quantities = {
+                cases: data.inventory.cases,
+                caseColors: data.inventory.caseColors,
+                pins: data.inventory.pins
+              };
+              localStorage.setItem('productQuantities', JSON.stringify(quantities));
+              localStorage.setItem('productQuantitiesTimestamp', Date.now().toString());
+              return quantities;
+            }
+          }
+        } catch (directError) {
+          // Fall through to original error handling
+        }
+      }
+      
       if (fetchError.name === 'AbortError') {
         // Silently handle timeout - will fall back to localStorage
-        console.debug('Inventory fetch timed out, using localStorage fallback');
       } else if (fetchError.message && fetchError.message.includes('Failed to fetch')) {
         // Network errors in production likely mean backend not deployed - silently handle
-        console.debug('Backend server not available, using localStorage fallback');
       } else {
         throw fetchError; // Re-throw unexpected errors
       }
     }
   } catch (error) {
     // Silently fall back to localStorage - this is expected when backend isn't configured
-    console.debug('Failed to fetch inventory from Supabase, using localStorage fallback:', error.message);
   }
   
   return null;
@@ -123,7 +185,7 @@ export const getItemQuantityFromSupabase = async (itemId) => {
       }
     }
   } catch (error) {
-    console.debug('Failed to fetch item quantity from Supabase:', error.message);
+    // Silently handle errors
   }
   return null;
 };
@@ -186,10 +248,7 @@ export const initializeQuantities = async () => {
     }
     // Silently continue if no quantities found - items will show as unlimited until set via Dashboard
   } catch (error) {
-    if (!initializationWarningShown) {
-      console.error('Error initializing quantities:', error);
-      initializationWarningShown = true;
-    }
+    // Silently handle errors
   }
 };
 
@@ -210,13 +269,13 @@ export const getMaxAvailableQuantity = (item, cart) => {
   const savedQuantities = localStorage.getItem('productQuantities');
   let quantities = null;
   
-  if (savedQuantities) {
-    try {
-      quantities = JSON.parse(savedQuantities);
-    } catch (error) {
-      console.error('Error parsing saved quantities:', error);
+    if (savedQuantities) {
+      try {
+        quantities = JSON.parse(savedQuantities);
+      } catch (error) {
+        // Silently handle parsing errors
+      }
     }
-  }
   
   // If no cached data, try to refresh from Supabase (but return null for now to avoid blocking)
   if (!quantities) {
@@ -253,21 +312,6 @@ export const getMaxAvailableQuantity = (item, cart) => {
       }
     }
 
-    // Debug logging for specific color (Light Pink)
-    if (item.color === '#f49f90' || item.color.toLowerCase().includes('pink')) {
-      console.log('🔍 [DEBUG] Light Pink inventory check:', {
-        caseType: item.caseType,
-        color: item.color,
-        maxQuantity: maxQuantity,
-        caseIndex: Products.cases.findIndex(c => c.type === item.caseType),
-        hasCaseColors: !!(quantities && quantities.caseColors),
-        quantities: quantities ? {
-          caseColors: quantities.caseColors?.[Products.cases.findIndex(c => c.type === item.caseType)],
-          cases: quantities.cases?.[Products.cases.findIndex(c => c.type === item.caseType)]
-        } : null
-      });
-    }
-
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
@@ -277,11 +321,6 @@ export const getMaxAvailableQuantity = (item, cart) => {
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
-      console.log(`⚠️ [SOLD OUT] Item exists in Supabase but qty is 0:`, {
-        caseType: item.caseType,
-        color: item.color,
-        maxQuantity: maxQuantity
-      });
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
 
@@ -379,10 +418,6 @@ export const refreshInventoryFromSupabase = async () => {
   
   // Fetch fresh data from Supabase
   const quantities = await fetchInventoryFromSupabase();
-  
-  if (quantities) {
-    console.log('✅ Inventory refreshed from Supabase inventory_items table');
-  }
   
   return quantities;
 };
