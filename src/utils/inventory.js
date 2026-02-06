@@ -70,14 +70,27 @@ const fetchInventoryFromSupabase = async () => {
         
         if (response.ok) {
           const data = await safeParseJSON(response);
+          
+          // Log full response structure for debugging
           console.log('[INVENTORY] ✅ Received inventory data:', {
             success: data.success,
             hasInventory: !!data.inventory,
+            inventoryType: typeof data.inventory,
+            inventoryKeys: data.inventory ? Object.keys(data.inventory) : null,
+            casesType: typeof data.inventory?.cases,
+            casesIsArray: Array.isArray(data.inventory?.cases),
             casesLength: data.inventory?.cases?.length,
+            casesValue: data.inventory?.cases,
+            caseColorsType: typeof data.inventory?.caseColors,
+            caseColorsIsArray: Array.isArray(data.inventory?.caseColors),
             caseColorsLength: data.inventory?.caseColors?.length,
+            caseColorsValue: data.inventory?.caseColors,
+            pinsType: typeof data.inventory?.pins,
+            pinsKeys: data.inventory?.pins ? Object.keys(data.inventory.pins) : null,
             pinsFlagsLength: data.inventory?.pins?.flags?.length,
             pinsColorfulLength: data.inventory?.pins?.colorful?.length,
-            pinsBronzeLength: data.inventory?.pins?.bronze?.length
+            pinsBronzeLength: data.inventory?.pins?.bronze?.length,
+            fullInventory: data.inventory // Log full structure
           });
 
           if (data.success && data.inventory) {
@@ -87,6 +100,17 @@ const fetchInventoryFromSupabase = async () => {
               caseColors: data.inventory.caseColors,
               pins: data.inventory.pins
             };
+            
+            console.log('[INVENTORY] 🔍 Parsed quantities structure:', {
+              casesType: typeof quantities.cases,
+              casesIsArray: Array.isArray(quantities.cases),
+              casesValue: quantities.cases,
+              caseColorsType: typeof quantities.caseColors,
+              caseColorsIsArray: Array.isArray(quantities.caseColors),
+              caseColorsValue: quantities.caseColors,
+              pinsType: typeof quantities.pins,
+              pinsValue: quantities.pins
+            });
             
             // Log sold out items for debugging
             if (quantities.caseColors) {
@@ -115,8 +139,15 @@ const fetchInventoryFromSupabase = async () => {
             console.log('[INVENTORY] 📊 Inventory summary:', {
               hasInventoryData,
               cacheTimestamp: Date.now(),
-              cases: quantities.cases?.slice(0, 5), // First 5 for preview
-              caseColorsPreview: quantities.caseColors?.slice(0, 2).map(arr => arr?.slice(0, 3)) // Preview
+              casesType: typeof quantities.cases,
+              casesIsArray: Array.isArray(quantities.cases),
+              casesPreview: Array.isArray(quantities.cases) ? quantities.cases.slice(0, 5) : quantities.cases,
+              caseColorsType: typeof quantities.caseColors,
+              caseColorsIsArray: Array.isArray(quantities.caseColors),
+              caseColorsPreview: Array.isArray(quantities.caseColors) 
+                ? quantities.caseColors.slice(0, 2).map(arr => Array.isArray(arr) ? arr.slice(0, 3) : arr)
+                : quantities.caseColors,
+              pinsPreview: quantities.pins
             });
             
             // Update in-memory cache
@@ -318,12 +349,29 @@ export const getMaxAvailableQuantity = (item, cart) => {
   // 1. Cache hasn't loaded yet (should be handled by waiting for inventoryInitialized)
   // 2. No items in Supabase inventory table (unlimited stock)
   if (!quantities) {
+    console.log('[SOLD_OUT_CHECK] ⚠️ No inventory cache available');
     return null; // No inventory data yet, return unlimited
   }
+  
+  // Log cache structure for debugging
+  console.log('[SOLD_OUT_CHECK] 🔍 Checking cache structure:', {
+    hasQuantities: !!quantities,
+    quantitiesType: typeof quantities,
+    quantitiesKeys: quantities ? Object.keys(quantities) : null,
+    hasCaseColors: !!quantities.caseColors,
+    caseColorsType: typeof quantities.caseColors,
+    caseColorsIsArray: Array.isArray(quantities.caseColors),
+    hasCases: !!quantities.cases,
+    casesType: typeof quantities.cases,
+    casesIsArray: Array.isArray(quantities.cases),
+    hasPins: !!quantities.pins,
+    pinsType: typeof quantities.pins
+  });
   
   // Verify cache structure is valid
   if (!quantities.caseColors && !quantities.cases && !quantities.pins) {
     // Cache exists but has no valid structure - treat as unlimited
+    console.log('[SOLD_OUT_CHECK] ⚠️ Cache exists but has no valid structure - treating as unlimited');
     return null;
   }
 
