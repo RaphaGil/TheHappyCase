@@ -217,25 +217,55 @@ exports.handler = async (event) => {
     const bronzePins = items.filter(item => item.item_type === 'pin_bronze');
 
     // Process case colors - match by case ID and color
-    caseItems.forEach((item) => {
+    console.log('[SUPABASE_INVENTORY] 🔄 STEP 1: Starting to process case colors...');
+    console.log(`[SUPABASE_INVENTORY] 📋 Found ${caseItems.length} case color items to process`);
+    
+    caseItems.forEach((item, itemIndex) => {
+      console.log(`[SUPABASE_INVENTORY] 🔍 STEP 1.${itemIndex + 1}: Processing item:`, {
+        item_id: item.item_id,
+        product_id: item.product_id,
+        color: item.color,
+        qty_in_stock: item.qty_in_stock,
+        qty_type: typeof item.qty_in_stock,
+        is_zero: item.qty_in_stock === 0,
+        is_null: item.qty_in_stock === null
+      });
+      
       const stock = item.qty_in_stock; // Read qty_in_stock from Supabase
       
+      console.log(`[SUPABASE_INVENTORY] 🔍 STEP 1.${itemIndex + 1}.1: Looking for case with product_id ${item.product_id}`);
       const caseIndex = Products.cases.findIndex(c => c.id === item.product_id);
+      
       if (caseIndex !== -1) {
+        console.log(`[SUPABASE_INVENTORY] ✅ STEP 1.${itemIndex + 1}.2: Found case at index ${caseIndex}`);
         const caseData = Products.cases[caseIndex];
+        console.log(`[SUPABASE_INVENTORY] 🔍 STEP 1.${itemIndex + 1}.3: Looking for color ${item.color} in case colors (${caseData.colors.length} colors)`);
+        
         const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
         if (colorIndex !== -1) {
+          console.log(`[SUPABASE_INVENTORY] ✅ STEP 1.${itemIndex + 1}.4: Found color at index ${colorIndex}`);
+          console.log(`[SUPABASE_INVENTORY] 📝 STEP 1.${itemIndex + 1}.5: Setting inventory.caseColors[${caseIndex}][${colorIndex}] = ${stock} (type: ${typeof stock})`);
+          
           inventory.caseColors[caseIndex][colorIndex] = stock; // Use qty_in_stock value
+          
+          console.log(`[SUPABASE_INVENTORY] ✅ STEP 1.${itemIndex + 1}.6: Value set successfully. Current value:`, {
+            value: inventory.caseColors[caseIndex][colorIndex],
+            type: typeof inventory.caseColors[caseIndex][colorIndex],
+            is_zero: inventory.caseColors[caseIndex][colorIndex] === 0,
+            is_null: inventory.caseColors[caseIndex][colorIndex] === null
+          });
           
           // Log sold out items for debugging
           if (stock === 0) {
-            console.log(`[SUPABASE_INVENTORY] 🚫 SOLD OUT - Case ID ${item.product_id} (index ${caseIndex}), Color ${item.color} (index ${colorIndex}): qty_in_stock = 0`);
+            console.log(`[SUPABASE_INVENTORY] 🚫 STEP 1.${itemIndex + 1}.7: SOLD OUT DETECTED - Case ID ${item.product_id} (index ${caseIndex}), Color ${item.color} (index ${colorIndex}): qty_in_stock = 0`);
           }
         } else {
-          console.warn(`[SUPABASE_INVENTORY] ⚠️ Color not found: ${item.color} for case ID ${item.product_id}`);
+          console.warn(`[SUPABASE_INVENTORY] ⚠️ STEP 1.${itemIndex + 1}.4: Color not found: ${item.color} for case ID ${item.product_id}`);
+          console.warn(`[SUPABASE_INVENTORY] Available colors:`, caseData.colors.map(c => c.color));
         }
       } else {
-        console.warn(`[SUPABASE_INVENTORY] ⚠️ Case not found: product_id ${item.product_id}`);
+        console.warn(`[SUPABASE_INVENTORY] ⚠️ STEP 1.${itemIndex + 1}.2: Case not found: product_id ${item.product_id}`);
+        console.warn(`[SUPABASE_INVENTORY] Available case IDs:`, Products.cases.map(c => c.id));
       }
     });
     
@@ -275,6 +305,8 @@ exports.handler = async (event) => {
     console.log(`[SUPABASE_INVENTORY] 📊 Processed pins: ${flagPins.length} flags, ${colorfulPins.length} colorful, ${bronzePins.length} bronze`);
 
     // Log final inventory structure summary
+    console.log('[SUPABASE_INVENTORY] 🔄 STEP 2: Calculating sold out counts...');
+    
     const soldOutCount = {
       cases: inventory.cases.filter(qty => qty === 0).length,
       caseColors: inventory.caseColors.reduce((sum, arr) => sum + (arr?.filter(qty => qty === 0).length || 0), 0),
@@ -283,7 +315,8 @@ exports.handler = async (event) => {
       pinsBronze: inventory.pins.bronze.filter(qty => qty === 0).length
     };
     
-    console.log('[SUPABASE_INVENTORY] ✅ Final inventory structure:', {
+    console.log('[SUPABASE_INVENTORY] 🔄 STEP 3: Logging final structure...');
+    console.log('[SUPABASE_INVENTORY] ✅ STEP 3.1: Final inventory structure:', {
       cases: inventory.cases.length,
       caseColors: inventory.caseColors.length,
       pinsFlags: inventory.pins.flags.length,
@@ -292,11 +325,53 @@ exports.handler = async (event) => {
       soldOutCount
     });
     
-    // Return success response
-    return sendResponse(200, {
+    // Log sample of caseColors to verify structure
+    console.log('[SUPABASE_INVENTORY] 🔄 STEP 3.2: Sample caseColors structure (first 2 cases, first 3 colors each):');
+    inventory.caseColors.slice(0, 2).forEach((colorArray, caseIdx) => {
+      console.log(`[SUPABASE_INVENTORY]   Case ${caseIdx}:`, {
+        arrayLength: colorArray?.length,
+        isArray: Array.isArray(colorArray),
+        first3Colors: colorArray?.slice(0, 3).map((qty, idx) => ({
+          index: idx,
+          value: qty,
+          type: typeof qty,
+          is_zero: qty === 0,
+          is_null: qty === null
+        }))
+      });
+    });
+    
+    // Log all sold out items in final structure
+    console.log('[SUPABASE_INVENTORY] 🔄 STEP 3.3: Finding all sold out items in final structure...');
+    inventory.caseColors.forEach((colorArray, caseIdx) => {
+      if (Array.isArray(colorArray)) {
+        colorArray.forEach((qty, colorIdx) => {
+          if (qty === 0) {
+            const caseData = Products.cases[caseIdx];
+            const colorData = caseData?.colors?.[colorIdx];
+            console.log(`[SUPABASE_INVENTORY] 🚫 SOLD OUT in final structure - Case ${caseIdx} (ID: ${caseData?.id}), Color ${colorIdx} (${colorData?.color}): qty = 0`);
+          }
+        });
+      }
+    });
+    
+    console.log('[SUPABASE_INVENTORY] 🔄 STEP 4: Preparing response...');
+    const responseBody = {
       success: true,
       inventory: inventory
+    };
+    
+    console.log('[SUPABASE_INVENTORY] ✅ STEP 4.1: Response prepared. Response structure:', {
+      success: responseBody.success,
+      hasInventory: !!responseBody.inventory,
+      inventoryKeys: Object.keys(responseBody.inventory || {}),
+      caseColorsType: typeof responseBody.inventory?.caseColors,
+      caseColorsIsArray: Array.isArray(responseBody.inventory?.caseColors),
+      caseColorsLength: responseBody.inventory?.caseColors?.length
     });
+    
+    // Return success response
+    return sendResponse(200, responseBody);
 
   } catch (error) {
     console.error('\n❌ ========== ERROR FETCHING INVENTORY ==========');
