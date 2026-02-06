@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
-import { getMaxAvailableQuantity } from '../../utils/inventory';
+import { getMaxAvailableQuantity, getCachedInventory } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
+import Products from '../../data/products.json';
 import { 
   getProductsWithQuantities, 
   getDetailImagesForColor,
@@ -79,6 +80,47 @@ export const usePassportCases = () => {
       setSelectedColor(selectedCase.colors[0].color);
     }
   }, [selectedCaseType, selectedColor, selectedCase]);
+
+  // Log inventory quantities for all passport case items
+  useEffect(() => {
+    const quantities = getCachedInventory();
+    if (quantities) {
+      console.log('📦 Passport Cases Inventory Quantities:');
+      console.log('=====================================');
+      
+      Products.cases.forEach((caseItem, caseIndex) => {
+        console.log(`\n${caseItem.name} (${caseItem.type}):`);
+        
+        // Log case-level quantity if available
+        if (quantities.cases && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
+          console.log(`  Case-level quantity: ${quantities.cases[caseIndex]}`);
+        } else {
+          console.log(`  Case-level quantity: Unlimited`);
+        }
+        
+        // Log color-level quantities
+        if (quantities.caseColors && quantities.caseColors[caseIndex]) {
+          console.log(`  Color quantities:`);
+          caseItem.colors.forEach((color, colorIndex) => {
+            const colorQty = quantities.caseColors[caseIndex][colorIndex];
+            const productForInventory = {
+              caseType: caseItem.type,
+              color: color.color,
+            };
+            const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+            const status = maxAvailable === null ? 'Unlimited' : maxAvailable === 0 ? 'SOLD OUT' : `${maxAvailable} available`;
+            console.log(`    - ${color.color}: ${colorQty !== null && colorQty !== undefined ? colorQty : 'Unlimited'} (${status})`);
+          });
+        } else {
+          console.log(`  Color quantities: Unlimited for all colors`);
+        }
+      });
+      
+      console.log('\n=====================================');
+    } else {
+      console.log('📦 Passport Cases Inventory: Not loaded yet');
+    }
+  }, [cart]); // Re-log when cart changes to show updated available quantities
   
   // Get the image for the selected color (normalized)
   const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
@@ -123,6 +165,15 @@ export const usePassportCases = () => {
       return;
     }
     
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: color,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    console.log(`🎨 Color changed - ${selectedCase?.name || 'Passport Case'} (${selectedCaseType}, ${color}):`);
+    console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
+    
     setSelectedColor(color);
     setSelectedDetailImage(null); // Reset detail image when color changes
     setQuantity(1); // Reset quantity when color changes
@@ -143,6 +194,10 @@ export const usePassportCases = () => {
       color: selectedColor,
     };
     const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    console.log(`🛒 Adding to cart - ${selectedCase?.name || 'Passport Case'} (${selectedCaseType}, ${selectedColor}):`);
+    console.log(`   Requested quantity: ${quantity}`);
+    console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
     
     // Check if this case already exists in cart
     const existingItemIndex = cart.findIndex(item => 
@@ -232,6 +287,10 @@ export const usePassportCases = () => {
       color: selectedColor,
     };
     const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
+    
+    console.log(`➕ Increment quantity - ${selectedCase?.name || 'Passport Case'} (${selectedCaseType}, ${selectedColor}):`);
+    console.log(`   Current quantity: ${quantity}`);
+    console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
     
     if (maxAvailable === null || maxAvailable > quantity) {
       setQuantity(quantity + 1);

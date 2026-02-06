@@ -143,6 +143,10 @@ export const isSelectedColorSoldOut = (selectedCase, selectedCaseType, selectedC
   };
   const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
   
+  console.log(`🔍 Sold-out check - ${selectedCase.name || 'Passport Case'} (${selectedCaseType}, ${selectedColor}):`);
+  console.log(`   Max available (considering cart): ${maxAvailable === null ? 'Unlimited' : maxAvailable}`);
+  console.log(`   Status: ${maxAvailable !== null && maxAvailable === 0 ? 'SOLD OUT' : 'Available'}`);
+  
   // If maxAvailable === 0, item is sold out (either Supabase qty is 0, or all items are in cart)
   // If maxAvailable is null (unlimited) or > 0, color is available
   return maxAvailable !== null && maxAvailable === 0;
