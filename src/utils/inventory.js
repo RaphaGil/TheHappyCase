@@ -50,6 +50,7 @@ const fetchInventoryFromSupabase = async () => {
       };
       
       try {
+        console.log(`🌐 Fetching inventory from: ${apiUrl}`);
         const response = await fetch(apiUrl, {
           signal: controller.signal,
           headers: {
@@ -59,8 +60,16 @@ const fetchInventoryFromSupabase = async () => {
         
         clearTimeout(timeoutId);
         
+        console.log(`📡 Inventory API response status: ${response.status} ${response.statusText}`);
+        
         if (response.ok) {
           const data = await safeParseJSON(response);
+          console.log('✅ Inventory API response received:', {
+            success: data.success,
+            hasInventory: !!data.inventory,
+            hasCases: !!(data.inventory && data.inventory.cases),
+            hasCaseColors: !!(data.inventory && data.inventory.caseColors)
+          });
 
           if (data.success && data.inventory) {
             // Convert Supabase format to quantities format
@@ -73,6 +82,12 @@ const fetchInventoryFromSupabase = async () => {
             // Update in-memory cache
             inventoryCache = quantities;
             inventoryCacheTimestamp = Date.now();
+            
+            console.log('💾 Inventory cache updated:', {
+              timestamp: new Date(inventoryCacheTimestamp).toISOString(),
+              casesCount: quantities.cases ? quantities.cases.length : 0,
+              caseColorsCount: quantities.caseColors ? quantities.caseColors.length : 0
+            });
             
             // Dispatch custom events to notify listeners of cache update
             // Dispatch both event names for backward compatibility
@@ -256,6 +271,7 @@ export const getMaxAvailableQuantity = (item, cart) => {
   // 1. Cache hasn't loaded yet (should be handled by waiting for inventoryInitialized)
   // 2. No items in Supabase inventory table (unlimited stock)
   if (!quantities) {
+    console.warn(`⚠️ getMaxAvailableQuantity: Cache is empty for ${item.caseType || item.type || 'item'} - returning null (unlimited)`);
     return null; // No inventory data yet, return unlimited
   }
   

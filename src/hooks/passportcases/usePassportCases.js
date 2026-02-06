@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
-import { getMaxAvailableQuantity, getCachedInventory } from '../../utils/inventory';
+import { getMaxAvailableQuantity, getCachedInventory, refreshInventoryFromSupabase } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
 import Products from '../../data/products.json';
 import { 
@@ -46,9 +46,50 @@ export const usePassportCases = () => {
   const [isSpecificationsOpen, setIsSpecificationsOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [quantityError, setQuantityError] = useState('');
+  const [inventoryLoaded, setInventoryLoaded] = useState(false);
 
   const productsWithQuantities = getProductsWithQuantities();
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+  
+  // Initialize inventory on mount (like charms page does)
+  useEffect(() => {
+    const initializeInventory = async () => {
+      try {
+        console.log('🔄 PassportCases: Initializing inventory from Supabase...');
+        const quantities = await refreshInventoryFromSupabase();
+        
+        if (quantities) {
+          console.log('✅ PassportCases: Inventory initialized successfully');
+          console.log('   Cases:', quantities.cases ? 'Loaded' : 'Unlimited');
+          console.log('   Case Colors:', quantities.caseColors ? 'Loaded' : 'Unlimited');
+        } else {
+          console.warn('⚠️ PassportCases: Inventory fetch returned null/undefined');
+        }
+        
+        // Verify cache is populated
+        const cached = getCachedInventory();
+        if (cached) {
+          console.log('✅ PassportCases: Cache verified - inventory data available');
+          setInventoryLoaded(true);
+        } else {
+          console.warn('⚠️ PassportCases: Cache is empty after fetch - inventory may not be configured');
+          // Still mark as loaded to allow page to render
+          setInventoryLoaded(true);
+        }
+      } catch (error) {
+        console.error('❌ PassportCases: Error initializing inventory:', error);
+        console.error('   Error details:', {
+          message: error.message,
+          name: error.name,
+          stack: error.stack
+        });
+        // Mark as loaded even on error to allow page to render
+        setInventoryLoaded(true);
+      }
+    };
+    
+    initializeInventory();
+  }, []);
   
   // Helper functions for inventory checks (like charms page)
   const isSelectedColorSoldOut = useCallback(() => {
@@ -81,8 +122,13 @@ export const usePassportCases = () => {
     }
   }, [selectedCaseType, selectedColor, selectedCase]);
 
-  // Log inventory quantities for all passport case items
+  // Log inventory quantities for all passport case items (only after inventory is loaded)
   useEffect(() => {
+    if (!inventoryLoaded) {
+      console.log('📦 Passport Cases Inventory: Waiting for inventory to load...');
+      return;
+    }
+    
     const quantities = getCachedInventory();
     if (quantities) {
       console.log('📦 Passport Cases Inventory Quantities:');
@@ -118,9 +164,10 @@ export const usePassportCases = () => {
       
       console.log('\n=====================================');
     } else {
-      console.log('📦 Passport Cases Inventory: Not loaded yet');
+      console.warn('⚠️ Passport Cases Inventory: Cache is empty - inventory may not be configured in Supabase');
+      console.warn('   This means all items will show as "Unlimited" stock');
     }
-  }, [cart]); // Re-log when cart changes to show updated available quantities
+  }, [cart, inventoryLoaded]); // Re-log when cart changes or inventory loads
   
   // Get the image for the selected color (normalized)
   const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
