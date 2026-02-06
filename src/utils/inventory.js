@@ -79,6 +79,23 @@ const fetchInventoryFromSupabase = async () => {
               pins: data.inventory.pins
             };
             
+            // Check if we actually have inventory data (not just null values)
+            const hasInventoryData = (
+              (quantities.cases && Array.isArray(quantities.cases) && quantities.cases.some(qty => qty !== null)) ||
+              (quantities.caseColors && Array.isArray(quantities.caseColors) && quantities.caseColors.some(arr => arr && arr.some(qty => qty !== null))) ||
+              (quantities.pins && (
+                (quantities.pins.flags && quantities.pins.flags.some(qty => qty !== null)) ||
+                (quantities.pins.colorful && quantities.pins.colorful.some(qty => qty !== null)) ||
+                (quantities.pins.bronze && quantities.pins.bronze.some(qty => qty !== null))
+              ))
+            );
+            
+            if (!hasInventoryData) {
+              console.warn('⚠️ Inventory API returned success but all quantities are null - Supabase may not be configured');
+              console.warn('   This means all items will show as "Unlimited" stock');
+              // Still set cache so we don't keep fetching, but log warning
+            }
+            
             // Update in-memory cache
             inventoryCache = quantities;
             inventoryCacheTimestamp = Date.now();
@@ -86,7 +103,8 @@ const fetchInventoryFromSupabase = async () => {
             console.log('💾 Inventory cache updated:', {
               timestamp: new Date(inventoryCacheTimestamp).toISOString(),
               casesCount: quantities.cases ? quantities.cases.length : 0,
-              caseColorsCount: quantities.caseColors ? quantities.caseColors.length : 0
+              caseColorsCount: quantities.caseColors ? quantities.caseColors.length : 0,
+              hasInventoryData: hasInventoryData
             });
             
             // Dispatch custom events to notify listeners of cache update
@@ -98,6 +116,11 @@ const fetchInventoryFromSupabase = async () => {
             }
             
             return quantities;
+          } else {
+            console.warn('⚠️ Inventory API response missing success or inventory data:', {
+              success: data.success,
+              hasInventory: !!data.inventory
+            });
           }
         } else if (response.status === 404) {
           // If 404, try direct function URL as fallback (in case redirect rule isn't working)

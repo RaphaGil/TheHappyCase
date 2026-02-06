@@ -377,6 +377,7 @@ export const usePassportCases = () => {
     currentImage,
     detailImages,
     cart,
+    inventoryLoaded,
     
     // Setters
     setIsSpecificationsOpen,
