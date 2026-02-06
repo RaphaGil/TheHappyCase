@@ -38,6 +38,7 @@ const PassportCases = () => {
   // Show loading state until inventory is loaded and case data is ready
   if (!inventoryLoaded || !selectedCase || !selectedCase.images || selectedCase.images.length === 0) {
     return <LoadingState />;
+    
   }
 
 

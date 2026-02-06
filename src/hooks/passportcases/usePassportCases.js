@@ -69,7 +69,24 @@ export const usePassportCases = () => {
         // Verify cache is populated
         const cached = getCachedInventory();
         if (cached) {
-          console.log('✅ PassportCases: Cache verified - inventory data available');
+          // Check if cache has actual data (not just null values)
+          const hasData = (
+            (cached.cases && Array.isArray(cached.cases) && cached.cases.some(qty => qty !== null)) ||
+            (cached.caseColors && Array.isArray(cached.caseColors) && cached.caseColors.some(arr => arr && arr.some(qty => qty !== null))) ||
+            (cached.pins && (
+              (cached.pins.flags && cached.pins.flags.some(qty => qty !== null)) ||
+              (cached.pins.colorful && cached.pins.colorful.some(qty => qty !== null)) ||
+              (cached.pins.bronze && cached.pins.bronze.some(qty => qty !== null))
+            ))
+          );
+          
+          if (hasData) {
+            console.log('✅ PassportCases: Cache verified - inventory data available');
+          } else {
+            console.warn('⚠️ PassportCases: Cache exists but contains only null values');
+            console.warn('   This means Supabase is not configured or inventory_items table is empty');
+            console.warn('   All items will show as "Unlimited" stock');
+          }
           setInventoryLoaded(true);
         } else {
           console.warn('⚠️ PassportCases: Cache is empty after fetch - inventory may not be configured');

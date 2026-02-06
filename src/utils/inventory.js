@@ -91,8 +91,24 @@ const fetchInventoryFromSupabase = async () => {
             );
             
             if (!hasInventoryData) {
-              console.warn('⚠️ Inventory API returned success but all quantities are null - Supabase may not be configured');
-              console.warn('   This means all items will show as "Unlimited" stock');
+              console.warn('⚠️ ============================================');
+              console.warn('⚠️ INVENTORY CONFIGURATION ISSUE DETECTED');
+              console.warn('⚠️ ============================================');
+              console.warn('⚠️ The API returned success but all quantities are null.');
+              console.warn('⚠️ This means:');
+              console.warn('⚠️   1. Supabase environment variables may not be set in Netlify');
+              console.warn('⚠️   2. OR the inventory_items table is empty');
+              console.warn('⚠️   3. OR Supabase is not properly configured');
+              console.warn('⚠️');
+              console.warn('⚠️ RESULT: All items will show as "Unlimited" stock');
+              console.warn('⚠️');
+              console.warn('⚠️ TO FIX:');
+              console.warn('⚠️   1. Check Netlify environment variables:');
+              console.warn('⚠️      - SUPABASE_URL');
+              console.warn('⚠️      - SUPABASE_SERVICE_ROLE_KEY');
+              console.warn('⚠️   2. Ensure inventory_items table exists in Supabase');
+              console.warn('⚠️   3. Add inventory data to the table');
+              console.warn('⚠️ ============================================');
               // Still set cache so we don't keep fetching, but log warning
             }
             
