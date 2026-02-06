@@ -12,7 +12,7 @@ import { useCurrency } from '../../context/CurrencyContext';
 
 // Utils
 import { createPaymentIntent } from '../../utils/mockPaymentAPI';
-import { getMaxAvailableQuantity } from '../../utils/inventory';
+import { getMaxAvailableQuantity, refreshInventoryFromSupabase } from '../../utils/inventory';
 
 // Components
 import InternationalNote from '../InternationalNote';
@@ -316,6 +316,78 @@ const CheckoutForm = () => {
     setError(null);
 
     try {
+      // Double-check inventory from Supabase before processing payment
+      // This prevents race conditions where another customer bought the last item
+      console.log('🔍 Checking inventory before payment confirmation...');
+      await refreshInventoryFromSupabase();
+      
+      // Check each item in cart against current Supabase inventory
+      // Allow purchase if user has the item in their cart (even if it shows as sold out)
+      const outOfStockItems = [];
+      
+      // Group items by their inventory key (case+color or charm identity)
+      const itemGroups = new Map();
+      
+      for (const item of cart) {
+        let groupKey = '';
+        let itemName = '';
+        
+        if (item.type === 'charm') {
+          const category = item.category || item.pin?.category || 'colorful';
+          const pinName = item.pin?.name || item.name || '';
+          groupKey = `charm-${category}-${pinName}`;
+          itemName = item.name || item.pin?.name || 'Charm';
+        } else if (item.caseType && item.color) {
+          groupKey = `case-${item.caseType}-${item.color}`;
+          itemName = item.caseName || item.name || 'Passport Case';
+        } else {
+          groupKey = item.id || `item-${item.name}`;
+          itemName = item.name || 'Item';
+        }
+        
+        if (!itemGroups.has(groupKey)) {
+          itemGroups.set(groupKey, {
+            item: item,
+            name: itemName,
+            totalQuantity: 0
+          });
+        }
+        
+        const group = itemGroups.get(groupKey);
+        group.totalQuantity += (item.quantity || 1);
+      }
+      
+      // Check each group against base inventory (without cart subtraction)
+      for (const [groupKey, group] of itemGroups) {
+        // Get base inventory without subtracting cart items
+        const baseInventory = getMaxAvailableQuantity(group.item, []);
+        
+        // If item has limited stock
+        if (baseInventory !== null) {
+          // Check if base inventory is sufficient for what's in cart
+          // If baseInventory is 0, it means truly out of stock
+          // If baseInventory > 0 but less than totalQuantity, insufficient stock
+          if (baseInventory === 0 || group.totalQuantity > baseInventory) {
+            outOfStockItems.push(group.name);
+          }
+        }
+        // If baseInventory is null, it means unlimited stock - always allow
+      }
+      
+      // If any items are out of stock, prevent payment
+      if (outOfStockItems.length > 0) {
+        const itemsList = outOfStockItems.length === 1 
+          ? outOfStockItems[0]
+          : outOfStockItems.slice(0, -1).join(', ') + ' and ' + outOfStockItems[outOfStockItems.length - 1];
+        
+        const errorMessage = `Sorry, ${itemsList} ${outOfStockItems.length === 1 ? 'is' : 'are'} no longer available. Please remove ${outOfStockItems.length === 1 ? 'it' : 'them'} from your cart and try again.`;
+        setError(errorMessage);
+        setLoading(false);
+        console.warn('⚠️ Payment blocked - items out of stock:', outOfStockItems);
+        return;
+      }
+      
+      console.log('✅ Inventory check passed - all items are in stock');
       // Confirm the payment with Stripe
       // The clientSecret is automatically retrieved from Elements context
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({

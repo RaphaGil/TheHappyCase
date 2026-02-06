@@ -42,19 +42,6 @@ const PassportCases = () => {
     isCaseTypeSoldOut,
   } = usePassportCases();
 
-  // Force refresh inventory on page load to ensure we have latest data
-  useEffect(() => {
-    const forceRefreshOnLoad = async () => {
-      try {
-        await refreshInventoryFromSupabase();
-        setRefreshKey(prev => prev + 1);
-      } catch (error) {
-        // Silently handle errors
-      }
-    };
-    forceRefreshOnLoad();
-  }, []); // Run once on mount
-
   // Listen for real-time inventory updates from Supabase
   useEffect(() => {
     if (!supabase) {
@@ -73,16 +60,13 @@ const PassportCases = () => {
         },
         async (payload) => {
           // Refresh cache immediately when inventory changes
+          // refreshInventoryFromSupabase will dispatch events automatically
           try {
             await refreshInventoryFromSupabase();
             // Force component re-render to use updated cache
             setRefreshKey(prev => prev + 1);
             // Trigger hook update by updating timestamp
             setInventoryUpdateTrigger(Date.now());
-            // Dispatch custom event for hook to listen
-            window.dispatchEvent(new CustomEvent('inventoryUpdated', {
-              detail: { timestamp: Date.now() }
-            }));
           } catch (error) {
             // Silently handle errors
           }

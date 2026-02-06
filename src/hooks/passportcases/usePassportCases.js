@@ -48,58 +48,26 @@ export const usePassportCases = () => {
   const [inventoryRefreshKey, setInventoryRefreshKey] = useState(0);
 
   // Make productsWithQuantities reactive - re-compute when inventoryRefreshKey changes
-  // This ensures it updates when localStorage cache is refreshed
-  // Also read timestamp directly to trigger updates
-  const cacheTimestamp = typeof window !== 'undefined' 
-    ? localStorage.getItem('productQuantitiesTimestamp') 
-    : null;
-  
+  // This ensures it updates when inventory cache is refreshed
   const productsWithQuantities = useMemo(() => {
-    console.log('🔄 Re-computing productsWithQuantities, refreshKey:', inventoryRefreshKey, 'timestamp:', cacheTimestamp);
+    console.log('🔄 Re-computing productsWithQuantities, refreshKey:', inventoryRefreshKey);
     return getProductsWithQuantities();
-  }, [inventoryRefreshKey, cacheTimestamp]);
+  }, [inventoryRefreshKey]);
   
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   
-  // Listen for inventory updates and refresh
+  // Listen for inventory cache updates and refresh
   useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'productQuantities' || e.key === null) {
-        // Inventory cache was updated, force re-render
-        console.log('🔄 Storage event detected, refreshing products...');
-        setInventoryRefreshKey(prev => prev + 1);
-      }
-    };
-
-    // Listen for storage events (from other tabs/windows)
-    window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom inventory update event
-    const handleInventoryUpdate = (event) => {
-      console.log('🔄 Inventory update event received, refreshing products...', event.detail);
+    // Listen for custom inventory cache update event
+    const handleInventoryCacheUpdate = (event) => {
+      console.log('🔄 Inventory cache update event received, refreshing products...', event.detail);
       setInventoryRefreshKey(prev => prev + 1);
     };
-    window.addEventListener('inventoryUpdated', handleInventoryUpdate);
     
-    // Poll localStorage timestamp to catch updates (fallback for same-tab updates)
-    // Storage events only fire for cross-tab updates, not same-tab
-    let lastKnownTimestamp = localStorage.getItem('productQuantitiesTimestamp');
-    const pollInterval = setInterval(() => {
-      const currentTimestamp = localStorage.getItem('productQuantitiesTimestamp');
-      if (currentTimestamp && currentTimestamp !== lastKnownTimestamp) {
-        console.log('🔄 Cache timestamp changed, refreshing products...', {
-          old: lastKnownTimestamp,
-          new: currentTimestamp
-        });
-        lastKnownTimestamp = currentTimestamp;
-        setInventoryRefreshKey(prev => prev + 1);
-      }
-    }, 2000); // Check every 2 seconds (less aggressive)
+    window.addEventListener('inventoryCacheUpdated', handleInventoryCacheUpdate);
     
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('inventoryUpdated', handleInventoryUpdate);
-      clearInterval(pollInterval);
+      window.removeEventListener('inventoryCacheUpdated', handleInventoryCacheUpdate);
     };
   }, []);
   

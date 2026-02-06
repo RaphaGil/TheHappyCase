@@ -1389,6 +1389,194 @@ app.post("/api/save-order", async (req, res) => {
       return;
     }
 
+    // --- Double-check inventory before saving order ---
+    // This prevents race conditions where another customer bought the last item
+    console.log("\n🔍 Double-checking inventory before saving order...");
+    const inventoryChecks = [];
+    
+    items.forEach(item => {
+      const quantity = item.quantity || 1;
+      
+      // Handle standalone charm items (type === 'charm')
+      if (item.type === 'charm') {
+        const category = item.category || item.pin?.category || 'colorful';
+        const pinName = item.pin?.name || item.name;
+        const pinSrc = item.pin?.src || item.src;
+        
+        let foundPin = null;
+        let pinId = null;
+        
+        // Try to find pin by ID first
+        if (item.pin?.id || item.id) {
+          pinId = item.pin?.id || item.id;
+        } else {
+          // Find pin by name or src in products.json
+          if (category === 'flags' && Products.pins.flags) {
+            foundPin = Products.pins.flags.find(p => 
+              p.name === pinName || 
+              (pinSrc && p.src === pinSrc) ||
+              p.id === item.pin?.id
+            );
+          } else if (category === 'colorful' && Products.pins.colorful) {
+            foundPin = Products.pins.colorful.find(p => 
+              p.name === pinName || 
+              (pinSrc && p.src === pinSrc) ||
+              p.id === item.pin?.id
+            );
+          } else if (category === 'bronze' && Products.pins.bronze) {
+            foundPin = Products.pins.bronze.find(p => 
+              p.name === pinName || 
+              (pinSrc && p.src === pinSrc) ||
+              p.id === item.pin?.id
+            );
+          }
+          
+          pinId = foundPin?.id;
+        }
+        
+        if (pinId) {
+          const itemId = `pin-${category}-${pinId}`;
+          inventoryChecks.push({
+            item_id: itemId,
+            quantity: quantity,
+            name: pinName || 'Unknown Charm',
+            type: 'charm'
+          });
+        }
+      }
+      
+      // Check case inventory if caseType and color are present
+      if (item.caseType && item.color) {
+        const caseData = Products.cases.find(c => c.type === item.caseType);
+        if (caseData) {
+          const colorExists = caseData.colors.some(c => c.color === item.color);
+          if (colorExists) {
+            const itemId = `case-${caseData.id}-color-${item.color}`;
+            inventoryChecks.push({
+              item_id: itemId,
+              quantity: quantity,
+              name: `${caseData.name} - ${item.color}`,
+              type: 'case'
+            });
+          }
+        }
+      }
+      
+      // Check pin inventory if pins are present (pins attached to cases)
+      const pins = item.pins || item.pinsDetails || [];
+      if (Array.isArray(pins) && pins.length > 0) {
+        pins.forEach(pin => {
+          if (!pin) return;
+          
+          const category = pin.category || 'colorful';
+          let pinId = null;
+          
+          if (pin.id) {
+            pinId = pin.id;
+          } else {
+            let foundPin = null;
+            if (category === 'flags' && Products.pins.flags) {
+              foundPin = Products.pins.flags.find(p => 
+                p.id === pin.id || 
+                p.name === pin.name || 
+                (pin.src && p.src === pin.src)
+              );
+            } else if (category === 'colorful' && Products.pins.colorful) {
+              foundPin = Products.pins.colorful.find(p => 
+                p.id === pin.id || 
+                p.name === pin.name || 
+                (pin.src && p.src === pin.src)
+              );
+            } else if (category === 'bronze' && Products.pins.bronze) {
+              foundPin = Products.pins.bronze.find(p => 
+                p.id === pin.id || 
+                p.name === pin.name || 
+                (pin.src && p.src === pin.src)
+              );
+            }
+            pinId = foundPin?.id;
+          }
+          
+          if (pinId) {
+            const itemId = `pin-${category}-${pinId}`;
+            inventoryChecks.push({
+              item_id: itemId,
+              quantity: quantity,
+              name: pin.name || 'Unknown Pin',
+              type: 'pin'
+            });
+          }
+        });
+      }
+    });
+    
+    // Check each item's inventory
+    const outOfStockItems = [];
+    for (const check of inventoryChecks) {
+      try {
+        const { data: inventoryItem, error: fetchError } = await supabase
+          .from('inventory_items')
+          .select('qty_in_stock, name')
+          .eq('item_id', check.item_id)
+          .single();
+        
+        if (fetchError) {
+          if (fetchError.code === 'PGRST116') {
+            // Item not in inventory table - treat as unlimited (skip check)
+            console.log(`  ℹ️ ${check.name}: Not in inventory table (unlimited stock)`);
+            continue;
+          }
+          console.warn(`  ⚠️ Error checking inventory for ${check.item_id}:`, fetchError.message);
+          continue;
+        }
+        
+        if (!inventoryItem) {
+          // Item not found - treat as unlimited (skip check)
+          console.log(`  ℹ️ ${check.name}: Not found in inventory (unlimited stock)`);
+          continue;
+        }
+        
+        const currentQty = inventoryItem.qty_in_stock;
+        
+        // If qty_in_stock is null, it means unlimited - skip check
+        if (currentQty === null) {
+          console.log(`  ✅ ${check.name}: Unlimited stock`);
+          continue;
+        }
+        
+        // Check if there's enough stock
+        if (currentQty < check.quantity) {
+          const itemName = inventoryItem.name || check.name;
+          outOfStockItems.push({
+            name: itemName,
+            requested: check.quantity,
+            available: currentQty
+          });
+          console.warn(`  ❌ ${itemName}: Insufficient stock (requested: ${check.quantity}, available: ${currentQty})`);
+        } else {
+          console.log(`  ✅ ${check.name}: Stock available (requested: ${check.quantity}, available: ${currentQty})`);
+        }
+      } catch (checkError) {
+        console.warn(`  ⚠️ Exception checking inventory for ${check.item_id}:`, checkError.message);
+        // Continue with other checks - don't block order if check fails
+      }
+    }
+    
+    // If any items are out of stock, reject the order
+    if (outOfStockItems.length > 0) {
+      const itemsList = outOfStockItems.map(item => 
+        `${item.name} (requested: ${item.requested}, available: ${item.available})`
+      ).join(', ');
+      
+      console.error(`\n❌ Order rejected - items out of stock: ${itemsList}`);
+      return sendErrorResponse(409, "Some items are no longer available", {
+        outOfStockItems: outOfStockItems,
+        message: "One or more items in your order are no longer in stock. Please update your cart and try again."
+      });
+    }
+    
+    console.log(`✅ Inventory check passed - all items are in stock`);
+
     // Upload images to Supabase Storage and prepare items with image URLs
     console.log("\n📤 Uploading images to Supabase Storage bucket 'order-images'...");
     let itemsWithImages = [];
@@ -1559,6 +1747,55 @@ app.post("/api/save-order", async (req, res) => {
     items.forEach(item => {
       const quantity = item.quantity || 1;
       
+      // Handle standalone charm items (type === 'charm')
+      if (item.type === 'charm') {
+        const category = item.category || item.pin?.category || 'colorful';
+        const pinName = item.pin?.name || item.name;
+        const pinSrc = item.pin?.src || item.src;
+        
+        let foundPin = null;
+        let pinId = null;
+        
+        // Try to find pin by ID first
+        if (item.pin?.id || item.id) {
+          pinId = item.pin?.id || item.id;
+        } else {
+          // Find pin by name or src in products.json
+          if (category === 'flags' && Products.pins.flags) {
+            foundPin = Products.pins.flags.find(p => 
+              p.name === pinName || 
+              (pinSrc && p.src === pinSrc) ||
+              p.id === item.pin?.id
+            );
+          } else if (category === 'colorful' && Products.pins.colorful) {
+            foundPin = Products.pins.colorful.find(p => 
+              p.name === pinName || 
+              (pinSrc && p.src === pinSrc) ||
+              p.id === item.pin?.id
+            );
+          } else if (category === 'bronze' && Products.pins.bronze) {
+            foundPin = Products.pins.bronze.find(p => 
+              p.name === pinName || 
+              (pinSrc && p.src === pinSrc) ||
+              p.id === item.pin?.id
+            );
+          }
+          
+          pinId = foundPin?.id;
+        }
+        
+        if (pinId) {
+          const itemId = `pin-${category}-${pinId}`;
+          inventoryUpdates.push({
+            item_id: itemId,
+            quantity: quantity
+          });
+          console.log(`  📝 Standalone Charm: ${pinName || 'Unknown'} (${category}, ${quantity}x) → ${itemId}`);
+        } else {
+          console.warn(`  ⚠️ Could not find standalone charm ID for: ${pinName || 'Unknown'} (category: ${category})`);
+        }
+      }
+      
       // Update case inventory if caseType and color are present
       if (item.caseType && item.color) {
         // Find the case in products.json by type
@@ -1581,7 +1818,7 @@ app.post("/api/save-order", async (req, res) => {
         }
       }
 
-      // Update pin inventory if pins are present
+      // Update pin inventory if pins are present (pins attached to cases)
       const pins = item.pins || item.pinsDetails || [];
       if (Array.isArray(pins) && pins.length > 0) {
         pins.forEach(pin => {
@@ -1627,7 +1864,7 @@ app.post("/api/save-order", async (req, res) => {
               item_id: itemId,
               quantity: quantity // Each case has quantity pins
             });
-            console.log(`  📝 Pin: ${pin.name || 'Unknown'} (${category}, ${quantity}x) → ${itemId}`);
+            console.log(`  📝 Pin (attached to case): ${pin.name || 'Unknown'} (${category}, ${quantity}x) → ${itemId}`);
           } else {
             console.warn(`  ⚠️ Could not find pin ID for: ${pin.name || 'Unknown'} (category: ${category})`);
             if (pin.src) {
@@ -1648,6 +1885,13 @@ app.post("/api/save-order", async (req, res) => {
     });
 
     console.log(`\n📊 Total unique items to update: ${Object.keys(groupedUpdates).length}`);
+    
+    let inventoryUpdateResults = {
+      totalItems: Object.keys(groupedUpdates).length,
+      successful: 0,
+      failed: 0,
+      failedItems: []
+    };
     
     // Update inventory for each item
     if (Object.keys(groupedUpdates).length > 0) {
@@ -1709,6 +1953,10 @@ app.post("/api/save-order", async (req, res) => {
       const results = await Promise.all(updatePromises);
       const successful = results.filter(r => r.success).length;
       const failed = results.filter(r => !r.success);
+      
+      inventoryUpdateResults.successful = successful;
+      inventoryUpdateResults.failed = failed.length;
+      inventoryUpdateResults.failedItems = failed.map(f => f.item_id);
 
       console.log(`\n📊 Inventory Update Summary:`);
       console.log(`  ✅ Successfully updated: ${successful}`);
@@ -1730,7 +1978,12 @@ app.post("/api/save-order", async (req, res) => {
           message: "Order saved successfully",
           order_id: orderId,
           data: data,
-          inventoryUpdated: Object.keys(groupedUpdates).length
+          inventoryUpdate: {
+            totalItems: inventoryUpdateResults.totalItems,
+            successful: inventoryUpdateResults.successful,
+            failed: inventoryUpdateResults.failed,
+            failedItems: inventoryUpdateResults.failedItems
+          }
         };
         res.json(successResponse);
         console.log('✅ Success response sent for order:', orderId);

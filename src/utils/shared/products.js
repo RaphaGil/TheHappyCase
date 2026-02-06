@@ -1,15 +1,15 @@
 import Products from '../../data/products.json';
+import { getCachedInventory } from '../inventory';
 
 /**
- * Get products with quantities merged from localStorage (Supabase inventory)
+ * Get products with quantities merged from Supabase inventory (in-memory cache)
  * This is a shared utility that handles both cases and charms to avoid duplication
  */
 export const getProductsWithQuantities = () => {
-  const savedQuantities = localStorage.getItem('productQuantities');
-  if (!savedQuantities) return Products;
+  const quantities = getCachedInventory();
+  if (!quantities) return Products;
   
   try {
-    const quantities = JSON.parse(savedQuantities);
     const mergedProducts = { ...Products };
     
     // Merge case quantities and color quantities
