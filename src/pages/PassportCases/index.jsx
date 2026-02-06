@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PassportCasesHeader from '../../component/PassportCases/components/PassportCasesHeader';
 import LoadingState from '../../component/PassportCases/components/LoadingState';
 import CaseTypeTabs from '../../component/PassportCases/components/CaseTypeTabs';
@@ -9,16 +9,8 @@ import ProductInfo from '../../component/PassportCases/components/ProductInfo';
 import PriceAndCTA from '../../component/PassportCases/components/PriceAndCTA';
 import { usePassportCases } from '../../hooks/passportcases/usePassportCases';
 import { getCaseDisplayName, getColorName } from '../../utils/passportcases/helpers';
-import { refreshInventoryFromSupabase } from '../../utils/inventory';
-import { getSupabaseClient } from '../../utils/supabaseClient';
-
-// Get shared Supabase client instance
-const supabase = getSupabaseClient();
 
 const PassportCases = () => {
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [inventoryUpdateTrigger, setInventoryUpdateTrigger] = useState(0);
-  
   const {
     selectedCaseType,
     selectedColor,
@@ -41,59 +33,6 @@ const PassportCases = () => {
     isColorSoldOut,
     isCaseTypeSoldOut,
   } = usePassportCases();
-
-  // Listen for real-time inventory updates from Supabase
-  useEffect(() => {
-    if (!supabase) {
-      return;
-    }
-
-    // Subscribe to changes in inventory_items table
-    const channel = supabase
-      .channel('inventory-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Listen to INSERT, UPDATE, DELETE
-          schema: 'public',
-          table: 'inventory_items'
-        },
-        async (payload) => {
-          // Refresh cache immediately when inventory changes
-          // refreshInventoryFromSupabase will dispatch events automatically
-          try {
-            await refreshInventoryFromSupabase();
-            // Force component re-render to use updated cache
-            setRefreshKey(prev => prev + 1);
-            // Trigger hook update by updating timestamp
-            setInventoryUpdateTrigger(Date.now());
-          } catch (error) {
-            // Silently handle errors
-          }
-        }
-      )
-      .subscribe();
-
-    // Also listen for Dashboard events (fallback if Realtime not enabled)
-    const handleInventoryUpdate = async (event) => {
-      try {
-        await refreshInventoryFromSupabase();
-        setRefreshKey(prev => prev + 1);
-        // Trigger hook update
-        setInventoryUpdateTrigger(Date.now());
-      } catch (error) {
-        // Silently handle errors
-      }
-    };
-
-    window.addEventListener('inventoryUpdated', handleInventoryUpdate);
-    
-    // Cleanup
-    return () => {
-      supabase.removeChannel(channel);
-      window.removeEventListener('inventoryUpdated', handleInventoryUpdate);
-    };
-  }, []);
 
   if (!selectedCase || !selectedCase.images || selectedCase.images.length === 0) {
     return <LoadingState />;

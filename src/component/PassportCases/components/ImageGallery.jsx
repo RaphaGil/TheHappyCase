@@ -15,13 +15,6 @@ const ImageGallery = ({
       <div className="relative group">
         <div 
           className={`relative overflow-hidden ${isSelectedColorSoldOut() ? 'pointer-events-none cursor-not-allowed' : ''}`}
-          onClick={(e) => {
-            if (isSelectedColorSoldOut()) {
-              e.preventDefault();
-              e.stopPropagation();
-              return false;
-            }
-          }}
         >
           <img
             src={normalizeImagePath(currentImage)}
@@ -32,13 +25,6 @@ const ImageGallery = ({
             decoding="async"
             width="500"
             height="500"
-            onClick={(e) => {
-              if (isSelectedColorSoldOut()) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-              }
-            }}
             onError={(e) => {
               e.target.style.display = 'none';
               if (e.target.nextSibling) {

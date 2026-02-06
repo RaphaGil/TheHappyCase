@@ -1742,10 +1742,15 @@ app.post("/api/save-order", async (req, res) => {
 
     // --- Update Inventory Items ---
     console.log("\n📦 Updating inventory_items table for purchased items...");
+    console.log(`   Processing ${items.length} item(s) from order`);
     const inventoryUpdates = [];
 
-    items.forEach(item => {
+    items.forEach((item, index) => {
       const quantity = item.quantity || 1;
+      console.log(`\n   Item ${index + 1}/${items.length}:`);
+      console.log(`     - Type: ${item.type || 'case'}`);
+      console.log(`     - Quantity: ${quantity}`);
+      console.log(`     - Name: ${item.name || item.caseName || item.pin?.name || 'Unknown'}`);
       
       // Handle standalone charm items (type === 'charm')
       if (item.type === 'charm') {
@@ -1884,7 +1889,12 @@ app.post("/api/save-order", async (req, res) => {
       groupedUpdates[update.item_id] += update.quantity;
     });
 
-    console.log(`\n📊 Total unique items to update: ${Object.keys(groupedUpdates).length}`);
+    console.log(`\n📊 Inventory Update Summary:`);
+    console.log(`   Total unique items to update: ${Object.keys(groupedUpdates).length}`);
+    console.log(`   Items breakdown:`);
+    Object.entries(groupedUpdates).forEach(([itemId, totalQty]) => {
+      console.log(`     - ${itemId}: ${totalQty} unit(s)`);
+    });
     
     let inventoryUpdateResults = {
       totalItems: Object.keys(groupedUpdates).length,
@@ -1897,6 +1907,9 @@ app.post("/api/save-order", async (req, res) => {
     if (Object.keys(groupedUpdates).length > 0) {
       const updatePromises = Object.entries(groupedUpdates).map(async ([itemId, qtyToDecrement]) => {
         try {
+          console.log(`\n  🔄 Processing: ${itemId}`);
+          console.log(`     Quantity to decrement: ${qtyToDecrement}`);
+          
           // First, get current quantity
           const { data: currentItem, error: fetchError } = await supabase
             .from('inventory_items')
@@ -1918,6 +1931,7 @@ app.post("/api/save-order", async (req, res) => {
           }
 
           const currentQty = currentItem.qty_in_stock;
+          console.log(`     Current quantity in stock: ${currentQty === null ? 'Unlimited (null)' : currentQty}`);
           
           // If qty_in_stock is null, it means unlimited - don't decrement
           if (currentQty === null) {
@@ -1927,6 +1941,7 @@ app.post("/api/save-order", async (req, res) => {
 
           // Calculate new quantity
           const newQty = Math.max(0, currentQty - qtyToDecrement);
+          console.log(`     New quantity after decrement: ${newQty} (${currentQty} - ${qtyToDecrement})`);
           
           // Update inventory
           const { error: updateError } = await supabase

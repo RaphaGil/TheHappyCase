@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
@@ -45,44 +45,22 @@ export const usePassportCases = () => {
   const [isSpecificationsOpen, setIsSpecificationsOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [quantityError, setQuantityError] = useState('');
-  const [inventoryRefreshKey, setInventoryRefreshKey] = useState(0);
 
-  // Make productsWithQuantities reactive - re-compute when inventoryRefreshKey changes
-  // This ensures it updates when inventory cache is refreshed
-  const productsWithQuantities = useMemo(() => {
-    console.log('🔄 Re-computing productsWithQuantities, refreshKey:', inventoryRefreshKey);
-    return getProductsWithQuantities();
-  }, [inventoryRefreshKey]);
-  
+  const productsWithQuantities = getProductsWithQuantities();
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   
-  // Listen for inventory cache updates and refresh
-  useEffect(() => {
-    // Listen for custom inventory cache update event
-    const handleInventoryCacheUpdate = (event) => {
-      console.log('🔄 Inventory cache update event received, refreshing products...', event.detail);
-      setInventoryRefreshKey(prev => prev + 1);
-    };
-    
-    window.addEventListener('inventoryCacheUpdated', handleInventoryCacheUpdate);
-    
-    return () => {
-      window.removeEventListener('inventoryCacheUpdated', handleInventoryCacheUpdate);
-    };
-  }, []);
-  
-  // Helper functions for inventory checks
-  const isSelectedColorSoldOut = () => {
+  // Helper functions for inventory checks (like charms page)
+  const isSelectedColorSoldOut = useCallback(() => {
     return checkSelectedColorSoldOut(selectedCase, selectedCaseType, selectedColor, cart);
-  };
+  }, [selectedCase, selectedCaseType, selectedColor, cart]);
   
-  const isColorSoldOut = (color) => {
+  const isColorSoldOut = useCallback((color) => {
     return checkColorSoldOut(selectedCase, selectedCaseType, color, cart);
-  };
+  }, [selectedCase, selectedCaseType, cart]);
   
-  const isCaseTypeSoldOut = (caseType) => {
+  const isCaseTypeSoldOut = useCallback((caseType) => {
     return checkCaseTypeSoldOut(caseType, cart);
-  };
+  }, [cart]);
   
   // Update case type when URL path parameter changes
   useEffect(() => {
@@ -101,23 +79,6 @@ export const usePassportCases = () => {
       setSelectedColor(selectedCase.colors[0].color);
     }
   }, [selectedCaseType, selectedColor, selectedCase]);
-
-  // Clamp quantity to max available inventory
-  useEffect(() => {
-    if (!selectedCaseType || !selectedColor) return;
-    
-    const productForInventory = {
-      caseType: selectedCaseType,
-      color: selectedColor,
-    };
-    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    if (maxAvailable !== null && quantity > maxAvailable) {
-      setQuantity(Math.max(1, maxAvailable));
-    }
-    // Clear error when case type or color changes
-    setQuantityError('');
-  }, [selectedCaseType, selectedColor, cart, quantity]); // eslint-disable-line react-hooks/exhaustive-deps
   
   // Get the image for the selected color (normalized)
   const selectedColorData = selectedCase?.colors?.find(c => c.color === selectedColor);
@@ -127,7 +88,7 @@ export const usePassportCases = () => {
   const detailImages = getDetailImagesForColor(selectedCaseType, selectedColorData, selectedCase);
 
   const handleCaseTypeChange = (type) => {
-    // Prevent selecting sold out case types
+    // Don't allow selecting sold out case types
     if (isCaseTypeSoldOut(type)) {
       return;
     }
@@ -157,12 +118,8 @@ export const usePassportCases = () => {
   };
 
   const handleColorChange = (color) => {
-    // Check if the color is sold out before changing
-    const colorData = selectedCase?.colors?.find(c => c.color === color);
-    const isColorSoldOut = colorData?.quantity !== undefined && colorData.quantity === 0;
-    
     // Don't change to sold out colors
-    if (isColorSoldOut) {
+    if (isColorSoldOut(color)) {
       return;
     }
     
@@ -180,29 +137,91 @@ export const usePassportCases = () => {
   };
 
   const handleAddToCart = (product) => {
-    // Prevent adding sold out items
-    if (isSelectedColorSoldOut()) {
-      return;
-    }
+    // Check stock availability from Supabase inventory_items table (like charms page)
+    const productForInventory = {
+      caseType: selectedCaseType,
+      color: selectedColor,
+    };
+    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
     
-    // Add quantity to product
-    const productWithQuantity = {
-      ...product,
-      quantity: quantity
-    };
-    // Ensure unique ID with timestamp
-    const productWithId = {
-      ...productWithQuantity,
-      id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
-    };
-    console.log('💼 PassportCases page - Adding case to cart:', {
-      caseName: product.caseName || product.name,
-      caseType: product.caseType,
-      color: product.color,
-      quantity: quantity,
-      product: productWithId
-    });
-    addToCart(productWithId);
+    // Check if this case already exists in cart
+    const existingItemIndex = cart.findIndex(item => 
+      item.caseType === selectedCaseType && item.color === selectedColor
+    );
+    
+    if (existingItemIndex !== -1) {
+      // Item already in cart - check if we can add more
+      if (maxAvailable === null) {
+        // Unlimited stock - allow adding
+        const productWithQuantity = {
+          ...product,
+          quantity: quantity
+        };
+        const productWithId = {
+          ...productWithQuantity,
+          id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
+        };
+        addToCart(productWithId);
+        return;
+      }
+      
+      if (maxAvailable > 0) {
+        // Can add more - allow adding
+        const productWithQuantity = {
+          ...product,
+          quantity: quantity
+        };
+        const productWithId = {
+          ...productWithQuantity,
+          id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
+        };
+        addToCart(productWithId);
+        return;
+      } else {
+        // Can't add more - already at maximum qty_in_stock
+        const itemName = product.caseName || product.name || 'Passport Case';
+        const errorMessage = `Oops! We don't have any more ${itemName} in stock right now, so you can't add more to your basket.`;
+        setQuantityError(errorMessage);
+        return;
+      }
+    } else {
+      // New item - check if we can add it
+      const requestedQty = quantity;
+      
+      if (maxAvailable === null) {
+        // Unlimited stock - allow adding
+        const productWithQuantity = {
+          ...product,
+          quantity: quantity
+        };
+        const productWithId = {
+          ...productWithQuantity,
+          id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
+        };
+        addToCart(productWithId);
+        return;
+      }
+      
+      if (maxAvailable >= requestedQty) {
+        // Can add the requested quantity
+        const productWithQuantity = {
+          ...product,
+          quantity: quantity
+        };
+        const productWithId = {
+          ...productWithQuantity,
+          id: `case-${selectedCaseType}-${selectedColor}-${Date.now()}`
+        };
+        addToCart(productWithId);
+        return;
+      } else {
+        // Can't add requested quantity - show error with available amount
+        const itemName = product.caseName || product.name || 'Passport Case';
+        const errorMessage = `Oops! We only have ${maxAvailable} ${itemName}${maxAvailable === 1 ? '' : 's'} in stock right now.`;
+        setQuantityError(errorMessage);
+        return;
+      }
+    }
   };
 
   const handleIncrementQuantity = () => {
@@ -264,7 +283,7 @@ export const usePassportCases = () => {
     handleIncrementQuantity,
     handleDecrementQuantity,
     
-    // Helpers
+    // Inventory helpers (like charms page)
     isSelectedColorSoldOut,
     isColorSoldOut,
     isCaseTypeSoldOut,

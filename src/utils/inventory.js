@@ -251,8 +251,18 @@ export const getMaxAvailableQuantity = (item, cart) => {
   // Use cached data if available, otherwise return null (unlimited)
   const quantities = inventoryCache;
   
+  // If cache is not populated, return null (unlimited stock)
+  // This happens when:
+  // 1. Cache hasn't loaded yet (should be handled by waiting for inventoryInitialized)
+  // 2. No items in Supabase inventory table (unlimited stock)
   if (!quantities) {
     return null; // No inventory data yet, return unlimited
+  }
+  
+  // Verify cache structure is valid
+  if (!quantities.caseColors && !quantities.cases && !quantities.pins) {
+    // Cache exists but has no valid structure - treat as unlimited
+    return null;
   }
 
   // Handle case items - get quantity from Supabase inventory_items table
@@ -269,7 +279,9 @@ export const getMaxAvailableQuantity = (item, cart) => {
       const caseIndex = Products.cases.findIndex(c => c.type === item.caseType);
       if (caseIndex !== -1 && quantities.caseColors[caseIndex]) {
         const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
-        if (colorIndex !== -1 && quantities.caseColors[caseIndex][colorIndex] !== undefined) {
+        // Check if value exists (including 0, which means sold out)
+        // null/undefined means item not in Supabase (unlimited)
+        if (colorIndex !== -1 && quantities.caseColors[caseIndex][colorIndex] !== null && quantities.caseColors[caseIndex][colorIndex] !== undefined) {
           maxQuantity = quantities.caseColors[caseIndex][colorIndex];
         }
       }
@@ -278,7 +290,9 @@ export const getMaxAvailableQuantity = (item, cart) => {
     // Fallback: Get from cases array (overall case quantity from Supabase)
     if (maxQuantity === null && quantities && quantities.cases) {
       const caseIndex = Products.cases.findIndex(c => c.type === item.caseType);
-      if (caseIndex !== -1 && quantities.cases[caseIndex] !== undefined) {
+      // Check if value exists (including 0, which means sold out)
+      // null/undefined means item not in Supabase (unlimited)
+      if (caseIndex !== -1 && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
         maxQuantity = quantities.cases[caseIndex];
       }
     }
