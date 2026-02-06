@@ -6,6 +6,7 @@ import { getApiUrl } from './apiConfig';
 let inventoryCache = null;
 let inventoryCacheTimestamp = null;
 let inventoryFetchPromise = null; // Track ongoing fetch to avoid duplicate requests
+let isInitializing = false; // Track if we're in the initial load phase
 
 /**
  * Fetch inventory from Supabase API (inventory_items table)
@@ -20,6 +21,11 @@ const fetchInventoryFromSupabase = async () => {
 
   inventoryFetchPromise = (async () => {
     try {
+      // Mark as initializing if cache is empty
+      if (!inventoryCache) {
+        isInitializing = true;
+      }
+      
       // Try to fetch from API (server endpoint) with timeout
       const apiUrl = getApiUrl('/api/inventory');
       
@@ -131,6 +137,9 @@ const fetchInventoryFromSupabase = async () => {
               window.dispatchEvent(new CustomEvent('inventoryUpdated', { detail: eventDetail }));
             }
             
+            // Mark initialization as complete
+            isInitializing = false;
+            
             return quantities;
           } else {
             console.warn('⚠️ Inventory API response missing success or inventory data:', {
@@ -170,6 +179,7 @@ const fetchInventoryFromSupabase = async () => {
         }
       } catch (fetchError) {
         clearTimeout(timeoutId);
+        isInitializing = false; // Mark initialization as complete even on error
         
         // If HTML response detected, try direct function URL as fallback
         if (fetchError.message === 'HTML_RESPONSE_FALLBACK') {
@@ -218,9 +228,11 @@ const fetchInventoryFromSupabase = async () => {
       }
     } catch (error) {
       console.error('❌ Error in fetchInventoryFromSupabase:', error.message);
+      isInitializing = false; // Clear flag on error
     } finally {
       // Clear the promise so next fetch can proceed
       inventoryFetchPromise = null;
+      isInitializing = false; // Ensure flag is cleared
     }
     
     return null;
@@ -291,12 +303,19 @@ export const initializeQuantities = async () => {
  * @returns {number|null} - Maximum quantity available (null if unlimited)
  */
 export const getMaxAvailableQuantity = (item, cart) => {
+  // If cache is empty and we're still initializing, wait for the fetch to complete
+  if (!inventoryCache && inventoryFetchPromise && isInitializing) {
+    // Cache is being populated - return null for now (will be checked again after cache is populated)
+    // Don't log warning during initialization
+    return null;
+  }
+  
   // Trigger background refresh if cache is empty or stale (> 1 minute old)
   const cacheAge = inventoryCacheTimestamp ? Date.now() - inventoryCacheTimestamp : Infinity;
   const isStale = !inventoryCache || cacheAge > 60 * 1000; // 1 minute
   
-  if (isStale) {
-    // Fetch fresh data in background (fire and forget)
+  if (isStale && !isInitializing) {
+    // Fetch fresh data in background (fire and forget) - but not if we're already initializing
     fetchInventoryFromSupabase().catch(err => {
       console.warn('⚠️ Background inventory fetch failed:', err.message);
     });
@@ -310,7 +329,11 @@ export const getMaxAvailableQuantity = (item, cart) => {
   // 1. Cache hasn't loaded yet (should be handled by waiting for inventoryInitialized)
   // 2. No items in Supabase inventory table (unlimited stock)
   if (!quantities) {
-    console.warn(`⚠️ getMaxAvailableQuantity: Cache is empty for ${item.caseType || item.type || 'item'} - returning null (unlimited)`);
+    // Only log warning if we're not in the middle of initialization
+    if (!isInitializing) {
+      console.warn(`⚠️ getMaxAvailableQuantity: Cache is empty for ${item.caseType || item.type || 'item'} - returning null (unlimited)`);
+      console.warn(`   This may mean inventory hasn't loaded yet or Supabase is not configured`);
+    }
     return null; // No inventory data yet, return unlimited
   }
   
