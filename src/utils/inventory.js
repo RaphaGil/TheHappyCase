@@ -68,6 +68,22 @@ const fetchInventoryFromSupabase = async () => {
         
         console.log('[INVENTORY] 📡 Response status:', response.status, response.statusText);
         
+        if (!response.ok) {
+          // Log error response for debugging
+          try {
+            const errorText = await response.text();
+            console.error('[INVENTORY] ❌ Error response body:', errorText);
+            try {
+              const errorJson = JSON.parse(errorText);
+              console.error('[INVENTORY] ❌ Error details:', errorJson);
+            } catch (e) {
+              // Not JSON, that's okay
+            }
+          } catch (e) {
+            console.error('[INVENTORY] ❌ Could not read error response:', e);
+          }
+        }
+        
         if (response.ok) {
           const data = await safeParseJSON(response);
           
@@ -197,8 +213,20 @@ const fetchInventoryFromSupabase = async () => {
         console.error('[INVENTORY] ❌ Error fetching inventory:', {
           message: fetchError.message,
           name: fetchError.name,
-          apiUrl
+          apiUrl,
+          errorType: fetchError.name === 'TypeError' && fetchError.message === 'Failed to fetch' 
+            ? 'Network error - Backend server may not be running' 
+            : 'Other error'
         });
+        
+        // If it's a network error in development, provide helpful message
+        if (import.meta.env.DEV && fetchError.name === 'TypeError' && fetchError.message === 'Failed to fetch') {
+          console.error('[INVENTORY] 💡 TROUBLESHOOTING:');
+          console.error('   1. Make sure the Express server is running: npm run server');
+          console.error('   2. Check that the server is listening on port 3001');
+          console.error('   3. Verify VITE_API_URL is not set (should use Vite proxy in dev)');
+          console.error('   4. Check browser console for CORS errors');
+        }
         
         // If HTML response detected, try direct function URL as fallback
         if (fetchError.message === 'HTML_RESPONSE_FALLBACK') {
