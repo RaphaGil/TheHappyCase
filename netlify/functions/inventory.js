@@ -44,20 +44,38 @@ const loadProductsJson = () => {
     join(__dirname, "../../../src/data/products.json"),
   ];
 
+  console.log("[API INVENTORY] Checking for products.json in:", possiblePaths);
+  console.log("[API INVENTORY] __dirname:", __dirname);
+  console.log("[API INVENTORY] process.cwd():", process.cwd());
+
   for (const filePath of possiblePaths) {
     try {
-      if (!existsSync(filePath)) continue;
+      const exists = existsSync(filePath);
+      console.log(`[API INVENTORY] Checking: ${filePath} - ${exists ? "EXISTS" : "NOT FOUND"}`);
+      
+      if (!exists) continue;
+      
       const raw = readFileSync(filePath, "utf-8");
       const parsed = JSON.parse(raw);
 
       console.log("✅ Loaded products.json from:", filePath);
+      console.log("[API INVENTORY] Products structure:", {
+        hasCases: !!parsed.cases,
+        casesLength: parsed.cases?.length,
+        hasPins: !!parsed.pins,
+        pinsFlags: parsed.pins?.flags?.length,
+        pinsColorful: parsed.pins?.colorful?.length,
+        pinsBronze: parsed.pins?.bronze?.length,
+      });
 
       return parsed;
     } catch (err) {
       console.warn("⚠️ Failed loading products.json from:", filePath);
+      console.warn("   Error:", err.message);
     }
   }
 
+  console.error("❌ products.json not found in any of the checked paths");
   return null;
 };
 
@@ -120,10 +138,11 @@ exports.handler = async (event) => {
     const { data: items, error } = await supabase
       .from("inventory_items")
       .select("*")
-      .order("item_type", { ascending: true })
-      .order("product_id", { ascending: true });
+      .order("item_type, product_id");
 
     console.log("[API INVENTORY] Supabase returned items:", items?.length || 0);
+    console.log("[API INVENTORY] Raw Supabase result:", items);
+    console.log("[API INVENTORY] Supabase error:", error);
 
     if (error) {
       console.error("[API INVENTORY] Supabase error:", error);
@@ -212,10 +231,14 @@ exports.handler = async (event) => {
     });
   } catch (err) {
     console.error("❌ INVENTORY FUNCTION CRASH:", err);
+    console.error("Error stack:", err.stack);
+    console.error("Error name:", err.name);
+    console.error("Error message:", err.message);
 
     return sendResponse(500, {
       success: false,
       error: err.message || "Unknown server error",
+      details: process.env.NODE_ENV === "development" ? err.stack : undefined,
     });
   }
 };
