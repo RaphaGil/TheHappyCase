@@ -139,6 +139,14 @@ exports.handler = async (event) => {
       });
     }
 
+    // Log Products structure
+    console.log("[API INVENTORY] Products cases length:", Products?.cases?.length);
+    console.log("[API INVENTORY] Products pins:", {
+      flags: Products?.pins?.flags?.length,
+      colorful: Products?.pins?.colorful?.length,
+      bronze: Products?.pins?.bronze?.length,
+    });
+
     // Fetch all inventory items with timeout protection
     let items = null;
     let error = null;

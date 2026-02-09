@@ -53,13 +53,29 @@ Check that `netlify.toml` has:
 1. Go to Netlify Dashboard → **Functions** → `inventory` → **Logs**
 2. Check for runtime errors
 
-### 5. **Verify Environment Variables**
+### 5. **Verify Environment Variables** ⚠️ **CRITICAL**
 
-In Netlify Dashboard → Site Settings → Environment Variables, ensure:
-- `SUPABASE_URL` is set
-- `SUPABASE_SERVICE_ROLE_KEY` is set
+**REQUIRED Environment Variables:**
 
-**Note**: These are needed for the function to work, but missing them would return JSON with an error, not HTML.
+In Netlify Dashboard → **Site Settings → Environment Variables**, you MUST set:
+
+1. **`SUPABASE_URL`**
+   - Value: Your Supabase project URL (e.g., `https://xxxxx.supabase.co`)
+   - Where to find: Supabase Dashboard → Settings → API → Project URL
+
+2. **`SUPABASE_SERVICE_ROLE_KEY`**
+   - Value: Your Supabase service role key
+   - Where to find: Supabase Dashboard → Settings → API → service_role key
+   - ⚠️ **WARNING**: This is a secret key - never expose it publicly!
+
+**How to add:**
+1. Go to Netlify Dashboard → Your Site → **Site Settings** → **Environment Variables**
+2. Click **Add a variable**
+3. Add `SUPABASE_URL` with your Supabase project URL
+4. Add `SUPABASE_SERVICE_ROLE_KEY` with your Supabase service role key
+5. **Save** and **Redeploy** your site
+
+**Note**: Missing these variables will cause the function to return empty inventory data. The function will still return JSON (not HTML), but inventory will be null.
 
 ### 6. **Force Redeploy**
 

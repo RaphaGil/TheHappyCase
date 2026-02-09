@@ -234,14 +234,30 @@ Tailwind is configured in `tailwind.config.js` with custom colors, fonts, and br
    - Publish directory: `build`
    - Functions directory: `netlify/functions`
 
-2. **Environment Variables**
-   Set the following in Netlify dashboard:
+2. **Environment Variables** ⚠️ **REQUIRED**
+   
+   **IMPORTANT:** You MUST set these environment variables in Netlify Dashboard for the app to work correctly.
+   
+   Go to: **Netlify Dashboard → Your Site → Site Settings → Environment Variables**
+   
+   **Required for Serverless Functions (CRITICAL):**
+   - `SUPABASE_URL` - Your Supabase project URL (e.g., `https://xxxxx.supabase.co`)
+   - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (found in Supabase Dashboard → Settings → API)
+   
+   **Required for Frontend:**
+   - `VITE_SUPABASE_URL` - Same as SUPABASE_URL (your Supabase project URL)
+   - `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key (found in Supabase Dashboard → Settings → API)
+   
+   **Required for Payments:**
    - `STRIPE_SECRET_KEY` - Stripe secret key for payment processing
    - `VITE_STRIPE_PUBLISHABLE_KEY` - Stripe publishable key for frontend
-   - `VITE_SUPABASE_URL` - Supabase project URL
-   - `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
-   - `SUPABASE_URL` - Supabase project URL (for serverless functions)
-   - `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (for serverless functions)
+   
+   **How to find Supabase keys:**
+   1. Go to your Supabase project dashboard
+   2. Navigate to **Settings → API**
+   3. Copy the **Project URL** → Use for both `SUPABASE_URL` and `VITE_SUPABASE_URL`
+   4. Copy the **anon/public key** → Use for `VITE_SUPABASE_ANON_KEY`
+   5. Copy the **service_role key** → Use for `SUPABASE_SERVICE_ROLE_KEY` (⚠️ Keep this secret!)
 
 3. **Netlify Functions**
    The following serverless functions are available:
@@ -263,8 +279,13 @@ Tailwind is configured in `tailwind.config.js` with custom colors, fonts, and br
 
 **To ensure stock shows correctly in production:**
 
-1. **Deploy the inventory function**: The `netlify/functions/inventory.js` function must be deployed
-2. **Set Supabase environment variables**: Make sure `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are set in Netlify
+1. **Set Supabase environment variables** ⚠️ **CRITICAL**: 
+   - Go to **Netlify Dashboard → Site Settings → Environment Variables**
+   - Add `SUPABASE_URL` with your Supabase project URL
+   - Add `SUPABASE_SERVICE_ROLE_KEY` with your Supabase service role key
+   - **Redeploy your site** after adding these variables
+   
+2. **Deploy the inventory function**: The `netlify/functions/inventory.js` function must be deployed
 3. **Update inventory in Supabase**: Use the Dashboard (`/dashboard`) to update stock levels in the `inventory_items` table
 4. **Clear browser cache**: Users may need to clear localStorage or wait 5 minutes for cache to expire
 
