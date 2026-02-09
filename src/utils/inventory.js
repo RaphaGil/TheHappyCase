@@ -114,39 +114,6 @@ const fetchInventoryFromSupabase = async () => {
               pinsValue: quantities.pins
             });
             
-            // Log sample of caseColors received
-            if (Array.isArray(quantities.caseColors)) {
-              console.log('[INVENTORY] 🔍 STEP 5.2: Sample caseColors received (first 2 cases):');
-              quantities.caseColors.slice(0, 2).forEach((colorArray, caseIdx) => {
-                console.log(`[INVENTORY]   Case ${caseIdx}:`, {
-                  arrayLength: colorArray?.length,
-                  isArray: Array.isArray(colorArray),
-                  first3Colors: colorArray?.slice(0, 3).map((qty, idx) => ({
-                    index: idx,
-                    value: qty,
-                    type: typeof qty,
-                    is_zero: qty === 0,
-                    is_null: qty === null
-                  }))
-                });
-              });
-            }
-            
-            // Log sold out items for debugging
-            console.log('[INVENTORY] 🔄 STEP 5.3: Checking for sold out items in received data...');
-            if (quantities.caseColors && Array.isArray(quantities.caseColors)) {
-              quantities.caseColors.forEach((colorArray, caseIndex) => {
-                if (Array.isArray(colorArray)) {
-                  colorArray.forEach((qty, colorIndex) => {
-                    if (qty === 0) {
-                      console.log(`[INVENTORY] 🚫 STEP 5.3: SOLD OUT detected - Case ${caseIndex}, Color ${colorIndex}: qty = 0`);
-                    }
-                  });
-                }
-              });
-            } else {
-              console.warn('[INVENTORY] ⚠️ STEP 5.3: caseColors is not an array, cannot check sold out items');
-            }
             
             // Check if we actually have inventory data (not just null values)
             const hasInventoryData = (
@@ -178,27 +145,6 @@ const fetchInventoryFromSupabase = async () => {
             inventoryCache = quantities;
             inventoryCacheTimestamp = Date.now();
             
-            console.log('[INVENTORY] ✅ STEP 5.5: Cache updated. Verifying cache contents:');
-            console.log('[INVENTORY]   Cache structure:', {
-              hasCaseColors: !!inventoryCache.caseColors,
-              caseColorsType: typeof inventoryCache.caseColors,
-              caseColorsIsArray: Array.isArray(inventoryCache.caseColors),
-              caseColorsLength: inventoryCache.caseColors?.length
-            });
-            
-            // Verify sold out items are in cache
-            if (Array.isArray(inventoryCache.caseColors)) {
-              console.log('[INVENTORY] 🔄 STEP 5.6: Verifying sold out items in cache...');
-              inventoryCache.caseColors.forEach((colorArray, caseIdx) => {
-                if (Array.isArray(colorArray)) {
-                  colorArray.forEach((qty, colorIdx) => {
-                    if (qty === 0) {
-                      console.log(`[INVENTORY] ✅ STEP 5.6: SOLD OUT confirmed in cache - Case ${caseIdx}, Color ${colorIdx}: qty = 0`);
-                    }
-                  });
-                }
-              });
-            }
             
             // Dispatch custom events to notify listeners of cache update
             // Dispatch both event names for backward compatibility
@@ -396,29 +342,12 @@ export const getMaxAvailableQuantity = (item, cart) => {
   // 1. Cache hasn't loaded yet (should be handled by waiting for inventoryInitialized)
   // 2. No items in Supabase inventory table (unlimited stock)
   if (!quantities) {
-    console.log('[SOLD_OUT_CHECK] ⚠️ No inventory cache available');
     return null; // No inventory data yet, return unlimited
   }
-  
-  // Log cache structure for debugging
-  console.log('[SOLD_OUT_CHECK] 🔍 Checking cache structure:', {
-    hasQuantities: !!quantities,
-    quantitiesType: typeof quantities,
-    quantitiesKeys: quantities ? Object.keys(quantities) : null,
-    hasCaseColors: !!quantities.caseColors,
-    caseColorsType: typeof quantities.caseColors,
-    caseColorsIsArray: Array.isArray(quantities.caseColors),
-    hasCases: !!quantities.cases,
-    casesType: typeof quantities.cases,
-    casesIsArray: Array.isArray(quantities.cases),
-    hasPins: !!quantities.pins,
-    pinsType: typeof quantities.pins
-  });
   
   // Verify cache structure is valid
   if (!quantities.caseColors && !quantities.cases && !quantities.pins) {
     // Cache exists but has no valid structure - treat as unlimited
-    console.log('[SOLD_OUT_CHECK] ⚠️ Cache exists but has no valid structure - treating as unlimited');
     return null;
   }
 
@@ -427,64 +356,26 @@ export const getMaxAvailableQuantity = (item, cart) => {
     // Find the case in Products
     const caseData = Products.cases.find(c => c.type === item.caseType);
     if (!caseData) {
-      console.log('[SOLD_OUT_CHECK] ⚠️ Case not found:', item.caseType);
       return null;
     }
 
     // Get color-specific quantity from Supabase (via in-memory cache)
     let maxQuantity = null;
-    let source = 'none';
 
     // Primary: Get from caseColors array (from Supabase inventory_items table)
-    console.log('[SOLD_OUT_CHECK] 🔄 STEP 6: Checking caseColors array...');
-    console.log('[SOLD_OUT_CHECK]   Looking for:', {
-      caseType: item.caseType,
-      color: item.color
-    });
-    
     if (quantities && quantities.caseColors) {
-      console.log('[SOLD_OUT_CHECK] ✅ STEP 6.1: caseColors exists, type:', typeof quantities.caseColors, 'isArray:', Array.isArray(quantities.caseColors));
-      
       const caseIndex = Products.cases.findIndex(c => c.type === item.caseType);
-      console.log('[SOLD_OUT_CHECK] 🔍 STEP 6.2: Found case index:', caseIndex);
       
       if (caseIndex !== -1 && quantities.caseColors[caseIndex]) {
-        console.log('[SOLD_OUT_CHECK] ✅ STEP 6.3: Case array exists at index', caseIndex);
-        console.log('[SOLD_OUT_CHECK]   Case array type:', typeof quantities.caseColors[caseIndex], 'isArray:', Array.isArray(quantities.caseColors[caseIndex]));
-        console.log('[SOLD_OUT_CHECK]   Case array length:', quantities.caseColors[caseIndex]?.length);
-        
         const colorIndex = caseData.colors.findIndex(c => c.color === item.color);
-        console.log('[SOLD_OUT_CHECK] 🔍 STEP 6.4: Found color index:', colorIndex);
         
         // Check if value exists (including 0, which means sold out)
         // null/undefined means item not in Supabase (unlimited)
         if (colorIndex !== -1 && quantities.caseColors[caseIndex][colorIndex] !== null && quantities.caseColors[caseIndex][colorIndex] !== undefined) {
           const stock = quantities.caseColors[caseIndex][colorIndex]; // This is qty_in_stock from Supabase
-          console.log('[SOLD_OUT_CHECK] ✅ STEP 6.5: Found stock value:', {
-            stock,
-            type: typeof stock,
-            is_zero: stock === 0,
-            is_null: stock === null,
-            is_undefined: stock === undefined
-          });
-          
           maxQuantity = stock;
-          source = `caseColors[${caseIndex}][${colorIndex}]`;
-          
-          console.log('[SOLD_OUT_CHECK] ✅ STEP 6.6: Set maxQuantity =', maxQuantity, 'from', source);
-        } else {
-          console.log('[SOLD_OUT_CHECK] ⚠️ STEP 6.5: Stock value not found or is null/undefined:', {
-            colorIndex,
-            value: colorIndex !== -1 ? quantities.caseColors[caseIndex][colorIndex] : 'colorIndex not found',
-            is_null: colorIndex !== -1 ? quantities.caseColors[caseIndex][colorIndex] === null : 'N/A',
-            is_undefined: colorIndex !== -1 ? quantities.caseColors[caseIndex][colorIndex] === undefined : 'N/A'
-          });
         }
-      } else {
-        console.log('[SOLD_OUT_CHECK] ⚠️ STEP 6.3: Case array does not exist at index', caseIndex);
       }
-    } else {
-      console.log('[SOLD_OUT_CHECK] ⚠️ STEP 6.1: caseColors does not exist or is falsy');
     }
 
     // Fallback: Get from cases array (overall case quantity from Supabase)
@@ -495,40 +386,20 @@ export const getMaxAvailableQuantity = (item, cart) => {
       if (caseIndex !== -1 && quantities.cases[caseIndex] !== null && quantities.cases[caseIndex] !== undefined) {
         const stock = quantities.cases[caseIndex]; // This is qty_in_stock from Supabase
         maxQuantity = stock;
-        source = `cases[${caseIndex}]`;
       }
     }
 
     // Check if item exists in Supabase inventory_items table
-    console.log('[SOLD_OUT_CHECK] 🔄 STEP 7: Evaluating maxQuantity...');
-    console.log('[SOLD_OUT_CHECK]   maxQuantity:', maxQuantity, 'type:', typeof maxQuantity, 'source:', source);
-    
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
-      console.log('[SOLD_OUT_CHECK] ✅ STEP 7.1: DECISION - Unlimited stock:', {
-        caseType: item.caseType,
-        color: item.color,
-        reason: 'Not in Supabase inventory',
-        maxQuantity,
-        source
-      });
       return null; // Item not in Supabase - unlimited stock
     }
 
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
-      console.log('[SOLD_OUT_CHECK] ✅ STEP 7.2: DECISION - SOLD OUT (Supabase qty = 0):', {
-        caseType: item.caseType,
-        color: item.color,
-        source,
-        maxQuantity,
-        cartItems: cart.length
-      });
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
-    
-    console.log('[SOLD_OUT_CHECK] ✅ STEP 7.3: Item has stock, maxQuantity =', maxQuantity);
 
     // If item exists in Supabase and qty > 0, subtract items already in cart
     // Count how many items with same caseType+color are already in cart
@@ -542,32 +413,10 @@ export const getMaxAvailableQuantity = (item, cart) => {
     }, 0);
 
     // Calculate: Supabase qty_in_stock - cart items
-    console.log('[SOLD_OUT_CHECK] 🔄 STEP 8: Calculating available stock...');
-    console.log('[SOLD_OUT_CHECK]   Counting items in cart...');
-    
     const available = maxQuantity - alreadyInCart;
     
-    console.log('[SOLD_OUT_CHECK] ✅ STEP 8.1: Calculation complete:', {
-      caseType: item.caseType,
-      color: item.color,
-      source,
-      supabaseQty: maxQuantity,
-      alreadyInCart,
-      available,
-      isSoldOut: available === 0
-    });
-    
-    const finalResult = Math.max(0, available);
-    
-    console.log('[SOLD_OUT_CHECK] ✅ STEP 8.2: FINAL DECISION - Returning:', {
-      result: finalResult,
-      isSoldOut: finalResult === 0,
-      caseType: item.caseType,
-      color: item.color
-    });
-    
     // If available === 0, show sold out (all items are in cart)
-    return finalResult;
+    return Math.max(0, available);
   }
 
   // Handle charm items - get quantity from Supabase inventory_items table
@@ -605,23 +454,12 @@ export const getMaxAvailableQuantity = (item, cart) => {
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)
     if (maxQuantity === null || maxQuantity === undefined) {
-      console.log('[SOLD_OUT_CHECK] ♾️ Unlimited stock (charm/pin):', {
-        category,
-        pinName,
-        reason: 'Not in Supabase inventory'
-      });
       return null; // Item not in Supabase - unlimited stock
     }
 
     // If item exists in Supabase and qty is 0, show sold out immediately
     // This check happens BEFORE considering cart items
     if (maxQuantity === 0) {
-      console.log('[SOLD_OUT_CHECK] 🚫 SOLD OUT (Supabase qty = 0) - charm/pin:', {
-        category,
-        pinName,
-        maxQuantity,
-        cartItems: cart.length
-      });
       return 0; // Sold out - item exists in Supabase but qty is 0
     }
 
@@ -636,15 +474,6 @@ export const getMaxAvailableQuantity = (item, cart) => {
 
     // Calculate: Supabase qty - cart items
     const available = maxQuantity - alreadyInCart;
-    
-    console.log('[SOLD_OUT_CHECK] 📦 Stock check (charm/pin):', {
-      category,
-      pinName,
-      supabaseQty: maxQuantity,
-      alreadyInCart,
-      available,
-      isSoldOut: available === 0
-    });
     
     // If available === 0, show sold out (all items are in cart)
     return Math.max(0, available);
