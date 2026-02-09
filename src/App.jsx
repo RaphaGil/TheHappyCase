@@ -13,6 +13,7 @@ if (import.meta.env.DEV) {
 
 import Footer from './component/Footer';
 import CartDrawer from './component/CartDrawer';
+import EnvDebug from './component/EnvDebug';
 import { CartProvider } from './context/CartContext';
 import { CurrencyProvider } from './context/CurrencyContext';
 
@@ -84,6 +85,7 @@ function AppContent() {
 
   return (
     <div className="App bg-white min-h-screen">
+      <EnvDebug />
       {!hideNavBar && (
         <header className={`App-header ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{background: 'white'}}>
           <NavBar isHomePage={isHomePage} />
