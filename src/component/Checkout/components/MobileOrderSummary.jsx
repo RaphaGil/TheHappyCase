@@ -9,7 +9,6 @@ const MobileOrderSummary = ({
   formatPrice,
   cart,
   subtotal,
-  vatAmount,
   shippingCost,
   shippingLabel,
   showInternationalNote,
@@ -53,7 +52,6 @@ const MobileOrderSummary = ({
               cart={cart}
               formatPrice={formatPrice}
               subtotal={subtotal}
-              vatAmount={vatAmount}
               shippingCost={shippingCost}
               shippingLabel={shippingLabel}
               totalWithShipping={totalWithShipping}

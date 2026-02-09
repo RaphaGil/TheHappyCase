@@ -7,7 +7,6 @@ const OrderSummary = ({
   cart, 
   formatPrice, 
   subtotal, 
-  vatAmount, 
   shippingCost, 
   shippingLabel, 
   totalWithShipping, 
@@ -51,13 +50,6 @@ const OrderSummary = ({
             <span>Subtotal</span>
             <span className="font-medium text-gray-900 font-inter">{formatPrice(subtotal)}</span>
           </div>
-          
-          {vatAmount > 0 && (
-            <div className="flex justify-between text-sm font-light text-gray-700 font-inter">
-              <span>VAT</span>
-              <span className="font-medium text-gray-900 font-inter">{formatPrice(vatAmount)}</span>
-            </div>
-          )}
           
           <div className="flex justify-between text-sm font-light text-gray-700 font-inter">
             <span className="flex items-center gap-1.5">

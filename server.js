@@ -200,6 +200,49 @@ app.post("/create-checkout-session", async (req, res) => {
   }
 });
 
+// --- Get Exchange Rates ---
+app.get("/api/exchange-rates", async (req, res) => {
+  try {
+    // Use exchangerate-api.io for free exchange rates
+    // Base currency: GBP
+    const response = await fetch('https://api.exchangerate-api.com/v4/latest/GBP');
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch exchange rates');
+    }
+    
+    const data = await response.json();
+    
+    // Extract rates for supported currencies
+    const rates = {
+      GBP: 1.0,
+      EUR: data.rates?.EUR || 1.17, // Fallback to default if not available
+    };
+    
+    console.log('📊 Exchange rates fetched:', rates);
+    
+    res.json({
+      success: true,
+      base: 'GBP',
+      rates,
+      timestamp: data.time_last_updated || Date.now(),
+    });
+  } catch (error) {
+    console.error('❌ Error fetching exchange rates:', error);
+    
+    // Return default rates on error
+    res.json({
+      success: false,
+      base: 'GBP',
+      rates: {
+        GBP: 1.0,
+        EUR: 1.17, // Default fallback rate
+      },
+      error: error.message,
+    });
+  }
+});
+
 // --- Create Payment Intent for Payment Element ---
 app.post("/api/create-payment-intent", async (req, res) => {
   // Ensure we always send JSON responses
@@ -254,14 +297,7 @@ app.post("/api/create-payment-intent", async (req, res) => {
     // Stripe minimum amounts by currency (in smallest currency unit)
     const minimumAmounts = {
       'gbp': 30,      // 30 pence = £0.30
-      'usd': 50,      // 50 cents = $0.50
       'eur': 50,      // 50 cents = €0.50
-      'cad': 50,      // 50 cents = C$0.50
-      'aud': 50,      // 50 cents = A$0.50
-      'brl': 50,      // 50 centavos = R$0.50
-      'jpy': 50,      // 50 yen
-      'mxn': 100,     // 100 centavos = MX$1.00
-      'inr': 50,      // 50 paise = ₹0.50
     };
 
     const minimumAmount = minimumAmounts[resolvedCurrency] || 30; // Default to 30
@@ -276,14 +312,7 @@ app.post("/api/create-payment-intent", async (req, res) => {
     if (roundedAmount < minimumAmount) {
       const currencySymbols = {
         'gbp': '£',
-        'usd': '$',
         'eur': '€',
-        'cad': 'C$',
-        'aud': 'A$',
-        'brl': 'R$',
-        'jpy': '¥',
-        'mxn': 'MX$',
-        'inr': '₹',
       };
       const symbol = currencySymbols[resolvedCurrency] || resolvedCurrency.toUpperCase();
       const minDisplay = (minimumAmount / 100).toFixed(2);
@@ -407,7 +436,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       return sendErrorResponse(400, 'Request body is required');
     }
     
-    const { paymentIntent, customerInfo, items, shippingCost, vatAmount, subtotal, totalWithShipping } = req.body;
+    const { paymentIntent, customerInfo, items, shippingCost, subtotal, totalWithShipping } = req.body;
 
     console.log('📧 Email request details:');
     console.log('   - Payment Intent ID:', paymentIntent?.id || 'MISSING');
@@ -415,7 +444,6 @@ app.post("/api/send-order-confirmation", async (req, res) => {
     console.log('   - Customer Name:', customerInfo?.name || 'MISSING');
     console.log('   - Items Count:', items?.length || 0);
     console.log('   - Shipping Cost:', shippingCost || 'N/A');
-    console.log('   - VAT Amount:', vatAmount || 'N/A');
     console.log('   - Subtotal:', subtotal || 'N/A');
     console.log('   - Total with Shipping:', totalWithShipping || 'N/A');
     console.log('   - Request body keys:', Object.keys(req.body || {}));
@@ -446,38 +474,33 @@ app.post("/api/send-order-confirmation", async (req, res) => {
     // Calculate shipping if not provided (fallback for Stripe redirects or old requests)
     let calculatedShipping = shippingCost || 0;
     if (!shippingCost && customerInfo?.address?.country && items?.length > 0) {
+      // European countries list
+      const EUROPEAN_COUNTRIES_LIST = [
+        'AL', 'AD', 'AT', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 
+        'LV', 'LI', 'LT', 'LU', 'MT', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL', 'PT', 'RO', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH'
+      ];
+      
       const SHIPPING_RATES = {
         GB: 3,
-        US: 16,
-        FR: 7,
+        // All European countries use £10
+        ...Object.fromEntries(EUROPEAN_COUNTRIES_LIST.map(code => [code, 10])),
       };
       const DEFAULT_SHIPPING_RATE = 12;
       const country = customerInfo.address.country.toUpperCase();
+      
       calculatedShipping = SHIPPING_RATES[country] ?? DEFAULT_SHIPPING_RATE;
-      console.log(`   Calculated shipping from country ${country}: £${calculatedShipping}`);
-    }
-    
-    // Calculate VAT if not provided (fallback for Stripe redirects or old requests)
-    let calculatedVat = vatAmount || 0;
-    if (!vatAmount && customerInfo?.address?.country) {
-      const EUROPEAN_COUNTRIES = new Set(['FR', 'DE', 'ES', 'IT']);
-      const EUROPEAN_VAT_RATE = 0.2;
-      const country = customerInfo.address.country.toUpperCase();
-      if (EUROPEAN_COUNTRIES.has(country)) {
-        calculatedVat = calculatedSubtotal * EUROPEAN_VAT_RATE;
-        console.log(`   Calculated VAT for European country ${country}: £${calculatedVat.toFixed(2)}`);
-      }
+      
+      console.log(`   Calculated shipping from country ${country}: £${calculatedShipping.toFixed(2)}`);
     }
     
     // Calculate total
     const totalAmount = totalWithShipping !== undefined 
       ? totalWithShipping 
-      : calculatedSubtotal + calculatedVat + calculatedShipping;
+      : calculatedSubtotal + calculatedShipping;
     
     console.log(`📊 Order totals:`);
     console.log(`   - Subtotal: £${calculatedSubtotal.toFixed(2)}`);
     console.log(`   - Shipping: £${calculatedShipping.toFixed(2)}`);
-    console.log(`   - VAT: £${calculatedVat.toFixed(2)}`);
     console.log(`   - Total: £${totalAmount.toFixed(2)}`);
     
     const orderId = paymentIntent?.id || `order-${Date.now()}`;
@@ -749,12 +772,6 @@ app.post("/api/send-order-confirmation", async (req, res) => {
                   <td style="padding: 8px 12px; text-align: right;">£${calculatedShipping.toFixed(2)}</td>
                 </tr>
                 ` : ''}
-                ${calculatedVat > 0 ? `
-                <tr>
-                  <td colspan="2" style="padding: 8px 12px; text-align: right; color: #6b7280;">VAT:</td>
-                  <td style="padding: 8px 12px; text-align: right;">£${calculatedVat.toFixed(2)}</td>
-                </tr>
-                ` : ''}
                 <tr>
                   <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #e5e7eb; font-size: 16px;">Total:</td>
                   <td style="padding: 12px; text-align: right; font-weight: bold; font-size: 18px; border-top: 2px solid #e5e7eb;">£${totalAmount.toFixed(2)}</td>
@@ -826,9 +843,6 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       console.log(`Order Date: ${orderDate}`);
       console.log(`Subtotal: £${calculatedSubtotal.toFixed(2)}`);
       console.log(`Shipping: £${calculatedShipping.toFixed(2)}`);
-      if (calculatedVat > 0) {
-        console.log(`VAT: £${calculatedVat.toFixed(2)}`);
-      }
       console.log(`Total: £${totalAmount.toFixed(2)}`);
       console.log(`Items: ${items?.length || 0}`);
       console.log('='.repeat(60));

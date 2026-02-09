@@ -18,6 +18,7 @@ import { getMaxAvailableQuantity, refreshInventoryFromSupabase } from '../../uti
 import InternationalNote from '../InternationalNote';
 import CheckoutHeader from './components/CheckoutHeader';
 import LoadingState from './components/LoadingState';
+import ExpressCheckout from './components/ExpressCheckout';
 import CustomerInfoForm from './components/CustomerInfoForm';
 import PaymentSection from './components/PaymentSection';
 import OrderSummary from './components/OrderSummary';
@@ -40,21 +41,31 @@ const stripePromise = loadStripe(
   'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
 );
 
+// European countries list
+const EUROPEAN_COUNTRIES = new Set([
+  'AL', 'AD', 'AT', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 
+  'LV', 'LI', 'LT', 'LU', 'MT', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL', 'PT', 'RO', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH'
+]);
+
 const SHIPPING_RATES = {
   GB: 3,
-  US: 16,
-  FR: 7,
+  // All European countries use the same rate
+  ...Object.fromEntries(Array.from(EUROPEAN_COUNTRIES).map(code => [code, 10])),
 };
 
 const SHIPPING_LABELS = {
-  GB: 'UK',
-  US: 'USA',
-  FR: 'France',
+  GB: 'England',
+  // European countries will use their country name
+  AL: 'Albania', AD: 'Andorra', AT: 'Austria', BE: 'Belgium', BA: 'Bosnia and Herzegovina', BG: 'Bulgaria',
+  HR: 'Croatia', CY: 'Cyprus', CZ: 'Czech Republic', DK: 'Denmark', EE: 'Estonia', FI: 'Finland',
+  FR: 'France', DE: 'Germany', GR: 'Greece', HU: 'Hungary', IS: 'Iceland', IE: 'Ireland', IT: 'Italy',
+  LV: 'Latvia', LI: 'Liechtenstein', LT: 'Lithuania', LU: 'Luxembourg', MT: 'Malta', MC: 'Monaco',
+  ME: 'Montenegro', NL: 'Netherlands', MK: 'North Macedonia', NO: 'Norway', PL: 'Poland', PT: 'Portugal',
+  RO: 'Romania', SM: 'San Marino', RS: 'Serbia', SK: 'Slovakia', SI: 'Slovenia', ES: 'Spain',
+  SE: 'Sweden', CH: 'Switzerland',
 };
 
 const DEFAULT_SHIPPING_RATE = 12;
-const EUROPEAN_COUNTRIES = new Set(['FR', 'DE', 'ES', 'IT']);
-const EUROPEAN_VAT_RATE = 0.2;
 
 const CURRENCY_MULTIPLIERS = {
   'jpy': 1,  // Japanese Yen doesn't use decimals
@@ -68,7 +79,7 @@ const CheckoutForm = () => {
   const elements = useElements();
   const navigate = useNavigate();
   const { cart, getTotalPrice, clearCart, incrementItemQty, decrementItemQty, removeFromCart } = useCart();
-  const { formatPrice } = useCurrency();
+  const { formatPrice, setCurrency, currency } = useCurrency();
 
   // --- State ---
   const [loading, setLoading] = useState(false);
@@ -99,16 +110,55 @@ const CheckoutForm = () => {
   // --- Computed Values ---
   const subtotal = getTotalPrice();
   const selectedCountry = customerInfo.address.country;
+  
+  // Calculate shipping cost
+  // Use fixed rates from SHIPPING_RATES
   const shippingCost = cart.length === 0
     ? 0
     : SHIPPING_RATES[selectedCountry] ?? DEFAULT_SHIPPING_RATE;
+  
   const shippingLabel = SHIPPING_LABELS[selectedCountry] || 'International';
-  const applyEuropeanVat = EUROPEAN_COUNTRIES.has(selectedCountry);
-  const vatAmount = applyEuropeanVat ? subtotal * EUROPEAN_VAT_RATE : 0;
   const showInternationalNote = selectedCountry && selectedCountry.toUpperCase() !== 'GB' && cart.length > 0;
-  const totalWithShipping = subtotal + vatAmount + shippingCost;
+  const totalWithShipping = subtotal + shippingCost;
 
   // --- Effects ---
+  // Suppress non-critical hCaptcha errors (used internally by Stripe for fraud detection)
+  // These 401 errors are harmless - Stripe falls back to other fraud detection methods
+  useEffect(() => {
+    const handleUnhandledRejection = (event) => {
+      const errorMessage = event.reason?.message || event.reason?.toString() || '';
+      const errorUrl = event.reason?.url || '';
+      
+      // Suppress hCaptcha 401 errors (non-critical, Stripe handles gracefully)
+      if (errorMessage.includes('hcaptcha') || 
+          errorMessage.includes('hCaptcha') ||
+          errorUrl.includes('api.hcaptcha.com') ||
+          (errorMessage.includes('401') && errorMessage.includes('Unauthorized'))) {
+        event.preventDefault(); // Prevent error from showing in console
+        console.debug('hCaptcha authentication skipped (Stripe uses fallback fraud detection)');
+      }
+    };
+    
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
+  // Automatically change currency based on selected country
+  useEffect(() => {
+    if (selectedCountry) {
+      if (EUROPEAN_COUNTRIES.has(selectedCountry)) {
+        // Set currency to EUR for European countries
+        setCurrency('EUR');
+      } else if (selectedCountry === 'GB') {
+        // Set currency to GBP for UK
+        setCurrency('GBP');
+      }
+    }
+  }, [selectedCountry, setCurrency]);
+
   // Check authentication status on mount and when returning from login
   useEffect(() => {
     const checkAuth = () => {
@@ -430,7 +480,6 @@ const CheckoutForm = () => {
             customerInfo,
             items: cartItemsCopy,
             shippingCost,
-            vatAmount,
             totalWithShipping,
             subtotal,
           } 
@@ -452,7 +501,6 @@ const CheckoutForm = () => {
             customerInfo,
             items: cartItemsCopy,
             shippingCost,
-            vatAmount,
             totalWithShipping,
             subtotal,
           } 
@@ -476,7 +524,6 @@ const CheckoutForm = () => {
         formatPrice={formatPrice}
         cart={cart}
         subtotal={subtotal}
-        vatAmount={vatAmount}
         shippingCost={shippingCost}
         shippingLabel={shippingLabel}
         showInternationalNote={showInternationalNote}
@@ -492,7 +539,15 @@ const CheckoutForm = () => {
         <form
           onSubmit={handleSubmit}
           className="space-y-6  mt-6 lg:mt-0 lg:p-6 w-full lg:w-1/2 lg:flex-shrink-0"
-        >
+        > 
+        <p className="text-sm text-center text-gray-500 font-light font-inter">Express Checkout</p>
+        {/* Express Checkout - Apple Pay, Google Pay, Klarna */}
+        <ExpressCheckout
+          amount={Math.round(totalWithShipping * 100)} // Convert to smallest currency unit
+          currency={currency.toLowerCase()}
+          paymentElementReady={paymentElementReady}
+        />
+
         {/* Customer Information */}
         <CustomerInfoForm 
           customerInfo={customerInfo}
@@ -547,7 +602,6 @@ const CheckoutForm = () => {
               cart={cart}
               formatPrice={formatPrice}
               subtotal={subtotal}
-              vatAmount={vatAmount}
               shippingCost={shippingCost}
               shippingLabel={shippingLabel}
               totalWithShipping={totalWithShipping}

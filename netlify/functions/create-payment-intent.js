@@ -73,14 +73,7 @@ exports.handler = async (event) => {
     // Stripe minimum amounts by currency (in smallest currency unit)
     const minimumAmounts = {
       'gbp': 30,      // 30 pence = £0.30
-      'usd': 50,      // 50 cents = $0.50
       'eur': 50,      // 50 cents = €0.50
-      'cad': 50,      // 50 cents = C$0.50
-      'aud': 50,      // 50 cents = A$0.50
-      'brl': 50,      // 50 centavos = R$0.50
-      'jpy': 50,      // 50 yen
-      'mxn': 100,     // 100 centavos = MX$1.00
-      'inr': 50,      // 50 paise = ₹0.50
     };
 
     const minimumAmount = minimumAmounts[resolvedCurrency] || 30;
@@ -88,14 +81,7 @@ exports.handler = async (event) => {
     if (roundedAmount < minimumAmount) {
       const currencySymbols = {
         'gbp': '£',
-        'usd': '$',
         'eur': '€',
-        'cad': 'C$',
-        'aud': 'A$',
-        'brl': 'R$',
-        'jpy': '¥',
-        'mxn': 'MX$',
-        'inr': '₹',
       };
       const symbol = currencySymbols[resolvedCurrency] || resolvedCurrency.toUpperCase();
       const minDisplay = (minimumAmount / 100).toFixed(2);

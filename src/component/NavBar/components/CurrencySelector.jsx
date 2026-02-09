@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useCurrency } from '../../../context/CurrencyContext';
-import { currencyToCountry, currencyToFlag, mainCurrencies, europeanCountries } from '../../../data/currencyConstants';
+import { currencyToCountry, currencyToFlag, mainCurrencies } from '../../../data/currencyConstants';
 
 const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
   const { currency, setCurrency, currencySymbol } = useCurrency();
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
-  const [showEuropeanCountries, setShowEuropeanCountries] = useState(false);
   const currencyDropdownRef = useRef(null);
 
   const getCurrencyDisplayWithFlag = () => {
@@ -19,7 +18,6 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
   const handleCurrencySelect = (currencyCode) => {
     setCurrency(currencyCode);
     setIsCurrencyDropdownOpen(false);
-    setShowEuropeanCountries(false);
     if (onSelect) {
       onSelect();
     }
@@ -32,7 +30,6 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
     const handleClickOutside = (event) => {
       if (isCurrencyDropdownOpen && currencyDropdownRef.current && !currencyDropdownRef.current.contains(event.target)) {
         setIsCurrencyDropdownOpen(false);
-        setShowEuropeanCountries(false);
       }
     };
 
@@ -43,7 +40,6 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
   }, [isCurrencyDropdownOpen]);
 
   const isMobile = variant === 'mobile';
-  const isEuropeanCurrency = ['PLN', 'CZK', 'HUF', 'RON', 'BGN', 'DKK', 'SEK', 'CHF', 'NOK'].includes(currency);
 
   if (isMobile) {
     return (
@@ -80,44 +76,6 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                 </div>
               </button>
             ))}
-            
-            {/* Other European Countries Dropdown */}
-            <div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowEuropeanCountries(!showEuropeanCountries);
-                }}
-                className={`w-full text-left px-8 py-2.5 text-sm transition-colors font-light font-inter ${isEuropeanCurrency ? 'bg-gray-100' : 'hover:bg-gray-100'} flex items-center justify-between`}
-                style={{color: isEuropeanCurrency ? '#111827' : '#374151'}}
-              >
-                <div className="flex items-center justify-between flex-1">
-                  <span className="text-sm text-gray-500 font-light">Other European Countries</span>
-                </div>
-                <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-base transition-transform duration-200 ${showEuropeanCountries ? 'rotate-180' : ''}`} />
-              </button>
-              {showEuropeanCountries && (
-                <div className="pl-8 max-h-64 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                  {europeanCountries.map((country) => (
-                    <button
-                      key={country.code}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCurrencySelect(country.code);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm transition-colors font-light font-inter ${currency === country.code ? 'bg-gray-100' : 'hover:bg-gray-100'} flex items-center justify-between`}
-                      style={{color: currency === country.code ? '#111827' : '#374151'}}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{country.flag}</span>
-                        <span>{country.symbol} {country.code}</span>
-                      </div>
-                      <span className="text-sm text-gray-500 font-light">{country.name}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         )}
       </div>
@@ -158,45 +116,7 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
                 {curr.name !== 'Euro' && <span className="text-xs text-gray-500">{curr.name}</span>}
               </div>
             </button>
-          ))}
-          
-          {/* Other European Countries Dropdown */}
-          <div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowEuropeanCountries(!showEuropeanCountries);
-              }}
-              className={`w-full text-left px-4 py-2 text-xs transition-colors font-inter ${isEuropeanCurrency ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-              style={{color: isEuropeanCurrency ? '#111827' : '#6b7280'}}
-            >
-              <div className="flex items-center justify-between flex-1">
-                <span className="text-xs text-gray-500">Other European Countries</span>
-              </div>
-              <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-xs transition-transform ${showEuropeanCountries ? 'rotate-180' : ''}`} />
-            </button>
-            {showEuropeanCountries && (
-              <div className="pl-4 ml-2 max-h-64 overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                {europeanCountries.map((country) => (
-                  <button
-                    key={country.code}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCurrencySelect(country.code);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 text-xs transition-colors font-inter ${currency === country.code ? 'bg-gray-50 font-medium' : 'hover:bg-gray-50'} flex items-center justify-between`}
-                    style={{color: currency === country.code ? '#111827' : '#6b7280'}}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span>{country.flag}</span>
-                      <span>{country.symbol} {country.code}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">{country.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+            ))}
         </div>
       )}
     </div>

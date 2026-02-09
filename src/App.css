@@ -66,6 +66,48 @@ html {
   box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4) !important;
 }
 
+/* Express Checkout - Show only Apple Pay, Google Pay, and Klarna */
+.express-checkout-container [aria-label*="Link"],
+.express-checkout-container [aria-label*="link"],
+.express-checkout-container [aria-label*="PayPal"],
+.express-checkout-container [aria-label*="paypal"],
+.express-checkout-container [aria-label*="Cash App"],
+.express-checkout-container [aria-label*="cashapp"],
+.express-checkout-container [aria-label*="Afterpay"],
+.express-checkout-container [aria-label*="Clearpay"],
+.express-checkout-container [aria-label*="afterpay"],
+.express-checkout-container [aria-label*="clearpay"],
+.express-checkout-container [aria-label*="Amazon"],
+.express-checkout-container [aria-label*="amazon"],
+.express-checkout-container [data-testid*="link"],
+.express-checkout-container [data-testid*="paypal"],
+.express-checkout-container [data-testid*="cashapp"],
+.express-checkout-container [data-testid*="afterpay"],
+.express-checkout-container [data-testid*="clearpay"],
+.express-checkout-container [data-testid*="amazon"],
+.express-checkout-container [id*="amazon"],
+.express-checkout-container iframe[src*="amazon"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Show only Apple Pay, Google Pay, and Klarna */
+.express-checkout-container [aria-label*="Apple Pay"],
+.express-checkout-container [aria-label*="apple pay"],
+.express-checkout-container [aria-label*="Google Pay"],
+.express-checkout-container [aria-label*="google pay"],
+.express-checkout-container [aria-label*="Klarna"],
+.express-checkout-container [aria-label*="klarna"],
+.express-checkout-container iframe[title*="Apple Pay"],
+.express-checkout-container iframe[title*="Google Pay"],
+.express-checkout-container iframe[title*="Klarna"] {
+  display: block !important;
+  visibility: visible !important;
+}
+
 /* Express Checkout Section Styling */
 .express-checkout-wrapper {
   margin-bottom: 0;
@@ -340,6 +382,30 @@ button[aria-label*="ClearPay"] {
   opacity: 1 !important;
   width: 100% !important;
   margin-bottom: 12px !important;
+}
+
+/* Hide Amazon Pay in Payment Element */
+[data-testid="payment-element"] [aria-label*="Amazon"],
+[data-testid="payment-element"] [aria-label*="amazon"],
+[data-testid="payment-element"] [role="tab"][aria-label*="Amazon"],
+[data-testid="payment-element"] [role="tab"][aria-label*="amazon"],
+[data-testid="payment-element"] [role="button"][aria-label*="Amazon"],
+[data-testid="payment-element"] [role="button"][aria-label*="amazon"],
+[data-testid="payment-element"] button[aria-label*="Amazon"],
+[data-testid="payment-element"] button[aria-label*="amazon"],
+[data-testid="payment-element"] [data-testid*="amazon"],
+[data-testid="payment-element"] [id*="amazon"],
+[data-testid="payment-element"] [id*="AmazonPay"],
+[data-testid="payment-element"] iframe[src*="amazon"],
+[data-testid="payment-element"] iframe[src*="Amazon"],
+[data-testid="payment-element"] [class*="amazon"],
+[data-testid="payment-element"] [class*="Amazon"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
 }
 
 /* Ensure payment method buttons (Apple Pay, Google Pay, Klarna) are full width and stacked */

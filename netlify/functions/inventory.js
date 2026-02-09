@@ -10,8 +10,6 @@
  */
 
 const { createClient } = require("@supabase/supabase-js");
-const { readFileSync, existsSync } = require("fs");
-const { join } = require("path");
 
 // --------------------
 // Helper: Send JSON response
@@ -30,34 +28,40 @@ const sendResponse = (statusCode, body, headers = {}) => ({
 
 // --------------------
 // Load products.json
+// Use require() to ensure it's bundled with the function
+// Try multiple paths for reliability
 // --------------------
 const loadProductsJson = () => {
-  const productsPath = join(__dirname, "data", "products.json");
-
-  console.log("[API INVENTORY] Loading products.json from:", productsPath);
-
-  if (!existsSync(productsPath)) {
-    console.error("❌ products.json not found at:", productsPath);
-    return null;
-  }
-
   try {
-    const raw = readFileSync(productsPath, "utf-8");
-    const Products = JSON.parse(raw);
-
-    console.log("✅ Loaded products.json");
-    console.log("[API INVENTORY] Products structure:", {
-      hasCases: !!Products.cases,
-      casesLength: Products.cases?.length,
-      hasPins: !!Products.pins,
-      pinsFlags: Products.pins?.flags?.length,
-      pinsColorful: Products.pins?.colorful?.length,
-      pinsBronze: Products.pins?.bronze?.length,
-    });
-
-    return Products;
+    // Try same directory first (most reliable for Netlify bundling)
+    try {
+      const Products = require("./products.json");
+      console.log("✅ Loaded products.json from same directory");
+      console.log("[API INVENTORY] Products structure:", {
+        hasCases: !!Products.cases,
+        casesLength: Products.cases?.length,
+        hasPins: !!Products.pins,
+        pinsFlags: Products.pins?.flags?.length,
+        pinsColorful: Products.pins?.colorful?.length,
+        pinsBronze: Products.pins?.bronze?.length,
+      });
+      return Products;
+    } catch (err) {
+      // Fallback to data subdirectory
+      const Products = require("./data/products.json");
+      console.log("✅ Loaded products.json from data subdirectory");
+      console.log("[API INVENTORY] Products structure:", {
+        hasCases: !!Products.cases,
+        casesLength: Products.cases?.length,
+        hasPins: !!Products.pins,
+        pinsFlags: Products.pins?.flags?.length,
+        pinsColorful: Products.pins?.colorful?.length,
+        pinsBronze: Products.pins?.bronze?.length,
+      });
+      return Products;
+    }
   } catch (err) {
-    console.error("❌ Failed to parse products.json:", err.message);
+    console.error("❌ Failed to load products.json:", err.message);
     return null;
   }
 };

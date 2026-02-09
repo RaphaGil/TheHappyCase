@@ -207,7 +207,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
         
         <div>
           <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
-            Postal Code *
+            {customerInfo.address.country === 'GB' ? 'Postcode' : 'Postal Code'} *
           </label>
           <input
             type="text"
@@ -222,7 +222,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
         
         <div>
           <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
-            Country *
+            Country/Region *
           </label>
           <select
             name="address.country"
@@ -231,14 +231,48 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 font-light font-inter text-base"
             style={{ fontSize: '16px' }}
           >
-            <option value="GB">United Kingdom</option>
-            <option value="US">United States</option>
-            <option value="CA">Canada</option>
-            <option value="AU">Australia</option>
-            <option value="DE">Germany</option>
-            <option value="FR">France</option>
-            <option value="ES">Spain</option>
-            <option value="IT">Italy</option>
+            <option value="GB">England</option>
+            <optgroup label="Europe">
+              <option value="AL">Albania</option>
+              <option value="AD">Andorra</option>
+              <option value="AT">Austria</option>
+              <option value="BE">Belgium</option>
+              <option value="BA">Bosnia and Herzegovina</option>
+              <option value="BG">Bulgaria</option>
+              <option value="HR">Croatia</option>
+              <option value="CY">Cyprus</option>
+              <option value="CZ">Czech Republic</option>
+              <option value="DK">Denmark</option>
+              <option value="EE">Estonia</option>
+              <option value="FI">Finland</option>
+              <option value="FR">France</option>
+              <option value="DE">Germany</option>
+              <option value="GR">Greece</option>
+              <option value="HU">Hungary</option>
+              <option value="IS">Iceland</option>
+              <option value="IE">Ireland</option>
+              <option value="IT">Italy</option>
+              <option value="LV">Latvia</option>
+              <option value="LI">Liechtenstein</option>
+              <option value="LT">Lithuania</option>
+              <option value="LU">Luxembourg</option>
+              <option value="MT">Malta</option>
+              <option value="MC">Monaco</option>
+              <option value="ME">Montenegro</option>
+              <option value="NL">Netherlands</option>
+              <option value="MK">North Macedonia</option>
+              <option value="NO">Norway</option>
+              <option value="PL">Poland</option>
+              <option value="PT">Portugal</option>
+              <option value="RO">Romania</option>
+              <option value="SM">San Marino</option>
+              <option value="RS">Serbia</option>
+              <option value="SK">Slovakia</option>
+              <option value="SI">Slovenia</option>
+              <option value="ES">Spain</option>
+              <option value="SE">Sweden</option>
+              <option value="CH">Switzerland</option>
+            </optgroup>
           </select>
         </div>
       </div>
