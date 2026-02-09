@@ -72,11 +72,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Check NEXT_PUBLIC environment variables
-    console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log("SUPABASE KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 10));
-
     // Check Supabase configuration for PRODUCTION
+    // Note: Server-side Netlify functions use process.env, not import.meta.env
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
