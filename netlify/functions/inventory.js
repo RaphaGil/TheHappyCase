@@ -80,6 +80,9 @@ exports.handler = async (event) => {
       console.error('❌ PRODUCTION: Supabase credentials not configured in Netlify environment variables');
       console.error('   Missing: SUPABASE_URL and/or SUPABASE_SERVICE_ROLE_KEY');
       console.error('   Action: Set these in Netlify Dashboard → Site settings → Environment variables');
+      console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("SUPABASE KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 10));
+
       return sendResponse(200, {
         success: true,
         inventory: {
