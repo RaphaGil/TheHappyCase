@@ -158,6 +158,10 @@ exports.handler = async (event) => {
       if (result && typeof result === 'object') {
         items = result.data;
         error = result.error;
+        
+        // Log raw Supabase result
+        console.log("[API INVENTORY] raw supabase result:", items);
+        console.log("[API INVENTORY] error:", error);
       } else {
         throw new Error('Unexpected query result format');
       }
