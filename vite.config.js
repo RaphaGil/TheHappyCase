@@ -15,7 +15,7 @@ const baseUrl = process.env.VITE_BASE_URL || '/';
 
 // Full site URL for SEO meta tags (canonical, og:image, etc.)
 // Set VITE_SITE_URL=https://thehappycase.com for production
-const siteUrl = process.env.VITE_SITE_URL || 'https://thehappycase.com';
+const siteUrl = process.env.VITE_SITE_URL || 'https://thehappycase.shop';
 
 // Plugin to replace SEO placeholders in index.html and generate sitemap at build time
 function seoPlugin() {
