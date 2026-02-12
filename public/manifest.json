@@ -1,17 +1,10 @@
 {
   "short_name": "The Happy Case",
-  "name": "The Happy Case - Custom Passport Cases",
+  "name": "The Happy Case - Custom Passport Cases with Charms",
+  "description": "Create custom passport cases with personalized charms. Choose from 3 case styles and 40+ design ideas.",
   "icons": [
-    {
-      "src": "/assets/logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/assets/logo.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    {"src": "/assets/logo.webp", "sizes": "192x192", "type": "image/webp"},
+    {"src": "/assets/logo.webp", "sizes": "512x512", "type": "image/webp"}
   ],
   "start_url": "/",
   "display": "standalone",

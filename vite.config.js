@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 // Get __dirname equivalent in ES modules
@@ -12,9 +13,53 @@ const __dirname = path.dirname(__filename);
 // For Netlify/Vercel root: VITE_BASE_URL=/ (or leave unset)
 const baseUrl = process.env.VITE_BASE_URL || '/';
 
+// Full site URL for SEO meta tags (canonical, og:image, etc.)
+// Set VITE_SITE_URL=https://thehappycase.com for production
+const siteUrl = process.env.VITE_SITE_URL || 'https://thehappycase.com';
+
+// Plugin to replace SEO placeholders in index.html and generate sitemap at build time
+function seoPlugin() {
+  return {
+    name: 'seo-plugin',
+    transformIndexHtml(html) {
+      return html.replace(/__SITE_URL__/g, siteUrl);
+    },
+    closeBundle() {
+      const outDir = path.join(__dirname, 'build');
+      const robotsTxt = `# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+Sitemap: ${siteUrl}/sitemap.xml
+`;
+      fs.writeFileSync(path.join(outDir, 'robots.txt'), robotsTxt);
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${siteUrl}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>${siteUrl}/CreateYours</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>${siteUrl}/DesignIdeas</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>${siteUrl}/PassportCases/Economy</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>${siteUrl}/PassportCases/FirstClass</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>${siteUrl}/PassportCases/BusinessClass</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>${siteUrl}/Charms/Colorful</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>${siteUrl}/Charms/Bronze</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>${siteUrl}/Flags</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>${siteUrl}/ColorfulCharms</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>${siteUrl}/BronzeCharms</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>${siteUrl}/about</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>${siteUrl}/returns</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>${siteUrl}/shipping</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+</urlset>`;
+      fs.mkdirSync(outDir, { recursive: true });
+      fs.writeFileSync(path.join(outDir, 'sitemap.xml'), sitemap);
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    seoPlugin(),
     react({
       // Optimize React for production builds
       jsxRuntime: 'automatic',

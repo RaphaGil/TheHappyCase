@@ -88,15 +88,6 @@ export const createPaymentIntent = async (paymentData) => {
   // Try to create a real Payment Intent via backend
   try {
     const apiUrl = getApiUrl('/api/create-payment-intent');
-    console.log('📞 Calling backend to create payment intent');
-    console.log('   URL:', apiUrl);
-    console.log('   Request payload:', {
-      amount,
-      currency,
-      itemCount: Array.isArray(items) ? items.length : 0,
-      hasCustomerInfo: !!customerInfo,
-      customerEmail: customerInfo?.email || 'N/A'
-    });
     
     const requestBody = {
       amount,
@@ -104,8 +95,6 @@ export const createPaymentIntent = async (paymentData) => {
       items,
       customerInfo,
     };
-    
-    console.log('   Full request body:', JSON.stringify(requestBody, null, 2));
     
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -115,13 +104,6 @@ export const createPaymentIntent = async (paymentData) => {
       body: JSON.stringify(requestBody),
     });
 
-    console.log('📥 Response received:', {
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok,
-      headers: Object.fromEntries(response.headers.entries())
-    });
-
     if (!response.ok) {
       let errorBody;
       const contentType = response.headers.get('content-type');
@@ -129,35 +111,18 @@ export const createPaymentIntent = async (paymentData) => {
       try {
         if (contentType && contentType.includes('application/json')) {
           errorBody = await response.json();
-          console.error('❌ Backend error response (JSON):', {
-            status: response.status,
-            statusText: response.statusText,
-            error: errorBody.error || errorBody.message || errorBody,
-            fullBody: errorBody
-          });
         } else {
           errorBody = await response.text();
-          console.error('❌ Backend error response (text/plain):', {
-            status: response.status,
-            statusText: response.statusText,
-            contentType: contentType,
-            body: errorBody,
-            bodyLength: errorBody.length,
-            fullBody: errorBody // Log full body for debugging
-          });
           
           // Try to parse as JSON if it looks like JSON
           try {
             const parsed = JSON.parse(errorBody);
-            console.error('   Parsed text as JSON:', parsed);
             errorBody = parsed;
           } catch (e) {
             // Not JSON, keep as text
-            console.error('   Response is plain text, not JSON');
           }
         }
       } catch (parseError) {
-        console.error('❌ Failed to parse error response:', parseError);
         errorBody = 'Unable to parse error response';
       }
       
@@ -171,46 +136,15 @@ export const createPaymentIntent = async (paymentData) => {
     }
 
     const data = await response.json();
-    console.log('✅ Backend response received:', { 
-      hasClientSecret: !!data.clientSecret,
-      keys: Object.keys(data),
-      dataType: typeof data
-    });
 
     if (!data.clientSecret) {
-      console.error('❌ Backend response missing clientSecret');
-      console.error('   Response data:', data);
-      console.error('   Response keys:', Object.keys(data));
       throw new Error('Backend did not return a clientSecret');
     }
 
-    console.log('✅ Payment intent created successfully');
     return {
       client_secret: data.clientSecret,
     };
   } catch (error) {
-    console.error('❌ Failed to create payment intent via backend');
-    console.error('   Error name:', error?.name);
-    console.error('   Error message:', error?.message);
-    console.error('   Error type:', error?.constructor?.name);
-    
-    // Check if it's a network error
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      console.error('   ⚠️ Network error detected - server may be down or unreachable');
-      console.error('   Check if backend server is running on port 3001');
-    }
-    
-    // Check if it's a 500 error
-    if (error?.message?.includes('500')) {
-      console.error('   ⚠️ Server 500 error detected');
-      console.error('   This indicates a server-side error. Check server logs for details.');
-    }
-    
-    console.error('   Full error:', error);
-    if (error?.stack) {
-      console.error('   Stack trace:', error.stack);
-    }
-    
     // Don't fall back to mock - throw the error so the user knows something is wrong
     throw new Error(
       `Failed to create payment intent: ${error.message}. Please ensure your backend server is running on port 3001.`

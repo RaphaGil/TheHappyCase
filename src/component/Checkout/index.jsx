@@ -18,7 +18,6 @@ import { getMaxAvailableQuantity, refreshInventoryFromSupabase } from '../../uti
 import InternationalNote from '../InternationalNote';
 import CheckoutHeader from './components/CheckoutHeader';
 import LoadingState from './components/LoadingState';
-import ExpressCheckout from './components/ExpressCheckout';
 import CustomerInfoForm from './components/CustomerInfoForm';
 import PaymentSection from './components/PaymentSection';
 import OrderSummary from './components/OrderSummary';
@@ -29,12 +28,7 @@ import ShippingInfoModal from './components/ShippingInfoModal';
 // Get Stripe publishable key from environment
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
-// Validate Stripe key format
-if (!stripePublishableKey) {
-  console.warn('⚠️ VITE_STRIPE_PUBLISHABLE_KEY is not set. Payment Element may not load correctly.');
-} else if (!stripePublishableKey.startsWith('pk_')) {
-  console.warn('⚠️ Invalid Stripe publishable key format. Key should start with "pk_"');
-}
+// Validate Stripe key format (silent validation)
 
 const stripePromise = loadStripe(
   stripePublishableKey || 
@@ -135,7 +129,6 @@ const CheckoutForm = () => {
           errorUrl.includes('api.hcaptcha.com') ||
           (errorMessage.includes('401') && errorMessage.includes('Unauthorized'))) {
         event.preventDefault(); // Prevent error from showing in console
-        console.debug('hCaptcha authentication skipped (Stripe uses fallback fraud detection)');
       }
     };
     
@@ -251,27 +244,19 @@ const CheckoutForm = () => {
 
   // --- Handlers ---
   const handleIncrementWithCheck = (itemId) => {
-    console.log('🔄 handleIncrementWithCheck called:', { itemId, cartLength: cart.length, cartItems: cart.map((i, idx) => ({ index: idx, id: i.id, name: i.name || i.caseName, type: i.type })) });
-    
     // Find item by ID or by index
     const item = typeof itemId === 'string' 
       ? cart.find(i => i.id === itemId)
       : (typeof itemId === 'number' && itemId >= 0 && itemId < cart.length ? cart[itemId] : null);
     
-    console.log('📦 Item found:', item ? { name: item.name || item.caseName, id: item.id, type: item.type, quantity: item.quantity } : 'NOT FOUND');
-    
     if (!item) {
-      console.error('❌ Item not found for increment:', itemId);
       return;
     }
     
     const maxAvailable = getMaxAvailableQuantity(item, cart);
     const canIncrement = maxAvailable === null || maxAvailable > 0;
     
-    console.log('📊 Inventory check:', { maxAvailable, canIncrement, currentQty: item.quantity });
-    
     if (canIncrement) {
-      console.log('✅ Calling incrementItemQty with:', itemId);
       incrementItemQty(itemId);
       // Clear error when successfully incrementing
       setItemErrors(prev => {
@@ -318,10 +303,6 @@ const CheckoutForm = () => {
     }
   }, [cart, navigate]);
 
-  // Reset payment element ready state when elements change
-  useEffect(() => {
-    setPaymentElementReady(false);
-  }, [elements]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -368,7 +349,6 @@ const CheckoutForm = () => {
     try {
       // Double-check inventory from Supabase before processing payment
       // This prevents race conditions where another customer bought the last item
-      console.log('🔍 Checking inventory before payment confirmation...');
       await refreshInventoryFromSupabase();
       
       // Check each item in cart against current Supabase inventory
@@ -433,11 +413,8 @@ const CheckoutForm = () => {
         const errorMessage = `Sorry, ${itemsList} ${outOfStockItems.length === 1 ? 'is' : 'are'} no longer available. Please remove ${outOfStockItems.length === 1 ? 'it' : 'them'} from your cart and try again.`;
         setError(errorMessage);
         setLoading(false);
-        console.warn('⚠️ Payment blocked - items out of stock:', outOfStockItems);
         return;
       }
-      
-      console.log('✅ Inventory check passed - all items are in stock');
       // Confirm the payment with Stripe
       // The clientSecret is automatically retrieved from Elements context
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
@@ -506,10 +483,9 @@ const CheckoutForm = () => {
           } 
         });
       }
-    } catch (err) {
-      setError('An error occurred while processing your payment.');
-      console.error('Payment error:', err);
-    } finally {
+      } catch (err) {
+        setError('An error occurred while processing your payment.');
+      } finally {
       setLoading(false);
     }
   };
@@ -540,14 +516,6 @@ const CheckoutForm = () => {
           onSubmit={handleSubmit}
           className="space-y-6  mt-6 lg:mt-0 lg:p-6 w-full lg:w-1/2 lg:flex-shrink-0"
         > 
-        <p className="text-sm text-center text-gray-500 font-light font-inter">Express Checkout</p>
-        {/* Express Checkout - Apple Pay, Google Pay, Klarna */}
-        <ExpressCheckout
-          amount={Math.round(totalWithShipping * 100)} // Convert to smallest currency unit
-          currency={currency.toLowerCase()}
-          paymentElementReady={paymentElementReady}
-        />
-
         {/* Customer Information */}
         <CustomerInfoForm 
           customerInfo={customerInfo}
@@ -571,7 +539,6 @@ const CheckoutForm = () => {
           error={error}
           onPaymentReady={() => setPaymentElementReady(true)}
           onPaymentError={(errorMessage) => {
-            console.error('Payment Element load error:', errorMessage);
             setError(errorMessage);
           }}
         />
@@ -687,17 +654,6 @@ const Checkout = () => {
         setLoading(true);
         setPaymentError(null); // Clear any previous errors
         
-        console.log('🚀 Starting payment initialization...');
-        console.log('📦 Cart details:', {
-          itemCount: cart.length,
-          items: cart.map(item => ({
-            id: item.id,
-            name: item.name || item.caseName,
-            quantity: item.quantity,
-            price: item.price || item.totalPrice
-          }))
-        });
-        
         // Get total price in GBP, then convert to selected currency
         const totalPriceGBP = getTotalPrice();
         const totalPriceInCurrency = convertPrice(totalPriceGBP);
@@ -713,15 +669,6 @@ const Checkout = () => {
         const amount = Math.round(totalPriceInCurrency * multiplier);
         const currencyCode = currency.toLowerCase();
         
-        console.log('💳 Payment intent calculation:', {
-          totalPriceGBP,
-          totalPriceInCurrency,
-          currency: currencyCode,
-          amount,
-          multiplier,
-          cartLength: cart.length
-        });
-        
         const paymentData = {
           amount,
           currency: currencyCode,
@@ -729,22 +676,7 @@ const Checkout = () => {
           customerInfo: {},
         };
         
-        console.log('📤 Sending payment intent request:', {
-          url: 'POST /api/create-payment-intent',
-          amount,
-          currency: currencyCode,
-          itemCount: cart.length,
-          hasItems: Array.isArray(cart) && cart.length > 0
-        });
-        
         const result = await createPaymentIntent(paymentData);
-        
-        console.log('✅ Payment intent created successfully:', {
-          hasClientSecret: !!result?.client_secret,
-          clientSecretLength: result?.client_secret?.length
-        });
-
-        console.log("Client Secret received:", result.client_secret);
 
         setOptions({
           clientSecret: result.client_secret,
@@ -761,25 +693,7 @@ const Checkout = () => {
             },
           },
         });
-        console.log('✅ Payment options initialized successfully');
       } catch (err) {
-        console.error('❌ Failed to initialize payment options');
-        console.error('❌ Error type:', err?.constructor?.name || typeof err);
-        console.error('❌ Error message:', err?.message);
-        console.error('❌ Error stack:', err?.stack);
-        console.error('❌ Full error object:', {
-          name: err?.name,
-          message: err?.message,
-          cause: err?.cause,
-          ...(err?.response && {
-            response: {
-              status: err.response.status,
-              statusText: err.response.statusText,
-              data: err.response.data
-            }
-          })
-        });
-        
         // More detailed error message
         let errorMessage = 'Failed to initialize payment. ';
         if (err?.message) {
@@ -792,7 +706,6 @@ const Checkout = () => {
         hasInitializedRef.current = false; // Allow retry on error
       } finally {
         setLoading(false);
-        console.log('🏁 Payment initialization completed');
       }
     };
 
