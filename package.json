@@ -1,9 +1,15 @@
 {
   "name": "thehappycase",
-  "homepage": "https://username.github.io/repository-name",
+  "homepage": "https://raphagil.github.io/TheHappyCase/",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "overrides": {
+    "react-helmet-async": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^7.0.1",
@@ -29,55 +35,6 @@
     "stripe": "^19.3.0",
     "web-vitals": "^5.1.0"
   },
-  "scripts": {
-    "dev": "vite",
-    "build": "npm run copy-products-json && vite build",
-    "copy-products-json": "node -e \"const fs = require('fs'); const path = require('path'); const src = 'src/data/products.json'; const dest1 = 'netlify/functions/products.json'; const dest2 = 'netlify/functions/data/products.json'; fs.mkdirSync(path.dirname(dest2), { recursive: true }); fs.copyFileSync(src, dest1); fs.copyFileSync(src, dest2);\"",
-    "preview": "vite preview",
-    "server": "node server.js",
-    "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-  "postbuild": "react-snap"
-},
-"reactSnap": {
-  "include": [
-    "/",
-    "/CreateYours",
-    "/DesignIdeas",
-    "/PassportCases/Economy",
-    "/PassportCases/FirstClass",
-    "/PassportCases/BusinessClass",
-    "/Charms/Colorful",
-    "/Charms/Bronze",
-    "/Flags",
-    "/ColorfulCharms",
-    "/BronzeCharms",
-    "/about",
-    "/returns",
-    "/shipping"
-  ]
-}
-
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
@@ -88,10 +45,40 @@
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.0"
   },
-  "overrides": {
-    "react-helmet-async": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
-    
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run copy-products-json && vite build",
+    "copy-products-json": "node -e \"const fs = require('fs'); const path = require('path'); const src = 'src/data/products.json'; const dest1 = 'netlify/functions/products.json'; const dest2 = 'netlify/functions/data/products.json'; fs.mkdirSync(path.dirname(dest2), { recursive: true }); fs.copyFileSync(src, dest1); fs.copyFileSync(src, dest2);\"",
+    "preview": "vite preview",
+    "server": "node server.js",
+    "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "postbuild": "react-snap"
+  },
+  "reactSnap": {
+    "include": [
+      "/",
+      "/CreateYours",
+      "/DesignIdeas",
+      "/PassportCases/Economy",
+      "/PassportCases/FirstClass",
+      "/PassportCases/BusinessClass",
+      "/Charms/Colorful",
+      "/Charms/Bronze",
+      "/Flags",
+      "/ColorfulCharms",
+      "/BronzeCharms",
+      "/about",
+      "/returns",
+      "/shipping"
+    ]
+  },
+  "eslintConfig": {
+    "extends": ["react-app", "react-app/jest"]
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   }
+}
