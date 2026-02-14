@@ -1,53 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/TheHappyCase/assets/logo.webp" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="robots" content="noindex, follow" />
-    <meta
-      name="description"
-      content="The Happy Case - Custom passport cases with personalized charms. Create your unique travel accessory."
-    />
-    <link rel="apple-touch-icon" href="/TheHappyCase/assets/logo.webp" />
-    <link rel="manifest" href="/TheHappyCase/manifest.json" />
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-    
-    <title>The Happy Case</title>
-    <script type="text/javascript">
-      // Single Page Apps for GitHub Pages
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link href="./assets/logo.webp" rel="icon"><meta content="width=device-width,initial-scale=1" name="viewport"><meta content="#000000" name="theme-color"><meta content="index, follow" name="robots"><!-- Primary Meta Tags - VITE_SITE_URL is set in .env --><meta content="The Happy Case - Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins. Perfect travel gift." name="description"><meta content="passport case, custom passport holder, travel gifts, personalized passport cover, charm passport case" name="keywords"><meta content="The Happy Case" name="author"><!-- Open Graph / Facebook --><meta content="website" property="og:type"><meta content="The Happy Case" property="og:site_name"><meta content="The Happy Case - Custom Passport Cases with Personalized Charms" property="og:title"><meta content="Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins. Perfect travel gift." property="og:description"><meta content="https://thehappycase.store/assets/logo.webp" property="og:image"><meta content="https://thehappycase.store/" property="og:url"><meta content="en_GB" property="og:locale"><!-- Twitter Card --><meta content="summary_large_image" name="twitter:card"><meta content="The Happy Case - Custom Passport Cases with Personalized Charms" name="twitter:title"><meta content="Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins." name="twitter:description"><meta content="https://thehappycase.store/assets/logo.webp" name="twitter:image"><!-- Canonical URL - Uses VITE_SITE_URL from env --><link href="https://thehappycase.store/" rel="canonical"><!-- Structured Data (JSON-LD) for Google --><script type="application/ld+json">{
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "The Happy Case",
+      "url": "https://thehappycase.store",
+      "logo": "https://thehappycase.store/assets/logo.webp",
+      "description": "Custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins."
+    }</script><link href="./assets/logo.webp" rel="apple-touch-icon"><link href="/static/json/manifest-CYtEjORf.json" rel="manifest"><!-- Resource hints for better performance --><link href="https://fonts.googleapis.com" rel="dns-prefetch"><link href="https://fonts.gstatic.com" rel="dns-prefetch"><!-- Google Fonts - Optimized for performance --><link href="https://fonts.googleapis.com" rel="preconnect"><link href="https://fonts.gstatic.com" rel="preconnect" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet" media="all" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet"></noscript><title>The Happy Case</title><script type="text/javascript">// Single Page Apps for GitHub Pages
       // https://github.com/rafgraph/spa-github-pages
-      // This script takes the current url and converts the path and query
-      // string into just a query string, and then redirects the browser
-      // to the new url with only a query string and hash fragment,
-      // e.g., https://www.foo.tld/TheHappyCase/one/two?a=b&c=d#qwe, becomes
-      // https://www.foo.tld/TheHappyCase/?/one/two&a=b~and~c=d#qwe
-      // Note: this 404.html file must be at least 512 bytes for it to work
-      // with Internet Explorer (it is currently > 512 bytes)
-
-      // For Project Pages site at /TheHappyCase/, set segmentCount to 1
-      // This way the code will only replace the route part and not the real directory
-      var segmentCount = 1;
-
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
-
-    </script>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
-</html>
-
+      // This script checks to see if a redirect is present in the query string,
+      // converts it back into the correct url and adds it to the
+      // browser's history using window.history.replaceState(...),
+      // which won't cause the browser to attempt to load the new url.
+      // When the single page app is loaded further down in this file,
+      // the correct url will be waiting in the browser's history for
+      // the single page app to route accordingly.
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          // Get base path from current pathname
+          // For subdirectory: /TheHappyCase -> basePath = /TheHappyCase
+          // For root: / -> basePath = ''
+          var pathParts = l.pathname.split('/').filter(function(p) { return p && p !== 'index.html'; });
+          var basePath = pathParts.length > 0 ? '/' + pathParts[0] : '';
+          var newPath = basePath + decoded;
+          window.history.replaceState(null, null, newPath + l.hash);
+        }
+      }(window.location))</script><script type="module" crossorigin="" src="/static/js/index-C6zNumUC.js"></script><link href="/static/js/vendor-D1wWa2FR.js" rel="modulepreload" crossorigin=""><link href="/static/js/fontawesome-vendor-DK2YH0Ml.js" rel="modulepreload" crossorigin=""><link href="/static/js/react-vendor-Xg9P_WuX.js" rel="modulepreload" crossorigin=""><link href="/static/js/shared-utils-BFPS16no.js" rel="modulepreload" crossorigin=""><link href="/static/js/supabase-vendor-BpFasB-U.js" rel="modulepreload" crossorigin=""><link href="/static/css/index-BnHQeRev.css" rel="stylesheet" crossorigin=""></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"><h1>The Happy Case</h1><p>Custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins. Perfect travel gift.</p></div></body></html>
