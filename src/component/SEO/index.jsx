@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://thehappycase.shop';
+const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://thehappycase.store';
 const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.webp`;
 
 const PAGE_META = {

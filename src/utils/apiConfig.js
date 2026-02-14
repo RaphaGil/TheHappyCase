@@ -7,7 +7,7 @@
  * Production: Uses Netlify Functions (relative paths - Netlify routes /api/* to functions)
  * 
  * To override and use external API in production:
- * Set VITE_API_URL environment variable during build (e.g., VITE_API_URL=https://api.thehappycase.shop)
+ * Set VITE_API_URL environment variable during build (e.g., VITE_API_URL=https://api.thehappycase.store)
  * 
  * Netlify Functions:
  * - Development: Use relative paths (e.g., '/api/create-payment-intent')

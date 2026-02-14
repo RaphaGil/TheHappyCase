@@ -4,4 +4,4 @@ Allow: /
 
 # Sitemap - helps search engines discover all pages
 # Note: Update Sitemap URL in Netlify/build config if using custom domain
-Sitemap: https://thehappycase.shop/sitemap.xml
+Sitemap: https://thehappycase.store/sitemap.xml
