@@ -1,3 +1,4 @@
+WebDeveloper
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -25,6 +26,7 @@ function seoPlugin() {
       return html.replace(/__SITE_URL__/g, siteUrl);
     },
     closeBundle() {
+      const rootDir = __dirname;
       const outDir = path.join(__dirname, 'build');
       const robotsTxt = `# https://www.robotstxt.org/robotstxt.html
 User-agent: *
@@ -32,6 +34,8 @@ Allow: /
 
 Sitemap: ${siteUrl}/sitemap.xml
 `;
+      fs.writeFileSync(path.join(rootDir, 'robots.txt'), robotsTxt);
+      fs.mkdirSync(outDir, { recursive: true });
       fs.writeFileSync(path.join(outDir, 'robots.txt'), robotsTxt);
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -50,7 +54,7 @@ Sitemap: ${siteUrl}/sitemap.xml
   <url><loc>${siteUrl}/returns</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>${siteUrl}/shipping</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>`;
-      fs.mkdirSync(outDir, { recursive: true });
+      fs.writeFileSync(path.join(rootDir, 'sitemap.xml'), sitemap);
       fs.writeFileSync(path.join(outDir, 'sitemap.xml'), sitemap);
     },
   };
