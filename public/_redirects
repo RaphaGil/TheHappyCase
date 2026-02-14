@@ -1,5 +1,8 @@
-# API routes must come BEFORE the catch-all SPA rule
-# Rewrite API routes to Netlify Functions (200 = rewrite, not redirect)
+# Static files
+/robots.txt   /robots.txt   200
+/sitemap.xml  /sitemap.xml  200
+
+# API routes
 /api/create-payment-intent    /.netlify/functions/create-payment-intent    200
 /api/inventory                /.netlify/functions/inventory                 200
 

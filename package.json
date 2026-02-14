@@ -37,7 +37,28 @@
     "server": "node server.js",
     "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+  "postbuild": "react-snap"
+},
+"reactSnap": {
+  "include": [
+    "/",
+    "/CreateYours",
+    "/DesignIdeas",
+    "/PassportCases/Economy",
+    "/PassportCases/FirstClass",
+    "/PassportCases/BusinessClass",
+    "/Charms/Colorful",
+    "/Charms/Bronze",
+    "/Flags",
+    "/ColorfulCharms",
+    "/BronzeCharms",
+    "/about",
+    "/returns",
+    "/shipping"
+  ]
+}
+
   },
   "eslintConfig": {
     "extends": [
@@ -63,6 +84,7 @@
     "concurrently": "^9.1.0",
     "gh-pages": "^6.3.0",
     "postcss": "^8.5.1",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.0"
   },
@@ -71,5 +93,5 @@
       "react": "$react",
       "react-dom": "$react-dom"
     }
+    
   }
-}
