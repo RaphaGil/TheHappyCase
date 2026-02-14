@@ -10,8 +10,8 @@ const PAGE_META = {
     description: 'Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins. Perfect travel gift.',
   },
   '/CreateYours': {
-    title: 'Create Your Passport Case | The Happy Case',
-    description: 'Design your custom passport case with our interactive designer. Choose colours, add charms, and create a unique travel accessory.',
+    title: 'Create Your Own Passport Cover | The Happy Case',
+    description: 'Design and order your custom passport cover easily.',
   },
   '/DesignIdeas': {
     title: 'Passport Case Design Ideas | The Happy Case',
@@ -21,9 +21,29 @@ const PAGE_META = {
     title: 'Passport Cases | Economy, First Class & Business Class | The Happy Case',
     description: 'Shop passport cases in 3 styles: Economy, First Class, and Business Class. Multiple colours and personalisation options.',
   },
+  '/PassportCases/Economy': {
+    title: 'Economy Passport Case | The Happy Case',
+    description: 'Economy passport case - slim and lightweight. Customise with colours and charms.',
+  },
+  '/PassportCases/FirstClass': {
+    title: 'First Class Passport Case | The Happy Case',
+    description: 'First Class passport case - premium style with more space for stamps and charms.',
+  },
+  '/PassportCases/BusinessClass': {
+    title: 'Business Class Passport Case | The Happy Case',
+    description: 'Business Class passport case - luxury design with premium materials.',
+  },
   '/Charms': {
     title: 'Passport Charms & Pins | Bronze & Colorful | The Happy Case',
     description: 'Browse 40+ passport charms and pins. Bronze and colorful options - airplanes, landmarks, and travel-themed designs.',
+  },
+  '/Charms/Colorful': {
+    title: 'Colorful Passport Charms | The Happy Case',
+    description: 'Colorful passport charms and pins for your custom passport case.',
+  },
+  '/Charms/Bronze': {
+    title: 'Bronze Passport Charms | The Happy Case',
+    description: 'Bronze passport charms and pins. Classic metallic finishes.',
   },
   '/Flags': {
     title: 'Flag Charms for Passport Cases | The Happy Case',
@@ -56,6 +76,30 @@ const PAGE_META = {
   '/shipping': {
     title: 'Shipping Information | The Happy Case',
     description: 'Shipping options and delivery times for The Happy Case custom passport cases.',
+  },
+  '/checkout': {
+    title: 'Checkout | The Happy Case',
+    description: 'Complete your order. Secure checkout for your custom passport case.',
+  },
+  '/payment-success': {
+    title: 'Order Confirmed | The Happy Case',
+    description: 'Thank you for your order. Your custom passport case is on its way.',
+  },
+  '/dashboard': {
+    title: 'Dashboard | The Happy Case',
+    description: 'Admin dashboard for The Happy Case.',
+  },
+  '/my-orders': {
+    title: 'My Orders | The Happy Case',
+    description: 'View your order history and track your custom passport cases.',
+  },
+  '/login': {
+    title: 'Login | The Happy Case',
+    description: 'Sign in to your account.',
+  },
+  '/authentication/code': {
+    title: 'Verify Code | The Happy Case',
+    description: 'Enter your verification code.',
   },
 };
 
