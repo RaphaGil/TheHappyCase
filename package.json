@@ -58,6 +58,7 @@
     "postbuild": "if [ \"$NETLIFY\" != \"true\" ]; then react-snap; fi"
   },
   "reactSnap": {
+    "port": 35999,
     "include": [
       "/",
       "/CreateYours",
