@@ -54,7 +54,8 @@
     "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "postbuild": "react-snap"
+  
+    "postbuild": "if [ \"$NETLIFY\" != \"true\" ]; then react-snap; fi",
   },
   "reactSnap": {
     "include": [
@@ -71,7 +72,8 @@
       "/BronzeCharms",
       "/about",
       "/returns",
-      "/shipping"
+      "/shipping",
+
     ]
   },
   "eslintConfig": {
