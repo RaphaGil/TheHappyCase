@@ -3736,6 +3736,16 @@ app.post("/api/inventory", async (req, res) => {
   }
 });
 
+// --- Root: identify API (avoids "Route not found" when hitting /) ---
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "TheHappyCase API",
+    health: "/health",
+    docs: "Backend for Stripe checkout and orders. Use the frontend app for the store."
+  });
+});
+
 // --- Health Check ---
 app.get("/health", (req, res) => {
   res.json({ 
@@ -3823,23 +3833,15 @@ app.use((err, req, res, next) => {
   console.error('==========================================\n');
   
   if (!res.headersSent) {
-    try {
-      res.status(500).json({
-        success: false,
-        error: err.message || 'Internal server error',
-        errorName: err.name,
-        errorCode: err.code,
-        path: req.path
-      });
-    } catch (jsonError) {
-      // If JSON.stringify fails, send plain text
-      console.error('Failed to send JSON error response:', jsonError);
-      res.status(500).type('text/plain').send(
-        `Error: ${err.message || 'Internal server error'}\n` +
-        `Path: ${req.path}\n` +
-        `Check server console for details.`
-      );
-    }
+    // Use only primitives so JSON never fails (avoids plain-text fallback that breaks API clients)
+    const safePayload = {
+      success: false,
+      error: String(err?.message || 'Internal server error'),
+      errorName: String(err?.name || 'Error'),
+      errorCode: err?.code != null ? String(err.code) : undefined,
+      path: String(req.path || '')
+    };
+    res.status(500).json(safePayload);
   } else {
     console.error('⚠️ Response already sent, cannot send error response');
   }

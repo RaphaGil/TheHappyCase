@@ -1,3 +1,7 @@
+/**
+ * SEO component – react-helmet-async for every page.
+ * Rendered once in App.jsx; updates title, description, canonical, og:* and twitter:* from current route.
+ */
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 

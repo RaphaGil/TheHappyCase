@@ -112,74 +112,61 @@ const Dashboard = () => {
         const response = await fetch(url);
         const contentType = response.headers.get('content-type') || '';
         
-        // Check if response is JSON - if not, read as text to see what we got
-        if (!contentType.includes('application/json')) {
-          const text = await response.text();
-          console.error('❌ Dashboard: Expected JSON, got:', contentType);
-          console.error('❌ Dashboard: Response status:', response.status, response.statusText);
-          console.error('❌ Dashboard: Response text:', text);
-          throw new Error(`Expected JSON, got ${contentType}: ${text.substring(0, 500)}`);
-        }
+        // Read body once (fetch body can only be consumed once)
+        const rawText = await response.text();
         
-        // Response is JSON, parse it
-        const data = await response.json();
-        
-        if (response.ok) {
-          if (data.success && data.inventory) {
-            const quantities = {
-              cases: data.inventory.cases,
-              caseColors: data.inventory.caseColors,
-              pins: data.inventory.pins
-            };
-            
-            // Merge with products
-            const mergedProducts = structuredClone(Products);
-            mergeQuantities(mergedProducts, quantities);
-            setProducts(mergedProducts);
-            setInventorySource('supabase');
-            
-            console.log('✅ Dashboard: Inventory loaded from Supabase inventory_items table');
-            console.log('✅ Dashboard: All saved quantities are now displayed');
-            console.log('💾 Dashboard: Data source: Supabase (persisted, will be available after deployment)');
-            window.__dashboardInventoryLoaded = true;
-            window.__dashboardInventoryLoading = false;
-            setLoadingInventory(false);
-            return;
-          }
-        } else {
-          console.error('❌ Dashboard: Supabase API returned non-OK response:', response.status);
-          // Try to parse error response
-          let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        // Try to parse as JSON when content-type says JSON or when we have a non-OK response (server may send JSON errors)
+        let data = null;
+        if (contentType.includes('application/json')) {
           try {
-            const errorData = await response.json();
-            console.error('❌ Dashboard: Error details:', errorData);
-            errorMessage = errorData.error || errorData.message || errorMessage;
-            
-            // Show user-friendly error message
-            if (response.status === 500) {
-              console.error('❌ Dashboard: Server error - check server console for details');
-              console.error('❌ Dashboard: Error:', errorData.error || 'Internal server error');
-              if (errorData.details) {
-                console.error('❌ Dashboard: Error details:', errorData.details);
-              }
-            }
-          } catch (e) {
-            // Not JSON, probably HTML 404 page or plain text
-            console.error('❌ Dashboard: Non-JSON error response received');
-            console.error('❌ Dashboard: Failed to parse error as JSON:', e);
-            try {
-              // Clone the response to read it again
-              const clonedResponse = response.clone();
-              const text = await clonedResponse.text();
-              console.error('❌ Dashboard: Response status:', response.status);
-              console.error('❌ Dashboard: Response headers:', Object.fromEntries(response.headers.entries()));
-              console.error('❌ Dashboard: Response text (first 500 chars):', text.substring(0, 500));
-              console.error('❌ Dashboard: Full response text length:', text.length);
-            } catch (textError) {
-              console.error('❌ Dashboard: Could not read error response:', textError);
-            }
+            data = JSON.parse(rawText);
+          } catch (parseErr) {
+            console.error('❌ Dashboard: Response claimed JSON but parse failed:', parseErr);
+            throw new Error(`Invalid JSON from API: ${rawText.substring(0, 300)}`);
+          }
+        } else if (!response.ok && rawText.trim().length > 0) {
+          try {
+            data = JSON.parse(rawText);
+          } catch (_) {
+            // Plain text error body - use as message
+            data = { error: rawText.substring(0, 500), message: rawText.substring(0, 500) };
           }
         }
+        
+        if (response.ok && data && data.success && data.inventory) {
+          const quantities = {
+            cases: data.inventory.cases,
+            caseColors: data.inventory.caseColors,
+            pins: data.inventory.pins
+          };
+          
+          const mergedProducts = structuredClone(Products);
+          mergeQuantities(mergedProducts, quantities);
+          setProducts(mergedProducts);
+          setInventorySource('supabase');
+          
+          console.log('✅ Dashboard: Inventory loaded from Supabase inventory_items table');
+          window.__dashboardInventoryLoaded = true;
+          window.__dashboardInventoryLoading = false;
+          setLoadingInventory(false);
+          return;
+        }
+        
+        if (!response.ok) {
+          const errorMessage = (data && (data.error || data.message)) || rawText.substring(0, 500) || `HTTP ${response.status}: ${response.statusText}`;
+          console.error('❌ Dashboard: Supabase API returned non-OK response:', response.status, errorMessage);
+          if (data) console.error('❌ Dashboard: Error details:', data);
+          if (response.status === 500) {
+            console.error('❌ Dashboard: Server error - check server console (node server.js) for details');
+          }
+          // Fallback to default products so UI is not stuck loading
+          setProducts(Products);
+          setInventorySource('default');
+          console.warn('⚠️ Dashboard: Using default quantities from products.json');
+        }
+        window.__dashboardInventoryLoaded = true;
+        window.__dashboardInventoryLoading = false;
+        setLoadingInventory(false);
       } catch (error) {
         console.error('\n❌ ========== DASHBOARD INVENTORY LOAD ERROR ==========');
         console.error('Failed to load from Supabase:', error.message);
