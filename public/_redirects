@@ -1,10 +1,10 @@
-# Static files (SEO)
+# Serve SEO files directly
 /robots.txt   /robots.txt   200!
 /sitemap.xml  /sitemap.xml  200!
 
-# API routes
+# API routes → Netlify Functions
 /api/create-payment-intent    /.netlify/functions/create-payment-intent    200
 /api/inventory                /.netlify/functions/inventory                 200
 
-# SPA fallback
-/*    /index.html   200
+# SPA fallback (must be last)
+ /*    /index.html   200
