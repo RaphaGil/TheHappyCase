@@ -1,18 +1,38 @@
-
-
 [build]
+  command = "npm run build"
+  publish = "build"            # matches Vite output folder
   functions = "netlify/functions"
 
-  # Build command
-  command = "npm run build"
-  # Directory to publish (Vite outputs to 'build' directory)
-  publish = "build"
+# Serve robots.txt directly
+[[redirects]]
+from = "/robots.txt"
+to = "/robots.txt"
+status = 200
+force = true
 
-# Note: SPA redirects are handled by public/_redirects file
-# The _redirects file contains: /*    /index.html   200
+# Serve sitemap.xml directly
+[[redirects]]
+from = "/sitemap.xml"
+to = "/sitemap.xml"
+status = 200
+force = true
 
-# Domain configuration
-# Netlify will automatically handle custom domain SSL certificates
-# Make sure to add your custom domain in Netlify dashboard:
-# Site settings > Domain management > Add custom domain
+# API function routes
+[[redirects]]
+from = "/api/create-payment-intent"
+to = "/.netlify/functions/create-payment-intent"
+status = 200
+force = true
 
+[[redirects]]
+from = "/api/inventory"
+to = "/.netlify/functions/inventory"
+status = 200
+force = true
+
+# SPA catch-all (must be last)
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
