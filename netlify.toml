@@ -1,38 +1,35 @@
 [build]
   command = "npm run build"
-  publish = "build"            # matches Vite output folder
+  publish = "build"
   functions = "netlify/functions"
 
-# Serve robots.txt directly
+# Serve robots.txt directly (critical for SEO)
 [[redirects]]
 from = "/robots.txt"
 to = "/robots.txt"
 status = 200
 force = true
 
-# Serve sitemap.xml directly
+# Serve sitemap.xml directly (critical for SEO)
 [[redirects]]
 from = "/sitemap.xml"
 to = "/sitemap.xml"
 status = 200
 force = true
 
-# API function routes
+# API routes
 [[redirects]]
 from = "/api/create-payment-intent"
 to = "/.netlify/functions/create-payment-intent"
 status = 200
-force = true
 
 [[redirects]]
 from = "/api/inventory"
 to = "/.netlify/functions/inventory"
 status = 200
-force = true
 
-# SPA catch-all (must be last)
+# SPA fallback — MUST be last
 [[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
-force = false
