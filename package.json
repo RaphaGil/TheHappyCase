@@ -1,6 +1,5 @@
 {
   "name": "thehappycase",
-  "homepage": "https://raphagil.github.io/TheHappyCase/",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -55,10 +54,10 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "push": "npm run deploy",
-    "postbuild": "if [ \"$NETLIFY\" != \"true\" ]; then react-snap; fi"
+    "postbuild": "if [ \"$NETLIFY\" != \"true\" ]; then react-snap || echo '⚠️ react-snap failed (port may be in use), continuing build...'; fi"
   },
   "reactSnap": {
-    "port": 35999,
+    "port": 48763,
     "include": [
       "/",
       "/CreateYours",

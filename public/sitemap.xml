@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://thehappycase.store/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://thehappycase.store/CreateYours</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://thehappycase.store/DesignIdeas</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://thehappycase.store/PassportCases/Economy</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://thehappycase.store/PassportCases/FirstClass</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://thehappycase.store/PassportCases/BusinessClass</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://thehappycase.store/Charms/Colorful</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thehappycase.store/Charms/Bronze</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://thehappycase.store/Flags</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://thehappycase.store/ColorfulCharms</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://thehappycase.store/BronzeCharms</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://thehappycase.store/about</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://thehappycase.store/returns</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://thehappycase.store/shipping</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <url>
+    <loc>https://thehappycase.store/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://thehappycase.store/CreateYours</loc>
+  </url>
+
+  <url>
+    <loc>https://thehappycase.store/DesignIdeas</loc>
+  </url>
+
+  <url>
+    <loc>https://thehappycase.store/about</loc>
+  </url>
+
+  <url>
+    <loc>https://thehappycase.store/returns</loc>
+  </url>
+
+  <url>
+    <loc>https://thehappycase.store/shipping</loc>
+  </url>
+
 </urlset>
