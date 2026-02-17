@@ -1,4 +1,4 @@
-{
+WebDeveloper{
   "name": "thehappycase",
   "homepage": "https://raphagil.github.io/TheHappyCase/",
   "version": "0.1.0",
@@ -54,7 +54,7 @@
     "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-  
+    "push": "npm run deploy",
     "postbuild": "if [ \"$NETLIFY\" != \"true\" ]; then react-snap; fi"
   },
   "reactSnap": {
