@@ -13,6 +13,9 @@
 /.next
 /out
 
+# Next.js static export output
+out/
+
 # misc
 .DS_Store
 .env

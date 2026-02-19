@@ -13,6 +13,13 @@ const nextConfig = {
   turbopack: {
     root: resolve(__dirname),
   },
+  // Configure Next.js for static export (required for Netlify)
+  // API routes are handled by Netlify Functions, so we can use static export
+  output: 'export',
+  // Disable image optimization for static export
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;

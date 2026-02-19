@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "build"
+  publish = "out"
   functions = "netlify/functions"
 
 # Serve robots.txt directly (critical for SEO)
@@ -17,7 +17,7 @@ to = "/sitemap.xml"
 status = 200
 force = true
 
-# API routes
+# API routes - redirect to Netlify Functions
 [[redirects]]
 from = "/api/create-payment-intent"
 to = "/.netlify/functions/create-payment-intent"
@@ -28,8 +28,5 @@ from = "/api/inventory"
 to = "/.netlify/functions/inventory"
 status = 200
 
-# SPA fallback — MUST be last
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+# Next.js static export generates HTML files for each route,
+# so we don't need a SPA fallback redirect
