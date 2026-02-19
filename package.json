@@ -24,6 +24,7 @@
     "express": "^5.1.0",
     "fabric": "^6.5.4",
     "next": "^16.1.6",
+    "next-sitemap": "^4.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-helmet-async": "^2.0.5",
@@ -56,7 +57,8 @@
     "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d out",
-    "push": "npm run deploy"
+    "push": "npm run deploy",
+      "postbuild": "next-sitemap"
   },
   "reactSnap": {
     "port": 48763,
