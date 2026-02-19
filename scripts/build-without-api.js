@@ -21,10 +21,26 @@ try {
     mkdirSync(backupDir, { recursive: true });
   }
 
-  // Clean up any existing backup from previous failed builds
+  // Clean up any existing backup from previous failed builds (both old and new locations)
   if (existsSync(apiBackupDir)) {
     console.log('🧹 Cleaning up existing backup...');
     rmSync(apiBackupDir, { recursive: true, force: true });
+  }
+  
+  // Also clean up any old backup files that might be in src/app/ from previous failed builds
+  const oldApiBackup = join(projectRoot, 'src/app/api.backup');
+  const oldSitemapBackup = join(projectRoot, 'src/app/sitemap.js.backup');
+  const oldRobotsBackup = join(projectRoot, 'src/app/robots.js.backup');
+  
+  if (existsSync(oldApiBackup)) {
+    console.log('🧹 Cleaning up old backup directory in src/app/...');
+    rmSync(oldApiBackup, { recursive: true, force: true });
+  }
+  if (existsSync(oldSitemapBackup)) {
+    rmSync(oldSitemapBackup, { force: true });
+  }
+  if (existsSync(oldRobotsBackup)) {
+    rmSync(oldRobotsBackup, { force: true });
   }
 
   // Step 1: Temporarily move API directory out of the way
@@ -45,7 +61,14 @@ try {
     renameSync(robotsFile, robotsBackupFile);
   }
 
-  // Step 4: Run Next.js build
+  // Step 4: Clean .next directory to remove stale cache
+  const nextDir = join(projectRoot, '.next');
+  if (existsSync(nextDir)) {
+    console.log('🧹 Cleaning .next cache...');
+    rmSync(nextDir, { recursive: true, force: true });
+  }
+
+  // Step 5: Run Next.js build
   console.log('🔨 Running Next.js build...');
   execSync('next build', { 
     stdio: 'inherit',
@@ -58,7 +81,7 @@ try {
   console.error('❌ Build failed:', error.message);
   process.exit(1);
 } finally {
-  // Step 5: Restore all moved files/directories
+  // Step 6: Restore all moved files/directories
   if (existsSync(apiBackupDir)) {
     console.log('📦 Restoring API routes...');
     renameSync(apiBackupDir, apiDir);
