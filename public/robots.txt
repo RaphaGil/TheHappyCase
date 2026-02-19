@@ -3,4 +3,4 @@ User-agent: *
 Disallow:
 
 # Optional: add sitemap
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://thehappycase.store/sitemap.xml
