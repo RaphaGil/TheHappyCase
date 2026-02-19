@@ -42,6 +42,7 @@ try {
   if (existsSync(oldRobotsBackup)) {
     rmSync(oldRobotsBackup, { force: true });
   }
+  
 
   // Step 1: Temporarily move API directory out of the way
   if (existsSync(apiDir)) {
@@ -55,7 +56,8 @@ try {
     renameSync(sitemapFile, sitemapBackupFile);
   }
 
-  // Step 3: Temporarily move robots.js (may have same issue)
+  // Step 3: Temporarily move robots.js (not compatible with static export)
+  // We use the static robots.txt from public/ instead
   if (existsSync(robotsFile)) {
     console.log('📦 Temporarily moving robots.js out of the way for static export...');
     renameSync(robotsFile, robotsBackupFile);
