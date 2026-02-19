@@ -10,6 +10,8 @@
 
 # production
 /build
+/.next
+/out
 
 # misc
 .DS_Store
@@ -25,3 +27,14 @@ yarn-error.log*
 
 # Local Netlify folder
 .netlify
+
+# Next.js
+.next/
+out/
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

@@ -1,8 +1,0 @@
-{
-  "/Charms/[type]/page": "app/Charms/[type]/page.js",
-  "/Charms/page": "app/Charms/page.js",
-  "/PassportCases/[type]/page": "app/PassportCases/[type]/page.js",
-  "/PassportCases/page": "app/PassportCases/page.js",
-  "/api/inventory/route": "app/api/inventory/route.js",
-  "/page": "app/page.js"
-}
