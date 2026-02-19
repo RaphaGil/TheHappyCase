@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import PromotionalBanner from './components/PromotionalBanner';
 import Logo from './components/Logo';

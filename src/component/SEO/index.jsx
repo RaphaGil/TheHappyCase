@@ -5,7 +5,16 @@
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://thehappycase.store';
+// In Next.js, use process.env.NEXT_PUBLIC_* for client-accessible env variables
+const getSiteUrl = () => {
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env.NEXT_PUBLIC_SITE_URL || 
+           process.env.VITE_SITE_URL || 
+           'https://thehappycase.store';
+  }
+  return 'https://thehappycase.store';
+};
+const SITE_URL = getSiteUrl();
 const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.webp`;
 
 const PAGE_META = {

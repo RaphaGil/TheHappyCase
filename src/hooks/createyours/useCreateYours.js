@@ -1,5 +1,8 @@
+'use client';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Products from '../../data/products.json';
 import { useCart } from '../../context/CartContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
@@ -19,9 +22,9 @@ import {
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../../data/constants';
 
 export const useCreateYours = () => {
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { addToCart, cart } = useCart();
   
   // State
@@ -38,7 +41,8 @@ export const useCreateYours = () => {
   const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
   const [isCharmsDropdownOpen, setIsCharmsDropdownOpen] = useState(false);
   const [isAddTextDropdownOpen, setIsAddTextDropdownOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // Initialize with safe default for SSR (assume desktop, will be updated on mount)
+  const [isMobile, setIsMobile] = useState(false);
   const [mobileCurrentStep, setMobileCurrentStep] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [customText, setCustomText] = useState('');
@@ -78,15 +82,17 @@ export const useCreateYours = () => {
     selectedCase
   });
 
-  // Scroll to top when component mounts or route changes
+  // Scroll to top when component mounts or route changes (client-side only)
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [location.pathname]);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [pathname]);
 
   // Update case and color when URL params change
   useEffect(() => {
-    const caseParam = searchParams.get('case');
-    const colorParam = searchParams.get('color');
+    const caseParam = searchParams?.get('case');
+    const colorParam = searchParams?.get('color');
     
     if (caseParam) {
       const caseFromParam = Products.cases.find(c => c.type === caseParam);
@@ -152,7 +158,7 @@ export const useCreateYours = () => {
       setInventoryType('error');
       setCharmInventoryError(errorMessage.replace('Oops! We don\'t have any more ', '').replace(' in stock right now, so you can\'t add more to your basket.', ''));
       
-      if (isMobile) {
+      if (isMobile && typeof window !== 'undefined') {
         setMobileCurrentStep(null);
         setTimeout(() => {
           window.scrollTo({ 
@@ -167,14 +173,14 @@ export const useCreateYours = () => {
     }
     
     // Add pin to canvas
-    if (window.addPinToCanvas) {
+    if (typeof window !== 'undefined' && window.addPinToCanvas) {
       window.addPinToCanvas(pinWithCategory);
     }
     
     setCharmInventoryError('');
     
     // Close mobile overlay after pin selection
-    if (isMobile) {
+    if (isMobile && typeof window !== 'undefined') {
       setMobileCurrentStep(null);
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -185,21 +191,33 @@ export const useCreateYours = () => {
   }, [isMobile, cart, selectedPins, selectedCategory, setCharmInventoryError, setInventoryMessage, setInventoryType]);
 
   // Handle navigation from other pages
+  // Note: Next.js doesn't support location.state like React Router
+  // If you need to pass selectedPin, use query parameters or other state management
   useEffect(() => {
-    if (location.state?.selectedPin) {
-      const selectedPin = location.state.selectedPin;
-      const pinWithCategory = {
-        ...selectedPin,
-        category: selectedPin.category || selectedCategory || 'colorful'
-      };
-      setTimeout(() => {
-        if (window.addPinToCanvas) {
-          window.addPinToCanvas(pinWithCategory);
-        }
-      }, 1000);
-      window.history.replaceState({}, document.title);
+    // Check for selectedPin in query params as fallback
+    const selectedPinParam = searchParams?.get('selectedPin');
+    if (selectedPinParam) {
+      try {
+        const selectedPin = JSON.parse(decodeURIComponent(selectedPinParam));
+        const pinWithCategory = {
+          ...selectedPin,
+          category: selectedPin.category || selectedCategory || 'colorful'
+        };
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && window.addPinToCanvas) {
+            window.addPinToCanvas(pinWithCategory);
+          }
+        }, 1000);
+        // Remove query param after processing
+        const newSearchParams = new URLSearchParams(searchParams?.toString() || '');
+        newSearchParams.delete('selectedPin');
+        const newUrl = `${pathname}${newSearchParams.toString() ? '?' + newSearchParams.toString() : ''}`;
+        router.replace(newUrl);
+      } catch (e) {
+        console.warn('Failed to parse selectedPin from query params:', e);
+      }
     }
-  }, [location.state, selectedCategory]);
+  }, [searchParams, selectedCategory, pathname, router]);
 
   // When category changes, update pins from Products
   useEffect(() => {
@@ -324,7 +342,7 @@ export const useCreateYours = () => {
     
     // Get canvas image data URL
     let canvasImageDataURL = null;
-    if (window.getDesignImageDataURL) {
+    if (typeof window !== 'undefined' && window.getDesignImageDataURL) {
       canvasImageDataURL = window.getDesignImageDataURL();
     }
     
@@ -356,7 +374,7 @@ export const useCreateYours = () => {
     });
     
     // Clear canvas and reset state
-    if (window.clearCanvas) {
+    if (typeof window !== 'undefined' && window.clearCanvas) {
       window.clearCanvas();
     }
     setSelectedPins([]);
@@ -376,8 +394,13 @@ export const useCreateYours = () => {
     setCharmInventoryError('');
   }, [setCharmInventoryError]);
 
-  // Track screen size changes
+  // Track screen size changes (client-side only)
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Set initial mobile state on mount
+    setIsMobile(window.innerWidth < 768);
+    
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -480,6 +503,6 @@ export const useCreateYours = () => {
     handlePinRemove,
     
     // Navigation
-    navigate,
+    router,
   };
 };

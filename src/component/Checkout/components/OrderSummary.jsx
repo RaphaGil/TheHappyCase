@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import OrderSummaryItem from './OrderSummaryItem';
 import InternationalNote from '../../InternationalNote';
 
@@ -78,7 +80,7 @@ const OrderSummary = ({
           <p className="text-xs text-gray-500 font-light font-inter leading-relaxed">
             Shipping and taxes are calculated at checkout if applicable.{' '}
             <Link
-              to="/shipping"
+              href="/shipping"
               className="text-gray-600 hover:text-gray-900 underline transition-colors"
               title="Learn more about shipping information"
             >

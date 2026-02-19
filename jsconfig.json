@@ -2,11 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    },
-    "jsx": "react-jsx"
+      "@/*": ["./src/*"],
+      "@/page-components/*": ["./src/page-components/*"]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules"]
 }
-

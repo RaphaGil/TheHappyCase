@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
   const linkClass = isMobile
@@ -7,10 +9,10 @@ const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
     : "px-3 py-1.5 hover:text-gray-900 font-light block transition-all duration-200 text-sm uppercase tracking-wider text-gray-600 hover:border-b-2 hover:border-blue-500";
 
   const links = [
-    { to: "/", label: "Home" },
-    { to: "/CreateYours", label: "Create Yours" },
-    { to: "/PassportCases", label: "Passport Cases" },
-    { to: "/Charms", label: "Charms" },
+    { href: "/", label: "Home" },
+    { href: "/CreateYours", label: "Create Yours" },
+    { href: "/PassportCases", label: "Passport Cases" },
+    { href: "/Charms", label: "Charms" },
   ];
 
   if (isMobile) {
@@ -19,9 +21,9 @@ const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
         className="flex flex-col space-y-1 font-inter"
       >
         {links.map((link) => (
-          <li key={link.to}>
+          <li key={link.href}>
             <Link
-              to={link.to}
+              href={link.href}
               className={linkClass}
               style={{color: '#6b7280'}}
               onClick={onLinkClick}
@@ -39,8 +41,8 @@ const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
       className="hidden lg:flex lg:items-center lg:space-x-1 flex-1 justify-center font-inter"
     >
       {links.map((link) => (
-        <li key={link.to}>
-          <Link to={link.to} className={linkClass}>
+        <li key={link.href}>
+          <Link href={link.href} className={linkClass}>
             {link.label}
           </Link>
         </li>

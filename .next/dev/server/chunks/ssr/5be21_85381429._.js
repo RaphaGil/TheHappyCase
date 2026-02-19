@@ -1,0 +1,12840 @@
+module.exports = [
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@swc/helpers/cjs/_interop_require_wildcard.cjs [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+function _getRequireWildcardCache(nodeInterop) {
+    if (typeof WeakMap !== "function") return null;
+    var cacheBabelInterop = new WeakMap();
+    var cacheNodeInterop = new WeakMap();
+    return (_getRequireWildcardCache = function(nodeInterop) {
+        return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+    })(nodeInterop);
+}
+function _interop_require_wildcard(obj, nodeInterop) {
+    if (!nodeInterop && obj && obj.__esModule) return obj;
+    if (obj === null || typeof obj !== "object" && typeof obj !== "function") return {
+        default: obj
+    };
+    var cache = _getRequireWildcardCache(nodeInterop);
+    if (cache && cache.has(obj)) return cache.get(obj);
+    var newObj = {
+        __proto__: null
+    };
+    var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
+    for(var key in obj){
+        if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) {
+            var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
+            if (desc && (desc.get || desc.set)) Object.defineProperty(newObj, key, desc);
+            else newObj[key] = obj[key];
+        }
+    }
+    newObj.default = obj;
+    if (cache) cache.set(obj, newObj);
+    return newObj;
+}
+exports._ = _interop_require_wildcard;
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@fortawesome/fontawesome-svg-core/index.mjs [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "api",
+    ()=>api,
+    "config",
+    ()=>config$1,
+    "counter",
+    ()=>counter,
+    "dom",
+    ()=>dom$1,
+    "findIconDefinition",
+    ()=>findIconDefinition$1,
+    "icon",
+    ()=>icon,
+    "layer",
+    ()=>layer,
+    "library",
+    ()=>library$1,
+    "noAuto",
+    ()=>noAuto$1,
+    "parse",
+    ()=>parse$1,
+    "text",
+    ()=>text,
+    "toHtml",
+    ()=>toHtml$1
+]);
+/*!
+ * Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Copyright 2024 Fonticons, Inc.
+ */ function _defineProperty(e, r, t) {
+    return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+        value: t,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+    }) : e[r] = t, e;
+}
+function _inherits(t, e) {
+    if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function");
+    t.prototype = Object.create(e && e.prototype, {
+        constructor: {
+            value: t,
+            writable: !0,
+            configurable: !0
+        }
+    }), Object.defineProperty(t, "prototype", {
+        writable: !1
+    }), e && _setPrototypeOf(t, e);
+}
+function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+        var o = Object.getOwnPropertySymbols(e);
+        r && (o = o.filter(function(r) {
+            return Object.getOwnPropertyDescriptor(e, r).enumerable;
+        })), t.push.apply(t, o);
+    }
+    return t;
+}
+function _objectSpread2(e) {
+    for(var r = 1; r < arguments.length; r++){
+        var t = null != arguments[r] ? arguments[r] : {};
+        r % 2 ? ownKeys(Object(t), !0).forEach(function(r) {
+            _defineProperty(e, r, t[r]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r) {
+            Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+        });
+    }
+    return e;
+}
+function _setPrototypeOf(t, e) {
+    return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function(t, e) {
+        return t.__proto__ = e, t;
+    }, _setPrototypeOf(t, e);
+}
+function _toPrimitive(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+        var i = e.call(t, r || "default");
+        if ("object" != typeof i) return i;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+}
+function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+}
+function _wrapRegExp() {
+    _wrapRegExp = function(e, r) {
+        return new BabelRegExp(e, void 0, r);
+    };
+    var e = RegExp.prototype, r = new WeakMap();
+    function BabelRegExp(e, t, p) {
+        var o = RegExp(e, t);
+        return r.set(o, p || r.get(e)), _setPrototypeOf(o, BabelRegExp.prototype);
+    }
+    function buildGroups(e, t) {
+        var p = r.get(t);
+        return Object.keys(p).reduce(function(r, t) {
+            var o = p[t];
+            if ("number" == typeof o) r[t] = e[o];
+            else {
+                for(var i = 0; void 0 === e[o[i]] && i + 1 < o.length;)i++;
+                r[t] = e[o[i]];
+            }
+            return r;
+        }, Object.create(null));
+    }
+    return _inherits(BabelRegExp, RegExp), BabelRegExp.prototype.exec = function(r) {
+        var t = e.exec.call(this, r);
+        if (t) {
+            t.groups = buildGroups(t, this);
+            var p = t.indices;
+            p && (p.groups = buildGroups(p, this));
+        }
+        return t;
+    }, BabelRegExp.prototype[Symbol.replace] = function(t, p) {
+        if ("string" == typeof p) {
+            var o = r.get(this);
+            return e[Symbol.replace].call(this, t, p.replace(/\$<([^>]+)>/g, function(e, r) {
+                var t = o[r];
+                return "$" + (Array.isArray(t) ? t.join("$") : t);
+            }));
+        }
+        if ("function" == typeof p) {
+            var i = this;
+            return e[Symbol.replace].call(this, t, function() {
+                var e = arguments;
+                return "object" != typeof e[e.length - 1] && (e = [].slice.call(e)).push(buildGroups(e, i)), p.apply(this, e);
+            });
+        }
+        return e[Symbol.replace].call(this, t, p);
+    }, _wrapRegExp.apply(this, arguments);
+}
+const noop = ()=>{};
+let _WINDOW = {};
+let _DOCUMENT = {};
+let _MUTATION_OBSERVER = null;
+let _PERFORMANCE = {
+    mark: noop,
+    measure: noop
+};
+try {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    if (typeof document !== 'undefined') _DOCUMENT = document;
+    if (typeof MutationObserver !== 'undefined') _MUTATION_OBSERVER = MutationObserver;
+    if (typeof performance !== 'undefined') _PERFORMANCE = performance;
+} catch (e) {}
+const { userAgent = '' } = _WINDOW.navigator || {};
+const WINDOW = _WINDOW;
+const DOCUMENT = _DOCUMENT;
+const MUTATION_OBSERVER = _MUTATION_OBSERVER;
+const PERFORMANCE = _PERFORMANCE;
+const IS_BROWSER = !!WINDOW.document;
+const IS_DOM = !!DOCUMENT.documentElement && !!DOCUMENT.head && typeof DOCUMENT.addEventListener === 'function' && typeof DOCUMENT.createElement === 'function';
+const IS_IE = ~userAgent.indexOf('MSIE') || ~userAgent.indexOf('Trident/');
+var p = /fa(s|r|l|t|d|dr|dl|dt|b|k|kd|ss|sr|sl|st|sds|sdr|sdl|sdt)?[\-\ ]/, g = /Font ?Awesome ?([56 ]*)(Solid|Regular|Light|Thin|Duotone|Brands|Free|Pro|Sharp Duotone|Sharp|Kit)?.*/i;
+var S = {
+    classic: {
+        fa: "solid",
+        fas: "solid",
+        "fa-solid": "solid",
+        far: "regular",
+        "fa-regular": "regular",
+        fal: "light",
+        "fa-light": "light",
+        fat: "thin",
+        "fa-thin": "thin",
+        fab: "brands",
+        "fa-brands": "brands"
+    },
+    duotone: {
+        fa: "solid",
+        fad: "solid",
+        "fa-solid": "solid",
+        "fa-duotone": "solid",
+        fadr: "regular",
+        "fa-regular": "regular",
+        fadl: "light",
+        "fa-light": "light",
+        fadt: "thin",
+        "fa-thin": "thin"
+    },
+    sharp: {
+        fa: "solid",
+        fass: "solid",
+        "fa-solid": "solid",
+        fasr: "regular",
+        "fa-regular": "regular",
+        fasl: "light",
+        "fa-light": "light",
+        fast: "thin",
+        "fa-thin": "thin"
+    },
+    "sharp-duotone": {
+        fa: "solid",
+        fasds: "solid",
+        "fa-solid": "solid",
+        fasdr: "regular",
+        "fa-regular": "regular",
+        fasdl: "light",
+        "fa-light": "light",
+        fasdt: "thin",
+        "fa-thin": "thin"
+    }
+}, A = {
+    GROUP: "duotone-group",
+    SWAP_OPACITY: "swap-opacity",
+    PRIMARY: "primary",
+    SECONDARY: "secondary"
+}, P = [
+    "fa-classic",
+    "fa-duotone",
+    "fa-sharp",
+    "fa-sharp-duotone"
+];
+var s = "classic", t = "duotone", r = "sharp", o = "sharp-duotone", L = [
+    s,
+    t,
+    r,
+    o
+];
+var G = {
+    classic: {
+        900: "fas",
+        400: "far",
+        normal: "far",
+        300: "fal",
+        100: "fat"
+    },
+    duotone: {
+        900: "fad",
+        400: "fadr",
+        300: "fadl",
+        100: "fadt"
+    },
+    sharp: {
+        900: "fass",
+        400: "fasr",
+        300: "fasl",
+        100: "fast"
+    },
+    "sharp-duotone": {
+        900: "fasds",
+        400: "fasdr",
+        300: "fasdl",
+        100: "fasdt"
+    }
+};
+var lt = {
+    "Font Awesome 6 Free": {
+        900: "fas",
+        400: "far"
+    },
+    "Font Awesome 6 Pro": {
+        900: "fas",
+        400: "far",
+        normal: "far",
+        300: "fal",
+        100: "fat"
+    },
+    "Font Awesome 6 Brands": {
+        400: "fab",
+        normal: "fab"
+    },
+    "Font Awesome 6 Duotone": {
+        900: "fad",
+        400: "fadr",
+        normal: "fadr",
+        300: "fadl",
+        100: "fadt"
+    },
+    "Font Awesome 6 Sharp": {
+        900: "fass",
+        400: "fasr",
+        normal: "fasr",
+        300: "fasl",
+        100: "fast"
+    },
+    "Font Awesome 6 Sharp Duotone": {
+        900: "fasds",
+        400: "fasdr",
+        normal: "fasdr",
+        300: "fasdl",
+        100: "fasdt"
+    }
+};
+var pt = new Map([
+    [
+        "classic",
+        {
+            defaultShortPrefixId: "fas",
+            defaultStyleId: "solid",
+            styleIds: [
+                "solid",
+                "regular",
+                "light",
+                "thin",
+                "brands"
+            ],
+            futureStyleIds: [],
+            defaultFontWeight: 900
+        }
+    ],
+    [
+        "sharp",
+        {
+            defaultShortPrefixId: "fass",
+            defaultStyleId: "solid",
+            styleIds: [
+                "solid",
+                "regular",
+                "light",
+                "thin"
+            ],
+            futureStyleIds: [],
+            defaultFontWeight: 900
+        }
+    ],
+    [
+        "duotone",
+        {
+            defaultShortPrefixId: "fad",
+            defaultStyleId: "solid",
+            styleIds: [
+                "solid",
+                "regular",
+                "light",
+                "thin"
+            ],
+            futureStyleIds: [],
+            defaultFontWeight: 900
+        }
+    ],
+    [
+        "sharp-duotone",
+        {
+            defaultShortPrefixId: "fasds",
+            defaultStyleId: "solid",
+            styleIds: [
+                "solid",
+                "regular",
+                "light",
+                "thin"
+            ],
+            futureStyleIds: [],
+            defaultFontWeight: 900
+        }
+    ]
+]), xt = {
+    classic: {
+        solid: "fas",
+        regular: "far",
+        light: "fal",
+        thin: "fat",
+        brands: "fab"
+    },
+    duotone: {
+        solid: "fad",
+        regular: "fadr",
+        light: "fadl",
+        thin: "fadt"
+    },
+    sharp: {
+        solid: "fass",
+        regular: "fasr",
+        light: "fasl",
+        thin: "fast"
+    },
+    "sharp-duotone": {
+        solid: "fasds",
+        regular: "fasdr",
+        light: "fasdl",
+        thin: "fasdt"
+    }
+};
+var Ft = [
+    "fak",
+    "fa-kit",
+    "fakd",
+    "fa-kit-duotone"
+], St = {
+    kit: {
+        fak: "kit",
+        "fa-kit": "kit"
+    },
+    "kit-duotone": {
+        fakd: "kit-duotone",
+        "fa-kit-duotone": "kit-duotone"
+    }
+}, At = [
+    "kit"
+];
+var Ct = {
+    kit: {
+        "fa-kit": "fak"
+    },
+    "kit-duotone": {
+        "fa-kit-duotone": "fakd"
+    }
+};
+var Lt = [
+    "fak",
+    "fakd"
+], Wt = {
+    kit: {
+        fak: "fa-kit"
+    },
+    "kit-duotone": {
+        fakd: "fa-kit-duotone"
+    }
+};
+var Et = {
+    kit: {
+        kit: "fak"
+    },
+    "kit-duotone": {
+        "kit-duotone": "fakd"
+    }
+};
+var t$1 = {
+    GROUP: "duotone-group",
+    SWAP_OPACITY: "swap-opacity",
+    PRIMARY: "primary",
+    SECONDARY: "secondary"
+}, r$1 = [
+    "fa-classic",
+    "fa-duotone",
+    "fa-sharp",
+    "fa-sharp-duotone"
+];
+var bt$1 = [
+    "fak",
+    "fa-kit",
+    "fakd",
+    "fa-kit-duotone"
+];
+var Yt = {
+    "Font Awesome Kit": {
+        400: "fak",
+        normal: "fak"
+    },
+    "Font Awesome Kit Duotone": {
+        400: "fakd",
+        normal: "fakd"
+    }
+};
+var ua = {
+    classic: {
+        "fa-brands": "fab",
+        "fa-duotone": "fad",
+        "fa-light": "fal",
+        "fa-regular": "far",
+        "fa-solid": "fas",
+        "fa-thin": "fat"
+    },
+    duotone: {
+        "fa-regular": "fadr",
+        "fa-light": "fadl",
+        "fa-thin": "fadt"
+    },
+    sharp: {
+        "fa-solid": "fass",
+        "fa-regular": "fasr",
+        "fa-light": "fasl",
+        "fa-thin": "fast"
+    },
+    "sharp-duotone": {
+        "fa-solid": "fasds",
+        "fa-regular": "fasdr",
+        "fa-light": "fasdl",
+        "fa-thin": "fasdt"
+    }
+}, I$1 = {
+    classic: [
+        "fas",
+        "far",
+        "fal",
+        "fat",
+        "fad"
+    ],
+    duotone: [
+        "fadr",
+        "fadl",
+        "fadt"
+    ],
+    sharp: [
+        "fass",
+        "fasr",
+        "fasl",
+        "fast"
+    ],
+    "sharp-duotone": [
+        "fasds",
+        "fasdr",
+        "fasdl",
+        "fasdt"
+    ]
+}, ga = {
+    classic: {
+        fab: "fa-brands",
+        fad: "fa-duotone",
+        fal: "fa-light",
+        far: "fa-regular",
+        fas: "fa-solid",
+        fat: "fa-thin"
+    },
+    duotone: {
+        fadr: "fa-regular",
+        fadl: "fa-light",
+        fadt: "fa-thin"
+    },
+    sharp: {
+        fass: "fa-solid",
+        fasr: "fa-regular",
+        fasl: "fa-light",
+        fast: "fa-thin"
+    },
+    "sharp-duotone": {
+        fasds: "fa-solid",
+        fasdr: "fa-regular",
+        fasdl: "fa-light",
+        fasdt: "fa-thin"
+    }
+}, x = [
+    "fa-solid",
+    "fa-regular",
+    "fa-light",
+    "fa-thin",
+    "fa-duotone",
+    "fa-brands"
+], Ia = [
+    "fa",
+    "fas",
+    "far",
+    "fal",
+    "fat",
+    "fad",
+    "fadr",
+    "fadl",
+    "fadt",
+    "fab",
+    "fass",
+    "fasr",
+    "fasl",
+    "fast",
+    "fasds",
+    "fasdr",
+    "fasdl",
+    "fasdt",
+    ...r$1,
+    ...x
+], m$1 = [
+    "solid",
+    "regular",
+    "light",
+    "thin",
+    "duotone",
+    "brands"
+], c$1 = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+], F$1 = c$1.concat([
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+]), ma = [
+    ...Object.keys(I$1),
+    ...m$1,
+    "2xs",
+    "xs",
+    "sm",
+    "lg",
+    "xl",
+    "2xl",
+    "beat",
+    "border",
+    "fade",
+    "beat-fade",
+    "bounce",
+    "flip-both",
+    "flip-horizontal",
+    "flip-vertical",
+    "flip",
+    "fw",
+    "inverse",
+    "layers-counter",
+    "layers-text",
+    "layers",
+    "li",
+    "pull-left",
+    "pull-right",
+    "pulse",
+    "rotate-180",
+    "rotate-270",
+    "rotate-90",
+    "rotate-by",
+    "shake",
+    "spin-pulse",
+    "spin-reverse",
+    "spin",
+    "stack-1x",
+    "stack-2x",
+    "stack",
+    "ul",
+    t$1.GROUP,
+    t$1.SWAP_OPACITY,
+    t$1.PRIMARY,
+    t$1.SECONDARY
+].concat(c$1.map((a)=>"".concat(a, "x"))).concat(F$1.map((a)=>"w-".concat(a)));
+var wa = {
+    "Font Awesome 5 Free": {
+        900: "fas",
+        400: "far"
+    },
+    "Font Awesome 5 Pro": {
+        900: "fas",
+        400: "far",
+        normal: "far",
+        300: "fal"
+    },
+    "Font Awesome 5 Brands": {
+        400: "fab",
+        normal: "fab"
+    },
+    "Font Awesome 5 Duotone": {
+        900: "fad"
+    }
+};
+const NAMESPACE_IDENTIFIER = '___FONT_AWESOME___';
+const UNITS_IN_GRID = 16;
+const DEFAULT_CSS_PREFIX = 'fa';
+const DEFAULT_REPLACEMENT_CLASS = 'svg-inline--fa';
+const DATA_FA_I2SVG = 'data-fa-i2svg';
+const DATA_FA_PSEUDO_ELEMENT = 'data-fa-pseudo-element';
+const DATA_FA_PSEUDO_ELEMENT_PENDING = 'data-fa-pseudo-element-pending';
+const DATA_PREFIX = 'data-prefix';
+const DATA_ICON = 'data-icon';
+const HTML_CLASS_I2SVG_BASE_CLASS = 'fontawesome-i2svg';
+const MUTATION_APPROACH_ASYNC = 'async';
+const TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS = [
+    'HTML',
+    'HEAD',
+    'STYLE',
+    'SCRIPT'
+];
+const PRODUCTION = (()=>{
+    try {
+        return ("TURBOPACK compile-time value", "development") === 'production';
+    } catch (e$$1) {
+        return false;
+    }
+})();
+function familyProxy(obj) {
+    // Defaults to the classic family if family is not available
+    return new Proxy(obj, {
+        get (target, prop) {
+            return prop in target ? target[prop] : target[s];
+        }
+    });
+}
+const _PREFIX_TO_STYLE = _objectSpread2({}, S);
+// We changed FACSSClassesToStyleId in the icons repo to be canonical and as such, "classic" family does not have any
+// duotone styles.  But we do still need duotone in _PREFIX_TO_STYLE below, so we are manually adding
+// {'fa-duotone': 'duotone'}
+_PREFIX_TO_STYLE[s] = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, {
+    'fa-duotone': 'duotone'
+}), S[s]), St['kit']), St['kit-duotone']);
+const PREFIX_TO_STYLE = familyProxy(_PREFIX_TO_STYLE);
+const _STYLE_TO_PREFIX = _objectSpread2({}, xt);
+// We changed FAStyleIdToShortPrefixId in the icons repo to be canonical and as such, "classic" family does not have any
+// duotone styles.  But we do still need duotone in _STYLE_TO_PREFIX below, so we are manually adding {duotone: 'fad'}
+_STYLE_TO_PREFIX[s] = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, {
+    duotone: 'fad'
+}), _STYLE_TO_PREFIX[s]), Et['kit']), Et['kit-duotone']);
+const STYLE_TO_PREFIX = familyProxy(_STYLE_TO_PREFIX);
+const _PREFIX_TO_LONG_STYLE = _objectSpread2({}, ga);
+_PREFIX_TO_LONG_STYLE[s] = _objectSpread2(_objectSpread2({}, _PREFIX_TO_LONG_STYLE[s]), Wt['kit']);
+const PREFIX_TO_LONG_STYLE = familyProxy(_PREFIX_TO_LONG_STYLE);
+const _LONG_STYLE_TO_PREFIX = _objectSpread2({}, ua);
+_LONG_STYLE_TO_PREFIX[s] = _objectSpread2(_objectSpread2({}, _LONG_STYLE_TO_PREFIX[s]), Ct['kit']);
+const LONG_STYLE_TO_PREFIX = familyProxy(_LONG_STYLE_TO_PREFIX);
+const ICON_SELECTION_SYNTAX_PATTERN = p; // eslint-disable-line no-useless-escape
+const LAYERS_TEXT_CLASSNAME = 'fa-layers-text';
+const FONT_FAMILY_PATTERN = g;
+const _FONT_WEIGHT_TO_PREFIX = _objectSpread2({}, G);
+const FONT_WEIGHT_TO_PREFIX = familyProxy(_FONT_WEIGHT_TO_PREFIX);
+const ATTRIBUTES_WATCHED_FOR_MUTATION = [
+    'class',
+    'data-prefix',
+    'data-icon',
+    'data-fa-transform',
+    'data-fa-mask'
+];
+const DUOTONE_CLASSES = A;
+const RESERVED_CLASSES = [
+    ...At,
+    ...ma
+];
+const initial = WINDOW.FontAwesomeConfig || {};
+function getAttrConfig(attr) {
+    var element = DOCUMENT.querySelector('script[' + attr + ']');
+    if (element) {
+        return element.getAttribute(attr);
+    }
+}
+function coerce(val) {
+    // Getting an empty string will occur if the attribute is set on the HTML tag but without a value
+    // We'll assume that this is an indication that it should be toggled to true
+    if (val === '') return true;
+    if (val === 'false') return false;
+    if (val === 'true') return true;
+    return val;
+}
+if (DOCUMENT && typeof DOCUMENT.querySelector === 'function') {
+    const attrs = [
+        [
+            'data-family-prefix',
+            'familyPrefix'
+        ],
+        [
+            'data-css-prefix',
+            'cssPrefix'
+        ],
+        [
+            'data-family-default',
+            'familyDefault'
+        ],
+        [
+            'data-style-default',
+            'styleDefault'
+        ],
+        [
+            'data-replacement-class',
+            'replacementClass'
+        ],
+        [
+            'data-auto-replace-svg',
+            'autoReplaceSvg'
+        ],
+        [
+            'data-auto-add-css',
+            'autoAddCss'
+        ],
+        [
+            'data-auto-a11y',
+            'autoA11y'
+        ],
+        [
+            'data-search-pseudo-elements',
+            'searchPseudoElements'
+        ],
+        [
+            'data-observe-mutations',
+            'observeMutations'
+        ],
+        [
+            'data-mutate-approach',
+            'mutateApproach'
+        ],
+        [
+            'data-keep-original-source',
+            'keepOriginalSource'
+        ],
+        [
+            'data-measure-performance',
+            'measurePerformance'
+        ],
+        [
+            'data-show-missing-icons',
+            'showMissingIcons'
+        ]
+    ];
+    attrs.forEach((_ref)=>{
+        let [attr, key] = _ref;
+        const val = coerce(getAttrConfig(attr));
+        if (val !== undefined && val !== null) {
+            initial[key] = val;
+        }
+    });
+}
+const _default = {
+    styleDefault: 'solid',
+    familyDefault: s,
+    cssPrefix: DEFAULT_CSS_PREFIX,
+    replacementClass: DEFAULT_REPLACEMENT_CLASS,
+    autoReplaceSvg: true,
+    autoAddCss: true,
+    autoA11y: true,
+    searchPseudoElements: false,
+    observeMutations: true,
+    mutateApproach: 'async',
+    keepOriginalSource: true,
+    measurePerformance: false,
+    showMissingIcons: true
+};
+// familyPrefix is deprecated but we must still support it if present
+if (initial.familyPrefix) {
+    initial.cssPrefix = initial.familyPrefix;
+}
+const _config = _objectSpread2(_objectSpread2({}, _default), initial);
+if (!_config.autoReplaceSvg) _config.observeMutations = false;
+const config = {};
+Object.keys(_default).forEach((key)=>{
+    Object.defineProperty(config, key, {
+        enumerable: true,
+        set: function(val) {
+            _config[key] = val;
+            _onChangeCb.forEach((cb)=>cb(config));
+        },
+        get: function() {
+            return _config[key];
+        }
+    });
+});
+// familyPrefix is deprecated as of 6.2.0 and should be removed in 7.0.0
+Object.defineProperty(config, 'familyPrefix', {
+    enumerable: true,
+    set: function(val) {
+        _config.cssPrefix = val;
+        _onChangeCb.forEach((cb)=>cb(config));
+    },
+    get: function() {
+        return _config.cssPrefix;
+    }
+});
+WINDOW.FontAwesomeConfig = config;
+const _onChangeCb = [];
+function onChange(cb) {
+    _onChangeCb.push(cb);
+    return ()=>{
+        _onChangeCb.splice(_onChangeCb.indexOf(cb), 1);
+    };
+}
+const d$2 = UNITS_IN_GRID;
+const meaninglessTransform = {
+    size: 16,
+    x: 0,
+    y: 0,
+    rotate: 0,
+    flipX: false,
+    flipY: false
+};
+function insertCss(css) {
+    if (!css || !IS_DOM) {
+        return;
+    }
+    const style = DOCUMENT.createElement('style');
+    style.setAttribute('type', 'text/css');
+    style.innerHTML = css;
+    const headChildren = DOCUMENT.head.childNodes;
+    let beforeChild = null;
+    for(let i = headChildren.length - 1; i > -1; i--){
+        const child = headChildren[i];
+        const tagName = (child.tagName || '').toUpperCase();
+        if ([
+            'STYLE',
+            'LINK'
+        ].indexOf(tagName) > -1) {
+            beforeChild = child;
+        }
+    }
+    DOCUMENT.head.insertBefore(style, beforeChild);
+    return css;
+}
+const idPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function nextUniqueId() {
+    let size = 12;
+    let id = '';
+    while(size-- > 0){
+        id += idPool[Math.random() * 62 | 0];
+    }
+    return id;
+}
+function toArray(obj) {
+    const array = [];
+    for(let i = (obj || []).length >>> 0; i--;){
+        array[i] = obj[i];
+    }
+    return array;
+}
+function classArray(node) {
+    if (node.classList) {
+        return toArray(node.classList);
+    } else {
+        return (node.getAttribute('class') || '').split(' ').filter((i)=>i);
+    }
+}
+function htmlEscape(str) {
+    return "".concat(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function joinAttributes(attributes) {
+    return Object.keys(attributes || {}).reduce((acc, attributeName)=>{
+        return acc + "".concat(attributeName, "=\"").concat(htmlEscape(attributes[attributeName]), "\" ");
+    }, '').trim();
+}
+function joinStyles(styles) {
+    return Object.keys(styles || {}).reduce((acc, styleName)=>{
+        return acc + "".concat(styleName, ": ").concat(styles[styleName].trim(), ";");
+    }, '');
+}
+function transformIsMeaningful(transform) {
+    return transform.size !== meaninglessTransform.size || transform.x !== meaninglessTransform.x || transform.y !== meaninglessTransform.y || transform.rotate !== meaninglessTransform.rotate || transform.flipX || transform.flipY;
+}
+function transformForSvg(_ref) {
+    let { transform, containerWidth, iconWidth } = _ref;
+    const outer = {
+        transform: "translate(".concat(containerWidth / 2, " 256)")
+    };
+    const innerTranslate = "translate(".concat(transform.x * 32, ", ").concat(transform.y * 32, ") ");
+    const innerScale = "scale(".concat(transform.size / 16 * (transform.flipX ? -1 : 1), ", ").concat(transform.size / 16 * (transform.flipY ? -1 : 1), ") ");
+    const innerRotate = "rotate(".concat(transform.rotate, " 0 0)");
+    const inner = {
+        transform: "".concat(innerTranslate, " ").concat(innerScale, " ").concat(innerRotate)
+    };
+    const path = {
+        transform: "translate(".concat(iconWidth / 2 * -1, " -256)")
+    };
+    return {
+        outer,
+        inner,
+        path
+    };
+}
+function transformForCss(_ref2) {
+    let { transform, width = UNITS_IN_GRID, height = UNITS_IN_GRID, startCentered = false } = _ref2;
+    let val = '';
+    if (startCentered && IS_IE) {
+        val += "translate(".concat(transform.x / d$2 - width / 2, "em, ").concat(transform.y / d$2 - height / 2, "em) ");
+    } else if (startCentered) {
+        val += "translate(calc(-50% + ".concat(transform.x / d$2, "em), calc(-50% + ").concat(transform.y / d$2, "em)) ");
+    } else {
+        val += "translate(".concat(transform.x / d$2, "em, ").concat(transform.y / d$2, "em) ");
+    }
+    val += "scale(".concat(transform.size / d$2 * (transform.flipX ? -1 : 1), ", ").concat(transform.size / d$2 * (transform.flipY ? -1 : 1), ") ");
+    val += "rotate(".concat(transform.rotate, "deg) ");
+    return val;
+}
+var baseStyles = ":root, :host {\n  --fa-font-solid: normal 900 1em/1 \"Font Awesome 6 Free\";\n  --fa-font-regular: normal 400 1em/1 \"Font Awesome 6 Free\";\n  --fa-font-light: normal 300 1em/1 \"Font Awesome 6 Pro\";\n  --fa-font-thin: normal 100 1em/1 \"Font Awesome 6 Pro\";\n  --fa-font-duotone: normal 900 1em/1 \"Font Awesome 6 Duotone\";\n  --fa-font-duotone-regular: normal 400 1em/1 \"Font Awesome 6 Duotone\";\n  --fa-font-duotone-light: normal 300 1em/1 \"Font Awesome 6 Duotone\";\n  --fa-font-duotone-thin: normal 100 1em/1 \"Font Awesome 6 Duotone\";\n  --fa-font-brands: normal 400 1em/1 \"Font Awesome 6 Brands\";\n  --fa-font-sharp-solid: normal 900 1em/1 \"Font Awesome 6 Sharp\";\n  --fa-font-sharp-regular: normal 400 1em/1 \"Font Awesome 6 Sharp\";\n  --fa-font-sharp-light: normal 300 1em/1 \"Font Awesome 6 Sharp\";\n  --fa-font-sharp-thin: normal 100 1em/1 \"Font Awesome 6 Sharp\";\n  --fa-font-sharp-duotone-solid: normal 900 1em/1 \"Font Awesome 6 Sharp Duotone\";\n  --fa-font-sharp-duotone-regular: normal 400 1em/1 \"Font Awesome 6 Sharp Duotone\";\n  --fa-font-sharp-duotone-light: normal 300 1em/1 \"Font Awesome 6 Sharp Duotone\";\n  --fa-font-sharp-duotone-thin: normal 100 1em/1 \"Font Awesome 6 Sharp Duotone\";\n}\n\nsvg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa {\n  overflow: visible;\n  box-sizing: content-box;\n}\n\n.svg-inline--fa {\n  display: var(--fa-display, inline-block);\n  height: 1em;\n  overflow: visible;\n  vertical-align: -0.125em;\n}\n.svg-inline--fa.fa-2xs {\n  vertical-align: 0.1em;\n}\n.svg-inline--fa.fa-xs {\n  vertical-align: 0em;\n}\n.svg-inline--fa.fa-sm {\n  vertical-align: -0.0714285705em;\n}\n.svg-inline--fa.fa-lg {\n  vertical-align: -0.2em;\n}\n.svg-inline--fa.fa-xl {\n  vertical-align: -0.25em;\n}\n.svg-inline--fa.fa-2xl {\n  vertical-align: -0.3125em;\n}\n.svg-inline--fa.fa-pull-left {\n  margin-right: var(--fa-pull-margin, 0.3em);\n  width: auto;\n}\n.svg-inline--fa.fa-pull-right {\n  margin-left: var(--fa-pull-margin, 0.3em);\n  width: auto;\n}\n.svg-inline--fa.fa-li {\n  width: var(--fa-li-width, 2em);\n  top: 0.25em;\n}\n.svg-inline--fa.fa-fw {\n  width: var(--fa-fw-width, 1.25em);\n}\n\n.fa-layers svg.svg-inline--fa {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n\n.fa-layers-counter, .fa-layers-text {\n  display: inline-block;\n  position: absolute;\n  text-align: center;\n}\n\n.fa-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -0.125em;\n  width: 1em;\n}\n.fa-layers svg.svg-inline--fa {\n  transform-origin: center center;\n}\n\n.fa-layers-text {\n  left: 50%;\n  top: 50%;\n  transform: translate(-50%, -50%);\n  transform-origin: center center;\n}\n\n.fa-layers-counter {\n  background-color: var(--fa-counter-background-color, #ff253a);\n  border-radius: var(--fa-counter-border-radius, 1em);\n  box-sizing: border-box;\n  color: var(--fa-inverse, #fff);\n  line-height: var(--fa-counter-line-height, 1);\n  max-width: var(--fa-counter-max-width, 5em);\n  min-width: var(--fa-counter-min-width, 1.5em);\n  overflow: hidden;\n  padding: var(--fa-counter-padding, 0.25em 0.5em);\n  right: var(--fa-right, 0);\n  text-overflow: ellipsis;\n  top: var(--fa-top, 0);\n  transform: scale(var(--fa-counter-scale, 0.25));\n  transform-origin: top right;\n}\n\n.fa-layers-bottom-right {\n  bottom: var(--fa-bottom, 0);\n  right: var(--fa-right, 0);\n  top: auto;\n  transform: scale(var(--fa-layers-scale, 0.25));\n  transform-origin: bottom right;\n}\n\n.fa-layers-bottom-left {\n  bottom: var(--fa-bottom, 0);\n  left: var(--fa-left, 0);\n  right: auto;\n  top: auto;\n  transform: scale(var(--fa-layers-scale, 0.25));\n  transform-origin: bottom left;\n}\n\n.fa-layers-top-right {\n  top: var(--fa-top, 0);\n  right: var(--fa-right, 0);\n  transform: scale(var(--fa-layers-scale, 0.25));\n  transform-origin: top right;\n}\n\n.fa-layers-top-left {\n  left: var(--fa-left, 0);\n  right: auto;\n  top: var(--fa-top, 0);\n  transform: scale(var(--fa-layers-scale, 0.25));\n  transform-origin: top left;\n}\n\n.fa-1x {\n  font-size: 1em;\n}\n\n.fa-2x {\n  font-size: 2em;\n}\n\n.fa-3x {\n  font-size: 3em;\n}\n\n.fa-4x {\n  font-size: 4em;\n}\n\n.fa-5x {\n  font-size: 5em;\n}\n\n.fa-6x {\n  font-size: 6em;\n}\n\n.fa-7x {\n  font-size: 7em;\n}\n\n.fa-8x {\n  font-size: 8em;\n}\n\n.fa-9x {\n  font-size: 9em;\n}\n\n.fa-10x {\n  font-size: 10em;\n}\n\n.fa-2xs {\n  font-size: 0.625em;\n  line-height: 0.1em;\n  vertical-align: 0.225em;\n}\n\n.fa-xs {\n  font-size: 0.75em;\n  line-height: 0.0833333337em;\n  vertical-align: 0.125em;\n}\n\n.fa-sm {\n  font-size: 0.875em;\n  line-height: 0.0714285718em;\n  vertical-align: 0.0535714295em;\n}\n\n.fa-lg {\n  font-size: 1.25em;\n  line-height: 0.05em;\n  vertical-align: -0.075em;\n}\n\n.fa-xl {\n  font-size: 1.5em;\n  line-height: 0.0416666682em;\n  vertical-align: -0.125em;\n}\n\n.fa-2xl {\n  font-size: 2em;\n  line-height: 0.03125em;\n  vertical-align: -0.1875em;\n}\n\n.fa-fw {\n  text-align: center;\n  width: 1.25em;\n}\n\n.fa-ul {\n  list-style-type: none;\n  margin-left: var(--fa-li-margin, 2.5em);\n  padding-left: 0;\n}\n.fa-ul > li {\n  position: relative;\n}\n\n.fa-li {\n  left: calc(-1 * var(--fa-li-width, 2em));\n  position: absolute;\n  text-align: center;\n  width: var(--fa-li-width, 2em);\n  line-height: inherit;\n}\n\n.fa-border {\n  border-color: var(--fa-border-color, #eee);\n  border-radius: var(--fa-border-radius, 0.1em);\n  border-style: var(--fa-border-style, solid);\n  border-width: var(--fa-border-width, 0.08em);\n  padding: var(--fa-border-padding, 0.2em 0.25em 0.15em);\n}\n\n.fa-pull-left {\n  float: left;\n  margin-right: var(--fa-pull-margin, 0.3em);\n}\n\n.fa-pull-right {\n  float: right;\n  margin-left: var(--fa-pull-margin, 0.3em);\n}\n\n.fa-beat {\n  animation-name: fa-beat;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, ease-in-out);\n}\n\n.fa-bounce {\n  animation-name: fa-bounce;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));\n}\n\n.fa-fade {\n  animation-name: fa-fade;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));\n}\n\n.fa-beat-fade {\n  animation-name: fa-beat-fade;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));\n}\n\n.fa-flip {\n  animation-name: fa-flip;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, ease-in-out);\n}\n\n.fa-shake {\n  animation-name: fa-shake;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, linear);\n}\n\n.fa-spin {\n  animation-name: fa-spin;\n  animation-delay: var(--fa-animation-delay, 0s);\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 2s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, linear);\n}\n\n.fa-spin-reverse {\n  --fa-animation-direction: reverse;\n}\n\n.fa-pulse,\n.fa-spin-pulse {\n  animation-name: fa-spin;\n  animation-direction: var(--fa-animation-direction, normal);\n  animation-duration: var(--fa-animation-duration, 1s);\n  animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  animation-timing-function: var(--fa-animation-timing, steps(8));\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .fa-beat,\n.fa-bounce,\n.fa-fade,\n.fa-beat-fade,\n.fa-flip,\n.fa-pulse,\n.fa-shake,\n.fa-spin,\n.fa-spin-pulse {\n    animation-delay: -1ms;\n    animation-duration: 1ms;\n    animation-iteration-count: 1;\n    transition-delay: 0s;\n    transition-duration: 0s;\n  }\n}\n@keyframes fa-beat {\n  0%, 90% {\n    transform: scale(1);\n  }\n  45% {\n    transform: scale(var(--fa-beat-scale, 1.25));\n  }\n}\n@keyframes fa-bounce {\n  0% {\n    transform: scale(1, 1) translateY(0);\n  }\n  10% {\n    transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);\n  }\n  30% {\n    transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));\n  }\n  50% {\n    transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);\n  }\n  57% {\n    transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));\n  }\n  64% {\n    transform: scale(1, 1) translateY(0);\n  }\n  100% {\n    transform: scale(1, 1) translateY(0);\n  }\n}\n@keyframes fa-fade {\n  50% {\n    opacity: var(--fa-fade-opacity, 0.4);\n  }\n}\n@keyframes fa-beat-fade {\n  0%, 100% {\n    opacity: var(--fa-beat-fade-opacity, 0.4);\n    transform: scale(1);\n  }\n  50% {\n    opacity: 1;\n    transform: scale(var(--fa-beat-fade-scale, 1.125));\n  }\n}\n@keyframes fa-flip {\n  50% {\n    transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));\n  }\n}\n@keyframes fa-shake {\n  0% {\n    transform: rotate(-15deg);\n  }\n  4% {\n    transform: rotate(15deg);\n  }\n  8%, 24% {\n    transform: rotate(-18deg);\n  }\n  12%, 28% {\n    transform: rotate(18deg);\n  }\n  16% {\n    transform: rotate(-22deg);\n  }\n  20% {\n    transform: rotate(22deg);\n  }\n  32% {\n    transform: rotate(-12deg);\n  }\n  36% {\n    transform: rotate(12deg);\n  }\n  40%, 100% {\n    transform: rotate(0deg);\n  }\n}\n@keyframes fa-spin {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n.fa-rotate-90 {\n  transform: rotate(90deg);\n}\n\n.fa-rotate-180 {\n  transform: rotate(180deg);\n}\n\n.fa-rotate-270 {\n  transform: rotate(270deg);\n}\n\n.fa-flip-horizontal {\n  transform: scale(-1, 1);\n}\n\n.fa-flip-vertical {\n  transform: scale(1, -1);\n}\n\n.fa-flip-both,\n.fa-flip-horizontal.fa-flip-vertical {\n  transform: scale(-1, -1);\n}\n\n.fa-rotate-by {\n  transform: rotate(var(--fa-rotate-angle, 0));\n}\n\n.fa-stack {\n  display: inline-block;\n  vertical-align: middle;\n  height: 2em;\n  position: relative;\n  width: 2.5em;\n}\n\n.fa-stack-1x,\n.fa-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0;\n  z-index: var(--fa-stack-z-index, auto);\n}\n\n.svg-inline--fa.fa-stack-1x {\n  height: 1em;\n  width: 1.25em;\n}\n.svg-inline--fa.fa-stack-2x {\n  height: 2em;\n  width: 2.5em;\n}\n\n.fa-inverse {\n  color: var(--fa-inverse, #fff);\n}\n\n.sr-only,\n.fa-sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n.sr-only-focusable:not(:focus),\n.fa-sr-only-focusable:not(:focus) {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n.svg-inline--fa .fa-primary {\n  fill: var(--fa-primary-color, currentColor);\n  opacity: var(--fa-primary-opacity, 1);\n}\n\n.svg-inline--fa .fa-secondary {\n  fill: var(--fa-secondary-color, currentColor);\n  opacity: var(--fa-secondary-opacity, 0.4);\n}\n\n.svg-inline--fa.fa-swap-opacity .fa-primary {\n  opacity: var(--fa-secondary-opacity, 0.4);\n}\n\n.svg-inline--fa.fa-swap-opacity .fa-secondary {\n  opacity: var(--fa-primary-opacity, 1);\n}\n\n.svg-inline--fa mask .fa-primary,\n.svg-inline--fa mask .fa-secondary {\n  fill: black;\n}";
+function css() {
+    const dcp = DEFAULT_CSS_PREFIX;
+    const drc = DEFAULT_REPLACEMENT_CLASS;
+    const fp = config.cssPrefix;
+    const rc = config.replacementClass;
+    let s = baseStyles;
+    if (fp !== dcp || rc !== drc) {
+        const dPatt = new RegExp("\\.".concat(dcp, "\\-"), 'g');
+        const customPropPatt = new RegExp("\\--".concat(dcp, "\\-"), 'g');
+        const rPatt = new RegExp("\\.".concat(drc), 'g');
+        s = s.replace(dPatt, ".".concat(fp, "-")).replace(customPropPatt, "--".concat(fp, "-")).replace(rPatt, ".".concat(rc));
+    }
+    return s;
+}
+let _cssInserted = false;
+function ensureCss() {
+    if (config.autoAddCss && !_cssInserted) {
+        insertCss(css());
+        _cssInserted = true;
+    }
+}
+var InjectCSS = {
+    mixout () {
+        return {
+            dom: {
+                css,
+                insertCss: ensureCss
+            }
+        };
+    },
+    hooks () {
+        return {
+            beforeDOMElementCreation () {
+                ensureCss();
+            },
+            beforeI2svg () {
+                ensureCss();
+            }
+        };
+    }
+};
+const w = WINDOW || {};
+if (!w[NAMESPACE_IDENTIFIER]) w[NAMESPACE_IDENTIFIER] = {};
+if (!w[NAMESPACE_IDENTIFIER].styles) w[NAMESPACE_IDENTIFIER].styles = {};
+if (!w[NAMESPACE_IDENTIFIER].hooks) w[NAMESPACE_IDENTIFIER].hooks = {};
+if (!w[NAMESPACE_IDENTIFIER].shims) w[NAMESPACE_IDENTIFIER].shims = [];
+var namespace = w[NAMESPACE_IDENTIFIER];
+const functions = [];
+const listener = function() {
+    DOCUMENT.removeEventListener('DOMContentLoaded', listener);
+    loaded = 1;
+    functions.map((fn)=>fn());
+};
+let loaded = false;
+if (IS_DOM) {
+    loaded = (DOCUMENT.documentElement.doScroll ? /^loaded|^c/ : /^loaded|^i|^c/).test(DOCUMENT.readyState);
+    if (!loaded) DOCUMENT.addEventListener('DOMContentLoaded', listener);
+}
+function domready(fn) {
+    if (!IS_DOM) return;
+    loaded ? setTimeout(fn, 0) : functions.push(fn);
+}
+function toHtml(abstractNodes) {
+    const { tag, attributes = {}, children = [] } = abstractNodes;
+    if (typeof abstractNodes === 'string') {
+        return htmlEscape(abstractNodes);
+    } else {
+        return "<".concat(tag, " ").concat(joinAttributes(attributes), ">").concat(children.map(toHtml).join(''), "</").concat(tag, ">");
+    }
+}
+function iconFromMapping(mapping, prefix, iconName) {
+    if (mapping && mapping[prefix] && mapping[prefix][iconName]) {
+        return {
+            prefix,
+            iconName,
+            icon: mapping[prefix][iconName]
+        };
+    }
+}
+/**
+ * Internal helper to bind a function known to have 4 arguments
+ * to a given context.
+ */ var bindInternal4 = function bindInternal4(func, thisContext) {
+    return function(a, b, c, d) {
+        return func.call(thisContext, a, b, c, d);
+    };
+};
+/**
+ * # Reduce
+ *
+ * A fast object `.reduce()` implementation.
+ *
+ * @param  {Object}   subject      The object to reduce over.
+ * @param  {Function} fn           The reducer function.
+ * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
+ * @param  {Object}   thisContext  The context for the reducer.
+ * @return {mixed}                 The final result.
+ */ var reduce = function fastReduceObject(subject, fn, initialValue, thisContext) {
+    var keys = Object.keys(subject), length = keys.length, iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn, i, key, result;
+    if (initialValue === undefined) {
+        i = 1;
+        result = subject[keys[0]];
+    } else {
+        i = 0;
+        result = initialValue;
+    }
+    for(; i < length; i++){
+        key = keys[i];
+        result = iterator(result, subject[key], key, subject);
+    }
+    return result;
+};
+/**
+ * ucs2decode() and codePointAt() are both works of Mathias Bynens and licensed under MIT
+ *
+ * Copyright Mathias Bynens <https://mathiasbynens.be/>
+
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */ function ucs2decode(string) {
+    const output = [];
+    let counter = 0;
+    const length = string.length;
+    while(counter < length){
+        const value = string.charCodeAt(counter++);
+        if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+            const extra = string.charCodeAt(counter++);
+            if ((extra & 0xFC00) == 0xDC00) {
+                // eslint-disable-line eqeqeq
+                output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+            } else {
+                output.push(value);
+                counter--;
+            }
+        } else {
+            output.push(value);
+        }
+    }
+    return output;
+}
+function toHex(unicode) {
+    const decoded = ucs2decode(unicode);
+    return decoded.length === 1 ? decoded[0].toString(16) : null;
+}
+function codePointAt(string, index) {
+    const size = string.length;
+    let first = string.charCodeAt(index);
+    let second;
+    if (first >= 0xD800 && first <= 0xDBFF && size > index + 1) {
+        second = string.charCodeAt(index + 1);
+        if (second >= 0xDC00 && second <= 0xDFFF) {
+            return (first - 0xD800) * 0x400 + second - 0xDC00 + 0x10000;
+        }
+    }
+    return first;
+}
+function normalizeIcons(icons) {
+    return Object.keys(icons).reduce((acc, iconName)=>{
+        const icon = icons[iconName];
+        const expanded = !!icon.icon;
+        if (expanded) {
+            acc[icon.iconName] = icon.icon;
+        } else {
+            acc[iconName] = icon;
+        }
+        return acc;
+    }, {});
+}
+function defineIcons(prefix, icons) {
+    let params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const { skipHooks = false } = params;
+    const normalized = normalizeIcons(icons);
+    if (typeof namespace.hooks.addPack === 'function' && !skipHooks) {
+        namespace.hooks.addPack(prefix, normalizeIcons(icons));
+    } else {
+        namespace.styles[prefix] = _objectSpread2(_objectSpread2({}, namespace.styles[prefix] || {}), normalized);
+    }
+    /**
+   * Font Awesome 4 used the prefix of `fa` for all icons. With the introduction
+   * of new styles we needed to differentiate between them. Prefix `fa` is now an alias
+   * for `fas` so we'll ease the upgrade process for our users by automatically defining
+   * this as well.
+   */ if (prefix === 'fas') {
+        defineIcons('fa', icons);
+    }
+}
+const duotonePathRe = [
+    /*#__PURE__*/ _wrapRegExp(/path d="([^"]+)".*path d="([^"]+)"/, {
+        d1: 1,
+        d2: 2
+    }),
+    /*#__PURE__*/ _wrapRegExp(/path class="([^"]+)".*d="([^"]+)".*path class="([^"]+)".*d="([^"]+)"/, {
+        cls1: 1,
+        d1: 2,
+        cls2: 3,
+        d2: 4
+    }),
+    /*#__PURE__*/ _wrapRegExp(/path class="([^"]+)".*d="([^"]+)"/, {
+        cls1: 1,
+        d1: 2
+    })
+];
+const { styles, shims } = namespace;
+const FAMILY_NAMES = Object.keys(PREFIX_TO_LONG_STYLE);
+const PREFIXES_FOR_FAMILY = FAMILY_NAMES.reduce((acc, familyId)=>{
+    acc[familyId] = Object.keys(PREFIX_TO_LONG_STYLE[familyId]);
+    return acc;
+}, {});
+let _defaultUsablePrefix = null;
+let _byUnicode = {};
+let _byLigature = {};
+let _byOldName = {};
+let _byOldUnicode = {};
+let _byAlias = {};
+function isReserved(name) {
+    return ~RESERVED_CLASSES.indexOf(name);
+}
+function getIconName(cssPrefix, cls) {
+    const parts = cls.split('-');
+    const prefix = parts[0];
+    const iconName = parts.slice(1).join('-');
+    if (prefix === cssPrefix && iconName !== '' && !isReserved(iconName)) {
+        return iconName;
+    } else {
+        return null;
+    }
+}
+const build = ()=>{
+    const lookup = (reducer)=>{
+        return reduce(styles, (o$$1, style, prefix)=>{
+            o$$1[prefix] = reduce(style, reducer, {});
+            return o$$1;
+        }, {});
+    };
+    _byUnicode = lookup((acc, icon, iconName)=>{
+        if (icon[3]) {
+            acc[icon[3]] = iconName;
+        }
+        if (icon[2]) {
+            const aliases = icon[2].filter((a$$1)=>{
+                return typeof a$$1 === 'number';
+            });
+            aliases.forEach((alias)=>{
+                acc[alias.toString(16)] = iconName;
+            });
+        }
+        return acc;
+    });
+    _byLigature = lookup((acc, icon, iconName)=>{
+        acc[iconName] = iconName;
+        if (icon[2]) {
+            const aliases = icon[2].filter((a$$1)=>{
+                return typeof a$$1 === 'string';
+            });
+            aliases.forEach((alias)=>{
+                acc[alias] = iconName;
+            });
+        }
+        return acc;
+    });
+    _byAlias = lookup((acc, icon, iconName)=>{
+        const aliases = icon[2];
+        acc[iconName] = iconName;
+        aliases.forEach((alias)=>{
+            acc[alias] = iconName;
+        });
+        return acc;
+    });
+    // If we have a Kit, we can't determine if regular is available since we
+    // could be auto-fetching it. We'll have to assume that it is available.
+    const hasRegular = 'far' in styles || config.autoFetchSvg;
+    const shimLookups = reduce(shims, (acc, shim)=>{
+        const maybeNameMaybeUnicode = shim[0];
+        let prefix = shim[1];
+        const iconName = shim[2];
+        if (prefix === 'far' && !hasRegular) {
+            prefix = 'fas';
+        }
+        if (typeof maybeNameMaybeUnicode === 'string') {
+            acc.names[maybeNameMaybeUnicode] = {
+                prefix,
+                iconName
+            };
+        }
+        if (typeof maybeNameMaybeUnicode === 'number') {
+            acc.unicodes[maybeNameMaybeUnicode.toString(16)] = {
+                prefix,
+                iconName
+            };
+        }
+        return acc;
+    }, {
+        names: {},
+        unicodes: {}
+    });
+    _byOldName = shimLookups.names;
+    _byOldUnicode = shimLookups.unicodes;
+    _defaultUsablePrefix = getCanonicalPrefix(config.styleDefault, {
+        family: config.familyDefault
+    });
+};
+onChange((c$$1)=>{
+    _defaultUsablePrefix = getCanonicalPrefix(c$$1.styleDefault, {
+        family: config.familyDefault
+    });
+});
+build();
+function byUnicode(prefix, unicode) {
+    return (_byUnicode[prefix] || {})[unicode];
+}
+function byLigature(prefix, ligature) {
+    return (_byLigature[prefix] || {})[ligature];
+}
+function byAlias(prefix, alias) {
+    return (_byAlias[prefix] || {})[alias];
+}
+function byOldName(name) {
+    return _byOldName[name] || {
+        prefix: null,
+        iconName: null
+    };
+}
+function byOldUnicode(unicode) {
+    const oldUnicode = _byOldUnicode[unicode];
+    const newUnicode = byUnicode('fas', unicode);
+    return oldUnicode || (newUnicode ? {
+        prefix: 'fas',
+        iconName: newUnicode
+    } : null) || {
+        prefix: null,
+        iconName: null
+    };
+}
+function getDefaultUsablePrefix() {
+    return _defaultUsablePrefix;
+}
+const emptyCanonicalIcon = ()=>{
+    return {
+        prefix: null,
+        iconName: null,
+        rest: []
+    };
+};
+function getFamilyId(values) {
+    let family = s;
+    const famProps = FAMILY_NAMES.reduce((acc, familyId)=>{
+        acc[familyId] = "".concat(config.cssPrefix, "-").concat(familyId);
+        return acc;
+    }, {});
+    L.forEach((familyId)=>{
+        if (values.includes(famProps[familyId]) || values.some((v$$1)=>PREFIXES_FOR_FAMILY[familyId].includes(v$$1))) {
+            family = familyId;
+        }
+    });
+    return family;
+}
+function getCanonicalPrefix(styleOrPrefix) {
+    let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const { family = s } = params;
+    const style = PREFIX_TO_STYLE[family][styleOrPrefix];
+    // handles the exception of passing in only a family of 'duotone' with no style
+    if (family === t && !styleOrPrefix) {
+        return 'fad';
+    }
+    const prefix = STYLE_TO_PREFIX[family][styleOrPrefix] || STYLE_TO_PREFIX[family][style];
+    const defined = styleOrPrefix in namespace.styles ? styleOrPrefix : null;
+    const result = prefix || defined || null;
+    return result;
+}
+function moveNonFaClassesToRest(classNames) {
+    let rest = [];
+    let iconName = null;
+    classNames.forEach((cls)=>{
+        const result = getIconName(config.cssPrefix, cls);
+        if (result) {
+            iconName = result;
+        } else if (cls) {
+            rest.push(cls);
+        }
+    });
+    return {
+        iconName,
+        rest
+    };
+}
+function sortedUniqueValues(arr) {
+    return arr.sort().filter((value, index, arr)=>{
+        return arr.indexOf(value) === index;
+    });
+}
+function getCanonicalIcon(values) {
+    let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const { skipLookups = false } = params;
+    let givenPrefix = null;
+    const faCombinedClasses = Ia.concat(bt$1);
+    const faStyleOrFamilyClasses = sortedUniqueValues(values.filter((cls)=>faCombinedClasses.includes(cls)));
+    const nonStyleOrFamilyClasses = sortedUniqueValues(values.filter((cls)=>!Ia.includes(cls)));
+    const faStyles = faStyleOrFamilyClasses.filter((cls)=>{
+        givenPrefix = cls;
+        return !P.includes(cls);
+    });
+    const [styleFromValues = null] = faStyles;
+    const family = getFamilyId(faStyleOrFamilyClasses);
+    const canonical = _objectSpread2(_objectSpread2({}, moveNonFaClassesToRest(nonStyleOrFamilyClasses)), {}, {
+        prefix: getCanonicalPrefix(styleFromValues, {
+            family
+        })
+    });
+    return _objectSpread2(_objectSpread2(_objectSpread2({}, canonical), getDefaultCanonicalPrefix({
+        values,
+        family,
+        styles,
+        config,
+        canonical,
+        givenPrefix
+    })), applyShimAndAlias(skipLookups, givenPrefix, canonical));
+}
+function applyShimAndAlias(skipLookups, givenPrefix, canonical) {
+    let { prefix, iconName } = canonical;
+    if (skipLookups || !prefix || !iconName) {
+        return {
+            prefix,
+            iconName
+        };
+    }
+    const shim = givenPrefix === 'fa' ? byOldName(iconName) : {};
+    const aliasIconName = byAlias(prefix, iconName);
+    iconName = shim.iconName || aliasIconName || iconName;
+    prefix = shim.prefix || prefix;
+    if (prefix === 'far' && !styles['far'] && styles['fas'] && !config.autoFetchSvg) {
+        // Allow a fallback from the regular style to solid if regular is not available
+        // but only if we aren't auto-fetching SVGs
+        prefix = 'fas';
+    }
+    return {
+        prefix,
+        iconName
+    };
+}
+const newCanonicalFamilies = L.filter((familyId)=>{
+    return familyId !== s || familyId !== t;
+});
+const newCanonicalStyles = Object.keys(ga).filter((key)=>key !== s).map((key)=>Object.keys(ga[key])).flat();
+function getDefaultCanonicalPrefix(prefixOptions) {
+    const { values, family, canonical, givenPrefix = '', styles = {}, config: config$$1 = {} } = prefixOptions;
+    const isDuotoneFamily = family === t;
+    const valuesHasDuotone = values.includes('fa-duotone') || values.includes('fad');
+    const defaultFamilyIsDuotone = config$$1.familyDefault === 'duotone';
+    const canonicalPrefixIsDuotone = canonical.prefix === 'fad' || canonical.prefix === 'fa-duotone';
+    if (!isDuotoneFamily && (valuesHasDuotone || defaultFamilyIsDuotone || canonicalPrefixIsDuotone)) {
+        canonical.prefix = 'fad';
+    }
+    if (values.includes('fa-brands') || values.includes('fab')) {
+        canonical.prefix = 'fab';
+    }
+    if (!canonical.prefix && newCanonicalFamilies.includes(family)) {
+        const validPrefix = Object.keys(styles).find((key)=>newCanonicalStyles.includes(key));
+        if (validPrefix || config$$1.autoFetchSvg) {
+            const defaultPrefix = pt.get(family).defaultShortPrefixId;
+            canonical.prefix = defaultPrefix;
+            canonical.iconName = byAlias(canonical.prefix, canonical.iconName) || canonical.iconName;
+        }
+    }
+    if (canonical.prefix === 'fa' || givenPrefix === 'fa') {
+        // The fa prefix is not canonical. So if it has made it through until this point
+        // we will shift it to the correct prefix.
+        canonical.prefix = getDefaultUsablePrefix() || 'fas';
+    }
+    return canonical;
+}
+class Library {
+    constructor(){
+        this.definitions = {};
+    }
+    add() {
+        for(var _len = arguments.length, definitions = new Array(_len), _key = 0; _key < _len; _key++){
+            definitions[_key] = arguments[_key];
+        }
+        const additions = definitions.reduce(this._pullDefinitions, {});
+        Object.keys(additions).forEach((key)=>{
+            this.definitions[key] = _objectSpread2(_objectSpread2({}, this.definitions[key] || {}), additions[key]);
+            defineIcons(key, additions[key]);
+            // TODO can we stop doing this? We can't get the icons by 'fa-solid' any longer so this probably needs to change
+            const longPrefix = PREFIX_TO_LONG_STYLE[s][key];
+            if (longPrefix) defineIcons(longPrefix, additions[key]);
+            build();
+        });
+    }
+    reset() {
+        this.definitions = {};
+    }
+    _pullDefinitions(additions, definition) {
+        const normalized = definition.prefix && definition.iconName && definition.icon ? {
+            0: definition
+        } : definition;
+        Object.keys(normalized).map((key)=>{
+            const { prefix, iconName, icon } = normalized[key];
+            const aliases = icon[2];
+            if (!additions[prefix]) additions[prefix] = {};
+            if (aliases.length > 0) {
+                aliases.forEach((alias)=>{
+                    if (typeof alias === 'string') {
+                        additions[prefix][alias] = icon;
+                    }
+                });
+            }
+            additions[prefix][iconName] = icon;
+        });
+        return additions;
+    }
+}
+let _plugins = [];
+let _hooks = {};
+const providers = {};
+const defaultProviderKeys = Object.keys(providers);
+function registerPlugins(nextPlugins, _ref) {
+    let { mixoutsTo: obj } = _ref;
+    _plugins = nextPlugins;
+    _hooks = {};
+    Object.keys(providers).forEach((k)=>{
+        if (defaultProviderKeys.indexOf(k) === -1) {
+            delete providers[k];
+        }
+    });
+    _plugins.forEach((plugin)=>{
+        const mixout = plugin.mixout ? plugin.mixout() : {};
+        Object.keys(mixout).forEach((tk)=>{
+            if (typeof mixout[tk] === 'function') {
+                obj[tk] = mixout[tk];
+            }
+            if (typeof mixout[tk] === 'object') {
+                Object.keys(mixout[tk]).forEach((sk)=>{
+                    if (!obj[tk]) {
+                        obj[tk] = {};
+                    }
+                    obj[tk][sk] = mixout[tk][sk];
+                });
+            }
+        });
+        if (plugin.hooks) {
+            const hooks = plugin.hooks();
+            Object.keys(hooks).forEach((hook)=>{
+                if (!_hooks[hook]) {
+                    _hooks[hook] = [];
+                }
+                _hooks[hook].push(hooks[hook]);
+            });
+        }
+        if (plugin.provides) {
+            plugin.provides(providers);
+        }
+    });
+    return obj;
+}
+function chainHooks(hook, accumulator) {
+    for(var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++){
+        args[_key - 2] = arguments[_key];
+    }
+    const hookFns = _hooks[hook] || [];
+    hookFns.forEach((hookFn)=>{
+        accumulator = hookFn.apply(null, [
+            accumulator,
+            ...args
+        ]); // eslint-disable-line no-useless-call
+    });
+    return accumulator;
+}
+function callHooks(hook) {
+    for(var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++){
+        args[_key2 - 1] = arguments[_key2];
+    }
+    const hookFns = _hooks[hook] || [];
+    hookFns.forEach((hookFn)=>{
+        hookFn.apply(null, args);
+    });
+    return undefined;
+}
+function callProvided() {
+    const hook = arguments[0];
+    const args = Array.prototype.slice.call(arguments, 1);
+    return providers[hook] ? providers[hook].apply(null, args) : undefined;
+}
+function findIconDefinition(iconLookup) {
+    if (iconLookup.prefix === 'fa') {
+        iconLookup.prefix = 'fas';
+    }
+    let { iconName } = iconLookup;
+    const prefix = iconLookup.prefix || getDefaultUsablePrefix();
+    if (!iconName) return;
+    iconName = byAlias(prefix, iconName) || iconName;
+    return iconFromMapping(library.definitions, prefix, iconName) || iconFromMapping(namespace.styles, prefix, iconName);
+}
+const library = new Library();
+const noAuto = ()=>{
+    config.autoReplaceSvg = false;
+    config.observeMutations = false;
+    callHooks('noAuto');
+};
+const dom = {
+    i2svg: function() {
+        let params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        if (IS_DOM) {
+            callHooks('beforeI2svg', params);
+            callProvided('pseudoElements2svg', params);
+            return callProvided('i2svg', params);
+        } else {
+            return Promise.reject(new Error('Operation requires a DOM of some kind.'));
+        }
+    },
+    watch: function() {
+        let params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        const { autoReplaceSvgRoot } = params;
+        if (config.autoReplaceSvg === false) {
+            config.autoReplaceSvg = true;
+        }
+        config.observeMutations = true;
+        domready(()=>{
+            autoReplace({
+                autoReplaceSvgRoot
+            });
+            callHooks('watch', params);
+        });
+    }
+};
+const parse = {
+    icon: (icon)=>{
+        if (icon === null) {
+            return null;
+        }
+        if (typeof icon === 'object' && icon.prefix && icon.iconName) {
+            return {
+                prefix: icon.prefix,
+                iconName: byAlias(icon.prefix, icon.iconName) || icon.iconName
+            };
+        }
+        if (Array.isArray(icon) && icon.length === 2) {
+            const iconName = icon[1].indexOf('fa-') === 0 ? icon[1].slice(3) : icon[1];
+            const prefix = getCanonicalPrefix(icon[0]);
+            return {
+                prefix,
+                iconName: byAlias(prefix, iconName) || iconName
+            };
+        }
+        if (typeof icon === 'string' && (icon.indexOf("".concat(config.cssPrefix, "-")) > -1 || icon.match(ICON_SELECTION_SYNTAX_PATTERN))) {
+            const canonicalIcon = getCanonicalIcon(icon.split(' '), {
+                skipLookups: true
+            });
+            return {
+                prefix: canonicalIcon.prefix || getDefaultUsablePrefix(),
+                iconName: byAlias(canonicalIcon.prefix, canonicalIcon.iconName) || canonicalIcon.iconName
+            };
+        }
+        if (typeof icon === 'string') {
+            const prefix = getDefaultUsablePrefix();
+            return {
+                prefix,
+                iconName: byAlias(prefix, icon) || icon
+            };
+        }
+    }
+};
+const api = {
+    noAuto,
+    config,
+    dom,
+    parse,
+    library,
+    findIconDefinition,
+    toHtml
+};
+const autoReplace = function() {
+    let params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    const { autoReplaceSvgRoot = DOCUMENT } = params;
+    if ((Object.keys(namespace.styles).length > 0 || config.autoFetchSvg) && IS_DOM && config.autoReplaceSvg) api.dom.i2svg({
+        node: autoReplaceSvgRoot
+    });
+};
+function domVariants(val, abstractCreator) {
+    Object.defineProperty(val, 'abstract', {
+        get: abstractCreator
+    });
+    Object.defineProperty(val, 'html', {
+        get: function() {
+            return val.abstract.map((a)=>toHtml(a));
+        }
+    });
+    Object.defineProperty(val, 'node', {
+        get: function() {
+            if (!IS_DOM) return;
+            const container = DOCUMENT.createElement('div');
+            container.innerHTML = val.html;
+            return container.children;
+        }
+    });
+    return val;
+}
+function asIcon(_ref) {
+    let { children, main, mask, attributes, styles, transform } = _ref;
+    if (transformIsMeaningful(transform) && main.found && !mask.found) {
+        const { width, height } = main;
+        const offset = {
+            x: width / height / 2,
+            y: 0.5
+        };
+        attributes['style'] = joinStyles(_objectSpread2(_objectSpread2({}, styles), {}, {
+            'transform-origin': "".concat(offset.x + transform.x / 16, "em ").concat(offset.y + transform.y / 16, "em")
+        }));
+    }
+    return [
+        {
+            tag: 'svg',
+            attributes,
+            children
+        }
+    ];
+}
+function asSymbol(_ref) {
+    let { prefix, iconName, children, attributes, symbol } = _ref;
+    const id = symbol === true ? "".concat(prefix, "-").concat(config.cssPrefix, "-").concat(iconName) : symbol;
+    return [
+        {
+            tag: 'svg',
+            attributes: {
+                style: 'display: none;'
+            },
+            children: [
+                {
+                    tag: 'symbol',
+                    attributes: _objectSpread2(_objectSpread2({}, attributes), {}, {
+                        id
+                    }),
+                    children
+                }
+            ]
+        }
+    ];
+}
+function makeInlineSvgAbstract(params) {
+    const { icons: { main, mask }, prefix, iconName, transform, symbol, title, maskId, titleId, extra, watchable = false } = params;
+    const { width, height } = mask.found ? mask : main;
+    const isUploadedIcon = Lt.includes(prefix);
+    const attrClass = [
+        config.replacementClass,
+        iconName ? "".concat(config.cssPrefix, "-").concat(iconName) : ''
+    ].filter((c$$1)=>extra.classes.indexOf(c$$1) === -1).filter((c$$1)=>c$$1 !== '' || !!c$$1).concat(extra.classes).join(' ');
+    let content = {
+        children: [],
+        attributes: _objectSpread2(_objectSpread2({}, extra.attributes), {}, {
+            'data-prefix': prefix,
+            'data-icon': iconName,
+            'class': attrClass,
+            'role': extra.attributes.role || 'img',
+            'xmlns': 'http://www.w3.org/2000/svg',
+            'viewBox': "0 0 ".concat(width, " ").concat(height)
+        })
+    };
+    const uploadedIconWidthStyle = isUploadedIcon && !~extra.classes.indexOf('fa-fw') ? {
+        width: "".concat(width / height * 16 * 0.0625, "em")
+    } : {};
+    if (watchable) {
+        content.attributes[DATA_FA_I2SVG] = '';
+    }
+    if (title) {
+        content.children.push({
+            tag: 'title',
+            attributes: {
+                id: content.attributes['aria-labelledby'] || "title-".concat(titleId || nextUniqueId())
+            },
+            children: [
+                title
+            ]
+        });
+        delete content.attributes.title;
+    }
+    const args = _objectSpread2(_objectSpread2({}, content), {}, {
+        prefix,
+        iconName,
+        main,
+        mask,
+        maskId,
+        transform,
+        symbol,
+        styles: _objectSpread2(_objectSpread2({}, uploadedIconWidthStyle), extra.styles)
+    });
+    const { children, attributes } = mask.found && main.found ? callProvided('generateAbstractMask', args) || {
+        children: [],
+        attributes: {}
+    } : callProvided('generateAbstractIcon', args) || {
+        children: [],
+        attributes: {}
+    };
+    args.children = children;
+    args.attributes = attributes;
+    if (symbol) {
+        return asSymbol(args);
+    } else {
+        return asIcon(args);
+    }
+}
+function makeLayersTextAbstract(params) {
+    const { content, width, height, transform, title, extra, watchable = false } = params;
+    const attributes = _objectSpread2(_objectSpread2(_objectSpread2({}, extra.attributes), title ? {
+        'title': title
+    } : {}), {}, {
+        'class': extra.classes.join(' ')
+    });
+    if (watchable) {
+        attributes[DATA_FA_I2SVG] = '';
+    }
+    const styles = _objectSpread2({}, extra.styles);
+    if (transformIsMeaningful(transform)) {
+        styles['transform'] = transformForCss({
+            transform,
+            startCentered: true,
+            width,
+            height
+        });
+        styles['-webkit-transform'] = styles['transform'];
+    }
+    const styleString = joinStyles(styles);
+    if (styleString.length > 0) {
+        attributes['style'] = styleString;
+    }
+    const val = [];
+    val.push({
+        tag: 'span',
+        attributes,
+        children: [
+            content
+        ]
+    });
+    if (title) {
+        val.push({
+            tag: 'span',
+            attributes: {
+                class: 'sr-only'
+            },
+            children: [
+                title
+            ]
+        });
+    }
+    return val;
+}
+function makeLayersCounterAbstract(params) {
+    const { content, title, extra } = params;
+    const attributes = _objectSpread2(_objectSpread2(_objectSpread2({}, extra.attributes), title ? {
+        'title': title
+    } : {}), {}, {
+        'class': extra.classes.join(' ')
+    });
+    const styleString = joinStyles(extra.styles);
+    if (styleString.length > 0) {
+        attributes['style'] = styleString;
+    }
+    const val = [];
+    val.push({
+        tag: 'span',
+        attributes,
+        children: [
+            content
+        ]
+    });
+    if (title) {
+        val.push({
+            tag: 'span',
+            attributes: {
+                class: 'sr-only'
+            },
+            children: [
+                title
+            ]
+        });
+    }
+    return val;
+}
+const { styles: styles$1 } = namespace;
+function asFoundIcon(icon) {
+    const width = icon[0];
+    const height = icon[1];
+    const [vectorData] = icon.slice(4);
+    let element = null;
+    if (Array.isArray(vectorData)) {
+        element = {
+            tag: 'g',
+            attributes: {
+                class: "".concat(config.cssPrefix, "-").concat(DUOTONE_CLASSES.GROUP)
+            },
+            children: [
+                {
+                    tag: 'path',
+                    attributes: {
+                        class: "".concat(config.cssPrefix, "-").concat(DUOTONE_CLASSES.SECONDARY),
+                        fill: 'currentColor',
+                        d: vectorData[0]
+                    }
+                },
+                {
+                    tag: 'path',
+                    attributes: {
+                        class: "".concat(config.cssPrefix, "-").concat(DUOTONE_CLASSES.PRIMARY),
+                        fill: 'currentColor',
+                        d: vectorData[1]
+                    }
+                }
+            ]
+        };
+    } else {
+        element = {
+            tag: 'path',
+            attributes: {
+                fill: 'currentColor',
+                d: vectorData
+            }
+        };
+    }
+    return {
+        found: true,
+        width,
+        height,
+        icon: element
+    };
+}
+const missingIconResolutionMixin = {
+    found: false,
+    width: 512,
+    height: 512
+};
+function maybeNotifyMissing(iconName, prefix) {
+    if (!PRODUCTION && !config.showMissingIcons && iconName) {
+        console.error("Icon with name \"".concat(iconName, "\" and prefix \"").concat(prefix, "\" is missing."));
+    }
+}
+function findIcon(iconName, prefix) {
+    let givenPrefix = prefix;
+    if (prefix === 'fa' && config.styleDefault !== null) {
+        prefix = getDefaultUsablePrefix();
+    }
+    return new Promise((resolve, reject)=>{
+        if (givenPrefix === 'fa') {
+            const shim = byOldName(iconName) || {};
+            iconName = shim.iconName || iconName;
+            prefix = shim.prefix || prefix;
+        }
+        if (iconName && prefix && styles$1[prefix] && styles$1[prefix][iconName]) {
+            const icon = styles$1[prefix][iconName];
+            return resolve(asFoundIcon(icon));
+        }
+        maybeNotifyMissing(iconName, prefix);
+        resolve(_objectSpread2(_objectSpread2({}, missingIconResolutionMixin), {}, {
+            icon: config.showMissingIcons && iconName ? callProvided('missingIconAbstract') || {} : {}
+        }));
+    });
+}
+const noop$1 = ()=>{};
+const p$2 = config.measurePerformance && PERFORMANCE && PERFORMANCE.mark && PERFORMANCE.measure ? PERFORMANCE : {
+    mark: noop$1,
+    measure: noop$1
+};
+const preamble = "FA \"6.7.2\"";
+const begin = (name)=>{
+    p$2.mark("".concat(preamble, " ").concat(name, " begins"));
+    return ()=>end(name);
+};
+const end = (name)=>{
+    p$2.mark("".concat(preamble, " ").concat(name, " ends"));
+    p$2.measure("".concat(preamble, " ").concat(name), "".concat(preamble, " ").concat(name, " begins"), "".concat(preamble, " ").concat(name, " ends"));
+};
+var perf = {
+    begin,
+    end
+};
+const noop$2 = ()=>{};
+function isWatched(node) {
+    const i2svg = node.getAttribute ? node.getAttribute(DATA_FA_I2SVG) : null;
+    return typeof i2svg === 'string';
+}
+function hasPrefixAndIcon(node) {
+    const prefix = node.getAttribute ? node.getAttribute(DATA_PREFIX) : null;
+    const icon = node.getAttribute ? node.getAttribute(DATA_ICON) : null;
+    return prefix && icon;
+}
+function hasBeenReplaced(node) {
+    return node && node.classList && node.classList.contains && node.classList.contains(config.replacementClass);
+}
+function getMutator() {
+    if (config.autoReplaceSvg === true) {
+        return mutators.replace;
+    }
+    const mutator = mutators[config.autoReplaceSvg];
+    return mutator || mutators.replace;
+}
+function createElementNS(tag) {
+    return DOCUMENT.createElementNS('http://www.w3.org/2000/svg', tag);
+}
+function createElement(tag) {
+    return DOCUMENT.createElement(tag);
+}
+function convertSVG(abstractObj) {
+    let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const { ceFn = abstractObj.tag === 'svg' ? createElementNS : createElement } = params;
+    if (typeof abstractObj === 'string') {
+        return DOCUMENT.createTextNode(abstractObj);
+    }
+    const tag = ceFn(abstractObj.tag);
+    Object.keys(abstractObj.attributes || []).forEach(function(key) {
+        tag.setAttribute(key, abstractObj.attributes[key]);
+    });
+    const children = abstractObj.children || [];
+    children.forEach(function(child) {
+        tag.appendChild(convertSVG(child, {
+            ceFn
+        }));
+    });
+    return tag;
+}
+function nodeAsComment(node) {
+    let comment = " ".concat(node.outerHTML, " ");
+    /* BEGIN.ATTRIBUTION */ comment = "".concat(comment, "Font Awesome fontawesome.com ");
+    /* END.ATTRIBUTION */ return comment;
+}
+const mutators = {
+    replace: function(mutation) {
+        const node = mutation[0];
+        if (node.parentNode) {
+            mutation[1].forEach((abstract)=>{
+                node.parentNode.insertBefore(convertSVG(abstract), node);
+            });
+            if (node.getAttribute(DATA_FA_I2SVG) === null && config.keepOriginalSource) {
+                let comment = DOCUMENT.createComment(nodeAsComment(node));
+                node.parentNode.replaceChild(comment, node);
+            } else {
+                node.remove();
+            }
+        }
+    },
+    nest: function(mutation) {
+        const node = mutation[0];
+        const abstract = mutation[1];
+        // If we already have a replaced node we do not want to continue nesting within it.
+        // Short-circuit to the standard replacement
+        if (~classArray(node).indexOf(config.replacementClass)) {
+            return mutators.replace(mutation);
+        }
+        const forSvg = new RegExp("".concat(config.cssPrefix, "-.*"));
+        delete abstract[0].attributes.id;
+        if (abstract[0].attributes.class) {
+            const splitClasses = abstract[0].attributes.class.split(' ').reduce((acc, cls)=>{
+                if (cls === config.replacementClass || cls.match(forSvg)) {
+                    acc.toSvg.push(cls);
+                } else {
+                    acc.toNode.push(cls);
+                }
+                return acc;
+            }, {
+                toNode: [],
+                toSvg: []
+            });
+            abstract[0].attributes.class = splitClasses.toSvg.join(' ');
+            if (splitClasses.toNode.length === 0) {
+                node.removeAttribute('class');
+            } else {
+                node.setAttribute('class', splitClasses.toNode.join(' '));
+            }
+        }
+        const newInnerHTML = abstract.map((a)=>toHtml(a)).join('\n');
+        node.setAttribute(DATA_FA_I2SVG, '');
+        node.innerHTML = newInnerHTML;
+    }
+};
+function performOperationSync(op) {
+    op();
+}
+function perform(mutations, callback) {
+    const callbackFunction = typeof callback === 'function' ? callback : noop$2;
+    if (mutations.length === 0) {
+        callbackFunction();
+    } else {
+        let frame = performOperationSync;
+        if (config.mutateApproach === MUTATION_APPROACH_ASYNC) {
+            frame = WINDOW.requestAnimationFrame || performOperationSync;
+        }
+        frame(()=>{
+            const mutator = getMutator();
+            const mark = perf.begin('mutate');
+            mutations.map(mutator);
+            mark();
+            callbackFunction();
+        });
+    }
+}
+let disabled = false;
+function disableObservation() {
+    disabled = true;
+}
+function enableObservation() {
+    disabled = false;
+}
+let mo = null;
+function observe(options) {
+    if (!MUTATION_OBSERVER) {
+        return;
+    }
+    if (!config.observeMutations) {
+        return;
+    }
+    const { treeCallback = noop$2, nodeCallback = noop$2, pseudoElementsCallback = noop$2, observeMutationsRoot = DOCUMENT } = options;
+    mo = new MUTATION_OBSERVER((objects)=>{
+        if (disabled) return;
+        const defaultPrefix = getDefaultUsablePrefix();
+        toArray(objects).forEach((mutationRecord)=>{
+            if (mutationRecord.type === 'childList' && mutationRecord.addedNodes.length > 0 && !isWatched(mutationRecord.addedNodes[0])) {
+                if (config.searchPseudoElements) {
+                    pseudoElementsCallback(mutationRecord.target);
+                }
+                treeCallback(mutationRecord.target);
+            }
+            if (mutationRecord.type === 'attributes' && mutationRecord.target.parentNode && config.searchPseudoElements) {
+                pseudoElementsCallback(mutationRecord.target.parentNode);
+            }
+            if (mutationRecord.type === 'attributes' && isWatched(mutationRecord.target) && ~ATTRIBUTES_WATCHED_FOR_MUTATION.indexOf(mutationRecord.attributeName)) {
+                if (mutationRecord.attributeName === 'class' && hasPrefixAndIcon(mutationRecord.target)) {
+                    const { prefix, iconName } = getCanonicalIcon(classArray(mutationRecord.target));
+                    mutationRecord.target.setAttribute(DATA_PREFIX, prefix || defaultPrefix);
+                    if (iconName) mutationRecord.target.setAttribute(DATA_ICON, iconName);
+                } else if (hasBeenReplaced(mutationRecord.target)) {
+                    nodeCallback(mutationRecord.target);
+                }
+            }
+        });
+    });
+    if (!IS_DOM) return;
+    mo.observe(observeMutationsRoot, {
+        childList: true,
+        attributes: true,
+        characterData: true,
+        subtree: true
+    });
+}
+function disconnect() {
+    if (!mo) return;
+    mo.disconnect();
+}
+function styleParser(node) {
+    const style = node.getAttribute('style');
+    let val = [];
+    if (style) {
+        val = style.split(';').reduce((acc, style)=>{
+            const styles = style.split(':');
+            const prop = styles[0];
+            const value = styles.slice(1);
+            if (prop && value.length > 0) {
+                acc[prop] = value.join(':').trim();
+            }
+            return acc;
+        }, {});
+    }
+    return val;
+}
+function classParser(node) {
+    const existingPrefix = node.getAttribute('data-prefix');
+    const existingIconName = node.getAttribute('data-icon');
+    const innerText = node.innerText !== undefined ? node.innerText.trim() : '';
+    let val = getCanonicalIcon(classArray(node));
+    if (!val.prefix) {
+        val.prefix = getDefaultUsablePrefix();
+    }
+    if (existingPrefix && existingIconName) {
+        val.prefix = existingPrefix;
+        val.iconName = existingIconName;
+    }
+    if (val.iconName && val.prefix) {
+        return val;
+    }
+    if (val.prefix && innerText.length > 0) {
+        val.iconName = byLigature(val.prefix, node.innerText) || byUnicode(val.prefix, toHex(node.innerText));
+    }
+    if (!val.iconName && config.autoFetchSvg && node.firstChild && node.firstChild.nodeType === Node.TEXT_NODE) {
+        val.iconName = node.firstChild.data;
+    }
+    return val;
+}
+function attributesParser(node) {
+    const extraAttributes = toArray(node.attributes).reduce((acc, attr)=>{
+        if (acc.name !== 'class' && acc.name !== 'style') {
+            acc[attr.name] = attr.value;
+        }
+        return acc;
+    }, {});
+    const title = node.getAttribute('title');
+    const titleId = node.getAttribute('data-fa-title-id');
+    if (config.autoA11y) {
+        if (title) {
+            extraAttributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(titleId || nextUniqueId());
+        } else {
+            extraAttributes['aria-hidden'] = 'true';
+            extraAttributes['focusable'] = 'false';
+        }
+    }
+    return extraAttributes;
+}
+function blankMeta() {
+    return {
+        iconName: null,
+        title: null,
+        titleId: null,
+        prefix: null,
+        transform: meaninglessTransform,
+        symbol: false,
+        mask: {
+            iconName: null,
+            prefix: null,
+            rest: []
+        },
+        maskId: null,
+        extra: {
+            classes: [],
+            styles: {},
+            attributes: {}
+        }
+    };
+}
+function parseMeta(node) {
+    let parser = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        styleParser: true
+    };
+    const { iconName, prefix, rest: extraClasses } = classParser(node);
+    const extraAttributes = attributesParser(node);
+    const pluginMeta = chainHooks('parseNodeAttributes', {}, node);
+    let extraStyles = parser.styleParser ? styleParser(node) : [];
+    return _objectSpread2({
+        iconName,
+        title: node.getAttribute('title'),
+        titleId: node.getAttribute('data-fa-title-id'),
+        prefix,
+        transform: meaninglessTransform,
+        mask: {
+            iconName: null,
+            prefix: null,
+            rest: []
+        },
+        maskId: null,
+        symbol: false,
+        extra: {
+            classes: extraClasses,
+            styles: extraStyles,
+            attributes: extraAttributes
+        }
+    }, pluginMeta);
+}
+const { styles: styles$2 } = namespace;
+function generateMutation(node) {
+    const nodeMeta = config.autoReplaceSvg === 'nest' ? parseMeta(node, {
+        styleParser: false
+    }) : parseMeta(node);
+    if (~nodeMeta.extra.classes.indexOf(LAYERS_TEXT_CLASSNAME)) {
+        return callProvided('generateLayersText', node, nodeMeta);
+    } else {
+        return callProvided('generateSvgReplacementMutation', node, nodeMeta);
+    }
+}
+function getKnownPrefixes() {
+    return [
+        ...Ft,
+        ...Ia
+    ];
+}
+function onTree(root) {
+    let callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    if (!IS_DOM) return Promise.resolve();
+    const htmlClassList = DOCUMENT.documentElement.classList;
+    const hclAdd = (suffix)=>htmlClassList.add("".concat(HTML_CLASS_I2SVG_BASE_CLASS, "-").concat(suffix));
+    const hclRemove = (suffix)=>htmlClassList.remove("".concat(HTML_CLASS_I2SVG_BASE_CLASS, "-").concat(suffix));
+    const prefixes = config.autoFetchSvg ? getKnownPrefixes() : P.concat(Object.keys(styles$2));
+    if (!prefixes.includes('fa')) {
+        prefixes.push('fa');
+    }
+    const prefixesDomQuery = [
+        ".".concat(LAYERS_TEXT_CLASSNAME, ":not([").concat(DATA_FA_I2SVG, "])")
+    ].concat(prefixes.map((p$$1)=>".".concat(p$$1, ":not([").concat(DATA_FA_I2SVG, "])"))).join(', ');
+    if (prefixesDomQuery.length === 0) {
+        return Promise.resolve();
+    }
+    let candidates = [];
+    try {
+        candidates = toArray(root.querySelectorAll(prefixesDomQuery));
+    } catch (e$$1) {
+    // noop
+    }
+    if (candidates.length > 0) {
+        hclAdd('pending');
+        hclRemove('complete');
+    } else {
+        return Promise.resolve();
+    }
+    const mark = perf.begin('onTree');
+    const mutations = candidates.reduce((acc, node)=>{
+        try {
+            const mutation = generateMutation(node);
+            if (mutation) {
+                acc.push(mutation);
+            }
+        } catch (e$$1) {
+            if (!PRODUCTION) {
+                if (e$$1.name === 'MissingIcon') {
+                    console.error(e$$1);
+                }
+            }
+        }
+        return acc;
+    }, []);
+    return new Promise((resolve, reject)=>{
+        Promise.all(mutations).then((resolvedMutations)=>{
+            perform(resolvedMutations, ()=>{
+                hclAdd('active');
+                hclAdd('complete');
+                hclRemove('pending');
+                if (typeof callback === 'function') callback();
+                mark();
+                resolve();
+            });
+        }).catch((e$$1)=>{
+            mark();
+            reject(e$$1);
+        });
+    });
+}
+function onNode(node) {
+    let callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    generateMutation(node).then((mutation)=>{
+        if (mutation) {
+            perform([
+                mutation
+            ], callback);
+        }
+    });
+}
+function resolveIcons(next) {
+    return function(maybeIconDefinition) {
+        let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        const iconDefinition = (maybeIconDefinition || {}).icon ? maybeIconDefinition : findIconDefinition(maybeIconDefinition || {});
+        let { mask } = params;
+        if (mask) {
+            mask = (mask || {}).icon ? mask : findIconDefinition(mask || {});
+        }
+        return next(iconDefinition, _objectSpread2(_objectSpread2({}, params), {}, {
+            mask
+        }));
+    };
+}
+const render = function(iconDefinition) {
+    let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const { transform = meaninglessTransform, symbol = false, mask = null, maskId = null, title = null, titleId = null, classes = [], attributes = {}, styles = {} } = params;
+    if (!iconDefinition) return;
+    const { prefix, iconName, icon } = iconDefinition;
+    return domVariants(_objectSpread2({
+        type: 'icon'
+    }, iconDefinition), ()=>{
+        callHooks('beforeDOMElementCreation', {
+            iconDefinition,
+            params
+        });
+        if (config.autoA11y) {
+            if (title) {
+                attributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(titleId || nextUniqueId());
+            } else {
+                attributes['aria-hidden'] = 'true';
+                attributes['focusable'] = 'false';
+            }
+        }
+        return makeInlineSvgAbstract({
+            icons: {
+                main: asFoundIcon(icon),
+                mask: mask ? asFoundIcon(mask.icon) : {
+                    found: false,
+                    width: null,
+                    height: null,
+                    icon: {}
+                }
+            },
+            prefix,
+            iconName,
+            transform: _objectSpread2(_objectSpread2({}, meaninglessTransform), transform),
+            symbol,
+            title,
+            maskId,
+            titleId,
+            extra: {
+                attributes,
+                styles,
+                classes
+            }
+        });
+    });
+};
+var ReplaceElements = {
+    mixout () {
+        return {
+            icon: resolveIcons(render)
+        };
+    },
+    hooks () {
+        return {
+            mutationObserverCallbacks (accumulator) {
+                accumulator.treeCallback = onTree;
+                accumulator.nodeCallback = onNode;
+                return accumulator;
+            }
+        };
+    },
+    provides (providers$$1) {
+        providers$$1.i2svg = function(params) {
+            const { node = DOCUMENT, callback = ()=>{} } = params;
+            return onTree(node, callback);
+        };
+        providers$$1.generateSvgReplacementMutation = function(node, nodeMeta) {
+            const { iconName, title, titleId, prefix, transform, symbol, mask, maskId, extra } = nodeMeta;
+            return new Promise((resolve, reject)=>{
+                Promise.all([
+                    findIcon(iconName, prefix),
+                    mask.iconName ? findIcon(mask.iconName, mask.prefix) : Promise.resolve({
+                        found: false,
+                        width: 512,
+                        height: 512,
+                        icon: {}
+                    })
+                ]).then((_ref)=>{
+                    let [main, mask] = _ref;
+                    resolve([
+                        node,
+                        makeInlineSvgAbstract({
+                            icons: {
+                                main,
+                                mask
+                            },
+                            prefix,
+                            iconName,
+                            transform,
+                            symbol,
+                            maskId,
+                            title,
+                            titleId,
+                            extra,
+                            watchable: true
+                        })
+                    ]);
+                }).catch(reject);
+            });
+        };
+        providers$$1.generateAbstractIcon = function(_ref2) {
+            let { children, attributes, main, transform, styles } = _ref2;
+            const styleString = joinStyles(styles);
+            if (styleString.length > 0) {
+                attributes['style'] = styleString;
+            }
+            let nextChild;
+            if (transformIsMeaningful(transform)) {
+                nextChild = callProvided('generateAbstractTransformGrouping', {
+                    main,
+                    transform,
+                    containerWidth: main.width,
+                    iconWidth: main.width
+                });
+            }
+            children.push(nextChild || main.icon);
+            return {
+                children,
+                attributes
+            };
+        };
+    }
+};
+var Layers = {
+    mixout () {
+        return {
+            layer (assembler) {
+                let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+                const { classes = [] } = params;
+                return domVariants({
+                    type: 'layer'
+                }, ()=>{
+                    callHooks('beforeDOMElementCreation', {
+                        assembler,
+                        params
+                    });
+                    let children = [];
+                    assembler((args)=>{
+                        Array.isArray(args) ? args.map((a)=>{
+                            children = children.concat(a.abstract);
+                        }) : children = children.concat(args.abstract);
+                    });
+                    return [
+                        {
+                            tag: 'span',
+                            attributes: {
+                                class: [
+                                    "".concat(config.cssPrefix, "-layers"),
+                                    ...classes
+                                ].join(' ')
+                            },
+                            children
+                        }
+                    ];
+                });
+            }
+        };
+    }
+};
+var LayersCounter = {
+    mixout () {
+        return {
+            counter (content) {
+                let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+                const { title = null, classes = [], attributes = {}, styles = {} } = params;
+                return domVariants({
+                    type: 'counter',
+                    content
+                }, ()=>{
+                    callHooks('beforeDOMElementCreation', {
+                        content,
+                        params
+                    });
+                    return makeLayersCounterAbstract({
+                        content: content.toString(),
+                        title,
+                        extra: {
+                            attributes,
+                            styles,
+                            classes: [
+                                "".concat(config.cssPrefix, "-layers-counter"),
+                                ...classes
+                            ]
+                        }
+                    });
+                });
+            }
+        };
+    }
+};
+var LayersText = {
+    mixout () {
+        return {
+            text (content) {
+                let params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+                const { transform = meaninglessTransform, title = null, classes = [], attributes = {}, styles = {} } = params;
+                return domVariants({
+                    type: 'text',
+                    content
+                }, ()=>{
+                    callHooks('beforeDOMElementCreation', {
+                        content,
+                        params
+                    });
+                    return makeLayersTextAbstract({
+                        content,
+                        transform: _objectSpread2(_objectSpread2({}, meaninglessTransform), transform),
+                        title,
+                        extra: {
+                            attributes,
+                            styles,
+                            classes: [
+                                "".concat(config.cssPrefix, "-layers-text"),
+                                ...classes
+                            ]
+                        }
+                    });
+                });
+            }
+        };
+    },
+    provides (providers$$1) {
+        providers$$1.generateLayersText = function(node, nodeMeta) {
+            const { title, transform, extra } = nodeMeta;
+            let width = null;
+            let height = null;
+            if (IS_IE) {
+                const computedFontSize = parseInt(getComputedStyle(node).fontSize, 10);
+                const boundingClientRect = node.getBoundingClientRect();
+                width = boundingClientRect.width / computedFontSize;
+                height = boundingClientRect.height / computedFontSize;
+            }
+            if (config.autoA11y && !title) {
+                extra.attributes['aria-hidden'] = 'true';
+            }
+            return Promise.resolve([
+                node,
+                makeLayersTextAbstract({
+                    content: node.innerHTML,
+                    width,
+                    height,
+                    transform,
+                    title,
+                    extra,
+                    watchable: true
+                })
+            ]);
+        };
+    }
+};
+const CLEAN_CONTENT_PATTERN = new RegExp('\u{22}', 'ug');
+const SECONDARY_UNICODE_RANGE = [
+    1105920,
+    1112319
+];
+const _FONT_FAMILY_WEIGHT_TO_PREFIX = _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, {
+    FontAwesome: {
+        normal: 'fas',
+        400: 'fas'
+    }
+}), lt), wa), Yt);
+const FONT_FAMILY_WEIGHT_TO_PREFIX = Object.keys(_FONT_FAMILY_WEIGHT_TO_PREFIX).reduce((acc, key)=>{
+    acc[key.toLowerCase()] = _FONT_FAMILY_WEIGHT_TO_PREFIX[key];
+    return acc;
+}, {});
+const FONT_FAMILY_WEIGHT_FALLBACK = Object.keys(FONT_FAMILY_WEIGHT_TO_PREFIX).reduce((acc, fontFamily)=>{
+    const weights = FONT_FAMILY_WEIGHT_TO_PREFIX[fontFamily];
+    acc[fontFamily] = weights[900] || [
+        ...Object.entries(weights)
+    ][0][1];
+    return acc;
+}, {});
+function hexValueFromContent(content) {
+    const cleaned = content.replace(CLEAN_CONTENT_PATTERN, '');
+    const codePoint = codePointAt(cleaned, 0);
+    const isPrependTen = codePoint >= SECONDARY_UNICODE_RANGE[0] && codePoint <= SECONDARY_UNICODE_RANGE[1];
+    const isDoubled = cleaned.length === 2 ? cleaned[0] === cleaned[1] : false;
+    return {
+        value: isDoubled ? toHex(cleaned[0]) : toHex(cleaned),
+        isSecondary: isPrependTen || isDoubled
+    };
+}
+function getPrefix(fontFamily, fontWeight) {
+    const fontFamilySanitized = fontFamily.replace(/^['"]|['"]$/g, '').toLowerCase();
+    const fontWeightInteger = parseInt(fontWeight);
+    const fontWeightSanitized = isNaN(fontWeightInteger) ? 'normal' : fontWeightInteger;
+    return (FONT_FAMILY_WEIGHT_TO_PREFIX[fontFamilySanitized] || {})[fontWeightSanitized] || FONT_FAMILY_WEIGHT_FALLBACK[fontFamilySanitized];
+}
+function replaceForPosition(node, position) {
+    const pendingAttribute = "".concat(DATA_FA_PSEUDO_ELEMENT_PENDING).concat(position.replace(':', '-'));
+    return new Promise((resolve, reject)=>{
+        if (node.getAttribute(pendingAttribute) !== null) {
+            // This node is already being processed
+            return resolve();
+        }
+        const children = toArray(node.children);
+        const alreadyProcessedPseudoElement = children.filter((c$$1)=>c$$1.getAttribute(DATA_FA_PSEUDO_ELEMENT) === position)[0];
+        const styles = WINDOW.getComputedStyle(node, position);
+        const fontFamily = styles.getPropertyValue('font-family');
+        const fontFamilyMatch = fontFamily.match(FONT_FAMILY_PATTERN);
+        const fontWeight = styles.getPropertyValue('font-weight');
+        const content = styles.getPropertyValue('content');
+        if (alreadyProcessedPseudoElement && !fontFamilyMatch) {
+            // If we've already processed it but the current computed style does not result in a font-family,
+            // that probably means that a class name that was previously present to make the icon has been
+            // removed. So we now should delete the icon.
+            node.removeChild(alreadyProcessedPseudoElement);
+            return resolve();
+        } else if (fontFamilyMatch && content !== 'none' && content !== '') {
+            const content = styles.getPropertyValue('content');
+            let prefix = getPrefix(fontFamily, fontWeight);
+            const { value: hexValue, isSecondary } = hexValueFromContent(content);
+            const isV4 = fontFamilyMatch[0].startsWith('FontAwesome');
+            let iconName = byUnicode(prefix, hexValue);
+            let iconIdentifier = iconName;
+            if (isV4) {
+                const iconName4 = byOldUnicode(hexValue);
+                if (iconName4.iconName && iconName4.prefix) {
+                    iconName = iconName4.iconName;
+                    prefix = iconName4.prefix;
+                }
+            }
+            // Only convert the pseudo element in this ::before/::after position into an icon if we haven't
+            // already done so with the same prefix and iconName
+            if (iconName && !isSecondary && (!alreadyProcessedPseudoElement || alreadyProcessedPseudoElement.getAttribute(DATA_PREFIX) !== prefix || alreadyProcessedPseudoElement.getAttribute(DATA_ICON) !== iconIdentifier)) {
+                node.setAttribute(pendingAttribute, iconIdentifier);
+                if (alreadyProcessedPseudoElement) {
+                    // Delete the old one, since we're replacing it with a new one
+                    node.removeChild(alreadyProcessedPseudoElement);
+                }
+                const meta = blankMeta();
+                const { extra } = meta;
+                extra.attributes[DATA_FA_PSEUDO_ELEMENT] = position;
+                findIcon(iconName, prefix).then((main)=>{
+                    const abstract = makeInlineSvgAbstract(_objectSpread2(_objectSpread2({}, meta), {}, {
+                        icons: {
+                            main,
+                            mask: emptyCanonicalIcon()
+                        },
+                        prefix,
+                        iconName: iconIdentifier,
+                        extra,
+                        watchable: true
+                    }));
+                    const element = DOCUMENT.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    if (position === '::before') {
+                        node.insertBefore(element, node.firstChild);
+                    } else {
+                        node.appendChild(element);
+                    }
+                    element.outerHTML = abstract.map((a$$1)=>toHtml(a$$1)).join('\n');
+                    node.removeAttribute(pendingAttribute);
+                    resolve();
+                }).catch(reject);
+            } else {
+                resolve();
+            }
+        } else {
+            resolve();
+        }
+    });
+}
+function replace(node) {
+    return Promise.all([
+        replaceForPosition(node, '::before'),
+        replaceForPosition(node, '::after')
+    ]);
+}
+function processable(node) {
+    return node.parentNode !== document.head && !~TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS.indexOf(node.tagName.toUpperCase()) && !node.getAttribute(DATA_FA_PSEUDO_ELEMENT) && (!node.parentNode || node.parentNode.tagName !== 'svg');
+}
+function searchPseudoElements(root) {
+    if (!IS_DOM) return;
+    return new Promise((resolve, reject)=>{
+        const operations = toArray(root.querySelectorAll('*')).filter(processable).map(replace);
+        const end = perf.begin('searchPseudoElements');
+        disableObservation();
+        Promise.all(operations).then(()=>{
+            end();
+            enableObservation();
+            resolve();
+        }).catch(()=>{
+            end();
+            enableObservation();
+            reject();
+        });
+    });
+}
+var PseudoElements = {
+    hooks () {
+        return {
+            mutationObserverCallbacks (accumulator) {
+                accumulator.pseudoElementsCallback = searchPseudoElements;
+                return accumulator;
+            }
+        };
+    },
+    provides (providers) {
+        providers.pseudoElements2svg = function(params) {
+            const { node = DOCUMENT } = params;
+            if (config.searchPseudoElements) {
+                searchPseudoElements(node);
+            }
+        };
+    }
+};
+let _unwatched = false;
+var MutationObserver$1 = {
+    mixout () {
+        return {
+            dom: {
+                unwatch () {
+                    disableObservation();
+                    _unwatched = true;
+                }
+            }
+        };
+    },
+    hooks () {
+        return {
+            bootstrap () {
+                observe(chainHooks('mutationObserverCallbacks', {}));
+            },
+            noAuto () {
+                disconnect();
+            },
+            watch (params) {
+                const { observeMutationsRoot } = params;
+                if (_unwatched) {
+                    enableObservation();
+                } else {
+                    observe(chainHooks('mutationObserverCallbacks', {
+                        observeMutationsRoot
+                    }));
+                }
+            }
+        };
+    }
+};
+const parseTransformString = (transformString)=>{
+    let transform = {
+        size: 16,
+        x: 0,
+        y: 0,
+        flipX: false,
+        flipY: false,
+        rotate: 0
+    };
+    return transformString.toLowerCase().split(' ').reduce((acc, n)=>{
+        const parts = n.toLowerCase().split('-');
+        const first = parts[0];
+        let rest = parts.slice(1).join('-');
+        if (first && rest === 'h') {
+            acc.flipX = true;
+            return acc;
+        }
+        if (first && rest === 'v') {
+            acc.flipY = true;
+            return acc;
+        }
+        rest = parseFloat(rest);
+        if (isNaN(rest)) {
+            return acc;
+        }
+        switch(first){
+            case 'grow':
+                acc.size = acc.size + rest;
+                break;
+            case 'shrink':
+                acc.size = acc.size - rest;
+                break;
+            case 'left':
+                acc.x = acc.x - rest;
+                break;
+            case 'right':
+                acc.x = acc.x + rest;
+                break;
+            case 'up':
+                acc.y = acc.y - rest;
+                break;
+            case 'down':
+                acc.y = acc.y + rest;
+                break;
+            case 'rotate':
+                acc.rotate = acc.rotate + rest;
+                break;
+        }
+        return acc;
+    }, transform);
+};
+var PowerTransforms = {
+    mixout () {
+        return {
+            parse: {
+                transform: (transformString)=>{
+                    return parseTransformString(transformString);
+                }
+            }
+        };
+    },
+    hooks () {
+        return {
+            parseNodeAttributes (accumulator, node) {
+                const transformString = node.getAttribute('data-fa-transform');
+                if (transformString) {
+                    accumulator.transform = parseTransformString(transformString);
+                }
+                return accumulator;
+            }
+        };
+    },
+    provides (providers) {
+        providers.generateAbstractTransformGrouping = function(_ref) {
+            let { main, transform, containerWidth, iconWidth } = _ref;
+            const outer = {
+                transform: "translate(".concat(containerWidth / 2, " 256)")
+            };
+            const innerTranslate = "translate(".concat(transform.x * 32, ", ").concat(transform.y * 32, ") ");
+            const innerScale = "scale(".concat(transform.size / 16 * (transform.flipX ? -1 : 1), ", ").concat(transform.size / 16 * (transform.flipY ? -1 : 1), ") ");
+            const innerRotate = "rotate(".concat(transform.rotate, " 0 0)");
+            const inner = {
+                transform: "".concat(innerTranslate, " ").concat(innerScale, " ").concat(innerRotate)
+            };
+            const path = {
+                transform: "translate(".concat(iconWidth / 2 * -1, " -256)")
+            };
+            const operations = {
+                outer,
+                inner,
+                path
+            };
+            return {
+                tag: 'g',
+                attributes: _objectSpread2({}, operations.outer),
+                children: [
+                    {
+                        tag: 'g',
+                        attributes: _objectSpread2({}, operations.inner),
+                        children: [
+                            {
+                                tag: main.icon.tag,
+                                children: main.icon.children,
+                                attributes: _objectSpread2(_objectSpread2({}, main.icon.attributes), operations.path)
+                            }
+                        ]
+                    }
+                ]
+            };
+        };
+    }
+};
+const ALL_SPACE = {
+    x: 0,
+    y: 0,
+    width: '100%',
+    height: '100%'
+};
+function fillBlack(abstract) {
+    let force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    if (abstract.attributes && (abstract.attributes.fill || force)) {
+        abstract.attributes.fill = 'black';
+    }
+    return abstract;
+}
+function deGroup(abstract) {
+    if (abstract.tag === 'g') {
+        return abstract.children;
+    } else {
+        return [
+            abstract
+        ];
+    }
+}
+var Masks = {
+    hooks () {
+        return {
+            parseNodeAttributes (accumulator, node) {
+                const maskData = node.getAttribute('data-fa-mask');
+                const mask = !maskData ? emptyCanonicalIcon() : getCanonicalIcon(maskData.split(' ').map((i)=>i.trim()));
+                if (!mask.prefix) {
+                    mask.prefix = getDefaultUsablePrefix();
+                }
+                accumulator.mask = mask;
+                accumulator.maskId = node.getAttribute('data-fa-mask-id');
+                return accumulator;
+            }
+        };
+    },
+    provides (providers) {
+        providers.generateAbstractMask = function(_ref) {
+            let { children, attributes, main, mask, maskId: explicitMaskId, transform } = _ref;
+            const { width: mainWidth, icon: mainPath } = main;
+            const { width: maskWidth, icon: maskPath } = mask;
+            const trans = transformForSvg({
+                transform,
+                containerWidth: maskWidth,
+                iconWidth: mainWidth
+            });
+            const maskRect = {
+                tag: 'rect',
+                attributes: _objectSpread2(_objectSpread2({}, ALL_SPACE), {}, {
+                    fill: 'white'
+                })
+            };
+            const maskInnerGroupChildrenMixin = mainPath.children ? {
+                children: mainPath.children.map(fillBlack)
+            } : {};
+            const maskInnerGroup = {
+                tag: 'g',
+                attributes: _objectSpread2({}, trans.inner),
+                children: [
+                    fillBlack(_objectSpread2({
+                        tag: mainPath.tag,
+                        attributes: _objectSpread2(_objectSpread2({}, mainPath.attributes), trans.path)
+                    }, maskInnerGroupChildrenMixin))
+                ]
+            };
+            const maskOuterGroup = {
+                tag: 'g',
+                attributes: _objectSpread2({}, trans.outer),
+                children: [
+                    maskInnerGroup
+                ]
+            };
+            const maskId = "mask-".concat(explicitMaskId || nextUniqueId());
+            const clipId = "clip-".concat(explicitMaskId || nextUniqueId());
+            const maskTag = {
+                tag: 'mask',
+                attributes: _objectSpread2(_objectSpread2({}, ALL_SPACE), {}, {
+                    id: maskId,
+                    maskUnits: 'userSpaceOnUse',
+                    maskContentUnits: 'userSpaceOnUse'
+                }),
+                children: [
+                    maskRect,
+                    maskOuterGroup
+                ]
+            };
+            const defs = {
+                tag: 'defs',
+                children: [
+                    {
+                        tag: 'clipPath',
+                        attributes: {
+                            id: clipId
+                        },
+                        children: deGroup(maskPath)
+                    },
+                    maskTag
+                ]
+            };
+            children.push(defs, {
+                tag: 'rect',
+                attributes: _objectSpread2({
+                    fill: 'currentColor',
+                    'clip-path': "url(#".concat(clipId, ")"),
+                    mask: "url(#".concat(maskId, ")")
+                }, ALL_SPACE)
+            });
+            return {
+                children,
+                attributes
+            };
+        };
+    }
+};
+var MissingIconIndicator = {
+    provides (providers) {
+        let reduceMotion = false;
+        if (WINDOW.matchMedia) {
+            reduceMotion = WINDOW.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        }
+        providers.missingIconAbstract = function() {
+            const gChildren = [];
+            const FILL = {
+                fill: 'currentColor'
+            };
+            const ANIMATION_BASE = {
+                attributeType: 'XML',
+                repeatCount: 'indefinite',
+                dur: '2s'
+            };
+            // Ring
+            gChildren.push({
+                tag: 'path',
+                attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
+                    d: 'M156.5,447.7l-12.6,29.5c-18.7-9.5-35.9-21.2-51.5-34.9l22.7-22.7C127.6,430.5,141.5,440,156.5,447.7z M40.6,272H8.5 c1.4,21.2,5.4,41.7,11.7,61.1L50,321.2C45.1,305.5,41.8,289,40.6,272z M40.6,240c1.4-18.8,5.2-37,11.1-54.1l-29.5-12.6 C14.7,194.3,10,216.7,8.5,240H40.6z M64.3,156.5c7.8-14.9,17.2-28.8,28.1-41.5L69.7,92.3c-13.7,15.6-25.5,32.8-34.9,51.5 L64.3,156.5z M397,419.6c-13.9,12-29.4,22.3-46.1,30.4l11.9,29.8c20.7-9.9,39.8-22.6,56.9-37.6L397,419.6z M115,92.4 c13.9-12,29.4-22.3,46.1-30.4l-11.9-29.8c-20.7,9.9-39.8,22.6-56.8,37.6L115,92.4z M447.7,355.5c-7.8,14.9-17.2,28.8-28.1,41.5 l22.7,22.7c13.7-15.6,25.5-32.9,34.9-51.5L447.7,355.5z M471.4,272c-1.4,18.8-5.2,37-11.1,54.1l29.5,12.6 c7.5-21.1,12.2-43.5,13.6-66.8H471.4z M321.2,462c-15.7,5-32.2,8.2-49.2,9.4v32.1c21.2-1.4,41.7-5.4,61.1-11.7L321.2,462z M240,471.4c-18.8-1.4-37-5.2-54.1-11.1l-12.6,29.5c21.1,7.5,43.5,12.2,66.8,13.6V471.4z M462,190.8c5,15.7,8.2,32.2,9.4,49.2h32.1 c-1.4-21.2-5.4-41.7-11.7-61.1L462,190.8z M92.4,397c-12-13.9-22.3-29.4-30.4-46.1l-29.8,11.9c9.9,20.7,22.6,39.8,37.6,56.9 L92.4,397z M272,40.6c18.8,1.4,36.9,5.2,54.1,11.1l12.6-29.5C317.7,14.7,295.3,10,272,8.5V40.6z M190.8,50 c15.7-5,32.2-8.2,49.2-9.4V8.5c-21.2,1.4-41.7,5.4-61.1,11.7L190.8,50z M442.3,92.3L419.6,115c12,13.9,22.3,29.4,30.5,46.1 l29.8-11.9C470,128.5,457.3,109.4,442.3,92.3z M397,92.4l22.7-22.7c-15.6-13.7-32.8-25.5-51.5-34.9l-12.6,29.5 C370.4,72.1,384.4,81.5,397,92.4z'
+                })
+            });
+            const OPACITY_ANIMATE = _objectSpread2(_objectSpread2({}, ANIMATION_BASE), {}, {
+                attributeName: 'opacity'
+            });
+            const dot = {
+                tag: 'circle',
+                attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
+                    cx: '256',
+                    cy: '364',
+                    r: '28'
+                }),
+                children: []
+            };
+            if (!reduceMotion) {
+                dot.children.push({
+                    tag: 'animate',
+                    attributes: _objectSpread2(_objectSpread2({}, ANIMATION_BASE), {}, {
+                        attributeName: 'r',
+                        values: '28;14;28;28;14;28;'
+                    })
+                }, {
+                    tag: 'animate',
+                    attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
+                        values: '1;0;1;1;0;1;'
+                    })
+                });
+            }
+            gChildren.push(dot);
+            gChildren.push({
+                tag: 'path',
+                attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
+                    opacity: '1',
+                    d: 'M263.7,312h-16c-6.6,0-12-5.4-12-12c0-71,77.4-63.9,77.4-107.8c0-20-17.8-40.2-57.4-40.2c-29.1,0-44.3,9.6-59.2,28.7 c-3.9,5-11.1,6-16.2,2.4l-13.1-9.2c-5.6-3.9-6.9-11.8-2.6-17.2c21.2-27.2,46.4-44.7,91.2-44.7c52.3,0,97.4,29.8,97.4,80.2 c0,67.6-77.4,63.5-77.4,107.8C275.7,306.6,270.3,312,263.7,312z'
+                }),
+                children: reduceMotion ? [] : [
+                    {
+                        tag: 'animate',
+                        attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
+                            values: '1;0;0;0;0;1;'
+                        })
+                    }
+                ]
+            });
+            if (!reduceMotion) {
+                // Exclamation
+                gChildren.push({
+                    tag: 'path',
+                    attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
+                        opacity: '0',
+                        d: 'M232.5,134.5l7,168c0.3,6.4,5.6,11.5,12,11.5h9c6.4,0,11.7-5.1,12-11.5l7-168c0.3-6.8-5.2-12.5-12-12.5h-23 C237.7,122,232.2,127.7,232.5,134.5z'
+                    }),
+                    children: [
+                        {
+                            tag: 'animate',
+                            attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
+                                values: '0;0;1;1;0;0;'
+                            })
+                        }
+                    ]
+                });
+            }
+            return {
+                tag: 'g',
+                attributes: {
+                    'class': 'missing'
+                },
+                children: gChildren
+            };
+        };
+    }
+};
+var SvgSymbols = {
+    hooks () {
+        return {
+            parseNodeAttributes (accumulator, node) {
+                const symbolData = node.getAttribute('data-fa-symbol');
+                const symbol = symbolData === null ? false : symbolData === '' ? true : symbolData;
+                accumulator['symbol'] = symbol;
+                return accumulator;
+            }
+        };
+    }
+};
+var plugins = [
+    InjectCSS,
+    ReplaceElements,
+    Layers,
+    LayersCounter,
+    LayersText,
+    PseudoElements,
+    MutationObserver$1,
+    PowerTransforms,
+    Masks,
+    MissingIconIndicator,
+    SvgSymbols
+];
+registerPlugins(plugins, {
+    mixoutsTo: api
+});
+const noAuto$1 = api.noAuto;
+const config$1 = api.config;
+const library$1 = api.library;
+const dom$1 = api.dom;
+const parse$1 = api.parse;
+const findIconDefinition$1 = api.findIconDefinition;
+const toHtml$1 = api.toHtml;
+const icon = api.icon;
+const layer = api.layer;
+const text = api.text;
+const counter = api.counter;
+;
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@fortawesome/fontawesome-svg-core/package.json (json)", ((__turbopack_context__) => {
+
+__turbopack_context__.v({"description":"The iconic font, CSS, and SVG framework","keywords":["font","awesome","fontawesome","icon","svg","bootstrap"],"homepage":"https://fontawesome.com","bugs":{"url":"https://github.com/FortAwesome/Font-Awesome/issues"},"author":"The Font Awesome Team (https://github.com/orgs/FortAwesome/people)","repository":{"type":"git","url":"https://github.com/FortAwesome/Font-Awesome"},"engines":{"node":">=6"},"dependencies":{"@fortawesome/fontawesome-common-types":"6.7.2"},"version":"6.7.2","name":"@fortawesome/fontawesome-svg-core","main":"index.js","module":"index.mjs","jsnext:main":"index.mjs","style":"styles.css","license":"MIT","types":"./index.d.ts","exports":{".":{"types":"./index.d.ts","module":"./index.mjs","import":"./index.mjs","require":"./index.js","style":"./styles.css","default":"./index.js"},"./index":{"types":"./index.d.ts","module":"./index.mjs","import":"./index.mjs","require":"./index.js","default":"./index.js"},"./index.js":{"types":"./index.d.ts","module":"./index.mjs","import":"./index.mjs","require":"./index.js","default":"./index.js"},"./plugins":{"types":"./index.d.ts","module":"./plugins.mjs","import":"./plugins.mjs","default":"./plugins.mjs"},"./import.macro":"./import.macro.js","./import.macro.js":"./import.macro.js","./styles":"./styles.css","./styles.css":"./styles.css","./package.json":"./package.json"},"sideEffects":["./index.js","./index.mjs","./styles.css"]});}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/react-is/cjs/react-is.development.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/** @license React v16.13.1
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */ if ("TURBOPACK compile-time truthy", 1) {
+    (function() {
+        'use strict';
+        // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+        // nor polyfill, then a plain number is used for performance.
+        var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+        var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+        var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+        var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+        var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+        var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+        var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+        var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+        // (unstable) APIs that have been removed. Can we remove the symbols?
+        var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+        var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+        var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+        var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+        var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+        var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+        var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+        var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+        var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+        var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+        var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+        function isValidElementType(type) {
+            return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+            type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+        }
+        function typeOf(object) {
+            if (typeof object === 'object' && object !== null) {
+                var $$typeof = object.$$typeof;
+                switch($$typeof){
+                    case REACT_ELEMENT_TYPE:
+                        var type = object.type;
+                        switch(type){
+                            case REACT_ASYNC_MODE_TYPE:
+                            case REACT_CONCURRENT_MODE_TYPE:
+                            case REACT_FRAGMENT_TYPE:
+                            case REACT_PROFILER_TYPE:
+                            case REACT_STRICT_MODE_TYPE:
+                            case REACT_SUSPENSE_TYPE:
+                                return type;
+                            default:
+                                var $$typeofType = type && type.$$typeof;
+                                switch($$typeofType){
+                                    case REACT_CONTEXT_TYPE:
+                                    case REACT_FORWARD_REF_TYPE:
+                                    case REACT_LAZY_TYPE:
+                                    case REACT_MEMO_TYPE:
+                                    case REACT_PROVIDER_TYPE:
+                                        return $$typeofType;
+                                    default:
+                                        return $$typeof;
+                                }
+                        }
+                    case REACT_PORTAL_TYPE:
+                        return $$typeof;
+                }
+            }
+            return undefined;
+        } // AsyncMode is deprecated along with isAsyncMode
+        var AsyncMode = REACT_ASYNC_MODE_TYPE;
+        var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+        var ContextConsumer = REACT_CONTEXT_TYPE;
+        var ContextProvider = REACT_PROVIDER_TYPE;
+        var Element = REACT_ELEMENT_TYPE;
+        var ForwardRef = REACT_FORWARD_REF_TYPE;
+        var Fragment = REACT_FRAGMENT_TYPE;
+        var Lazy = REACT_LAZY_TYPE;
+        var Memo = REACT_MEMO_TYPE;
+        var Portal = REACT_PORTAL_TYPE;
+        var Profiler = REACT_PROFILER_TYPE;
+        var StrictMode = REACT_STRICT_MODE_TYPE;
+        var Suspense = REACT_SUSPENSE_TYPE;
+        var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+        function isAsyncMode(object) {
+            {
+                if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+                    hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+                    console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+                }
+            }
+            return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+        }
+        function isConcurrentMode(object) {
+            return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+        }
+        function isContextConsumer(object) {
+            return typeOf(object) === REACT_CONTEXT_TYPE;
+        }
+        function isContextProvider(object) {
+            return typeOf(object) === REACT_PROVIDER_TYPE;
+        }
+        function isElement(object) {
+            return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+        }
+        function isForwardRef(object) {
+            return typeOf(object) === REACT_FORWARD_REF_TYPE;
+        }
+        function isFragment(object) {
+            return typeOf(object) === REACT_FRAGMENT_TYPE;
+        }
+        function isLazy(object) {
+            return typeOf(object) === REACT_LAZY_TYPE;
+        }
+        function isMemo(object) {
+            return typeOf(object) === REACT_MEMO_TYPE;
+        }
+        function isPortal(object) {
+            return typeOf(object) === REACT_PORTAL_TYPE;
+        }
+        function isProfiler(object) {
+            return typeOf(object) === REACT_PROFILER_TYPE;
+        }
+        function isStrictMode(object) {
+            return typeOf(object) === REACT_STRICT_MODE_TYPE;
+        }
+        function isSuspense(object) {
+            return typeOf(object) === REACT_SUSPENSE_TYPE;
+        }
+        exports.AsyncMode = AsyncMode;
+        exports.ConcurrentMode = ConcurrentMode;
+        exports.ContextConsumer = ContextConsumer;
+        exports.ContextProvider = ContextProvider;
+        exports.Element = Element;
+        exports.ForwardRef = ForwardRef;
+        exports.Fragment = Fragment;
+        exports.Lazy = Lazy;
+        exports.Memo = Memo;
+        exports.Portal = Portal;
+        exports.Profiler = Profiler;
+        exports.StrictMode = StrictMode;
+        exports.Suspense = Suspense;
+        exports.isAsyncMode = isAsyncMode;
+        exports.isConcurrentMode = isConcurrentMode;
+        exports.isContextConsumer = isContextConsumer;
+        exports.isContextProvider = isContextProvider;
+        exports.isElement = isElement;
+        exports.isForwardRef = isForwardRef;
+        exports.isFragment = isFragment;
+        exports.isLazy = isLazy;
+        exports.isMemo = isMemo;
+        exports.isPortal = isPortal;
+        exports.isProfiler = isProfiler;
+        exports.isStrictMode = isStrictMode;
+        exports.isSuspense = isSuspense;
+        exports.isValidElementType = isValidElementType;
+        exports.typeOf = typeOf;
+    })();
+}
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/react-is/index.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+;
+else {
+    module.exports = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/react-is/cjs/react-is.development.js [app-ssr] (ecmascript)");
+}
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/object-assign/index.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/ /* eslint-disable no-unused-vars */ var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+function toObject(val) {
+    if (val === null || val === undefined) {
+        throw new TypeError('Object.assign cannot be called with null or undefined');
+    }
+    return Object(val);
+}
+function shouldUseNative() {
+    try {
+        if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+        ;
+        // Detect buggy property enumeration order in older V8 versions.
+        // https://bugs.chromium.org/p/v8/issues/detail?id=4118
+        var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+        test1[5] = 'de';
+        if (Object.getOwnPropertyNames(test1)[0] === '5') {
+            return false;
+        }
+        // https://bugs.chromium.org/p/v8/issues/detail?id=3056
+        var test2 = {};
+        for(var i = 0; i < 10; i++){
+            test2['_' + String.fromCharCode(i)] = i;
+        }
+        var order2 = Object.getOwnPropertyNames(test2).map(function(n) {
+            return test2[n];
+        });
+        if (order2.join('') !== '0123456789') {
+            return false;
+        }
+        // https://bugs.chromium.org/p/v8/issues/detail?id=3056
+        var test3 = {};
+        'abcdefghijklmnopqrst'.split('').forEach(function(letter) {
+            test3[letter] = letter;
+        });
+        if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+            return false;
+        }
+        return true;
+    } catch (err) {
+        // We don't expect any of the above to throw, but better to be safe.
+        return false;
+    }
+}
+module.exports = shouldUseNative() ? Object.assign : function(target, source) {
+    var from;
+    var to = toObject(target);
+    var symbols;
+    for(var s = 1; s < arguments.length; s++){
+        from = Object(arguments[s]);
+        for(var key in from){
+            if (hasOwnProperty.call(from, key)) {
+                to[key] = from[key];
+            }
+        }
+        if (getOwnPropertySymbols) {
+            symbols = getOwnPropertySymbols(from);
+            for(var i = 0; i < symbols.length; i++){
+                if (propIsEnumerable.call(from, symbols[i])) {
+                    to[symbols[i]] = from[symbols[i]];
+                }
+            }
+        }
+    }
+    return to;
+};
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/lib/ReactPropTypesSecret.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+module.exports = ReactPropTypesSecret;
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/lib/has.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+
+module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/checkPropTypes.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */ var printWarning = function() {};
+if ("TURBOPACK compile-time truthy", 1) {
+    var ReactPropTypesSecret = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/lib/ReactPropTypesSecret.js [app-ssr] (ecmascript)");
+    var loggedTypeFailures = {};
+    var has = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/lib/has.js [app-ssr] (ecmascript)");
+    printWarning = function(text) {
+        var message = 'Warning: ' + text;
+        if (typeof console !== 'undefined') {
+            console.error(message);
+        }
+        try {
+            // --- Welcome to debugging React ---
+            // This error was thrown as a convenience so that you can use this stack
+            // to find the callsite that caused this warning to fire.
+            throw new Error(message);
+        } catch (x) {}
+    };
+}
+/**
+ * Assert that the values match with the type specs.
+ * Error messages are memorized and will only be shown once.
+ *
+ * @param {object} typeSpecs Map of name to a ReactPropType
+ * @param {object} values Runtime values that need to be type-checked
+ * @param {string} location e.g. "prop", "context", "child context"
+ * @param {string} componentName Name of the component for error messages.
+ * @param {?Function} getStack Returns the component stack.
+ * @private
+ */ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+    if ("TURBOPACK compile-time truthy", 1) {
+        for(var typeSpecName in typeSpecs){
+            if (has(typeSpecs, typeSpecName)) {
+                var error;
+                // Prop type validation may throw. In case they do, we don't want to
+                // fail the render phase where it didn't fail before. So we log it.
+                // After these have been cleaned up, we'll let them throw.
+                try {
+                    // This is intentionally an invariant that gets caught. It's the same
+                    // behavior as without this statement except with a better message.
+                    if (typeof typeSpecs[typeSpecName] !== 'function') {
+                        var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+                        err.name = 'Invariant Violation';
+                        throw err;
+                    }
+                    error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+                } catch (ex) {
+                    error = ex;
+                }
+                if (error && !(error instanceof Error)) {
+                    printWarning((componentName || 'React class') + ': type specification of ' + location + ' `' + typeSpecName + '` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a ' + typeof error + '. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).');
+                }
+                if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+                    // Only monitor this failure once because there tends to be a lot of the
+                    // same error.
+                    loggedTypeFailures[error.message] = true;
+                    var stack = getStack ? getStack() : '';
+                    printWarning('Failed ' + location + ' type: ' + error.message + (stack != null ? stack : ''));
+                }
+            }
+        }
+    }
+}
+/**
+ * Resets warning cache when testing.
+ *
+ * @private
+ */ checkPropTypes.resetWarningCache = function() {
+    if (("TURBOPACK compile-time value", "development") !== 'production') {
+        loggedTypeFailures = {};
+    }
+};
+module.exports = checkPropTypes;
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/factoryWithTypeCheckers.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"use strict";
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */ var ReactIs = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/react-is/index.js [app-ssr] (ecmascript)");
+var assign = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/object-assign/index.js [app-ssr] (ecmascript)");
+var ReactPropTypesSecret = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/lib/ReactPropTypesSecret.js [app-ssr] (ecmascript)");
+var has = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/lib/has.js [app-ssr] (ecmascript)");
+var checkPropTypes = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/checkPropTypes.js [app-ssr] (ecmascript)");
+var printWarning = function() {};
+if ("TURBOPACK compile-time truthy", 1) {
+    printWarning = function(text) {
+        var message = 'Warning: ' + text;
+        if (typeof console !== 'undefined') {
+            console.error(message);
+        }
+        try {
+            // --- Welcome to debugging React ---
+            // This error was thrown as a convenience so that you can use this stack
+            // to find the callsite that caused this warning to fire.
+            throw new Error(message);
+        } catch (x) {}
+    };
+}
+function emptyFunctionThatReturnsNull() {
+    return null;
+}
+module.exports = function(isValidElement, throwOnDirectAccess) {
+    /* global Symbol */ var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+    var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+    /**
+   * Returns the iterator method function contained on the iterable object.
+   *
+   * Be sure to invoke the function with the iterable as context:
+   *
+   *     var iteratorFn = getIteratorFn(myIterable);
+   *     if (iteratorFn) {
+   *       var iterator = iteratorFn.call(myIterable);
+   *       ...
+   *     }
+   *
+   * @param {?object} maybeIterable
+   * @return {?function}
+   */ function getIteratorFn(maybeIterable) {
+        var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+        if (typeof iteratorFn === 'function') {
+            return iteratorFn;
+        }
+    }
+    /**
+   * Collection of methods that allow declaration and validation of props that are
+   * supplied to React components. Example usage:
+   *
+   *   var Props = require('ReactPropTypes');
+   *   var MyArticle = React.createClass({
+   *     propTypes: {
+   *       // An optional string prop named "description".
+   *       description: Props.string,
+   *
+   *       // A required enum prop named "category".
+   *       category: Props.oneOf(['News','Photos']).isRequired,
+   *
+   *       // A prop named "dialog" that requires an instance of Dialog.
+   *       dialog: Props.instanceOf(Dialog).isRequired
+   *     },
+   *     render: function() { ... }
+   *   });
+   *
+   * A more formal specification of how these methods are used:
+   *
+   *   type := array|bool|func|object|number|string|oneOf([...])|instanceOf(...)
+   *   decl := ReactPropTypes.{type}(.isRequired)?
+   *
+   * Each and every declaration produces a function with the same signature. This
+   * allows the creation of custom validation functions. For example:
+   *
+   *  var MyLink = React.createClass({
+   *    propTypes: {
+   *      // An optional string or URI prop named "href".
+   *      href: function(props, propName, componentName) {
+   *        var propValue = props[propName];
+   *        if (propValue != null && typeof propValue !== 'string' &&
+   *            !(propValue instanceof URI)) {
+   *          return new Error(
+   *            'Expected a string or an URI for ' + propName + ' in ' +
+   *            componentName
+   *          );
+   *        }
+   *      }
+   *    },
+   *    render: function() {...}
+   *  });
+   *
+   * @internal
+   */ var ANONYMOUS = '<<anonymous>>';
+    // Important!
+    // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
+    var ReactPropTypes = {
+        array: createPrimitiveTypeChecker('array'),
+        bigint: createPrimitiveTypeChecker('bigint'),
+        bool: createPrimitiveTypeChecker('boolean'),
+        func: createPrimitiveTypeChecker('function'),
+        number: createPrimitiveTypeChecker('number'),
+        object: createPrimitiveTypeChecker('object'),
+        string: createPrimitiveTypeChecker('string'),
+        symbol: createPrimitiveTypeChecker('symbol'),
+        any: createAnyTypeChecker(),
+        arrayOf: createArrayOfTypeChecker,
+        element: createElementTypeChecker(),
+        elementType: createElementTypeTypeChecker(),
+        instanceOf: createInstanceTypeChecker,
+        node: createNodeChecker(),
+        objectOf: createObjectOfTypeChecker,
+        oneOf: createEnumTypeChecker,
+        oneOfType: createUnionTypeChecker,
+        shape: createShapeTypeChecker,
+        exact: createStrictShapeTypeChecker
+    };
+    /**
+   * inlined Object.is polyfill to avoid requiring consumers ship their own
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+   */ /*eslint-disable no-self-compare*/ function is(x, y) {
+        // SameValue algorithm
+        if (x === y) {
+            // Steps 1-5, 7-10
+            // Steps 6.b-6.e: +0 != -0
+            return x !== 0 || 1 / x === 1 / y;
+        } else {
+            // Step 6.a: NaN == NaN
+            return x !== x && y !== y;
+        }
+    }
+    /*eslint-enable no-self-compare*/ /**
+   * We use an Error-like object for backward compatibility as people may call
+   * PropTypes directly and inspect their output. However, we don't use real
+   * Errors anymore. We don't inspect their stack anyway, and creating them
+   * is prohibitively expensive if they are created too often, such as what
+   * happens in oneOfType() for any type before the one that matched.
+   */ function PropTypeError(message, data) {
+        this.message = message;
+        this.data = data && typeof data === 'object' ? data : {};
+        this.stack = '';
+    }
+    // Make `instanceof Error` still work for returned errors.
+    PropTypeError.prototype = Error.prototype;
+    function createChainableTypeChecker(validate) {
+        if (("TURBOPACK compile-time value", "development") !== 'production') {
+            var manualPropTypeCallCache = {};
+            var manualPropTypeWarningCount = 0;
+        }
+        function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+            componentName = componentName || ANONYMOUS;
+            propFullName = propFullName || propName;
+            if (secret !== ReactPropTypesSecret) {
+                if (throwOnDirectAccess) {
+                    // New behavior only for users of `prop-types` package
+                    var err = new Error('Calling PropTypes validators directly is not supported by the `prop-types` package. ' + 'Use `PropTypes.checkPropTypes()` to call them. ' + 'Read more at http://fb.me/use-check-prop-types');
+                    err.name = 'Invariant Violation';
+                    throw err;
+                } else if (("TURBOPACK compile-time value", "development") !== 'production' && typeof console !== 'undefined') {
+                    // Old behavior for people using React.PropTypes
+                    var cacheKey = componentName + ':' + propName;
+                    if (!manualPropTypeCallCache[cacheKey] && // Avoid spamming the console because they are often not actionable except for lib authors
+                    manualPropTypeWarningCount < 3) {
+                        printWarning('You are manually calling a React.PropTypes validation ' + 'function for the `' + propFullName + '` prop on `' + componentName + '`. This is deprecated ' + 'and will throw in the standalone `prop-types` package. ' + 'You may be seeing this warning due to a third-party PropTypes ' + 'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.');
+                        manualPropTypeCallCache[cacheKey] = true;
+                        manualPropTypeWarningCount++;
+                    }
+                }
+            }
+            if (props[propName] == null) {
+                if (isRequired) {
+                    if (props[propName] === null) {
+                        return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required ' + ('in `' + componentName + '`, but its value is `null`.'));
+                    }
+                    return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required in ' + ('`' + componentName + '`, but its value is `undefined`.'));
+                }
+                return null;
+            } else {
+                return validate(props, propName, componentName, location, propFullName);
+            }
+        }
+        var chainedCheckType = checkType.bind(null, false);
+        chainedCheckType.isRequired = checkType.bind(null, true);
+        return chainedCheckType;
+    }
+    function createPrimitiveTypeChecker(expectedType) {
+        function validate(props, propName, componentName, location, propFullName, secret) {
+            var propValue = props[propName];
+            var propType = getPropType(propValue);
+            if (propType !== expectedType) {
+                // `propValue` being instance of, say, date/regexp, pass the 'object'
+                // check, but we can offer a more precise error message here rather than
+                // 'of type `object`'.
+                var preciseType = getPreciseType(propValue);
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'), {
+                    expectedType: expectedType
+                });
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createAnyTypeChecker() {
+        return createChainableTypeChecker(emptyFunctionThatReturnsNull);
+    }
+    function createArrayOfTypeChecker(typeChecker) {
+        function validate(props, propName, componentName, location, propFullName) {
+            if (typeof typeChecker !== 'function') {
+                return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside arrayOf.');
+            }
+            var propValue = props[propName];
+            if (!Array.isArray(propValue)) {
+                var propType = getPropType(propValue);
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
+            }
+            for(var i = 0; i < propValue.length; i++){
+                var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret);
+                if (error instanceof Error) {
+                    return error;
+                }
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createElementTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+            var propValue = props[propName];
+            if (!isValidElement(propValue)) {
+                var propType = getPropType(propValue);
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement.'));
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createElementTypeTypeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+            var propValue = props[propName];
+            if (!ReactIs.isValidElementType(propValue)) {
+                var propType = getPropType(propValue);
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement type.'));
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createInstanceTypeChecker(expectedClass) {
+        function validate(props, propName, componentName, location, propFullName) {
+            if (!(props[propName] instanceof expectedClass)) {
+                var expectedClassName = expectedClass.name || ANONYMOUS;
+                var actualClassName = getClassName(props[propName]);
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + actualClassName + '` supplied to `' + componentName + '`, expected ') + ('instance of `' + expectedClassName + '`.'));
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createEnumTypeChecker(expectedValues) {
+        if (!Array.isArray(expectedValues)) {
+            if ("TURBOPACK compile-time truthy", 1) {
+                if (arguments.length > 1) {
+                    printWarning('Invalid arguments supplied to oneOf, expected an array, got ' + arguments.length + ' arguments. ' + 'A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z]).');
+                } else {
+                    printWarning('Invalid argument supplied to oneOf, expected an array.');
+                }
+            }
+            return emptyFunctionThatReturnsNull;
+        }
+        function validate(props, propName, componentName, location, propFullName) {
+            var propValue = props[propName];
+            for(var i = 0; i < expectedValues.length; i++){
+                if (is(propValue, expectedValues[i])) {
+                    return null;
+                }
+            }
+            var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+                var type = getPreciseType(value);
+                if (type === 'symbol') {
+                    return String(value);
+                }
+                return value;
+            });
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + String(propValue) + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createObjectOfTypeChecker(typeChecker) {
+        function validate(props, propName, componentName, location, propFullName) {
+            if (typeof typeChecker !== 'function') {
+                return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside objectOf.');
+            }
+            var propValue = props[propName];
+            var propType = getPropType(propValue);
+            if (propType !== 'object') {
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
+            }
+            for(var key in propValue){
+                if (has(propValue, key)) {
+                    var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+                    if (error instanceof Error) {
+                        return error;
+                    }
+                }
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createUnionTypeChecker(arrayOfTypeCheckers) {
+        if (!Array.isArray(arrayOfTypeCheckers)) {
+            ("TURBOPACK compile-time truthy", 1) ? printWarning('Invalid argument supplied to oneOfType, expected an instance of array.') : "TURBOPACK unreachable";
+            return emptyFunctionThatReturnsNull;
+        }
+        for(var i = 0; i < arrayOfTypeCheckers.length; i++){
+            var checker = arrayOfTypeCheckers[i];
+            if (typeof checker !== 'function') {
+                printWarning('Invalid argument supplied to oneOfType. Expected an array of check functions, but ' + 'received ' + getPostfixForTypeWarning(checker) + ' at index ' + i + '.');
+                return emptyFunctionThatReturnsNull;
+            }
+        }
+        function validate(props, propName, componentName, location, propFullName) {
+            var expectedTypes = [];
+            for(var i = 0; i < arrayOfTypeCheckers.length; i++){
+                var checker = arrayOfTypeCheckers[i];
+                var checkerResult = checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+                if (checkerResult == null) {
+                    return null;
+                }
+                if (checkerResult.data && has(checkerResult.data, 'expectedType')) {
+                    expectedTypes.push(checkerResult.data.expectedType);
+                }
+            }
+            var expectedTypesMessage = expectedTypes.length > 0 ? ', expected one of type [' + expectedTypes.join(', ') + ']' : '';
+            return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`' + expectedTypesMessage + '.'));
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createNodeChecker() {
+        function validate(props, propName, componentName, location, propFullName) {
+            if (!isNode(props[propName])) {
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`, expected a ReactNode.'));
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function invalidValidatorError(componentName, location, propFullName, key, type) {
+        return new PropTypeError((componentName || 'React class') + ': ' + location + ' type `' + propFullName + '.' + key + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + type + '`.');
+    }
+    function createShapeTypeChecker(shapeTypes) {
+        function validate(props, propName, componentName, location, propFullName) {
+            var propValue = props[propName];
+            var propType = getPropType(propValue);
+            if (propType !== 'object') {
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+            }
+            for(var key in shapeTypes){
+                var checker = shapeTypes[key];
+                if (typeof checker !== 'function') {
+                    return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+                }
+                var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+                if (error) {
+                    return error;
+                }
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function createStrictShapeTypeChecker(shapeTypes) {
+        function validate(props, propName, componentName, location, propFullName) {
+            var propValue = props[propName];
+            var propType = getPropType(propValue);
+            if (propType !== 'object') {
+                return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+            }
+            // We need to check all keys in case some are required but missing from props.
+            var allKeys = assign({}, props[propName], shapeTypes);
+            for(var key in allKeys){
+                var checker = shapeTypes[key];
+                if (has(shapeTypes, key) && typeof checker !== 'function') {
+                    return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+                }
+                if (!checker) {
+                    return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' + '\nBad object: ' + JSON.stringify(props[propName], null, '  ') + '\nValid keys: ' + JSON.stringify(Object.keys(shapeTypes), null, '  '));
+                }
+                var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+                if (error) {
+                    return error;
+                }
+            }
+            return null;
+        }
+        return createChainableTypeChecker(validate);
+    }
+    function isNode(propValue) {
+        switch(typeof propValue){
+            case 'number':
+            case 'string':
+            case 'undefined':
+                return true;
+            case 'boolean':
+                return !propValue;
+            case 'object':
+                if (Array.isArray(propValue)) {
+                    return propValue.every(isNode);
+                }
+                if (propValue === null || isValidElement(propValue)) {
+                    return true;
+                }
+                var iteratorFn = getIteratorFn(propValue);
+                if (iteratorFn) {
+                    var iterator = iteratorFn.call(propValue);
+                    var step;
+                    if (iteratorFn !== propValue.entries) {
+                        while(!(step = iterator.next()).done){
+                            if (!isNode(step.value)) {
+                                return false;
+                            }
+                        }
+                    } else {
+                        // Iterator will provide entry [k,v] tuples rather than values.
+                        while(!(step = iterator.next()).done){
+                            var entry = step.value;
+                            if (entry) {
+                                if (!isNode(entry[1])) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    return false;
+                }
+                return true;
+            default:
+                return false;
+        }
+    }
+    function isSymbol(propType, propValue) {
+        // Native Symbol.
+        if (propType === 'symbol') {
+            return true;
+        }
+        // falsy value can't be a Symbol
+        if (!propValue) {
+            return false;
+        }
+        // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
+        if (propValue['@@toStringTag'] === 'Symbol') {
+            return true;
+        }
+        // Fallback for non-spec compliant Symbols which are polyfilled.
+        if (typeof Symbol === 'function' && propValue instanceof Symbol) {
+            return true;
+        }
+        return false;
+    }
+    // Equivalent of `typeof` but with special handling for array and regexp.
+    function getPropType(propValue) {
+        var propType = typeof propValue;
+        if (Array.isArray(propValue)) {
+            return 'array';
+        }
+        if (propValue instanceof RegExp) {
+            // Old webkits (at least until Android 4.0) return 'function' rather than
+            // 'object' for typeof a RegExp. We'll normalize this here so that /bla/
+            // passes PropTypes.object.
+            return 'object';
+        }
+        if (isSymbol(propType, propValue)) {
+            return 'symbol';
+        }
+        return propType;
+    }
+    // This handles more types than `getPropType`. Only used for error messages.
+    // See `createPrimitiveTypeChecker`.
+    function getPreciseType(propValue) {
+        if (typeof propValue === 'undefined' || propValue === null) {
+            return '' + propValue;
+        }
+        var propType = getPropType(propValue);
+        if (propType === 'object') {
+            if (propValue instanceof Date) {
+                return 'date';
+            } else if (propValue instanceof RegExp) {
+                return 'regexp';
+            }
+        }
+        return propType;
+    }
+    // Returns a string that is postfixed to a warning about an invalid type.
+    // For example, "undefined" or "of type array"
+    function getPostfixForTypeWarning(value) {
+        var type = getPreciseType(value);
+        switch(type){
+            case 'array':
+            case 'object':
+                return 'an ' + type;
+            case 'boolean':
+            case 'date':
+            case 'regexp':
+                return 'a ' + type;
+            default:
+                return type;
+        }
+    }
+    // Returns class name of the object, if any.
+    function getClassName(propValue) {
+        if (!propValue.constructor || !propValue.constructor.name) {
+            return ANONYMOUS;
+        }
+        return propValue.constructor.name;
+    }
+    ReactPropTypes.checkPropTypes = checkPropTypes;
+    ReactPropTypes.resetWarningCache = checkPropTypes.resetWarningCache;
+    ReactPropTypes.PropTypes = ReactPropTypes;
+    return ReactPropTypes;
+};
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/index.js [app-ssr] (ecmascript)", ((__turbopack_context__, module, exports) => {
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */ if ("TURBOPACK compile-time truthy", 1) {
+    var ReactIs = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/react-is/index.js [app-ssr] (ecmascript)");
+    // By explicitly using `prop-types` you are opting into new development behavior.
+    // http://fb.me/prop-types-in-prod
+    var throwOnDirectAccess = true;
+    module.exports = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/factoryWithTypeCheckers.js [app-ssr] (ecmascript)")(ReactIs.isElement, throwOnDirectAccess);
+} else //TURBOPACK unreachable
+;
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@fortawesome/react-fontawesome/index.es.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "FontAwesomeIcon",
+    ()=>FontAwesomeIcon
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$fontawesome$2d$svg$2d$core$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@fortawesome/fontawesome-svg-core/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/prop-types/index.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+;
+;
+;
+function _arrayLikeToArray(r, a) {
+    (null == a || a > r.length) && (a = r.length);
+    for(var e = 0, n = Array(a); e < a; e++)n[e] = r[e];
+    return n;
+}
+function _arrayWithHoles(r) {
+    if (Array.isArray(r)) return r;
+}
+function _arrayWithoutHoles(r) {
+    if (Array.isArray(r)) return _arrayLikeToArray(r);
+}
+function _defineProperty(e, r, t) {
+    return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+        value: t,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+    }) : e[r] = t, e;
+}
+function _iterableToArray(r) {
+    if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+}
+function _iterableToArrayLimit(r, l) {
+    var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+    if (null != t) {
+        var e, n, i, u, a = [], f = !0, o = !1;
+        try {
+            if (i = (t = t.call(r)).next, 0 === l) {
+                if (Object(t) !== t) return;
+                f = !1;
+            } else for(; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+        } catch (r) {
+            o = !0, n = r;
+        } finally{
+            try {
+                if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+            } finally{
+                if (o) throw n;
+            }
+        }
+        return a;
+    }
+}
+function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+        var o = Object.getOwnPropertySymbols(e);
+        r && (o = o.filter(function(r) {
+            return Object.getOwnPropertyDescriptor(e, r).enumerable;
+        })), t.push.apply(t, o);
+    }
+    return t;
+}
+function _objectSpread2(e) {
+    for(var r = 1; r < arguments.length; r++){
+        var t = null != arguments[r] ? arguments[r] : {};
+        r % 2 ? ownKeys(Object(t), !0).forEach(function(r) {
+            _defineProperty(e, r, t[r]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r) {
+            Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
+        });
+    }
+    return e;
+}
+function _objectWithoutProperties(e, t) {
+    if (null == e) return {};
+    var o, r, i = _objectWithoutPropertiesLoose(e, t);
+    if (Object.getOwnPropertySymbols) {
+        var n = Object.getOwnPropertySymbols(e);
+        for(r = 0; r < n.length; r++)o = n[r], -1 === t.indexOf(o) && ({}).propertyIsEnumerable.call(e, o) && (i[o] = e[o]);
+    }
+    return i;
+}
+function _objectWithoutPropertiesLoose(r, e) {
+    if (null == r) return {};
+    var t = {};
+    for(var n in r)if (({}).hasOwnProperty.call(r, n)) {
+        if (-1 !== e.indexOf(n)) continue;
+        t[n] = r[n];
+    }
+    return t;
+}
+function _slicedToArray(r, e) {
+    return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+}
+function _toConsumableArray(r) {
+    return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+}
+function _toPrimitive(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+        var i = e.call(t, r || "default");
+        if ("object" != typeof i) return i;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+}
+function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+}
+function _typeof(o) {
+    "@babel/helpers - typeof";
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+        return typeof o;
+    } : function(o) {
+        return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+    }, _typeof(o);
+}
+function _unsupportedIterableToArray(r, a) {
+    if (r) {
+        if ("string" == typeof r) return _arrayLikeToArray(r, a);
+        var t = ({}).toString.call(r).slice(8, -1);
+        return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+    }
+}
+var ICON_PACKS_STARTING_VERSION = '7.0.0';
+// Try to get version from installed package first, fallback to env var, then default
+var SVG_CORE_VERSION;
+try {
+    var svgCorePackageJson = __turbopack_context__.r("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@fortawesome/fontawesome-svg-core/package.json (json)");
+    SVG_CORE_VERSION = svgCorePackageJson.version;
+} catch (e) {
+    // If package.json can't be loaded, try environment variable
+    SVG_CORE_VERSION = typeof process !== 'undefined' && process.env.FA_VERSION || '7.0.0';
+}
+// Get CSS class list from a props object
+function classList(props) {
+    var beat = props.beat, fade = props.fade, beatFade = props.beatFade, bounce = props.bounce, shake = props.shake, flash = props.flash, spin = props.spin, spinPulse = props.spinPulse, spinReverse = props.spinReverse, pulse = props.pulse, fixedWidth = props.fixedWidth, inverse = props.inverse, border = props.border, listItem = props.listItem, flip = props.flip, size = props.size, rotation = props.rotation, pull = props.pull, swapOpacity = props.swapOpacity, rotateBy = props.rotateBy, widthAuto = props.widthAuto;
+    // Check if we're using version 7 or later
+    var isVersion7OrLater = versionCheckGte(SVG_CORE_VERSION, ICON_PACKS_STARTING_VERSION);
+    // map of CSS class names to properties
+    var classes = _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+        'fa-beat': beat,
+        'fa-fade': fade,
+        'fa-beat-fade': beatFade,
+        'fa-bounce': bounce,
+        'fa-shake': shake,
+        'fa-flash': flash,
+        'fa-spin': spin,
+        'fa-spin-reverse': spinReverse,
+        'fa-spin-pulse': spinPulse,
+        'fa-pulse': pulse,
+        'fa-fw': fixedWidth,
+        'fa-inverse': inverse,
+        'fa-border': border,
+        'fa-li': listItem,
+        'fa-flip': flip === true,
+        'fa-flip-horizontal': flip === 'horizontal' || flip === 'both',
+        'fa-flip-vertical': flip === 'vertical' || flip === 'both'
+    }, "fa-".concat(size), typeof size !== 'undefined' && size !== null), "fa-rotate-".concat(rotation), typeof rotation !== 'undefined' && rotation !== null && rotation !== 0), "fa-pull-".concat(pull), typeof pull !== 'undefined' && pull !== null), 'fa-swap-opacity', swapOpacity), 'fa-rotate-by', isVersion7OrLater && rotateBy), 'fa-width-auto', isVersion7OrLater && widthAuto);
+    // map over all the keys in the classes object
+    // return an array of the keys where the value for the key is not null
+    return Object.keys(classes).map(function(key) {
+        return classes[key] ? key : null;
+    }).filter(function(key) {
+        return key;
+    });
+}
+// check if verion1 is greater than or equal to version2
+function versionCheckGte(version1, version2) {
+    var _version1$split = version1.split('-'), _version1$split2 = _slicedToArray(_version1$split, 2), v1Base = _version1$split2[0], v1PreRelease = _version1$split2[1];
+    var _version2$split = version2.split('-'), _version2$split2 = _slicedToArray(_version2$split, 2), v2Base = _version2$split2[0], v2PreRelease = _version2$split2[1];
+    var v1Parts = v1Base.split('.');
+    var v2Parts = v2Base.split('.');
+    // Compare version numbers first
+    for(var i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++){
+        var v1Part = v1Parts[i] || '0';
+        var v2Part = v2Parts[i] || '0';
+        // Compare numeric values
+        var v1Num = parseInt(v1Part, 10);
+        var v2Num = parseInt(v2Part, 10);
+        if (v1Num !== v2Num) {
+            return v1Num > v2Num;
+        }
+    }
+    // If numeric values are equal, look for any remaining parts
+    // that would make one version greater than the other
+    for(var _i = 0; _i < Math.max(v1Parts.length, v2Parts.length); _i++){
+        var _v1Part = v1Parts[_i] || '0';
+        var _v2Part = v2Parts[_i] || '0';
+        if (_v1Part !== _v2Part) {
+            // When numeric values are equal but strings differ,
+            // the one without leading zeros is greater
+            if (_v1Part.length !== _v2Part.length) {
+                return _v1Part.length < _v2Part.length;
+            }
+        }
+    }
+    // If version numbers are equal, compare pre-release identifiers
+    // A version with a pre-release identifier is less than one without
+    if (v1PreRelease && !v2PreRelease) return false;
+    if (!v1PreRelease && v2PreRelease) return true;
+    return true;
+}
+// Camelize taken from humps
+// humps is copyright © 2012+ Dom Christie
+// Released under the MIT license.
+// Performant way to determine if object coerces to a number
+function _isNumerical(obj) {
+    obj = obj - 0;
+    // eslint-disable-next-line no-self-compare
+    return obj === obj;
+}
+function camelize(string) {
+    if (_isNumerical(string)) {
+        return string;
+    }
+    // eslint-disable-next-line no-useless-escape
+    string = string.replace(/[\-_\s]+(.)?/g, function(match, chr) {
+        return chr ? chr.toUpperCase() : '';
+    });
+    // Ensure 1st char is always lowercase
+    return string.substr(0, 1).toLowerCase() + string.substr(1);
+}
+var _excluded = [
+    "style"
+];
+function capitalize(val) {
+    return val.charAt(0).toUpperCase() + val.slice(1);
+}
+function styleToObject(style) {
+    return style.split(';').map(function(s) {
+        return s.trim();
+    }).filter(function(s) {
+        return s;
+    }).reduce(function(acc, pair) {
+        var i = pair.indexOf(':');
+        var prop = camelize(pair.slice(0, i));
+        var value = pair.slice(i + 1).trim();
+        prop.startsWith('webkit') ? acc[capitalize(prop)] = value : acc[prop] = value;
+        return acc;
+    }, {});
+}
+function convert(createElement, element) {
+    var extraProps = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    if (typeof element === 'string') {
+        return element;
+    }
+    var children = (element.children || []).map(function(child) {
+        return convert(createElement, child);
+    });
+    /* eslint-disable dot-notation */ var mixins = Object.keys(element.attributes || {}).reduce(function(acc, key) {
+        var val = element.attributes[key];
+        switch(key){
+            case 'class':
+                acc.attrs['className'] = val;
+                delete element.attributes['class'];
+                break;
+            case 'style':
+                acc.attrs['style'] = styleToObject(val);
+                break;
+            default:
+                if (key.indexOf('aria-') === 0 || key.indexOf('data-') === 0) {
+                    acc.attrs[key.toLowerCase()] = val;
+                } else {
+                    acc.attrs[camelize(key)] = val;
+                }
+        }
+        return acc;
+    }, {
+        attrs: {}
+    });
+    var _extraProps$style = extraProps.style, existingStyle = _extraProps$style === void 0 ? {} : _extraProps$style, remaining = _objectWithoutProperties(extraProps, _excluded);
+    mixins.attrs['style'] = _objectSpread2(_objectSpread2({}, mixins.attrs['style']), existingStyle);
+    /* eslint-enable */ return createElement.apply(void 0, [
+        element.tag,
+        _objectSpread2(_objectSpread2({}, mixins.attrs), remaining)
+    ].concat(_toConsumableArray(children)));
+}
+var PRODUCTION = false;
+try {
+    PRODUCTION = ("TURBOPACK compile-time value", "development") === 'production';
+} catch (e) {}
+function log() {
+    if (!PRODUCTION && console && typeof console.error === 'function') {
+        var _console;
+        (_console = console).error.apply(_console, arguments);
+    }
+}
+// Normalize icon arguments
+function normalizeIconArgs(icon) {
+    // this has everything that it needs to be rendered which means it was probably imported
+    // directly from an icon svg package
+    if (icon && _typeof(icon) === 'object' && icon.prefix && icon.iconName && icon.icon) {
+        return icon;
+    }
+    if (__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$fontawesome$2d$svg$2d$core$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parse"].icon) {
+        return __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$fontawesome$2d$svg$2d$core$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parse"].icon(icon);
+    }
+    // if the icon is null, there's nothing to do
+    if (icon === null) {
+        return null;
+    }
+    // if the icon is an object and has a prefix and an icon name, return it
+    if (icon && _typeof(icon) === 'object' && icon.prefix && icon.iconName) {
+        return icon;
+    }
+    // if it's an array with length of two
+    if (Array.isArray(icon) && icon.length === 2) {
+        // use the first item as prefix, second as icon name
+        return {
+            prefix: icon[0],
+            iconName: icon[1]
+        };
+    }
+    // if it's a string, use it as the icon name
+    if (typeof icon === 'string') {
+        return {
+            prefix: 'fas',
+            iconName: icon
+        };
+    }
+}
+// creates an object with a key of key
+// and a value of value
+// if certain conditions are met
+function objectWithKey(key, value) {
+    // if the value is a non-empty array
+    // or it's not an array but it is truthy
+    // then create the object with the key and the value
+    // if not, return an empty array
+    return Array.isArray(value) && value.length > 0 || !Array.isArray(value) && value ? _defineProperty({}, key, value) : {};
+}
+var defaultProps = {
+    border: false,
+    className: '',
+    mask: null,
+    maskId: null,
+    // the fixedWidth property has been deprecated as of version 7
+    fixedWidth: false,
+    inverse: false,
+    flip: false,
+    icon: null,
+    listItem: false,
+    pull: null,
+    pulse: false,
+    rotation: null,
+    rotateBy: false,
+    size: null,
+    spin: false,
+    spinPulse: false,
+    spinReverse: false,
+    beat: false,
+    fade: false,
+    beatFade: false,
+    bounce: false,
+    shake: false,
+    symbol: false,
+    title: '',
+    titleId: null,
+    transform: null,
+    swapOpacity: false,
+    widthAuto: false
+};
+var FontAwesomeIcon = /*#__PURE__*/ __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].forwardRef(function(props, ref) {
+    var allProps = _objectSpread2(_objectSpread2({}, defaultProps), props);
+    var iconArgs = allProps.icon, maskArgs = allProps.mask, symbol = allProps.symbol, className = allProps.className, title = allProps.title, titleId = allProps.titleId, maskId = allProps.maskId;
+    var iconLookup = normalizeIconArgs(iconArgs);
+    var classes = objectWithKey('classes', [].concat(_toConsumableArray(classList(allProps)), _toConsumableArray((className || '').split(' '))));
+    var transform = objectWithKey('transform', typeof allProps.transform === 'string' ? __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$fontawesome$2d$svg$2d$core$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parse"].transform(allProps.transform) : allProps.transform);
+    var mask = objectWithKey('mask', normalizeIconArgs(maskArgs));
+    var renderedIcon = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$fontawesome$2d$svg$2d$core$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["icon"])(iconLookup, _objectSpread2(_objectSpread2(_objectSpread2(_objectSpread2({}, classes), transform), mask), {}, {
+        symbol: symbol,
+        title: title,
+        titleId: titleId,
+        maskId: maskId
+    }));
+    if (!renderedIcon) {
+        log('Could not find icon', iconLookup);
+        return null;
+    }
+    var abstract = renderedIcon.abstract;
+    var extraProps = {
+        ref: ref
+    };
+    Object.keys(allProps).forEach(function(key) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!defaultProps.hasOwnProperty(key)) {
+            extraProps[key] = allProps[key];
+        }
+    });
+    return convertCurry(abstract[0], extraProps);
+});
+FontAwesomeIcon.displayName = 'FontAwesomeIcon';
+FontAwesomeIcon.propTypes = {
+    beat: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    border: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    beatFade: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    bounce: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    className: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string,
+    fade: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    flash: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    mask: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOfType([
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].object,
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].array,
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string
+    ]),
+    maskId: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string,
+    // the fixedWidth property has been deprecated as of version 7
+    fixedWidth: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    inverse: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    flip: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOf([
+        true,
+        false,
+        'horizontal',
+        'vertical',
+        'both'
+    ]),
+    icon: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOfType([
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].object,
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].array,
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string
+    ]),
+    listItem: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    pull: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOf([
+        'right',
+        'left'
+    ]),
+    pulse: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    rotation: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOf([
+        0,
+        90,
+        180,
+        270
+    ]),
+    rotateBy: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    shake: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    size: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOf([
+        '2xs',
+        'xs',
+        'sm',
+        'lg',
+        'xl',
+        '2xl',
+        '1x',
+        '2x',
+        '3x',
+        '4x',
+        '5x',
+        '6x',
+        '7x',
+        '8x',
+        '9x',
+        '10x'
+    ]),
+    spin: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    spinPulse: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    spinReverse: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    symbol: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOfType([
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string
+    ]),
+    title: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string,
+    titleId: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string,
+    transform: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].oneOfType([
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].string,
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].object
+    ]),
+    swapOpacity: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool,
+    widthAuto: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$prop$2d$types$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].bool
+};
+var convertCurry = convert.bind(null, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].createElement);
+;
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/types.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * Base error for Supabase Edge Function invocations.
+ *
+ * @example
+ * ```ts
+ * import { FunctionsError } from '@supabase/functions-js'
+ *
+ * throw new FunctionsError('Unexpected error invoking function', 'FunctionsError', {
+ *   requestId: 'abc123',
+ * })
+ * ```
+ */ __turbopack_context__.s([
+    "FunctionRegion",
+    ()=>FunctionRegion,
+    "FunctionsError",
+    ()=>FunctionsError,
+    "FunctionsFetchError",
+    ()=>FunctionsFetchError,
+    "FunctionsHttpError",
+    ()=>FunctionsHttpError,
+    "FunctionsRelayError",
+    ()=>FunctionsRelayError
+]);
+class FunctionsError extends Error {
+    constructor(message, name = 'FunctionsError', context){
+        super(message);
+        this.name = name;
+        this.context = context;
+    }
+}
+class FunctionsFetchError extends FunctionsError {
+    constructor(context){
+        super('Failed to send a request to the Edge Function', 'FunctionsFetchError', context);
+    }
+}
+class FunctionsRelayError extends FunctionsError {
+    constructor(context){
+        super('Relay Error invoking the Edge Function', 'FunctionsRelayError', context);
+    }
+}
+class FunctionsHttpError extends FunctionsError {
+    constructor(context){
+        super('Edge Function returned a non-2xx status code', 'FunctionsHttpError', context);
+    }
+}
+var FunctionRegion;
+(function(FunctionRegion) {
+    FunctionRegion["Any"] = "any";
+    FunctionRegion["ApNortheast1"] = "ap-northeast-1";
+    FunctionRegion["ApNortheast2"] = "ap-northeast-2";
+    FunctionRegion["ApSouth1"] = "ap-south-1";
+    FunctionRegion["ApSoutheast1"] = "ap-southeast-1";
+    FunctionRegion["ApSoutheast2"] = "ap-southeast-2";
+    FunctionRegion["CaCentral1"] = "ca-central-1";
+    FunctionRegion["EuCentral1"] = "eu-central-1";
+    FunctionRegion["EuWest1"] = "eu-west-1";
+    FunctionRegion["EuWest2"] = "eu-west-2";
+    FunctionRegion["EuWest3"] = "eu-west-3";
+    FunctionRegion["SaEast1"] = "sa-east-1";
+    FunctionRegion["UsEast1"] = "us-east-1";
+    FunctionRegion["UsWest1"] = "us-west-1";
+    FunctionRegion["UsWest2"] = "us-west-2";
+})(FunctionRegion || (FunctionRegion = {})); //# sourceMappingURL=types.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/helper.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "resolveFetch",
+    ()=>resolveFetch
+]);
+const resolveFetch = (customFetch)=>{
+    if (customFetch) {
+        return (...args)=>customFetch(...args);
+    }
+    return (...args)=>fetch(...args);
+}; //# sourceMappingURL=helper.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/FunctionsClient.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "FunctionsClient",
+    ()=>FunctionsClient
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$tslib$2f$tslib$2e$es6$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/tslib/tslib.es6.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$helper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/helper.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/types.js [app-ssr] (ecmascript)");
+;
+;
+;
+class FunctionsClient {
+    /**
+     * Creates a new Functions client bound to an Edge Functions URL.
+     *
+     * @example
+     * ```ts
+     * import { FunctionsClient, FunctionRegion } from '@supabase/functions-js'
+     *
+     * const functions = new FunctionsClient('https://xyzcompany.supabase.co/functions/v1', {
+     *   headers: { apikey: 'public-anon-key' },
+     *   region: FunctionRegion.UsEast1,
+     * })
+     * ```
+     */ constructor(url, { headers = {}, customFetch, region = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionRegion"].Any } = {}){
+        this.url = url;
+        this.headers = headers;
+        this.region = region;
+        this.fetch = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$helper$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["resolveFetch"])(customFetch);
+    }
+    /**
+     * Updates the authorization header
+     * @param token - the new jwt token sent in the authorisation header
+     * @example
+     * ```ts
+     * functions.setAuth(session.access_token)
+     * ```
+     */ setAuth(token) {
+        this.headers.Authorization = `Bearer ${token}`;
+    }
+    /**
+     * Invokes a function
+     * @param functionName - The name of the Function to invoke.
+     * @param options - Options for invoking the Function.
+     * @example
+     * ```ts
+     * const { data, error } = await functions.invoke('hello-world', {
+     *   body: { name: 'Ada' },
+     * })
+     * ```
+     */ invoke(functionName_1) {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$tslib$2f$tslib$2e$es6$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["__awaiter"])(this, arguments, void 0, function*(functionName, options = {}) {
+            var _a;
+            let timeoutId;
+            let timeoutController;
+            try {
+                const { headers, method, body: functionArgs, signal, timeout } = options;
+                let _headers = {};
+                let { region } = options;
+                if (!region) {
+                    region = this.region;
+                }
+                // Add region as query parameter using URL API
+                const url = new URL(`${this.url}/${functionName}`);
+                if (region && region !== 'any') {
+                    _headers['x-region'] = region;
+                    url.searchParams.set('forceFunctionRegion', region);
+                }
+                let body;
+                if (functionArgs && (headers && !Object.prototype.hasOwnProperty.call(headers, 'Content-Type') || !headers)) {
+                    if (typeof Blob !== 'undefined' && functionArgs instanceof Blob || functionArgs instanceof ArrayBuffer) {
+                        // will work for File as File inherits Blob
+                        // also works for ArrayBuffer as it is the same underlying structure as a Blob
+                        _headers['Content-Type'] = 'application/octet-stream';
+                        body = functionArgs;
+                    } else if (typeof functionArgs === 'string') {
+                        // plain string
+                        _headers['Content-Type'] = 'text/plain';
+                        body = functionArgs;
+                    } else if (typeof FormData !== 'undefined' && functionArgs instanceof FormData) {
+                        // don't set content-type headers
+                        // Request will automatically add the right boundary value
+                        body = functionArgs;
+                    } else {
+                        // default, assume this is JSON
+                        _headers['Content-Type'] = 'application/json';
+                        body = JSON.stringify(functionArgs);
+                    }
+                } else {
+                    if (functionArgs && typeof functionArgs !== 'string' && !(typeof Blob !== 'undefined' && functionArgs instanceof Blob) && !(functionArgs instanceof ArrayBuffer) && !(typeof FormData !== 'undefined' && functionArgs instanceof FormData)) {
+                        body = JSON.stringify(functionArgs);
+                    } else {
+                        body = functionArgs;
+                    }
+                }
+                // Handle timeout by creating an AbortController
+                let effectiveSignal = signal;
+                if (timeout) {
+                    timeoutController = new AbortController();
+                    timeoutId = setTimeout(()=>timeoutController.abort(), timeout);
+                    // If user provided their own signal, we need to respect both
+                    if (signal) {
+                        effectiveSignal = timeoutController.signal;
+                        // If the user's signal is aborted, abort our timeout controller too
+                        signal.addEventListener('abort', ()=>timeoutController.abort());
+                    } else {
+                        effectiveSignal = timeoutController.signal;
+                    }
+                }
+                const response = yield this.fetch(url.toString(), {
+                    method: method || 'POST',
+                    // headers priority is (high to low):
+                    // 1. invoke-level headers
+                    // 2. client-level headers
+                    // 3. default Content-Type header
+                    headers: Object.assign(Object.assign(Object.assign({}, _headers), this.headers), headers),
+                    body,
+                    signal: effectiveSignal
+                }).catch((fetchError)=>{
+                    throw new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionsFetchError"](fetchError);
+                });
+                const isRelayError = response.headers.get('x-relay-error');
+                if (isRelayError && isRelayError === 'true') {
+                    throw new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionsRelayError"](response);
+                }
+                if (!response.ok) {
+                    throw new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionsHttpError"](response);
+                }
+                let responseType = ((_a = response.headers.get('Content-Type')) !== null && _a !== void 0 ? _a : 'text/plain').split(';')[0].trim();
+                let data;
+                if (responseType === 'application/json') {
+                    data = yield response.json();
+                } else if (responseType === 'application/octet-stream' || responseType === 'application/pdf') {
+                    data = yield response.blob();
+                } else if (responseType === 'text/event-stream') {
+                    data = response;
+                } else if (responseType === 'multipart/form-data') {
+                    data = yield response.formData();
+                } else {
+                    // default to text
+                    data = yield response.text();
+                }
+                return {
+                    data,
+                    error: null,
+                    response
+                };
+            } catch (error) {
+                return {
+                    data: null,
+                    error,
+                    response: error instanceof __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionsHttpError"] || error instanceof __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionsRelayError"] ? error.context : undefined
+                };
+            } finally{
+                // Clear the timeout if it was set
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+            }
+        });
+    }
+} //# sourceMappingURL=FunctionsClient.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/tslib/tslib.es6.mjs [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "__addDisposableResource",
+    ()=>__addDisposableResource,
+    "__assign",
+    ()=>__assign,
+    "__asyncDelegator",
+    ()=>__asyncDelegator,
+    "__asyncGenerator",
+    ()=>__asyncGenerator,
+    "__asyncValues",
+    ()=>__asyncValues,
+    "__await",
+    ()=>__await,
+    "__awaiter",
+    ()=>__awaiter,
+    "__classPrivateFieldGet",
+    ()=>__classPrivateFieldGet,
+    "__classPrivateFieldIn",
+    ()=>__classPrivateFieldIn,
+    "__classPrivateFieldSet",
+    ()=>__classPrivateFieldSet,
+    "__createBinding",
+    ()=>__createBinding,
+    "__decorate",
+    ()=>__decorate,
+    "__disposeResources",
+    ()=>__disposeResources,
+    "__esDecorate",
+    ()=>__esDecorate,
+    "__exportStar",
+    ()=>__exportStar,
+    "__extends",
+    ()=>__extends,
+    "__generator",
+    ()=>__generator,
+    "__importDefault",
+    ()=>__importDefault,
+    "__importStar",
+    ()=>__importStar,
+    "__makeTemplateObject",
+    ()=>__makeTemplateObject,
+    "__metadata",
+    ()=>__metadata,
+    "__param",
+    ()=>__param,
+    "__propKey",
+    ()=>__propKey,
+    "__read",
+    ()=>__read,
+    "__rest",
+    ()=>__rest,
+    "__rewriteRelativeImportExtension",
+    ()=>__rewriteRelativeImportExtension,
+    "__runInitializers",
+    ()=>__runInitializers,
+    "__setFunctionName",
+    ()=>__setFunctionName,
+    "__spread",
+    ()=>__spread,
+    "__spreadArray",
+    ()=>__spreadArray,
+    "__spreadArrays",
+    ()=>__spreadArrays,
+    "__values",
+    ()=>__values,
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */ /* global Reflect, Promise, SuppressedError, Symbol, Iterator */ var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf || ({
+        __proto__: []
+    }) instanceof Array && function(d, b) {
+        d.__proto__ = b;
+    } || function(d, b) {
+        for(var p in b)if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+    };
+    return extendStatics(d, b);
+};
+function __extends(d, b) {
+    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+    function __() {
+        this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for(var s, i = 1, n = arguments.length; i < n; i++){
+            s = arguments[i];
+            for(var p in s)if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+function __rest(s, e) {
+    var t = {};
+    for(var p in s)if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for(var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++){
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
+}
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for(var i = decorators.length - 1; i >= 0; i--)if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+function __param(paramIndex, decorator) {
+    return function(target, key) {
+        decorator(target, key, paramIndex);
+    };
+}
+function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
+    function accept(f) {
+        if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected");
+        return f;
+    }
+    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+    var _, done = false;
+    for(var i = decorators.length - 1; i >= 0; i--){
+        var context = {};
+        for(var p in contextIn)context[p] = p === "access" ? {} : contextIn[p];
+        for(var p in contextIn.access)context.access[p] = contextIn.access[p];
+        context.addInitializer = function(f) {
+            if (done) throw new TypeError("Cannot add initializers after decoration has completed");
+            extraInitializers.push(accept(f || null));
+        };
+        var result = (0, decorators[i])(kind === "accessor" ? {
+            get: descriptor.get,
+            set: descriptor.set
+        } : descriptor[key], context);
+        if (kind === "accessor") {
+            if (result === void 0) continue;
+            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
+            if (_ = accept(result.get)) descriptor.get = _;
+            if (_ = accept(result.set)) descriptor.set = _;
+            if (_ = accept(result.init)) initializers.unshift(_);
+        } else if (_ = accept(result)) {
+            if (kind === "field") initializers.unshift(_);
+            else descriptor[key] = _;
+        }
+    }
+    if (target) Object.defineProperty(target, contextIn.name, descriptor);
+    done = true;
+}
+;
+function __runInitializers(thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for(var i = 0; i < initializers.length; i++){
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+}
+;
+function __propKey(x) {
+    return typeof x === "symbol" ? x : "".concat(x);
+}
+;
+function __setFunctionName(f, name, prefix) {
+    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
+    return Object.defineProperty(f, "name", {
+        configurable: true,
+        value: prefix ? "".concat(prefix, " ", name) : name
+    });
+}
+;
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+        return value instanceof P ? value : new P(function(resolve) {
+            resolve(value);
+        });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+            try {
+                step(generator.next(value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function rejected(value) {
+            try {
+                step(generator["throw"](value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function step(result) {
+            result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+function __generator(thisArg, body) {
+    var _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    //TURBOPACK unreachable
+    ;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(g && (g = 0, op[0] && (_ = 0)), _)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+var __createBinding = Object.create ? function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = {
+            enumerable: true,
+            get: function() {
+                return m[k];
+            }
+        };
+    }
+    Object.defineProperty(o, k2, desc);
+} : function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+};
+function __exportStar(m, o) {
+    for(var p in m)if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
+}
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function() {
+            if (o && i >= o.length) o = void 0;
+            return {
+                value: o && o[i++],
+                done: !o
+            };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while((n === void 0 || n-- > 0) && !(r = i.next()).done)ar.push(r.value);
+    } catch (error) {
+        e = {
+            error: error
+        };
+    } finally{
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        } finally{
+            if (e) throw e.error;
+        }
+    }
+    return ar;
+}
+function __spread() {
+    for(var ar = [], i = 0; i < arguments.length; i++)ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+function __spreadArrays() {
+    for(var s = 0, i = 0, il = arguments.length; i < il; i++)s += arguments[i].length;
+    for(var r = Array(s), k = 0, i = 0; i < il; i++)for(var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)r[k] = a[j];
+    return r;
+}
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for(var i = 0, l = from.length, ar; i < l; i++){
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function() {
+        return this;
+    }, i;
+    //TURBOPACK unreachable
+    ;
+    function awaitReturn(f) {
+        return function(v) {
+            return Promise.resolve(v).then(f, reject);
+        };
+    }
+    function verb(n, f) {
+        if (g[n]) {
+            i[n] = function(v) {
+                return new Promise(function(a, b) {
+                    q.push([
+                        n,
+                        v,
+                        a,
+                        b
+                    ]) > 1 || resume(n, v);
+                });
+            };
+            if (f) i[n] = f(i[n]);
+        }
+    }
+    function resume(n, v) {
+        try {
+            step(g[n](v));
+        } catch (e) {
+            settle(q[0][3], e);
+        }
+    }
+    function step(r) {
+        r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);
+    }
+    function fulfill(value) {
+        resume("next", value);
+    }
+    function reject(value) {
+        resume("throw", value);
+    }
+    function settle(f, v) {
+        if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]);
+    }
+}
+function __asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function(e) {
+        throw e;
+    }), verb("return"), i[Symbol.iterator] = function() {
+        return this;
+    }, i;
+    //TURBOPACK unreachable
+    ;
+    function verb(n, f) {
+        i[n] = o[n] ? function(v) {
+            return (p = !p) ? {
+                value: __await(o[n](v)),
+                done: false
+            } : f ? f(v) : v;
+        } : f;
+    }
+}
+function __asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
+        return this;
+    }, i);
+    //TURBOPACK unreachable
+    ;
+    function verb(n) {
+        i[n] = o[n] && function(v) {
+            return new Promise(function(resolve, reject) {
+                v = o[n](v), settle(resolve, reject, v.done, v.value);
+            });
+        };
+    }
+    function settle(resolve, reject, d, v) {
+        Promise.resolve(v).then(function(v) {
+            resolve({
+                value: v,
+                done: d
+            });
+        }, reject);
+    }
+}
+function __makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) {
+        Object.defineProperty(cooked, "raw", {
+            value: raw
+        });
+    } else {
+        cooked.raw = raw;
+    }
+    return cooked;
+}
+;
+var __setModuleDefault = Object.create ? function(o, v) {
+    Object.defineProperty(o, "default", {
+        enumerable: true,
+        value: v
+    });
+} : function(o, v) {
+    o["default"] = v;
+};
+var ownKeys = function(o) {
+    ownKeys = Object.getOwnPropertyNames || function(o) {
+        var ar = [];
+        for(var k in o)if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+        return ar;
+    };
+    return ownKeys(o);
+};
+function __importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) {
+        for(var k = ownKeys(mod), i = 0; i < k.length; i++)if (k[i] !== "default") __createBinding(result, mod, k[i]);
+    }
+    __setModuleDefault(result, mod);
+    return result;
+}
+function __importDefault(mod) {
+    return mod && mod.__esModule ? mod : {
+        default: mod
+    };
+}
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+}
+function __classPrivateFieldIn(state, receiver) {
+    if (receiver === null || typeof receiver !== "object" && typeof receiver !== "function") throw new TypeError("Cannot use 'in' operator on non-object");
+    return typeof state === "function" ? receiver === state : state.has(receiver);
+}
+function __addDisposableResource(env, value, async) {
+    if (value !== null && value !== void 0) {
+        if (typeof value !== "object" && typeof value !== "function") throw new TypeError("Object expected.");
+        var dispose, inner;
+        if (async) {
+            if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
+            dispose = value[Symbol.asyncDispose];
+        }
+        if (dispose === void 0) {
+            if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
+            dispose = value[Symbol.dispose];
+            if (async) inner = dispose;
+        }
+        if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
+        if (inner) dispose = function() {
+            try {
+                inner.call(this);
+            } catch (e) {
+                return Promise.reject(e);
+            }
+        };
+        env.stack.push({
+            value: value,
+            dispose: dispose,
+            async: async
+        });
+    } else if (async) {
+        env.stack.push({
+            async: true
+        });
+    }
+    return value;
+}
+var _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function(error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+function __disposeResources(env) {
+    function fail(e) {
+        env.error = env.hasError ? new _SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
+        env.hasError = true;
+    }
+    var r, s = 0;
+    function next() {
+        while(r = env.stack.pop()){
+            try {
+                if (!r.async && s === 1) return s = 0, env.stack.push(r), Promise.resolve().then(next);
+                if (r.dispose) {
+                    var result = r.dispose.call(r.value);
+                    if (r.async) return s |= 2, Promise.resolve(result).then(next, function(e) {
+                        fail(e);
+                        return next();
+                    });
+                } else s |= 1;
+            } catch (e) {
+                fail(e);
+            }
+        }
+        if (s === 1) return env.hasError ? Promise.reject(env.error) : Promise.resolve();
+        if (env.hasError) throw env.error;
+    }
+    return next();
+}
+function __rewriteRelativeImportExtension(path, preserveJsx) {
+    if (typeof path === "string" && /^\.\.?\//.test(path)) {
+        return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
+            return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
+        });
+    }
+    return path;
+}
+const __TURBOPACK__default__export__ = {
+    __extends,
+    __assign,
+    __rest,
+    __decorate,
+    __param,
+    __esDecorate,
+    __runInitializers,
+    __propKey,
+    __setFunctionName,
+    __metadata,
+    __awaiter,
+    __generator,
+    __createBinding,
+    __exportStar,
+    __values,
+    __read,
+    __spread,
+    __spreadArrays,
+    __spreadArray,
+    __await,
+    __asyncGenerator,
+    __asyncDelegator,
+    __asyncValues,
+    __makeTemplateObject,
+    __importStar,
+    __importDefault,
+    __classPrivateFieldGet,
+    __classPrivateFieldSet,
+    __classPrivateFieldIn,
+    __addDisposableResource,
+    __disposeResources,
+    __rewriteRelativeImportExtension
+};
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/postgrest-js/dist/index.mjs [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "PostgrestBuilder",
+    ()=>PostgrestBuilder,
+    "PostgrestClient",
+    ()=>PostgrestClient,
+    "PostgrestError",
+    ()=>PostgrestError,
+    "PostgrestFilterBuilder",
+    ()=>PostgrestFilterBuilder,
+    "PostgrestQueryBuilder",
+    ()=>PostgrestQueryBuilder,
+    "PostgrestTransformBuilder",
+    ()=>PostgrestTransformBuilder,
+    "default",
+    ()=>src_default
+]);
+//#region src/PostgrestError.ts
+/**
+* Error format
+*
+* {@link https://postgrest.org/en/stable/api.html?highlight=options#errors-and-http-status-codes}
+*/ var PostgrestError = class extends Error {
+    /**
+	* @example
+	* ```ts
+	* import PostgrestError from '@supabase/postgrest-js'
+	*
+	* throw new PostgrestError({
+	*   message: 'Row level security prevented the request',
+	*   details: 'RLS denied the insert',
+	*   hint: 'Check your policies',
+	*   code: 'PGRST301',
+	* })
+	* ```
+	*/ constructor(context){
+        super(context.message);
+        this.name = "PostgrestError";
+        this.details = context.details;
+        this.hint = context.hint;
+        this.code = context.code;
+    }
+};
+//#endregion
+//#region src/PostgrestBuilder.ts
+var PostgrestBuilder = class {
+    /**
+	* Creates a builder configured for a specific PostgREST request.
+	*
+	* @example
+	* ```ts
+	* import PostgrestQueryBuilder from '@supabase/postgrest-js'
+	*
+	* const builder = new PostgrestQueryBuilder(
+	*   new URL('https://xyzcompany.supabase.co/rest/v1/users'),
+	*   { headers: new Headers({ apikey: 'public-anon-key' }) }
+	* )
+	* ```
+	*/ constructor(builder){
+        var _builder$shouldThrowO, _builder$isMaybeSingl, _builder$urlLengthLim;
+        this.shouldThrowOnError = false;
+        this.method = builder.method;
+        this.url = builder.url;
+        this.headers = new Headers(builder.headers);
+        this.schema = builder.schema;
+        this.body = builder.body;
+        this.shouldThrowOnError = (_builder$shouldThrowO = builder.shouldThrowOnError) !== null && _builder$shouldThrowO !== void 0 ? _builder$shouldThrowO : false;
+        this.signal = builder.signal;
+        this.isMaybeSingle = (_builder$isMaybeSingl = builder.isMaybeSingle) !== null && _builder$isMaybeSingl !== void 0 ? _builder$isMaybeSingl : false;
+        this.urlLengthLimit = (_builder$urlLengthLim = builder.urlLengthLimit) !== null && _builder$urlLengthLim !== void 0 ? _builder$urlLengthLim : 8e3;
+        if (builder.fetch) this.fetch = builder.fetch;
+        else this.fetch = fetch;
+    }
+    /**
+	* If there's an error with the query, throwOnError will reject the promise by
+	* throwing the error instead of returning it as part of a successful response.
+	*
+	* {@link https://github.com/supabase/supabase-js/issues/92}
+	*/ throwOnError() {
+        this.shouldThrowOnError = true;
+        return this;
+    }
+    /**
+	* Set an HTTP header for the request.
+	*/ setHeader(name, value) {
+        this.headers = new Headers(this.headers);
+        this.headers.set(name, value);
+        return this;
+    }
+    then(onfulfilled, onrejected) {
+        var _this = this;
+        if (this.schema === void 0) {} else if ([
+            "GET",
+            "HEAD"
+        ].includes(this.method)) this.headers.set("Accept-Profile", this.schema);
+        else this.headers.set("Content-Profile", this.schema);
+        if (this.method !== "GET" && this.method !== "HEAD") this.headers.set("Content-Type", "application/json");
+        const _fetch = this.fetch;
+        let res = _fetch(this.url.toString(), {
+            method: this.method,
+            headers: this.headers,
+            body: JSON.stringify(this.body),
+            signal: this.signal
+        }).then(async (res$1)=>{
+            let error = null;
+            let data = null;
+            let count = null;
+            let status = res$1.status;
+            let statusText = res$1.statusText;
+            if (res$1.ok) {
+                var _this$headers$get2, _res$headers$get;
+                if (_this.method !== "HEAD") {
+                    var _this$headers$get;
+                    const body = await res$1.text();
+                    if (body === "") {} else if (_this.headers.get("Accept") === "text/csv") data = body;
+                    else if (_this.headers.get("Accept") && ((_this$headers$get = _this.headers.get("Accept")) === null || _this$headers$get === void 0 ? void 0 : _this$headers$get.includes("application/vnd.pgrst.plan+text"))) data = body;
+                    else data = JSON.parse(body);
+                }
+                const countHeader = (_this$headers$get2 = _this.headers.get("Prefer")) === null || _this$headers$get2 === void 0 ? void 0 : _this$headers$get2.match(/count=(exact|planned|estimated)/);
+                const contentRange = (_res$headers$get = res$1.headers.get("content-range")) === null || _res$headers$get === void 0 ? void 0 : _res$headers$get.split("/");
+                if (countHeader && contentRange && contentRange.length > 1) count = parseInt(contentRange[1]);
+                if (_this.isMaybeSingle && _this.method === "GET" && Array.isArray(data)) if (data.length > 1) {
+                    error = {
+                        code: "PGRST116",
+                        details: `Results contain ${data.length} rows, application/vnd.pgrst.object+json requires 1 row`,
+                        hint: null,
+                        message: "JSON object requested, multiple (or no) rows returned"
+                    };
+                    data = null;
+                    count = null;
+                    status = 406;
+                    statusText = "Not Acceptable";
+                } else if (data.length === 1) data = data[0];
+                else data = null;
+            } else {
+                var _error$details;
+                const body = await res$1.text();
+                try {
+                    error = JSON.parse(body);
+                    if (Array.isArray(error) && res$1.status === 404) {
+                        data = [];
+                        error = null;
+                        status = 200;
+                        statusText = "OK";
+                    }
+                } catch (_unused) {
+                    if (res$1.status === 404 && body === "") {
+                        status = 204;
+                        statusText = "No Content";
+                    } else error = {
+                        message: body
+                    };
+                }
+                if (error && _this.isMaybeSingle && (error === null || error === void 0 || (_error$details = error.details) === null || _error$details === void 0 ? void 0 : _error$details.includes("0 rows"))) {
+                    error = null;
+                    status = 200;
+                    statusText = "OK";
+                }
+                if (error && _this.shouldThrowOnError) throw new PostgrestError(error);
+            }
+            return {
+                error,
+                data,
+                count,
+                status,
+                statusText
+            };
+        });
+        if (!this.shouldThrowOnError) res = res.catch((fetchError)=>{
+            var _fetchError$name2;
+            let errorDetails = "";
+            let hint = "";
+            let code = "";
+            const cause = fetchError === null || fetchError === void 0 ? void 0 : fetchError.cause;
+            if (cause) {
+                var _cause$message, _cause$code, _fetchError$name, _cause$name;
+                const causeMessage = (_cause$message = cause === null || cause === void 0 ? void 0 : cause.message) !== null && _cause$message !== void 0 ? _cause$message : "";
+                const causeCode = (_cause$code = cause === null || cause === void 0 ? void 0 : cause.code) !== null && _cause$code !== void 0 ? _cause$code : "";
+                errorDetails = `${(_fetchError$name = fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) !== null && _fetchError$name !== void 0 ? _fetchError$name : "FetchError"}: ${fetchError === null || fetchError === void 0 ? void 0 : fetchError.message}`;
+                errorDetails += `\n\nCaused by: ${(_cause$name = cause === null || cause === void 0 ? void 0 : cause.name) !== null && _cause$name !== void 0 ? _cause$name : "Error"}: ${causeMessage}`;
+                if (causeCode) errorDetails += ` (${causeCode})`;
+                if (cause === null || cause === void 0 ? void 0 : cause.stack) errorDetails += `\n${cause.stack}`;
+            } else {
+                var _fetchError$stack;
+                errorDetails = (_fetchError$stack = fetchError === null || fetchError === void 0 ? void 0 : fetchError.stack) !== null && _fetchError$stack !== void 0 ? _fetchError$stack : "";
+            }
+            const urlLength = this.url.toString().length;
+            if ((fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) === "AbortError" || (fetchError === null || fetchError === void 0 ? void 0 : fetchError.code) === "ABORT_ERR") {
+                code = "";
+                hint = "Request was aborted (timeout or manual cancellation)";
+                if (urlLength > this.urlLengthLimit) hint += `. Note: Your request URL is ${urlLength} characters, which may exceed server limits. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [many IDs])), consider using an RPC function to pass values server-side.`;
+            } else if ((cause === null || cause === void 0 ? void 0 : cause.name) === "HeadersOverflowError" || (cause === null || cause === void 0 ? void 0 : cause.code) === "UND_ERR_HEADERS_OVERFLOW") {
+                code = "";
+                hint = "HTTP headers exceeded server limits (typically 16KB)";
+                if (urlLength > this.urlLengthLimit) hint += `. Your request URL is ${urlLength} characters. If selecting many fields, consider using views. If filtering with large arrays (e.g., .in('id', [200+ IDs])), consider using an RPC function instead.`;
+            }
+            return {
+                error: {
+                    message: `${(_fetchError$name2 = fetchError === null || fetchError === void 0 ? void 0 : fetchError.name) !== null && _fetchError$name2 !== void 0 ? _fetchError$name2 : "FetchError"}: ${fetchError === null || fetchError === void 0 ? void 0 : fetchError.message}`,
+                    details: errorDetails,
+                    hint,
+                    code
+                },
+                data: null,
+                count: null,
+                status: 0,
+                statusText: ""
+            };
+        });
+        return res.then(onfulfilled, onrejected);
+    }
+    /**
+	* Override the type of the returned `data`.
+	*
+	* @typeParam NewResult - The new result type to override with
+	* @deprecated Use overrideTypes<yourType, { merge: false }>() method at the end of your call chain instead
+	*/ returns() {
+        /* istanbul ignore next */ return this;
+    }
+    /**
+	* Override the type of the returned `data` field in the response.
+	*
+	* @typeParam NewResult - The new type to cast the response data to
+	* @typeParam Options - Optional type configuration (defaults to { merge: true })
+	* @typeParam Options.merge - When true, merges the new type with existing return type. When false, replaces the existing types entirely (defaults to true)
+	* @example
+	* ```typescript
+	* // Merge with existing types (default behavior)
+	* const query = supabase
+	*   .from('users')
+	*   .select()
+	*   .overrideTypes<{ custom_field: string }>()
+	*
+	* // Replace existing types completely
+	* const replaceQuery = supabase
+	*   .from('users')
+	*   .select()
+	*   .overrideTypes<{ id: number; name: string }, { merge: false }>()
+	* ```
+	* @returns A PostgrestBuilder instance with the new type
+	*/ overrideTypes() {
+        return this;
+    }
+};
+//#endregion
+//#region src/PostgrestTransformBuilder.ts
+var PostgrestTransformBuilder = class extends PostgrestBuilder {
+    /**
+	* Perform a SELECT on the query result.
+	*
+	* By default, `.insert()`, `.update()`, `.upsert()`, and `.delete()` do not
+	* return modified rows. By calling this method, modified rows are returned in
+	* `data`.
+	*
+	* @param columns - The columns to retrieve, separated by commas
+	*/ select(columns) {
+        let quoted = false;
+        const cleanedColumns = (columns !== null && columns !== void 0 ? columns : "*").split("").map((c)=>{
+            if (/\s/.test(c) && !quoted) return "";
+            if (c === "\"") quoted = !quoted;
+            return c;
+        }).join("");
+        this.url.searchParams.set("select", cleanedColumns);
+        this.headers.append("Prefer", "return=representation");
+        return this;
+    }
+    /**
+	* Order the query result by `column`.
+	*
+	* You can call this method multiple times to order by multiple columns.
+	*
+	* You can order referenced tables, but it only affects the ordering of the
+	* parent table if you use `!inner` in the query.
+	*
+	* @param column - The column to order by
+	* @param options - Named parameters
+	* @param options.ascending - If `true`, the result will be in ascending order
+	* @param options.nullsFirst - If `true`, `null`s appear first. If `false`,
+	* `null`s appear last.
+	* @param options.referencedTable - Set this to order a referenced table by
+	* its columns
+	* @param options.foreignTable - Deprecated, use `options.referencedTable`
+	* instead
+	*/ order(column, { ascending = true, nullsFirst, foreignTable, referencedTable = foreignTable } = {}) {
+        const key = referencedTable ? `${referencedTable}.order` : "order";
+        const existingOrder = this.url.searchParams.get(key);
+        this.url.searchParams.set(key, `${existingOrder ? `${existingOrder},` : ""}${column}.${ascending ? "asc" : "desc"}${nullsFirst === void 0 ? "" : nullsFirst ? ".nullsfirst" : ".nullslast"}`);
+        return this;
+    }
+    /**
+	* Limit the query result by `count`.
+	*
+	* @param count - The maximum number of rows to return
+	* @param options - Named parameters
+	* @param options.referencedTable - Set this to limit rows of referenced
+	* tables instead of the parent table
+	* @param options.foreignTable - Deprecated, use `options.referencedTable`
+	* instead
+	*/ limit(count, { foreignTable, referencedTable = foreignTable } = {}) {
+        const key = typeof referencedTable === "undefined" ? "limit" : `${referencedTable}.limit`;
+        this.url.searchParams.set(key, `${count}`);
+        return this;
+    }
+    /**
+	* Limit the query result by starting at an offset `from` and ending at the offset `to`.
+	* Only records within this range are returned.
+	* This respects the query order and if there is no order clause the range could behave unexpectedly.
+	* The `from` and `to` values are 0-based and inclusive: `range(1, 3)` will include the second, third
+	* and fourth rows of the query.
+	*
+	* @param from - The starting index from which to limit the result
+	* @param to - The last index to which to limit the result
+	* @param options - Named parameters
+	* @param options.referencedTable - Set this to limit rows of referenced
+	* tables instead of the parent table
+	* @param options.foreignTable - Deprecated, use `options.referencedTable`
+	* instead
+	*/ range(from, to, { foreignTable, referencedTable = foreignTable } = {}) {
+        const keyOffset = typeof referencedTable === "undefined" ? "offset" : `${referencedTable}.offset`;
+        const keyLimit = typeof referencedTable === "undefined" ? "limit" : `${referencedTable}.limit`;
+        this.url.searchParams.set(keyOffset, `${from}`);
+        this.url.searchParams.set(keyLimit, `${to - from + 1}`);
+        return this;
+    }
+    /**
+	* Set the AbortSignal for the fetch request.
+	*
+	* @param signal - The AbortSignal to use for the fetch request
+	*/ abortSignal(signal) {
+        this.signal = signal;
+        return this;
+    }
+    /**
+	* Return `data` as a single object instead of an array of objects.
+	*
+	* Query result must be one row (e.g. using `.limit(1)`), otherwise this
+	* returns an error.
+	*/ single() {
+        this.headers.set("Accept", "application/vnd.pgrst.object+json");
+        return this;
+    }
+    /**
+	* Return `data` as a single object instead of an array of objects.
+	*
+	* Query result must be zero or one row (e.g. using `.limit(1)`), otherwise
+	* this returns an error.
+	*/ maybeSingle() {
+        if (this.method === "GET") this.headers.set("Accept", "application/json");
+        else this.headers.set("Accept", "application/vnd.pgrst.object+json");
+        this.isMaybeSingle = true;
+        return this;
+    }
+    /**
+	* Return `data` as a string in CSV format.
+	*/ csv() {
+        this.headers.set("Accept", "text/csv");
+        return this;
+    }
+    /**
+	* Return `data` as an object in [GeoJSON](https://geojson.org) format.
+	*/ geojson() {
+        this.headers.set("Accept", "application/geo+json");
+        return this;
+    }
+    /**
+	* Return `data` as the EXPLAIN plan for the query.
+	*
+	* You need to enable the
+	* [db_plan_enabled](https://supabase.com/docs/guides/database/debugging-performance#enabling-explain)
+	* setting before using this method.
+	*
+	* @param options - Named parameters
+	*
+	* @param options.analyze - If `true`, the query will be executed and the
+	* actual run time will be returned
+	*
+	* @param options.verbose - If `true`, the query identifier will be returned
+	* and `data` will include the output columns of the query
+	*
+	* @param options.settings - If `true`, include information on configuration
+	* parameters that affect query planning
+	*
+	* @param options.buffers - If `true`, include information on buffer usage
+	*
+	* @param options.wal - If `true`, include information on WAL record generation
+	*
+	* @param options.format - The format of the output, can be `"text"` (default)
+	* or `"json"`
+	*/ explain({ analyze = false, verbose = false, settings = false, buffers = false, wal = false, format = "text" } = {}) {
+        var _this$headers$get;
+        const options = [
+            analyze ? "analyze" : null,
+            verbose ? "verbose" : null,
+            settings ? "settings" : null,
+            buffers ? "buffers" : null,
+            wal ? "wal" : null
+        ].filter(Boolean).join("|");
+        const forMediatype = (_this$headers$get = this.headers.get("Accept")) !== null && _this$headers$get !== void 0 ? _this$headers$get : "application/json";
+        this.headers.set("Accept", `application/vnd.pgrst.plan+${format}; for="${forMediatype}"; options=${options};`);
+        if (format === "json") return this;
+        else return this;
+    }
+    /**
+	* Rollback the query.
+	*
+	* `data` will still be returned, but the query is not committed.
+	*/ rollback() {
+        this.headers.append("Prefer", "tx=rollback");
+        return this;
+    }
+    /**
+	* Override the type of the returned `data`.
+	*
+	* @typeParam NewResult - The new result type to override with
+	* @deprecated Use overrideTypes<yourType, { merge: false }>() method at the end of your call chain instead
+	*/ returns() {
+        return this;
+    }
+    /**
+	* Set the maximum number of rows that can be affected by the query.
+	* Only available in PostgREST v13+ and only works with PATCH and DELETE methods.
+	*
+	* @param value - The maximum number of rows that can be affected
+	*/ maxAffected(value) {
+        this.headers.append("Prefer", "handling=strict");
+        this.headers.append("Prefer", `max-affected=${value}`);
+        return this;
+    }
+};
+//#endregion
+//#region src/PostgrestFilterBuilder.ts
+const PostgrestReservedCharsRegexp = /* @__PURE__ */ new RegExp("[,()]");
+var PostgrestFilterBuilder = class extends PostgrestTransformBuilder {
+    /**
+	* Match only rows where `column` is equal to `value`.
+	*
+	* To check if the value of `column` is NULL, you should use `.is()` instead.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ eq(column, value) {
+        this.url.searchParams.append(column, `eq.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is not equal to `value`.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ neq(column, value) {
+        this.url.searchParams.append(column, `neq.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is greater than `value`.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ gt(column, value) {
+        this.url.searchParams.append(column, `gt.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is greater than or equal to `value`.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ gte(column, value) {
+        this.url.searchParams.append(column, `gte.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is less than `value`.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ lt(column, value) {
+        this.url.searchParams.append(column, `lt.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is less than or equal to `value`.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ lte(column, value) {
+        this.url.searchParams.append(column, `lte.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches `pattern` case-sensitively.
+	*
+	* @param column - The column to filter on
+	* @param pattern - The pattern to match with
+	*/ like(column, pattern) {
+        this.url.searchParams.append(column, `like.${pattern}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches all of `patterns` case-sensitively.
+	*
+	* @param column - The column to filter on
+	* @param patterns - The patterns to match with
+	*/ likeAllOf(column, patterns) {
+        this.url.searchParams.append(column, `like(all).{${patterns.join(",")}}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches any of `patterns` case-sensitively.
+	*
+	* @param column - The column to filter on
+	* @param patterns - The patterns to match with
+	*/ likeAnyOf(column, patterns) {
+        this.url.searchParams.append(column, `like(any).{${patterns.join(",")}}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches `pattern` case-insensitively.
+	*
+	* @param column - The column to filter on
+	* @param pattern - The pattern to match with
+	*/ ilike(column, pattern) {
+        this.url.searchParams.append(column, `ilike.${pattern}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches all of `patterns` case-insensitively.
+	*
+	* @param column - The column to filter on
+	* @param patterns - The patterns to match with
+	*/ ilikeAllOf(column, patterns) {
+        this.url.searchParams.append(column, `ilike(all).{${patterns.join(",")}}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches any of `patterns` case-insensitively.
+	*
+	* @param column - The column to filter on
+	* @param patterns - The patterns to match with
+	*/ ilikeAnyOf(column, patterns) {
+        this.url.searchParams.append(column, `ilike(any).{${patterns.join(",")}}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches the PostgreSQL regex `pattern`
+	* case-sensitively (using the `~` operator).
+	*
+	* @param column - The column to filter on
+	* @param pattern - The PostgreSQL regular expression pattern to match with
+	*/ regexMatch(column, pattern) {
+        this.url.searchParams.append(column, `match.${pattern}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` matches the PostgreSQL regex `pattern`
+	* case-insensitively (using the `~*` operator).
+	*
+	* @param column - The column to filter on
+	* @param pattern - The PostgreSQL regular expression pattern to match with
+	*/ regexIMatch(column, pattern) {
+        this.url.searchParams.append(column, `imatch.${pattern}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` IS `value`.
+	*
+	* For non-boolean columns, this is only relevant for checking if the value of
+	* `column` is NULL by setting `value` to `null`.
+	*
+	* For boolean columns, you can also set `value` to `true` or `false` and it
+	* will behave the same way as `.eq()`.
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ is(column, value) {
+        this.url.searchParams.append(column, `is.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` IS DISTINCT FROM `value`.
+	*
+	* Unlike `.neq()`, this treats `NULL` as a comparable value. Two `NULL` values
+	* are considered equal (not distinct), and comparing `NULL` with any non-NULL
+	* value returns true (distinct).
+	*
+	* @param column - The column to filter on
+	* @param value - The value to filter with
+	*/ isDistinct(column, value) {
+        this.url.searchParams.append(column, `isdistinct.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is included in the `values` array.
+	*
+	* @param column - The column to filter on
+	* @param values - The values array to filter with
+	*/ in(column, values) {
+        const cleanedValues = Array.from(new Set(values)).map((s)=>{
+            if (typeof s === "string" && PostgrestReservedCharsRegexp.test(s)) return `"${s}"`;
+            else return `${s}`;
+        }).join(",");
+        this.url.searchParams.append(column, `in.(${cleanedValues})`);
+        return this;
+    }
+    /**
+	* Match only rows where `column` is NOT included in the `values` array.
+	*
+	* @param column - The column to filter on
+	* @param values - The values array to filter with
+	*/ notIn(column, values) {
+        const cleanedValues = Array.from(new Set(values)).map((s)=>{
+            if (typeof s === "string" && PostgrestReservedCharsRegexp.test(s)) return `"${s}"`;
+            else return `${s}`;
+        }).join(",");
+        this.url.searchParams.append(column, `not.in.(${cleanedValues})`);
+        return this;
+    }
+    /**
+	* Only relevant for jsonb, array, and range columns. Match only rows where
+	* `column` contains every element appearing in `value`.
+	*
+	* @param column - The jsonb, array, or range column to filter on
+	* @param value - The jsonb, array, or range value to filter with
+	*/ contains(column, value) {
+        if (typeof value === "string") this.url.searchParams.append(column, `cs.${value}`);
+        else if (Array.isArray(value)) this.url.searchParams.append(column, `cs.{${value.join(",")}}`);
+        else this.url.searchParams.append(column, `cs.${JSON.stringify(value)}`);
+        return this;
+    }
+    /**
+	* Only relevant for jsonb, array, and range columns. Match only rows where
+	* every element appearing in `column` is contained by `value`.
+	*
+	* @param column - The jsonb, array, or range column to filter on
+	* @param value - The jsonb, array, or range value to filter with
+	*/ containedBy(column, value) {
+        if (typeof value === "string") this.url.searchParams.append(column, `cd.${value}`);
+        else if (Array.isArray(value)) this.url.searchParams.append(column, `cd.{${value.join(",")}}`);
+        else this.url.searchParams.append(column, `cd.${JSON.stringify(value)}`);
+        return this;
+    }
+    /**
+	* Only relevant for range columns. Match only rows where every element in
+	* `column` is greater than any element in `range`.
+	*
+	* @param column - The range column to filter on
+	* @param range - The range to filter with
+	*/ rangeGt(column, range) {
+        this.url.searchParams.append(column, `sr.${range}`);
+        return this;
+    }
+    /**
+	* Only relevant for range columns. Match only rows where every element in
+	* `column` is either contained in `range` or greater than any element in
+	* `range`.
+	*
+	* @param column - The range column to filter on
+	* @param range - The range to filter with
+	*/ rangeGte(column, range) {
+        this.url.searchParams.append(column, `nxl.${range}`);
+        return this;
+    }
+    /**
+	* Only relevant for range columns. Match only rows where every element in
+	* `column` is less than any element in `range`.
+	*
+	* @param column - The range column to filter on
+	* @param range - The range to filter with
+	*/ rangeLt(column, range) {
+        this.url.searchParams.append(column, `sl.${range}`);
+        return this;
+    }
+    /**
+	* Only relevant for range columns. Match only rows where every element in
+	* `column` is either contained in `range` or less than any element in
+	* `range`.
+	*
+	* @param column - The range column to filter on
+	* @param range - The range to filter with
+	*/ rangeLte(column, range) {
+        this.url.searchParams.append(column, `nxr.${range}`);
+        return this;
+    }
+    /**
+	* Only relevant for range columns. Match only rows where `column` is
+	* mutually exclusive to `range` and there can be no element between the two
+	* ranges.
+	*
+	* @param column - The range column to filter on
+	* @param range - The range to filter with
+	*/ rangeAdjacent(column, range) {
+        this.url.searchParams.append(column, `adj.${range}`);
+        return this;
+    }
+    /**
+	* Only relevant for array and range columns. Match only rows where
+	* `column` and `value` have an element in common.
+	*
+	* @param column - The array or range column to filter on
+	* @param value - The array or range value to filter with
+	*/ overlaps(column, value) {
+        if (typeof value === "string") this.url.searchParams.append(column, `ov.${value}`);
+        else this.url.searchParams.append(column, `ov.{${value.join(",")}}`);
+        return this;
+    }
+    /**
+	* Only relevant for text and tsvector columns. Match only rows where
+	* `column` matches the query string in `query`.
+	*
+	* @param column - The text or tsvector column to filter on
+	* @param query - The query text to match with
+	* @param options - Named parameters
+	* @param options.config - The text search configuration to use
+	* @param options.type - Change how the `query` text is interpreted
+	*/ textSearch(column, query, { config, type } = {}) {
+        let typePart = "";
+        if (type === "plain") typePart = "pl";
+        else if (type === "phrase") typePart = "ph";
+        else if (type === "websearch") typePart = "w";
+        const configPart = config === void 0 ? "" : `(${config})`;
+        this.url.searchParams.append(column, `${typePart}fts${configPart}.${query}`);
+        return this;
+    }
+    /**
+	* Match only rows where each column in `query` keys is equal to its
+	* associated value. Shorthand for multiple `.eq()`s.
+	*
+	* @param query - The object to filter with, with column names as keys mapped
+	* to their filter values
+	*/ match(query) {
+        Object.entries(query).forEach(([column, value])=>{
+            this.url.searchParams.append(column, `eq.${value}`);
+        });
+        return this;
+    }
+    /**
+	* Match only rows which doesn't satisfy the filter.
+	*
+	* Unlike most filters, `opearator` and `value` are used as-is and need to
+	* follow [PostgREST
+	* syntax](https://postgrest.org/en/stable/api.html#operators). You also need
+	* to make sure they are properly sanitized.
+	*
+	* @param column - The column to filter on
+	* @param operator - The operator to be negated to filter with, following
+	* PostgREST syntax
+	* @param value - The value to filter with, following PostgREST syntax
+	*/ not(column, operator, value) {
+        this.url.searchParams.append(column, `not.${operator}.${value}`);
+        return this;
+    }
+    /**
+	* Match only rows which satisfy at least one of the filters.
+	*
+	* Unlike most filters, `filters` is used as-is and needs to follow [PostgREST
+	* syntax](https://postgrest.org/en/stable/api.html#operators). You also need
+	* to make sure it's properly sanitized.
+	*
+	* It's currently not possible to do an `.or()` filter across multiple tables.
+	*
+	* @param filters - The filters to use, following PostgREST syntax
+	* @param options - Named parameters
+	* @param options.referencedTable - Set this to filter on referenced tables
+	* instead of the parent table
+	* @param options.foreignTable - Deprecated, use `referencedTable` instead
+	*/ or(filters, { foreignTable, referencedTable = foreignTable } = {}) {
+        const key = referencedTable ? `${referencedTable}.or` : "or";
+        this.url.searchParams.append(key, `(${filters})`);
+        return this;
+    }
+    /**
+	* Match only rows which satisfy the filter. This is an escape hatch - you
+	* should use the specific filter methods wherever possible.
+	*
+	* Unlike most filters, `opearator` and `value` are used as-is and need to
+	* follow [PostgREST
+	* syntax](https://postgrest.org/en/stable/api.html#operators). You also need
+	* to make sure they are properly sanitized.
+	*
+	* @param column - The column to filter on
+	* @param operator - The operator to filter with, following PostgREST syntax
+	* @param value - The value to filter with, following PostgREST syntax
+	*/ filter(column, operator, value) {
+        this.url.searchParams.append(column, `${operator}.${value}`);
+        return this;
+    }
+};
+//#endregion
+//#region src/PostgrestQueryBuilder.ts
+var PostgrestQueryBuilder = class {
+    /**
+	* Creates a query builder scoped to a Postgres table or view.
+	*
+	* @example
+	* ```ts
+	* import PostgrestQueryBuilder from '@supabase/postgrest-js'
+	*
+	* const query = new PostgrestQueryBuilder(
+	*   new URL('https://xyzcompany.supabase.co/rest/v1/users'),
+	*   { headers: { apikey: 'public-anon-key' } }
+	* )
+	* ```
+	*/ constructor(url, { headers = {}, schema, fetch: fetch$1, urlLengthLimit = 8e3 }){
+        this.url = url;
+        this.headers = new Headers(headers);
+        this.schema = schema;
+        this.fetch = fetch$1;
+        this.urlLengthLimit = urlLengthLimit;
+    }
+    /**
+	* Clone URL and headers to prevent shared state between operations.
+	*/ cloneRequestState() {
+        return {
+            url: new URL(this.url.toString()),
+            headers: new Headers(this.headers)
+        };
+    }
+    /**
+	* Perform a SELECT query on the table or view.
+	*
+	* @param columns - The columns to retrieve, separated by commas. Columns can be renamed when returned with `customName:columnName`
+	*
+	* @param options - Named parameters
+	*
+	* @param options.head - When set to `true`, `data` will not be returned.
+	* Useful if you only need the count.
+	*
+	* @param options.count - Count algorithm to use to count rows in the table or view.
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*
+	* @remarks
+	* When using `count` with `.range()` or `.limit()`, the returned `count` is the total number of rows
+	* that match your filters, not the number of rows in the current page. Use this to build pagination UI.
+	*/ select(columns, options) {
+        const { head = false, count } = options !== null && options !== void 0 ? options : {};
+        const method = head ? "HEAD" : "GET";
+        let quoted = false;
+        const cleanedColumns = (columns !== null && columns !== void 0 ? columns : "*").split("").map((c)=>{
+            if (/\s/.test(c) && !quoted) return "";
+            if (c === "\"") quoted = !quoted;
+            return c;
+        }).join("");
+        const { url, headers } = this.cloneRequestState();
+        url.searchParams.set("select", cleanedColumns);
+        if (count) headers.append("Prefer", `count=${count}`);
+        return new PostgrestFilterBuilder({
+            method,
+            url,
+            headers,
+            schema: this.schema,
+            fetch: this.fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+    /**
+	* Perform an INSERT into the table or view.
+	*
+	* By default, inserted rows are not returned. To return it, chain the call
+	* with `.select()`.
+	*
+	* @param values - The values to insert. Pass an object to insert a single row
+	* or an array to insert multiple rows.
+	*
+	* @param options - Named parameters
+	*
+	* @param options.count - Count algorithm to use to count inserted rows.
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*
+	* @param options.defaultToNull - Make missing fields default to `null`.
+	* Otherwise, use the default value for the column. Only applies for bulk
+	* inserts.
+	*/ insert(values, { count, defaultToNull = true } = {}) {
+        var _this$fetch;
+        const method = "POST";
+        const { url, headers } = this.cloneRequestState();
+        if (count) headers.append("Prefer", `count=${count}`);
+        if (!defaultToNull) headers.append("Prefer", `missing=default`);
+        if (Array.isArray(values)) {
+            const columns = values.reduce((acc, x)=>acc.concat(Object.keys(x)), []);
+            if (columns.length > 0) {
+                const uniqueColumns = [
+                    ...new Set(columns)
+                ].map((column)=>`"${column}"`);
+                url.searchParams.set("columns", uniqueColumns.join(","));
+            }
+        }
+        return new PostgrestFilterBuilder({
+            method,
+            url,
+            headers,
+            schema: this.schema,
+            body: values,
+            fetch: (_this$fetch = this.fetch) !== null && _this$fetch !== void 0 ? _this$fetch : fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+    /**
+	* Perform an UPSERT on the table or view. Depending on the column(s) passed
+	* to `onConflict`, `.upsert()` allows you to perform the equivalent of
+	* `.insert()` if a row with the corresponding `onConflict` columns doesn't
+	* exist, or if it does exist, perform an alternative action depending on
+	* `ignoreDuplicates`.
+	*
+	* By default, upserted rows are not returned. To return it, chain the call
+	* with `.select()`.
+	*
+	* @param values - The values to upsert with. Pass an object to upsert a
+	* single row or an array to upsert multiple rows.
+	*
+	* @param options - Named parameters
+	*
+	* @param options.onConflict - Comma-separated UNIQUE column(s) to specify how
+	* duplicate rows are determined. Two rows are duplicates if all the
+	* `onConflict` columns are equal.
+	*
+	* @param options.ignoreDuplicates - If `true`, duplicate rows are ignored. If
+	* `false`, duplicate rows are merged with existing rows.
+	*
+	* @param options.count - Count algorithm to use to count upserted rows.
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*
+	* @param options.defaultToNull - Make missing fields default to `null`.
+	* Otherwise, use the default value for the column. This only applies when
+	* inserting new rows, not when merging with existing rows under
+	* `ignoreDuplicates: false`. This also only applies when doing bulk upserts.
+	*
+	* @example Upsert a single row using a unique key
+	* ```ts
+	* // Upserting a single row, overwriting based on the 'username' unique column
+	* const { data, error } = await supabase
+	*   .from('users')
+	*   .upsert({ username: 'supabot' }, { onConflict: 'username' })
+	*
+	* // Example response:
+	* // {
+	* //   data: [
+	* //     { id: 4, message: 'bar', username: 'supabot' }
+	* //   ],
+	* //   error: null
+	* // }
+	* ```
+	*
+	* @example Upsert with conflict resolution and exact row counting
+	* ```ts
+	* // Upserting and returning exact count
+	* const { data, error, count } = await supabase
+	*   .from('users')
+	*   .upsert(
+	*     {
+	*       id: 3,
+	*       message: 'foo',
+	*       username: 'supabot'
+	*     },
+	*     {
+	*       onConflict: 'username',
+	*       count: 'exact'
+	*     }
+	*   )
+	*
+	* // Example response:
+	* // {
+	* //   data: [
+	* //     {
+	* //       id: 42,
+	* //       handle: "saoirse",
+	* //       display_name: "Saoirse"
+	* //     }
+	* //   ],
+	* //   count: 1,
+	* //   error: null
+	* // }
+	* ```
+	*/ upsert(values, { onConflict, ignoreDuplicates = false, count, defaultToNull = true } = {}) {
+        var _this$fetch2;
+        const method = "POST";
+        const { url, headers } = this.cloneRequestState();
+        headers.append("Prefer", `resolution=${ignoreDuplicates ? "ignore" : "merge"}-duplicates`);
+        if (onConflict !== void 0) url.searchParams.set("on_conflict", onConflict);
+        if (count) headers.append("Prefer", `count=${count}`);
+        if (!defaultToNull) headers.append("Prefer", "missing=default");
+        if (Array.isArray(values)) {
+            const columns = values.reduce((acc, x)=>acc.concat(Object.keys(x)), []);
+            if (columns.length > 0) {
+                const uniqueColumns = [
+                    ...new Set(columns)
+                ].map((column)=>`"${column}"`);
+                url.searchParams.set("columns", uniqueColumns.join(","));
+            }
+        }
+        return new PostgrestFilterBuilder({
+            method,
+            url,
+            headers,
+            schema: this.schema,
+            body: values,
+            fetch: (_this$fetch2 = this.fetch) !== null && _this$fetch2 !== void 0 ? _this$fetch2 : fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+    /**
+	* Perform an UPDATE on the table or view.
+	*
+	* By default, updated rows are not returned. To return it, chain the call
+	* with `.select()` after filters.
+	*
+	* @param values - The values to update with
+	*
+	* @param options - Named parameters
+	*
+	* @param options.count - Count algorithm to use to count updated rows.
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*/ update(values, { count } = {}) {
+        var _this$fetch3;
+        const method = "PATCH";
+        const { url, headers } = this.cloneRequestState();
+        if (count) headers.append("Prefer", `count=${count}`);
+        return new PostgrestFilterBuilder({
+            method,
+            url,
+            headers,
+            schema: this.schema,
+            body: values,
+            fetch: (_this$fetch3 = this.fetch) !== null && _this$fetch3 !== void 0 ? _this$fetch3 : fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+    /**
+	* Perform a DELETE on the table or view.
+	*
+	* By default, deleted rows are not returned. To return it, chain the call
+	* with `.select()` after filters.
+	*
+	* @param options - Named parameters
+	*
+	* @param options.count - Count algorithm to use to count deleted rows.
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*/ delete({ count } = {}) {
+        var _this$fetch4;
+        const method = "DELETE";
+        const { url, headers } = this.cloneRequestState();
+        if (count) headers.append("Prefer", `count=${count}`);
+        return new PostgrestFilterBuilder({
+            method,
+            url,
+            headers,
+            schema: this.schema,
+            fetch: (_this$fetch4 = this.fetch) !== null && _this$fetch4 !== void 0 ? _this$fetch4 : fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+};
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/typeof.js
+function _typeof(o) {
+    "@babel/helpers - typeof";
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
+        return typeof o$1;
+    } : function(o$1) {
+        return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+    }, _typeof(o);
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/toPrimitive.js
+function toPrimitive(t, r) {
+    if ("object" != _typeof(t) || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+        var i = e.call(t, r || "default");
+        if ("object" != _typeof(i)) return i;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/toPropertyKey.js
+function toPropertyKey(t) {
+    var i = toPrimitive(t, "string");
+    return "symbol" == _typeof(i) ? i : i + "";
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/defineProperty.js
+function _defineProperty(e, r, t) {
+    return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+        value: t,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+    }) : e[r] = t, e;
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/objectSpread2.js
+function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+        var o = Object.getOwnPropertySymbols(e);
+        r && (o = o.filter(function(r$1) {
+            return Object.getOwnPropertyDescriptor(e, r$1).enumerable;
+        })), t.push.apply(t, o);
+    }
+    return t;
+}
+function _objectSpread2(e) {
+    for(var r = 1; r < arguments.length; r++){
+        var t = null != arguments[r] ? arguments[r] : {};
+        r % 2 ? ownKeys(Object(t), !0).forEach(function(r$1) {
+            _defineProperty(e, r$1, t[r$1]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r$1) {
+            Object.defineProperty(e, r$1, Object.getOwnPropertyDescriptor(t, r$1));
+        });
+    }
+    return e;
+}
+//#endregion
+//#region src/PostgrestClient.ts
+/**
+* PostgREST client.
+*
+* @typeParam Database - Types for the schema from the [type
+* generator](https://supabase.com/docs/reference/javascript/next/typescript-support)
+*
+* @typeParam SchemaName - Postgres schema to switch to. Must be a string
+* literal, the same one passed to the constructor. If the schema is not
+* `"public"`, this must be supplied manually.
+*/ var PostgrestClient = class PostgrestClient {
+    /**
+	* Creates a PostgREST client.
+	*
+	* @param url - URL of the PostgREST endpoint
+	* @param options - Named parameters
+	* @param options.headers - Custom headers
+	* @param options.schema - Postgres schema to switch to
+	* @param options.fetch - Custom fetch
+	* @param options.timeout - Optional timeout in milliseconds for all requests. When set, requests will automatically abort after this duration to prevent indefinite hangs.
+	* @param options.urlLengthLimit - Maximum URL length in characters before warnings/errors are triggered. Defaults to 8000.
+	* @example
+	* ```ts
+	* import PostgrestClient from '@supabase/postgrest-js'
+	*
+	* const postgrest = new PostgrestClient('https://xyzcompany.supabase.co/rest/v1', {
+	*   headers: { apikey: 'public-anon-key' },
+	*   schema: 'public',
+	*   timeout: 30000, // 30 second timeout
+	* })
+	* ```
+	*/ constructor(url, { headers = {}, schema, fetch: fetch$1, timeout, urlLengthLimit = 8e3 } = {}){
+        this.url = url;
+        this.headers = new Headers(headers);
+        this.schemaName = schema;
+        this.urlLengthLimit = urlLengthLimit;
+        const originalFetch = fetch$1 !== null && fetch$1 !== void 0 ? fetch$1 : globalThis.fetch;
+        if (timeout !== void 0 && timeout > 0) this.fetch = (input, init)=>{
+            const controller = new AbortController();
+            const timeoutId = setTimeout(()=>controller.abort(), timeout);
+            const existingSignal = init === null || init === void 0 ? void 0 : init.signal;
+            if (existingSignal) {
+                if (existingSignal.aborted) {
+                    clearTimeout(timeoutId);
+                    return originalFetch(input, init);
+                }
+                const abortHandler = ()=>{
+                    clearTimeout(timeoutId);
+                    controller.abort();
+                };
+                existingSignal.addEventListener("abort", abortHandler, {
+                    once: true
+                });
+                return originalFetch(input, _objectSpread2(_objectSpread2({}, init), {}, {
+                    signal: controller.signal
+                })).finally(()=>{
+                    clearTimeout(timeoutId);
+                    existingSignal.removeEventListener("abort", abortHandler);
+                });
+            }
+            return originalFetch(input, _objectSpread2(_objectSpread2({}, init), {}, {
+                signal: controller.signal
+            })).finally(()=>clearTimeout(timeoutId));
+        };
+        else this.fetch = originalFetch;
+    }
+    /**
+	* Perform a query on a table or a view.
+	*
+	* @param relation - The table or view name to query
+	*/ from(relation) {
+        if (!relation || typeof relation !== "string" || relation.trim() === "") throw new Error("Invalid relation name: relation must be a non-empty string.");
+        return new PostgrestQueryBuilder(new URL(`${this.url}/${relation}`), {
+            headers: new Headers(this.headers),
+            schema: this.schemaName,
+            fetch: this.fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+    /**
+	* Select a schema to query or perform an function (rpc) call.
+	*
+	* The schema needs to be on the list of exposed schemas inside Supabase.
+	*
+	* @param schema - The schema to query
+	*/ schema(schema) {
+        return new PostgrestClient(this.url, {
+            headers: this.headers,
+            schema,
+            fetch: this.fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+    /**
+	* Perform a function call.
+	*
+	* @param fn - The function name to call
+	* @param args - The arguments to pass to the function call
+	* @param options - Named parameters
+	* @param options.head - When set to `true`, `data` will not be returned.
+	* Useful if you only need the count.
+	* @param options.get - When set to `true`, the function will be called with
+	* read-only access mode.
+	* @param options.count - Count algorithm to use to count rows returned by the
+	* function. Only applicable for [set-returning
+	* functions](https://www.postgresql.org/docs/current/functions-srf.html).
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*
+	* @example
+	* ```ts
+	* // For cross-schema functions where type inference fails, use overrideTypes:
+	* const { data } = await supabase
+	*   .schema('schema_b')
+	*   .rpc('function_a', {})
+	*   .overrideTypes<{ id: string; user_id: string }[]>()
+	* ```
+	*/ rpc(fn, args = {}, { head = false, get = false, count } = {}) {
+        var _this$fetch;
+        let method;
+        const url = new URL(`${this.url}/rpc/${fn}`);
+        let body;
+        const _isObject = (v)=>v !== null && typeof v === "object" && (!Array.isArray(v) || v.some(_isObject));
+        const _hasObjectArg = head && Object.values(args).some(_isObject);
+        if (_hasObjectArg) {
+            method = "POST";
+            body = args;
+        } else if (head || get) {
+            method = head ? "HEAD" : "GET";
+            Object.entries(args).filter(([_, value])=>value !== void 0).map(([name, value])=>[
+                    name,
+                    Array.isArray(value) ? `{${value.join(",")}}` : `${value}`
+                ]).forEach(([name, value])=>{
+                url.searchParams.append(name, value);
+            });
+        } else {
+            method = "POST";
+            body = args;
+        }
+        const headers = new Headers(this.headers);
+        if (_hasObjectArg) headers.set("Prefer", count ? `count=${count},return=minimal` : "return=minimal");
+        else if (count) headers.set("Prefer", `count=${count}`);
+        return new PostgrestFilterBuilder({
+            method,
+            url,
+            headers,
+            schema: this.schemaName,
+            body,
+            fetch: (_this$fetch = this.fetch) !== null && _this$fetch !== void 0 ? _this$fetch : fetch,
+            urlLengthLimit: this.urlLengthLimit
+        });
+    }
+};
+//#endregion
+//#region src/index.ts
+var src_default = {
+    PostgrestClient,
+    PostgrestQueryBuilder,
+    PostgrestFilterBuilder,
+    PostgrestTransformBuilder,
+    PostgrestBuilder,
+    PostgrestError
+};
+;
+ //# sourceMappingURL=index.mjs.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * Utilities for creating WebSocket instances across runtimes.
+ */ __turbopack_context__.s([
+    "WebSocketFactory",
+    ()=>WebSocketFactory,
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+class WebSocketFactory {
+    /**
+     * Static-only utility – prevent instantiation.
+     */ constructor(){}
+    static detectEnvironment() {
+        var _a;
+        if (typeof WebSocket !== 'undefined') {
+            return {
+                type: 'native',
+                constructor: WebSocket
+            };
+        }
+        if (typeof globalThis !== 'undefined' && typeof globalThis.WebSocket !== 'undefined') {
+            return {
+                type: 'native',
+                constructor: globalThis.WebSocket
+            };
+        }
+        if (("TURBOPACK compile-time value", "object") !== 'undefined' && typeof /*TURBOPACK member replacement*/ __turbopack_context__.g.WebSocket !== 'undefined') {
+            return {
+                type: 'native',
+                constructor: /*TURBOPACK member replacement*/ __turbopack_context__.g.WebSocket
+            };
+        }
+        if (typeof globalThis !== 'undefined' && typeof globalThis.WebSocketPair !== 'undefined' && typeof globalThis.WebSocket === 'undefined') {
+            return {
+                type: 'cloudflare',
+                error: 'Cloudflare Workers detected. WebSocket clients are not supported in Cloudflare Workers.',
+                workaround: 'Use Cloudflare Workers WebSocket API for server-side WebSocket handling, or deploy to a different runtime.'
+            };
+        }
+        if (typeof globalThis !== 'undefined' && globalThis.EdgeRuntime || typeof navigator !== 'undefined' && ((_a = navigator.userAgent) === null || _a === void 0 ? void 0 : _a.includes('Vercel-Edge'))) {
+            return {
+                type: 'unsupported',
+                error: 'Edge runtime detected (Vercel Edge/Netlify Edge). WebSockets are not supported in edge functions.',
+                workaround: 'Use serverless functions or a different deployment target for WebSocket functionality.'
+            };
+        }
+        // Use dynamic property access to avoid Next.js Edge Runtime static analysis warnings
+        const _process = globalThis['process'];
+        if (_process) {
+            const processVersions = _process['versions'];
+            if (processVersions && processVersions['node']) {
+                // Remove 'v' prefix if present and parse the major version
+                const versionString = processVersions['node'];
+                const nodeVersion = parseInt(versionString.replace(/^v/, '').split('.')[0]);
+                // Node.js 22+ should have native WebSocket
+                if (nodeVersion >= 22) {
+                    // Check if native WebSocket is available (should be in Node.js 22+)
+                    if (typeof globalThis.WebSocket !== 'undefined') {
+                        return {
+                            type: 'native',
+                            constructor: globalThis.WebSocket
+                        };
+                    }
+                    // If not available, user needs to provide it
+                    return {
+                        type: 'unsupported',
+                        error: `Node.js ${nodeVersion} detected but native WebSocket not found.`,
+                        workaround: 'Provide a WebSocket implementation via the transport option.'
+                    };
+                }
+                // Node.js < 22 doesn't have native WebSocket
+                return {
+                    type: 'unsupported',
+                    error: `Node.js ${nodeVersion} detected without native WebSocket support.`,
+                    workaround: 'For Node.js < 22, install "ws" package and provide it via the transport option:\n' + 'import ws from "ws"\n' + 'new RealtimeClient(url, { transport: ws })'
+                };
+            }
+        }
+        return {
+            type: 'unsupported',
+            error: 'Unknown JavaScript runtime without WebSocket support.',
+            workaround: "Ensure you're running in a supported environment (browser, Node.js, Deno) or provide a custom WebSocket implementation."
+        };
+    }
+    /**
+     * Returns the best available WebSocket constructor for the current runtime.
+     *
+     * @example
+     * ```ts
+     * const WS = WebSocketFactory.getWebSocketConstructor()
+     * const socket = new WS('wss://realtime.supabase.co/socket')
+     * ```
+     */ static getWebSocketConstructor() {
+        const env = this.detectEnvironment();
+        if (env.constructor) {
+            return env.constructor;
+        }
+        let errorMessage = env.error || 'WebSocket not supported in this environment.';
+        if (env.workaround) {
+            errorMessage += `\n\nSuggested solution: ${env.workaround}`;
+        }
+        throw new Error(errorMessage);
+    }
+    /**
+     * Creates a WebSocket using the detected constructor.
+     *
+     * @example
+     * ```ts
+     * const socket = WebSocketFactory.createWebSocket('wss://realtime.supabase.co/socket')
+     * ```
+     */ static createWebSocket(url, protocols) {
+        const WS = this.getWebSocketConstructor();
+        return new WS(url, protocols);
+    }
+    /**
+     * Detects whether the runtime can establish WebSocket connections.
+     *
+     * @example
+     * ```ts
+     * if (!WebSocketFactory.isWebSocketSupported()) {
+     *   console.warn('Falling back to long polling')
+     * }
+     * ```
+     */ static isWebSocketSupported() {
+        try {
+            const env = this.detectEnvironment();
+            return env.type === 'native' || env.type === 'ws';
+        } catch (_a) {
+            return false;
+        }
+    }
+}
+const __TURBOPACK__default__export__ = WebSocketFactory;
+ //# sourceMappingURL=websocket-factory.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/version.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Generated automatically during releases by scripts/update-version-files.ts
+// This file provides runtime access to the package version for:
+// - HTTP request headers (e.g., X-Client-Info header for API requests)
+// - Debugging and support (identifying which version is running)
+// - Telemetry and logging (version reporting in errors/analytics)
+// - Ensuring build artifacts match the published package version
+__turbopack_context__.s([
+    "version",
+    ()=>version
+]);
+const version = '2.95.3'; //# sourceMappingURL=version.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/constants.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "CHANNEL_EVENTS",
+    ()=>CHANNEL_EVENTS,
+    "CHANNEL_STATES",
+    ()=>CHANNEL_STATES,
+    "CONNECTION_STATE",
+    ()=>CONNECTION_STATE,
+    "DEFAULT_TIMEOUT",
+    ()=>DEFAULT_TIMEOUT,
+    "DEFAULT_VERSION",
+    ()=>DEFAULT_VERSION,
+    "DEFAULT_VSN",
+    ()=>DEFAULT_VSN,
+    "MAX_PUSH_BUFFER_SIZE",
+    ()=>MAX_PUSH_BUFFER_SIZE,
+    "SOCKET_STATES",
+    ()=>SOCKET_STATES,
+    "TRANSPORTS",
+    ()=>TRANSPORTS,
+    "VERSION",
+    ()=>VERSION,
+    "VSN_1_0_0",
+    ()=>VSN_1_0_0,
+    "VSN_2_0_0",
+    ()=>VSN_2_0_0,
+    "WS_CLOSE_NORMAL",
+    ()=>WS_CLOSE_NORMAL
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$version$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/version.js [app-ssr] (ecmascript)");
+;
+const DEFAULT_VERSION = `realtime-js/${__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$version$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["version"]}`;
+const VSN_1_0_0 = '1.0.0';
+const VSN_2_0_0 = '2.0.0';
+const DEFAULT_VSN = VSN_2_0_0;
+const VERSION = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$version$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["version"];
+const DEFAULT_TIMEOUT = 10000;
+const WS_CLOSE_NORMAL = 1000;
+const MAX_PUSH_BUFFER_SIZE = 100;
+var SOCKET_STATES;
+(function(SOCKET_STATES) {
+    SOCKET_STATES[SOCKET_STATES["connecting"] = 0] = "connecting";
+    SOCKET_STATES[SOCKET_STATES["open"] = 1] = "open";
+    SOCKET_STATES[SOCKET_STATES["closing"] = 2] = "closing";
+    SOCKET_STATES[SOCKET_STATES["closed"] = 3] = "closed";
+})(SOCKET_STATES || (SOCKET_STATES = {}));
+var CHANNEL_STATES;
+(function(CHANNEL_STATES) {
+    CHANNEL_STATES["closed"] = "closed";
+    CHANNEL_STATES["errored"] = "errored";
+    CHANNEL_STATES["joined"] = "joined";
+    CHANNEL_STATES["joining"] = "joining";
+    CHANNEL_STATES["leaving"] = "leaving";
+})(CHANNEL_STATES || (CHANNEL_STATES = {}));
+var CHANNEL_EVENTS;
+(function(CHANNEL_EVENTS) {
+    CHANNEL_EVENTS["close"] = "phx_close";
+    CHANNEL_EVENTS["error"] = "phx_error";
+    CHANNEL_EVENTS["join"] = "phx_join";
+    CHANNEL_EVENTS["reply"] = "phx_reply";
+    CHANNEL_EVENTS["leave"] = "phx_leave";
+    CHANNEL_EVENTS["access_token"] = "access_token";
+})(CHANNEL_EVENTS || (CHANNEL_EVENTS = {}));
+var TRANSPORTS;
+(function(TRANSPORTS) {
+    TRANSPORTS["websocket"] = "websocket";
+})(TRANSPORTS || (TRANSPORTS = {}));
+var CONNECTION_STATE;
+(function(CONNECTION_STATE) {
+    CONNECTION_STATE["Connecting"] = "connecting";
+    CONNECTION_STATE["Open"] = "open";
+    CONNECTION_STATE["Closing"] = "closing";
+    CONNECTION_STATE["Closed"] = "closed";
+})(CONNECTION_STATE || (CONNECTION_STATE = {})); //# sourceMappingURL=constants.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/serializer.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Serializer
+]);
+class Serializer {
+    constructor(allowedMetadataKeys){
+        this.HEADER_LENGTH = 1;
+        this.USER_BROADCAST_PUSH_META_LENGTH = 6;
+        this.KINDS = {
+            userBroadcastPush: 3,
+            userBroadcast: 4
+        };
+        this.BINARY_ENCODING = 0;
+        this.JSON_ENCODING = 1;
+        this.BROADCAST_EVENT = 'broadcast';
+        this.allowedMetadataKeys = [];
+        this.allowedMetadataKeys = allowedMetadataKeys !== null && allowedMetadataKeys !== void 0 ? allowedMetadataKeys : [];
+    }
+    encode(msg, callback) {
+        if (msg.event === this.BROADCAST_EVENT && !(msg.payload instanceof ArrayBuffer) && typeof msg.payload.event === 'string') {
+            return callback(this._binaryEncodeUserBroadcastPush(msg));
+        }
+        let payload = [
+            msg.join_ref,
+            msg.ref,
+            msg.topic,
+            msg.event,
+            msg.payload
+        ];
+        return callback(JSON.stringify(payload));
+    }
+    _binaryEncodeUserBroadcastPush(message) {
+        var _a;
+        if (this._isArrayBuffer((_a = message.payload) === null || _a === void 0 ? void 0 : _a.payload)) {
+            return this._encodeBinaryUserBroadcastPush(message);
+        } else {
+            return this._encodeJsonUserBroadcastPush(message);
+        }
+    }
+    _encodeBinaryUserBroadcastPush(message) {
+        var _a, _b;
+        const userPayload = (_b = (_a = message.payload) === null || _a === void 0 ? void 0 : _a.payload) !== null && _b !== void 0 ? _b : new ArrayBuffer(0);
+        return this._encodeUserBroadcastPush(message, this.BINARY_ENCODING, userPayload);
+    }
+    _encodeJsonUserBroadcastPush(message) {
+        var _a, _b;
+        const userPayload = (_b = (_a = message.payload) === null || _a === void 0 ? void 0 : _a.payload) !== null && _b !== void 0 ? _b : {};
+        const encoder = new TextEncoder();
+        const encodedUserPayload = encoder.encode(JSON.stringify(userPayload)).buffer;
+        return this._encodeUserBroadcastPush(message, this.JSON_ENCODING, encodedUserPayload);
+    }
+    _encodeUserBroadcastPush(message, encodingType, encodedPayload) {
+        var _a, _b;
+        const topic = message.topic;
+        const ref = (_a = message.ref) !== null && _a !== void 0 ? _a : '';
+        const joinRef = (_b = message.join_ref) !== null && _b !== void 0 ? _b : '';
+        const userEvent = message.payload.event;
+        // Filter metadata based on allowed keys
+        const rest = this.allowedMetadataKeys ? this._pick(message.payload, this.allowedMetadataKeys) : {};
+        const metadata = Object.keys(rest).length === 0 ? '' : JSON.stringify(rest);
+        // Validate lengths don't exceed uint8 max value (255)
+        if (joinRef.length > 255) {
+            throw new Error(`joinRef length ${joinRef.length} exceeds maximum of 255`);
+        }
+        if (ref.length > 255) {
+            throw new Error(`ref length ${ref.length} exceeds maximum of 255`);
+        }
+        if (topic.length > 255) {
+            throw new Error(`topic length ${topic.length} exceeds maximum of 255`);
+        }
+        if (userEvent.length > 255) {
+            throw new Error(`userEvent length ${userEvent.length} exceeds maximum of 255`);
+        }
+        if (metadata.length > 255) {
+            throw new Error(`metadata length ${metadata.length} exceeds maximum of 255`);
+        }
+        const metaLength = this.USER_BROADCAST_PUSH_META_LENGTH + joinRef.length + ref.length + topic.length + userEvent.length + metadata.length;
+        const header = new ArrayBuffer(this.HEADER_LENGTH + metaLength);
+        let view = new DataView(header);
+        let offset = 0;
+        view.setUint8(offset++, this.KINDS.userBroadcastPush); // kind
+        view.setUint8(offset++, joinRef.length);
+        view.setUint8(offset++, ref.length);
+        view.setUint8(offset++, topic.length);
+        view.setUint8(offset++, userEvent.length);
+        view.setUint8(offset++, metadata.length);
+        view.setUint8(offset++, encodingType);
+        Array.from(joinRef, (char)=>view.setUint8(offset++, char.charCodeAt(0)));
+        Array.from(ref, (char)=>view.setUint8(offset++, char.charCodeAt(0)));
+        Array.from(topic, (char)=>view.setUint8(offset++, char.charCodeAt(0)));
+        Array.from(userEvent, (char)=>view.setUint8(offset++, char.charCodeAt(0)));
+        Array.from(metadata, (char)=>view.setUint8(offset++, char.charCodeAt(0)));
+        var combined = new Uint8Array(header.byteLength + encodedPayload.byteLength);
+        combined.set(new Uint8Array(header), 0);
+        combined.set(new Uint8Array(encodedPayload), header.byteLength);
+        return combined.buffer;
+    }
+    decode(rawPayload, callback) {
+        if (this._isArrayBuffer(rawPayload)) {
+            let result = this._binaryDecode(rawPayload);
+            return callback(result);
+        }
+        if (typeof rawPayload === 'string') {
+            const jsonPayload = JSON.parse(rawPayload);
+            const [join_ref, ref, topic, event, payload] = jsonPayload;
+            return callback({
+                join_ref,
+                ref,
+                topic,
+                event,
+                payload
+            });
+        }
+        return callback({});
+    }
+    _binaryDecode(buffer) {
+        const view = new DataView(buffer);
+        const kind = view.getUint8(0);
+        const decoder = new TextDecoder();
+        switch(kind){
+            case this.KINDS.userBroadcast:
+                return this._decodeUserBroadcast(buffer, view, decoder);
+        }
+    }
+    _decodeUserBroadcast(buffer, view, decoder) {
+        const topicSize = view.getUint8(1);
+        const userEventSize = view.getUint8(2);
+        const metadataSize = view.getUint8(3);
+        const payloadEncoding = view.getUint8(4);
+        let offset = this.HEADER_LENGTH + 4;
+        const topic = decoder.decode(buffer.slice(offset, offset + topicSize));
+        offset = offset + topicSize;
+        const userEvent = decoder.decode(buffer.slice(offset, offset + userEventSize));
+        offset = offset + userEventSize;
+        const metadata = decoder.decode(buffer.slice(offset, offset + metadataSize));
+        offset = offset + metadataSize;
+        const payload = buffer.slice(offset, buffer.byteLength);
+        const parsedPayload = payloadEncoding === this.JSON_ENCODING ? JSON.parse(decoder.decode(payload)) : payload;
+        const data = {
+            type: this.BROADCAST_EVENT,
+            event: userEvent,
+            payload: parsedPayload
+        };
+        // Metadata is optional and always JSON encoded
+        if (metadataSize > 0) {
+            data['meta'] = JSON.parse(metadata);
+        }
+        return {
+            join_ref: null,
+            ref: null,
+            topic: topic,
+            event: this.BROADCAST_EVENT,
+            payload: data
+        };
+    }
+    _isArrayBuffer(buffer) {
+        var _a;
+        return buffer instanceof ArrayBuffer || ((_a = buffer === null || buffer === void 0 ? void 0 : buffer.constructor) === null || _a === void 0 ? void 0 : _a.name) === 'ArrayBuffer';
+    }
+    _pick(obj, keys) {
+        if (!obj || typeof obj !== 'object') {
+            return {};
+        }
+        return Object.fromEntries(Object.entries(obj).filter(([key])=>keys.includes(key)));
+    }
+} //# sourceMappingURL=serializer.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/timer.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * Creates a timer that accepts a `timerCalc` function to perform calculated timeout retries, such as exponential backoff.
+ *
+ * @example
+ *    let reconnectTimer = new Timer(() => this.connect(), function(tries){
+ *      return [1000, 5000, 10000][tries - 1] || 10000
+ *    })
+ *    reconnectTimer.scheduleTimeout() // fires after 1000
+ *    reconnectTimer.scheduleTimeout() // fires after 5000
+ *    reconnectTimer.reset()
+ *    reconnectTimer.scheduleTimeout() // fires after 1000
+ */ __turbopack_context__.s([
+    "default",
+    ()=>Timer
+]);
+class Timer {
+    constructor(callback, timerCalc){
+        this.callback = callback;
+        this.timerCalc = timerCalc;
+        this.timer = undefined;
+        this.tries = 0;
+        this.callback = callback;
+        this.timerCalc = timerCalc;
+    }
+    reset() {
+        this.tries = 0;
+        clearTimeout(this.timer);
+        this.timer = undefined;
+    }
+    // Cancels any previous scheduleTimeout and schedules callback
+    scheduleTimeout() {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(()=>{
+            this.tries = this.tries + 1;
+            this.callback();
+        }, this.timerCalc(this.tries + 1));
+    }
+} //# sourceMappingURL=timer.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/transformers.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * Helpers to convert the change Payload into native JS types.
+ */ // Adapted from epgsql (src/epgsql_binary.erl), this module licensed under
+// 3-clause BSD found here: https://raw.githubusercontent.com/epgsql/epgsql/devel/LICENSE
+__turbopack_context__.s([
+    "PostgresTypes",
+    ()=>PostgresTypes,
+    "convertCell",
+    ()=>convertCell,
+    "convertChangeData",
+    ()=>convertChangeData,
+    "convertColumn",
+    ()=>convertColumn,
+    "httpEndpointURL",
+    ()=>httpEndpointURL,
+    "toArray",
+    ()=>toArray,
+    "toBoolean",
+    ()=>toBoolean,
+    "toJson",
+    ()=>toJson,
+    "toNumber",
+    ()=>toNumber,
+    "toTimestampString",
+    ()=>toTimestampString
+]);
+var PostgresTypes;
+(function(PostgresTypes) {
+    PostgresTypes["abstime"] = "abstime";
+    PostgresTypes["bool"] = "bool";
+    PostgresTypes["date"] = "date";
+    PostgresTypes["daterange"] = "daterange";
+    PostgresTypes["float4"] = "float4";
+    PostgresTypes["float8"] = "float8";
+    PostgresTypes["int2"] = "int2";
+    PostgresTypes["int4"] = "int4";
+    PostgresTypes["int4range"] = "int4range";
+    PostgresTypes["int8"] = "int8";
+    PostgresTypes["int8range"] = "int8range";
+    PostgresTypes["json"] = "json";
+    PostgresTypes["jsonb"] = "jsonb";
+    PostgresTypes["money"] = "money";
+    PostgresTypes["numeric"] = "numeric";
+    PostgresTypes["oid"] = "oid";
+    PostgresTypes["reltime"] = "reltime";
+    PostgresTypes["text"] = "text";
+    PostgresTypes["time"] = "time";
+    PostgresTypes["timestamp"] = "timestamp";
+    PostgresTypes["timestamptz"] = "timestamptz";
+    PostgresTypes["timetz"] = "timetz";
+    PostgresTypes["tsrange"] = "tsrange";
+    PostgresTypes["tstzrange"] = "tstzrange";
+})(PostgresTypes || (PostgresTypes = {}));
+const convertChangeData = (columns, record, options = {})=>{
+    var _a;
+    const skipTypes = (_a = options.skipTypes) !== null && _a !== void 0 ? _a : [];
+    if (!record) {
+        return {};
+    }
+    return Object.keys(record).reduce((acc, rec_key)=>{
+        acc[rec_key] = convertColumn(rec_key, columns, record, skipTypes);
+        return acc;
+    }, {});
+};
+const convertColumn = (columnName, columns, record, skipTypes)=>{
+    const column = columns.find((x)=>x.name === columnName);
+    const colType = column === null || column === void 0 ? void 0 : column.type;
+    const value = record[columnName];
+    if (colType && !skipTypes.includes(colType)) {
+        return convertCell(colType, value);
+    }
+    return noop(value);
+};
+const convertCell = (type, value)=>{
+    // if data type is an array
+    if (type.charAt(0) === '_') {
+        const dataType = type.slice(1, type.length);
+        return toArray(value, dataType);
+    }
+    // If not null, convert to correct type.
+    switch(type){
+        case PostgresTypes.bool:
+            return toBoolean(value);
+        case PostgresTypes.float4:
+        case PostgresTypes.float8:
+        case PostgresTypes.int2:
+        case PostgresTypes.int4:
+        case PostgresTypes.int8:
+        case PostgresTypes.numeric:
+        case PostgresTypes.oid:
+            return toNumber(value);
+        case PostgresTypes.json:
+        case PostgresTypes.jsonb:
+            return toJson(value);
+        case PostgresTypes.timestamp:
+            return toTimestampString(value); // Format to be consistent with PostgREST
+        case PostgresTypes.abstime:
+        case PostgresTypes.date:
+        case PostgresTypes.daterange:
+        case PostgresTypes.int4range:
+        case PostgresTypes.int8range:
+        case PostgresTypes.money:
+        case PostgresTypes.reltime:
+        case PostgresTypes.text:
+        case PostgresTypes.time:
+        case PostgresTypes.timestamptz:
+        case PostgresTypes.timetz:
+        case PostgresTypes.tsrange:
+        case PostgresTypes.tstzrange:
+            return noop(value);
+        default:
+            // Return the value for remaining types
+            return noop(value);
+    }
+};
+const noop = (value)=>{
+    return value;
+};
+const toBoolean = (value)=>{
+    switch(value){
+        case 't':
+            return true;
+        case 'f':
+            return false;
+        default:
+            return value;
+    }
+};
+const toNumber = (value)=>{
+    if (typeof value === 'string') {
+        const parsedValue = parseFloat(value);
+        if (!Number.isNaN(parsedValue)) {
+            return parsedValue;
+        }
+    }
+    return value;
+};
+const toJson = (value)=>{
+    if (typeof value === 'string') {
+        try {
+            return JSON.parse(value);
+        } catch (_a) {
+            return value;
+        }
+    }
+    return value;
+};
+const toArray = (value, type)=>{
+    if (typeof value !== 'string') {
+        return value;
+    }
+    const lastIdx = value.length - 1;
+    const closeBrace = value[lastIdx];
+    const openBrace = value[0];
+    // Confirm value is a Postgres array by checking curly brackets
+    if (openBrace === '{' && closeBrace === '}') {
+        let arr;
+        const valTrim = value.slice(1, lastIdx);
+        // TODO: find a better solution to separate Postgres array data
+        try {
+            arr = JSON.parse('[' + valTrim + ']');
+        } catch (_) {
+            // WARNING: splitting on comma does not cover all edge cases
+            arr = valTrim ? valTrim.split(',') : [];
+        }
+        return arr.map((val)=>convertCell(type, val));
+    }
+    return value;
+};
+const toTimestampString = (value)=>{
+    if (typeof value === 'string') {
+        return value.replace(' ', 'T');
+    }
+    return value;
+};
+const httpEndpointURL = (socketUrl)=>{
+    const wsUrl = new URL(socketUrl);
+    wsUrl.protocol = wsUrl.protocol.replace(/^ws/i, 'http');
+    wsUrl.pathname = wsUrl.pathname.replace(/\/+$/, '') // remove all trailing slashes
+    .replace(/\/socket\/websocket$/i, '') // remove the socket/websocket path
+    .replace(/\/socket$/i, '') // remove the socket path
+    .replace(/\/websocket$/i, ''); // remove the websocket path
+    if (wsUrl.pathname === '' || wsUrl.pathname === '/') {
+        wsUrl.pathname = '/api/broadcast';
+    } else {
+        wsUrl.pathname = wsUrl.pathname + '/api/broadcast';
+    }
+    return wsUrl.href;
+}; //# sourceMappingURL=transformers.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/push.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>Push
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/constants.js [app-ssr] (ecmascript)");
+;
+class Push {
+    /**
+     * Initializes the Push
+     *
+     * @param channel The Channel
+     * @param event The event, for example `"phx_join"`
+     * @param payload The payload, for example `{user_id: 123}`
+     * @param timeout The push timeout in milliseconds
+     */ constructor(channel, event, payload = {}, timeout = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DEFAULT_TIMEOUT"]){
+        this.channel = channel;
+        this.event = event;
+        this.payload = payload;
+        this.timeout = timeout;
+        this.sent = false;
+        this.timeoutTimer = undefined;
+        this.ref = '';
+        this.receivedResp = null;
+        this.recHooks = [];
+        this.refEvent = null;
+    }
+    resend(timeout) {
+        this.timeout = timeout;
+        this._cancelRefEvent();
+        this.ref = '';
+        this.refEvent = null;
+        this.receivedResp = null;
+        this.sent = false;
+        this.send();
+    }
+    send() {
+        if (this._hasReceived('timeout')) {
+            return;
+        }
+        this.startTimeout();
+        this.sent = true;
+        this.channel.socket.push({
+            topic: this.channel.topic,
+            event: this.event,
+            payload: this.payload,
+            ref: this.ref,
+            join_ref: this.channel._joinRef()
+        });
+    }
+    updatePayload(payload) {
+        this.payload = Object.assign(Object.assign({}, this.payload), payload);
+    }
+    receive(status, callback) {
+        var _a;
+        if (this._hasReceived(status)) {
+            callback((_a = this.receivedResp) === null || _a === void 0 ? void 0 : _a.response);
+        }
+        this.recHooks.push({
+            status,
+            callback
+        });
+        return this;
+    }
+    startTimeout() {
+        if (this.timeoutTimer) {
+            return;
+        }
+        this.ref = this.channel.socket._makeRef();
+        this.refEvent = this.channel._replyEventName(this.ref);
+        const callback = (payload)=>{
+            this._cancelRefEvent();
+            this._cancelTimeout();
+            this.receivedResp = payload;
+            this._matchReceive(payload);
+        };
+        this.channel._on(this.refEvent, {}, callback);
+        this.timeoutTimer = setTimeout(()=>{
+            this.trigger('timeout', {});
+        }, this.timeout);
+    }
+    trigger(status, response) {
+        if (this.refEvent) this.channel._trigger(this.refEvent, {
+            status,
+            response
+        });
+    }
+    destroy() {
+        this._cancelRefEvent();
+        this._cancelTimeout();
+    }
+    _cancelRefEvent() {
+        if (!this.refEvent) {
+            return;
+        }
+        this.channel._off(this.refEvent, {});
+    }
+    _cancelTimeout() {
+        clearTimeout(this.timeoutTimer);
+        this.timeoutTimer = undefined;
+    }
+    _matchReceive({ status, response }) {
+        this.recHooks.filter((h)=>h.status === status).forEach((h)=>h.callback(response));
+    }
+    _hasReceived(status) {
+        return this.receivedResp && this.receivedResp.status === status;
+    }
+} //# sourceMappingURL=push.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/*
+  This file draws heavily from https://github.com/phoenixframework/phoenix/blob/d344ec0a732ab4ee204215b31de69cf4be72e3bf/assets/js/phoenix/presence.js
+  License: https://github.com/phoenixframework/phoenix/blob/d344ec0a732ab4ee204215b31de69cf4be72e3bf/LICENSE.md
+*/ __turbopack_context__.s([
+    "REALTIME_PRESENCE_LISTEN_EVENTS",
+    ()=>REALTIME_PRESENCE_LISTEN_EVENTS,
+    "default",
+    ()=>RealtimePresence
+]);
+var REALTIME_PRESENCE_LISTEN_EVENTS;
+(function(REALTIME_PRESENCE_LISTEN_EVENTS) {
+    REALTIME_PRESENCE_LISTEN_EVENTS["SYNC"] = "sync";
+    REALTIME_PRESENCE_LISTEN_EVENTS["JOIN"] = "join";
+    REALTIME_PRESENCE_LISTEN_EVENTS["LEAVE"] = "leave";
+})(REALTIME_PRESENCE_LISTEN_EVENTS || (REALTIME_PRESENCE_LISTEN_EVENTS = {}));
+class RealtimePresence {
+    /**
+     * Creates a Presence helper that keeps the local presence state in sync with the server.
+     *
+     * @param channel - The realtime channel to bind to.
+     * @param opts - Optional custom event names, e.g. `{ events: { state: 'state', diff: 'diff' } }`.
+     *
+     * @example
+     * ```ts
+     * const presence = new RealtimePresence(channel)
+     *
+     * channel.on('presence', ({ event, key }) => {
+     *   console.log(`Presence ${event} on ${key}`)
+     * })
+     * ```
+     */ constructor(channel, opts){
+        this.channel = channel;
+        this.state = {};
+        this.pendingDiffs = [];
+        this.joinRef = null;
+        this.enabled = false;
+        this.caller = {
+            onJoin: ()=>{},
+            onLeave: ()=>{},
+            onSync: ()=>{}
+        };
+        const events = (opts === null || opts === void 0 ? void 0 : opts.events) || {
+            state: 'presence_state',
+            diff: 'presence_diff'
+        };
+        this.channel._on(events.state, {}, (newState)=>{
+            const { onJoin, onLeave, onSync } = this.caller;
+            this.joinRef = this.channel._joinRef();
+            this.state = RealtimePresence.syncState(this.state, newState, onJoin, onLeave);
+            this.pendingDiffs.forEach((diff)=>{
+                this.state = RealtimePresence.syncDiff(this.state, diff, onJoin, onLeave);
+            });
+            this.pendingDiffs = [];
+            onSync();
+        });
+        this.channel._on(events.diff, {}, (diff)=>{
+            const { onJoin, onLeave, onSync } = this.caller;
+            if (this.inPendingSyncState()) {
+                this.pendingDiffs.push(diff);
+            } else {
+                this.state = RealtimePresence.syncDiff(this.state, diff, onJoin, onLeave);
+                onSync();
+            }
+        });
+        this.onJoin((key, currentPresences, newPresences)=>{
+            this.channel._trigger('presence', {
+                event: 'join',
+                key,
+                currentPresences,
+                newPresences
+            });
+        });
+        this.onLeave((key, currentPresences, leftPresences)=>{
+            this.channel._trigger('presence', {
+                event: 'leave',
+                key,
+                currentPresences,
+                leftPresences
+            });
+        });
+        this.onSync(()=>{
+            this.channel._trigger('presence', {
+                event: 'sync'
+            });
+        });
+    }
+    /**
+     * Used to sync the list of presences on the server with the
+     * client's state.
+     *
+     * An optional `onJoin` and `onLeave` callback can be provided to
+     * react to changes in the client's local presences across
+     * disconnects and reconnects with the server.
+     *
+     * @internal
+     */ static syncState(currentState, newState, onJoin, onLeave) {
+        const state = this.cloneDeep(currentState);
+        const transformedState = this.transformState(newState);
+        const joins = {};
+        const leaves = {};
+        this.map(state, (key, presences)=>{
+            if (!transformedState[key]) {
+                leaves[key] = presences;
+            }
+        });
+        this.map(transformedState, (key, newPresences)=>{
+            const currentPresences = state[key];
+            if (currentPresences) {
+                const newPresenceRefs = newPresences.map((m)=>m.presence_ref);
+                const curPresenceRefs = currentPresences.map((m)=>m.presence_ref);
+                const joinedPresences = newPresences.filter((m)=>curPresenceRefs.indexOf(m.presence_ref) < 0);
+                const leftPresences = currentPresences.filter((m)=>newPresenceRefs.indexOf(m.presence_ref) < 0);
+                if (joinedPresences.length > 0) {
+                    joins[key] = joinedPresences;
+                }
+                if (leftPresences.length > 0) {
+                    leaves[key] = leftPresences;
+                }
+            } else {
+                joins[key] = newPresences;
+            }
+        });
+        return this.syncDiff(state, {
+            joins,
+            leaves
+        }, onJoin, onLeave);
+    }
+    /**
+     * Used to sync a diff of presence join and leave events from the
+     * server, as they happen.
+     *
+     * Like `syncState`, `syncDiff` accepts optional `onJoin` and
+     * `onLeave` callbacks to react to a user joining or leaving from a
+     * device.
+     *
+     * @internal
+     */ static syncDiff(state, diff, onJoin, onLeave) {
+        const { joins, leaves } = {
+            joins: this.transformState(diff.joins),
+            leaves: this.transformState(diff.leaves)
+        };
+        if (!onJoin) {
+            onJoin = ()=>{};
+        }
+        if (!onLeave) {
+            onLeave = ()=>{};
+        }
+        this.map(joins, (key, newPresences)=>{
+            var _a;
+            const currentPresences = (_a = state[key]) !== null && _a !== void 0 ? _a : [];
+            state[key] = this.cloneDeep(newPresences);
+            if (currentPresences.length > 0) {
+                const joinedPresenceRefs = state[key].map((m)=>m.presence_ref);
+                const curPresences = currentPresences.filter((m)=>joinedPresenceRefs.indexOf(m.presence_ref) < 0);
+                state[key].unshift(...curPresences);
+            }
+            onJoin(key, currentPresences, newPresences);
+        });
+        this.map(leaves, (key, leftPresences)=>{
+            let currentPresences = state[key];
+            if (!currentPresences) return;
+            const presenceRefsToRemove = leftPresences.map((m)=>m.presence_ref);
+            currentPresences = currentPresences.filter((m)=>presenceRefsToRemove.indexOf(m.presence_ref) < 0);
+            state[key] = currentPresences;
+            onLeave(key, currentPresences, leftPresences);
+            if (currentPresences.length === 0) delete state[key];
+        });
+        return state;
+    }
+    /** @internal */ static map(obj, func) {
+        return Object.getOwnPropertyNames(obj).map((key)=>func(key, obj[key]));
+    }
+    /**
+     * Remove 'metas' key
+     * Change 'phx_ref' to 'presence_ref'
+     * Remove 'phx_ref' and 'phx_ref_prev'
+     *
+     * @example
+     * // returns {
+     *  abc123: [
+     *    { presence_ref: '2', user_id: 1 },
+     *    { presence_ref: '3', user_id: 2 }
+     *  ]
+     * }
+     * RealtimePresence.transformState({
+     *  abc123: {
+     *    metas: [
+     *      { phx_ref: '2', phx_ref_prev: '1' user_id: 1 },
+     *      { phx_ref: '3', user_id: 2 }
+     *    ]
+     *  }
+     * })
+     *
+     * @internal
+     */ static transformState(state) {
+        state = this.cloneDeep(state);
+        return Object.getOwnPropertyNames(state).reduce((newState, key)=>{
+            const presences = state[key];
+            if ('metas' in presences) {
+                newState[key] = presences.metas.map((presence)=>{
+                    presence['presence_ref'] = presence['phx_ref'];
+                    delete presence['phx_ref'];
+                    delete presence['phx_ref_prev'];
+                    return presence;
+                });
+            } else {
+                newState[key] = presences;
+            }
+            return newState;
+        }, {});
+    }
+    /** @internal */ static cloneDeep(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+    /** @internal */ onJoin(callback) {
+        this.caller.onJoin = callback;
+    }
+    /** @internal */ onLeave(callback) {
+        this.caller.onLeave = callback;
+    }
+    /** @internal */ onSync(callback) {
+        this.caller.onSync = callback;
+    }
+    /** @internal */ inPendingSyncState() {
+        return !this.joinRef || this.joinRef !== this.channel._joinRef();
+    }
+} //# sourceMappingURL=RealtimePresence.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "REALTIME_CHANNEL_STATES",
+    ()=>REALTIME_CHANNEL_STATES,
+    "REALTIME_LISTEN_TYPES",
+    ()=>REALTIME_LISTEN_TYPES,
+    "REALTIME_POSTGRES_CHANGES_LISTEN_EVENT",
+    ()=>REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+    "REALTIME_SUBSCRIBE_STATES",
+    ()=>REALTIME_SUBSCRIBE_STATES,
+    "default",
+    ()=>RealtimeChannel
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/constants.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$push$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/push.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$timer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/timer.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimePresence$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$transformers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/transformers.js [app-ssr] (ecmascript)");
+;
+;
+;
+;
+;
+;
+var REALTIME_POSTGRES_CHANGES_LISTEN_EVENT;
+(function(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT) {
+    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT["ALL"] = "*";
+    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT["INSERT"] = "INSERT";
+    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT["UPDATE"] = "UPDATE";
+    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT["DELETE"] = "DELETE";
+})(REALTIME_POSTGRES_CHANGES_LISTEN_EVENT || (REALTIME_POSTGRES_CHANGES_LISTEN_EVENT = {}));
+var REALTIME_LISTEN_TYPES;
+(function(REALTIME_LISTEN_TYPES) {
+    REALTIME_LISTEN_TYPES["BROADCAST"] = "broadcast";
+    REALTIME_LISTEN_TYPES["PRESENCE"] = "presence";
+    REALTIME_LISTEN_TYPES["POSTGRES_CHANGES"] = "postgres_changes";
+    REALTIME_LISTEN_TYPES["SYSTEM"] = "system";
+})(REALTIME_LISTEN_TYPES || (REALTIME_LISTEN_TYPES = {}));
+var REALTIME_SUBSCRIBE_STATES;
+(function(REALTIME_SUBSCRIBE_STATES) {
+    REALTIME_SUBSCRIBE_STATES["SUBSCRIBED"] = "SUBSCRIBED";
+    REALTIME_SUBSCRIBE_STATES["TIMED_OUT"] = "TIMED_OUT";
+    REALTIME_SUBSCRIBE_STATES["CLOSED"] = "CLOSED";
+    REALTIME_SUBSCRIBE_STATES["CHANNEL_ERROR"] = "CHANNEL_ERROR";
+})(REALTIME_SUBSCRIBE_STATES || (REALTIME_SUBSCRIBE_STATES = {}));
+const REALTIME_CHANNEL_STATES = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"];
+class RealtimeChannel {
+    /**
+     * Creates a channel that can broadcast messages, sync presence, and listen to Postgres changes.
+     *
+     * The topic determines which realtime stream you are subscribing to. Config options let you
+     * enable acknowledgement for broadcasts, presence tracking, or private channels.
+     *
+     * @example
+     * ```ts
+     * import RealtimeClient from '@supabase/realtime-js'
+     *
+     * const client = new RealtimeClient('https://xyzcompany.supabase.co/realtime/v1', {
+     *   params: { apikey: 'public-anon-key' },
+     * })
+     * const channel = new RealtimeChannel('realtime:public:messages', { config: {} }, client)
+     * ```
+     */ constructor(/** Topic name can be any string. */ topic, params = {
+        config: {}
+    }, socket){
+        var _a, _b;
+        this.topic = topic;
+        this.params = params;
+        this.socket = socket;
+        this.bindings = {};
+        this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].closed;
+        this.joinedOnce = false;
+        this.pushBuffer = [];
+        this.subTopic = topic.replace(/^realtime:/i, '');
+        this.params.config = Object.assign({
+            broadcast: {
+                ack: false,
+                self: false
+            },
+            presence: {
+                key: '',
+                enabled: false
+            },
+            private: false
+        }, params.config);
+        this.timeout = this.socket.timeout;
+        this.joinPush = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$push$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](this, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].join, this.params, this.timeout);
+        this.rejoinTimer = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$timer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](()=>this._rejoinUntilConnected(), this.socket.reconnectAfterMs);
+        this.joinPush.receive('ok', ()=>{
+            this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].joined;
+            this.rejoinTimer.reset();
+            this.pushBuffer.forEach((pushEvent)=>pushEvent.send());
+            this.pushBuffer = [];
+        });
+        this._onClose(()=>{
+            this.rejoinTimer.reset();
+            this.socket.log('channel', `close ${this.topic} ${this._joinRef()}`);
+            this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].closed;
+            this.socket._remove(this);
+        });
+        this._onError((reason)=>{
+            if (this._isLeaving() || this._isClosed()) {
+                return;
+            }
+            this.socket.log('channel', `error ${this.topic}`, reason);
+            this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].errored;
+            this.rejoinTimer.scheduleTimeout();
+        });
+        this.joinPush.receive('timeout', ()=>{
+            if (!this._isJoining()) {
+                return;
+            }
+            this.socket.log('channel', `timeout ${this.topic}`, this.joinPush.timeout);
+            this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].errored;
+            this.rejoinTimer.scheduleTimeout();
+        });
+        this.joinPush.receive('error', (reason)=>{
+            if (this._isLeaving() || this._isClosed()) {
+                return;
+            }
+            this.socket.log('channel', `error ${this.topic}`, reason);
+            this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].errored;
+            this.rejoinTimer.scheduleTimeout();
+        });
+        this._on(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].reply, {}, (payload, ref)=>{
+            this._trigger(this._replyEventName(ref), payload);
+        });
+        this.presence = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimePresence$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](this);
+        this.broadcastEndpointURL = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$transformers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["httpEndpointURL"])(this.socket.endPoint);
+        this.private = this.params.config.private || false;
+        if (!this.private && ((_b = (_a = this.params.config) === null || _a === void 0 ? void 0 : _a.broadcast) === null || _b === void 0 ? void 0 : _b.replay)) {
+            throw `tried to use replay on public channel '${this.topic}'. It must be a private channel.`;
+        }
+    }
+    /** Subscribe registers your client with the server */ subscribe(callback, timeout = this.timeout) {
+        var _a, _b, _c;
+        if (!this.socket.isConnected()) {
+            this.socket.connect();
+        }
+        if (this.state == __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].closed) {
+            const { config: { broadcast, presence, private: isPrivate } } = this.params;
+            const postgres_changes = (_b = (_a = this.bindings.postgres_changes) === null || _a === void 0 ? void 0 : _a.map((r)=>r.filter)) !== null && _b !== void 0 ? _b : [];
+            const presence_enabled = !!this.bindings[REALTIME_LISTEN_TYPES.PRESENCE] && this.bindings[REALTIME_LISTEN_TYPES.PRESENCE].length > 0 || ((_c = this.params.config.presence) === null || _c === void 0 ? void 0 : _c.enabled) === true;
+            const accessTokenPayload = {};
+            const config = {
+                broadcast,
+                presence: Object.assign(Object.assign({}, presence), {
+                    enabled: presence_enabled
+                }),
+                postgres_changes,
+                private: isPrivate
+            };
+            if (this.socket.accessTokenValue) {
+                accessTokenPayload.access_token = this.socket.accessTokenValue;
+            }
+            this._onError((e)=>callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, e));
+            this._onClose(()=>callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.CLOSED));
+            this.updateJoinPayload(Object.assign({
+                config
+            }, accessTokenPayload));
+            this.joinedOnce = true;
+            this._rejoin(timeout);
+            this.joinPush.receive('ok', async ({ postgres_changes })=>{
+                var _a;
+                // Only refresh auth if using callback-based tokens
+                if (!this.socket._isManualToken()) {
+                    this.socket.setAuth();
+                }
+                if (postgres_changes === undefined) {
+                    callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.SUBSCRIBED);
+                    return;
+                } else {
+                    const clientPostgresBindings = this.bindings.postgres_changes;
+                    const bindingsLen = (_a = clientPostgresBindings === null || clientPostgresBindings === void 0 ? void 0 : clientPostgresBindings.length) !== null && _a !== void 0 ? _a : 0;
+                    const newPostgresBindings = [];
+                    for(let i = 0; i < bindingsLen; i++){
+                        const clientPostgresBinding = clientPostgresBindings[i];
+                        const { filter: { event, schema, table, filter } } = clientPostgresBinding;
+                        const serverPostgresFilter = postgres_changes && postgres_changes[i];
+                        if (serverPostgresFilter && serverPostgresFilter.event === event && RealtimeChannel.isFilterValueEqual(serverPostgresFilter.schema, schema) && RealtimeChannel.isFilterValueEqual(serverPostgresFilter.table, table) && RealtimeChannel.isFilterValueEqual(serverPostgresFilter.filter, filter)) {
+                            newPostgresBindings.push(Object.assign(Object.assign({}, clientPostgresBinding), {
+                                id: serverPostgresFilter.id
+                            }));
+                        } else {
+                            this.unsubscribe();
+                            this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].errored;
+                            callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, new Error('mismatch between server and client bindings for postgres changes'));
+                            return;
+                        }
+                    }
+                    this.bindings.postgres_changes = newPostgresBindings;
+                    callback && callback(REALTIME_SUBSCRIBE_STATES.SUBSCRIBED);
+                    return;
+                }
+            }).receive('error', (error)=>{
+                this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].errored;
+                callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, new Error(JSON.stringify(Object.values(error).join(', ') || 'error')));
+                return;
+            }).receive('timeout', ()=>{
+                callback === null || callback === void 0 ? void 0 : callback(REALTIME_SUBSCRIBE_STATES.TIMED_OUT);
+                return;
+            });
+        }
+        return this;
+    }
+    /**
+     * Returns the current presence state for this channel.
+     *
+     * The shape is a map keyed by presence key (for example a user id) where each entry contains the
+     * tracked metadata for that user.
+     */ presenceState() {
+        return this.presence.state;
+    }
+    /**
+     * Sends the supplied payload to the presence tracker so other subscribers can see that this
+     * client is online. Use `untrack` to stop broadcasting presence for the same key.
+     */ async track(payload, opts = {}) {
+        return await this.send({
+            type: 'presence',
+            event: 'track',
+            payload
+        }, opts.timeout || this.timeout);
+    }
+    /**
+     * Removes the current presence state for this client.
+     */ async untrack(opts = {}) {
+        return await this.send({
+            type: 'presence',
+            event: 'untrack'
+        }, opts);
+    }
+    on(type, filter, callback) {
+        if (this.state === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].joined && type === REALTIME_LISTEN_TYPES.PRESENCE) {
+            this.socket.log('channel', `resubscribe to ${this.topic} due to change in presence callbacks on joined channel`);
+            this.unsubscribe().then(async ()=>await this.subscribe());
+        }
+        return this._on(type, filter, callback);
+    }
+    /**
+     * Sends a broadcast message explicitly via REST API.
+     *
+     * This method always uses the REST API endpoint regardless of WebSocket connection state.
+     * Useful when you want to guarantee REST delivery or when gradually migrating from implicit REST fallback.
+     *
+     * @param event The name of the broadcast event
+     * @param payload Payload to be sent (required)
+     * @param opts Options including timeout
+     * @returns Promise resolving to object with success status, and error details if failed
+     */ async httpSend(event, payload, opts = {}) {
+        var _a;
+        if (payload === undefined || payload === null) {
+            return Promise.reject('Payload is required for httpSend()');
+        }
+        const headers = {
+            apikey: this.socket.apiKey ? this.socket.apiKey : '',
+            'Content-Type': 'application/json'
+        };
+        if (this.socket.accessTokenValue) {
+            headers['Authorization'] = `Bearer ${this.socket.accessTokenValue}`;
+        }
+        const options = {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                messages: [
+                    {
+                        topic: this.subTopic,
+                        event,
+                        payload: payload,
+                        private: this.private
+                    }
+                ]
+            })
+        };
+        const response = await this._fetchWithTimeout(this.broadcastEndpointURL, options, (_a = opts.timeout) !== null && _a !== void 0 ? _a : this.timeout);
+        if (response.status === 202) {
+            return {
+                success: true
+            };
+        }
+        let errorMessage = response.statusText;
+        try {
+            const errorBody = await response.json();
+            errorMessage = errorBody.error || errorBody.message || errorMessage;
+        } catch (_b) {}
+        return Promise.reject(new Error(errorMessage));
+    }
+    /**
+     * Sends a message into the channel.
+     *
+     * @param args Arguments to send to channel
+     * @param args.type The type of event to send
+     * @param args.event The name of the event being sent
+     * @param args.payload Payload to be sent
+     * @param opts Options to be used during the send process
+     */ async send(args, opts = {}) {
+        var _a, _b;
+        if (!this._canPush() && args.type === 'broadcast') {
+            console.warn('Realtime send() is automatically falling back to REST API. ' + 'This behavior will be deprecated in the future. ' + 'Please use httpSend() explicitly for REST delivery.');
+            const { event, payload: endpoint_payload } = args;
+            const headers = {
+                apikey: this.socket.apiKey ? this.socket.apiKey : '',
+                'Content-Type': 'application/json'
+            };
+            if (this.socket.accessTokenValue) {
+                headers['Authorization'] = `Bearer ${this.socket.accessTokenValue}`;
+            }
+            const options = {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    messages: [
+                        {
+                            topic: this.subTopic,
+                            event,
+                            payload: endpoint_payload,
+                            private: this.private
+                        }
+                    ]
+                })
+            };
+            try {
+                const response = await this._fetchWithTimeout(this.broadcastEndpointURL, options, (_a = opts.timeout) !== null && _a !== void 0 ? _a : this.timeout);
+                await ((_b = response.body) === null || _b === void 0 ? void 0 : _b.cancel());
+                return response.ok ? 'ok' : 'error';
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    return 'timed out';
+                } else {
+                    return 'error';
+                }
+            }
+        } else {
+            return new Promise((resolve)=>{
+                var _a, _b, _c;
+                const push = this._push(args.type, args, opts.timeout || this.timeout);
+                if (args.type === 'broadcast' && !((_c = (_b = (_a = this.params) === null || _a === void 0 ? void 0 : _a.config) === null || _b === void 0 ? void 0 : _b.broadcast) === null || _c === void 0 ? void 0 : _c.ack)) {
+                    resolve('ok');
+                }
+                push.receive('ok', ()=>resolve('ok'));
+                push.receive('error', ()=>resolve('error'));
+                push.receive('timeout', ()=>resolve('timed out'));
+            });
+        }
+    }
+    /**
+     * Updates the payload that will be sent the next time the channel joins (reconnects).
+     * Useful for rotating access tokens or updating config without re-creating the channel.
+     */ updateJoinPayload(payload) {
+        this.joinPush.updatePayload(payload);
+    }
+    /**
+     * Leaves the channel.
+     *
+     * Unsubscribes from server events, and instructs channel to terminate on server.
+     * Triggers onClose() hooks.
+     *
+     * To receive leave acknowledgements, use the a `receive` hook to bind to the server ack, ie:
+     * channel.unsubscribe().receive("ok", () => alert("left!") )
+     */ unsubscribe(timeout = this.timeout) {
+        this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].leaving;
+        const onClose = ()=>{
+            this.socket.log('channel', `leave ${this.topic}`);
+            this._trigger(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].close, 'leave', this._joinRef());
+        };
+        this.joinPush.destroy();
+        let leavePush = null;
+        return new Promise((resolve)=>{
+            leavePush = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$push$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](this, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].leave, {}, timeout);
+            leavePush.receive('ok', ()=>{
+                onClose();
+                resolve('ok');
+            }).receive('timeout', ()=>{
+                onClose();
+                resolve('timed out');
+            }).receive('error', ()=>{
+                resolve('error');
+            });
+            leavePush.send();
+            if (!this._canPush()) {
+                leavePush.trigger('ok', {});
+            }
+        }).finally(()=>{
+            leavePush === null || leavePush === void 0 ? void 0 : leavePush.destroy();
+        });
+    }
+    /**
+     * Teardown the channel.
+     *
+     * Destroys and stops related timers.
+     */ teardown() {
+        this.pushBuffer.forEach((push)=>push.destroy());
+        this.pushBuffer = [];
+        this.rejoinTimer.reset();
+        this.joinPush.destroy();
+        this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].closed;
+        this.bindings = {};
+    }
+    /** @internal */ async _fetchWithTimeout(url, options, timeout) {
+        const controller = new AbortController();
+        const id = setTimeout(()=>controller.abort(), timeout);
+        const response = await this.socket.fetch(url, Object.assign(Object.assign({}, options), {
+            signal: controller.signal
+        }));
+        clearTimeout(id);
+        return response;
+    }
+    /** @internal */ _push(event, payload, timeout = this.timeout) {
+        if (!this.joinedOnce) {
+            throw `tried to push '${event}' to '${this.topic}' before joining. Use channel.subscribe() before pushing events`;
+        }
+        let pushEvent = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$push$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](this, event, payload, timeout);
+        if (this._canPush()) {
+            pushEvent.send();
+        } else {
+            this._addToPushBuffer(pushEvent);
+        }
+        return pushEvent;
+    }
+    /** @internal */ _addToPushBuffer(pushEvent) {
+        pushEvent.startTimeout();
+        this.pushBuffer.push(pushEvent);
+        // Enforce buffer size limit
+        if (this.pushBuffer.length > __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["MAX_PUSH_BUFFER_SIZE"]) {
+            const removedPush = this.pushBuffer.shift();
+            if (removedPush) {
+                removedPush.destroy();
+                this.socket.log('channel', `discarded push due to buffer overflow: ${removedPush.event}`, removedPush.payload);
+            }
+        }
+    }
+    /**
+     * Overridable message hook
+     *
+     * Receives all events for specialized message handling before dispatching to the channel callbacks.
+     * Must return the payload, modified or unmodified.
+     *
+     * @internal
+     */ _onMessage(_event, payload, _ref) {
+        return payload;
+    }
+    /** @internal */ _isMember(topic) {
+        return this.topic === topic;
+    }
+    /** @internal */ _joinRef() {
+        return this.joinPush.ref;
+    }
+    /** @internal */ _trigger(type, payload, ref) {
+        var _a, _b;
+        const typeLower = type.toLocaleLowerCase();
+        const { close, error, leave, join } = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"];
+        const events = [
+            close,
+            error,
+            leave,
+            join
+        ];
+        if (ref && events.indexOf(typeLower) >= 0 && ref !== this._joinRef()) {
+            return;
+        }
+        let handledPayload = this._onMessage(typeLower, payload, ref);
+        if (payload && !handledPayload) {
+            throw 'channel onMessage callbacks must return the payload, modified or unmodified';
+        }
+        if ([
+            'insert',
+            'update',
+            'delete'
+        ].includes(typeLower)) {
+            (_a = this.bindings.postgres_changes) === null || _a === void 0 ? void 0 : _a.filter((bind)=>{
+                var _a, _b, _c;
+                return ((_a = bind.filter) === null || _a === void 0 ? void 0 : _a.event) === '*' || ((_c = (_b = bind.filter) === null || _b === void 0 ? void 0 : _b.event) === null || _c === void 0 ? void 0 : _c.toLocaleLowerCase()) === typeLower;
+            }).map((bind)=>bind.callback(handledPayload, ref));
+        } else {
+            (_b = this.bindings[typeLower]) === null || _b === void 0 ? void 0 : _b.filter((bind)=>{
+                var _a, _b, _c, _d, _e, _f;
+                if ([
+                    'broadcast',
+                    'presence',
+                    'postgres_changes'
+                ].includes(typeLower)) {
+                    if ('id' in bind) {
+                        const bindId = bind.id;
+                        const bindEvent = (_a = bind.filter) === null || _a === void 0 ? void 0 : _a.event;
+                        return bindId && ((_b = payload.ids) === null || _b === void 0 ? void 0 : _b.includes(bindId)) && (bindEvent === '*' || (bindEvent === null || bindEvent === void 0 ? void 0 : bindEvent.toLocaleLowerCase()) === ((_c = payload.data) === null || _c === void 0 ? void 0 : _c.type.toLocaleLowerCase()));
+                    } else {
+                        const bindEvent = (_e = (_d = bind === null || bind === void 0 ? void 0 : bind.filter) === null || _d === void 0 ? void 0 : _d.event) === null || _e === void 0 ? void 0 : _e.toLocaleLowerCase();
+                        return bindEvent === '*' || bindEvent === ((_f = payload === null || payload === void 0 ? void 0 : payload.event) === null || _f === void 0 ? void 0 : _f.toLocaleLowerCase());
+                    }
+                } else {
+                    return bind.type.toLocaleLowerCase() === typeLower;
+                }
+            }).map((bind)=>{
+                if (typeof handledPayload === 'object' && 'ids' in handledPayload) {
+                    const postgresChanges = handledPayload.data;
+                    const { schema, table, commit_timestamp, type, errors } = postgresChanges;
+                    const enrichedPayload = {
+                        schema: schema,
+                        table: table,
+                        commit_timestamp: commit_timestamp,
+                        eventType: type,
+                        new: {},
+                        old: {},
+                        errors: errors
+                    };
+                    handledPayload = Object.assign(Object.assign({}, enrichedPayload), this._getPayloadRecords(postgresChanges));
+                }
+                bind.callback(handledPayload, ref);
+            });
+        }
+    }
+    /** @internal */ _isClosed() {
+        return this.state === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].closed;
+    }
+    /** @internal */ _isJoined() {
+        return this.state === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].joined;
+    }
+    /** @internal */ _isJoining() {
+        return this.state === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].joining;
+    }
+    /** @internal */ _isLeaving() {
+        return this.state === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].leaving;
+    }
+    /** @internal */ _replyEventName(ref) {
+        return `chan_reply_${ref}`;
+    }
+    /** @internal */ _on(type, filter, callback) {
+        const typeLower = type.toLocaleLowerCase();
+        const binding = {
+            type: typeLower,
+            filter: filter,
+            callback: callback
+        };
+        if (this.bindings[typeLower]) {
+            this.bindings[typeLower].push(binding);
+        } else {
+            this.bindings[typeLower] = [
+                binding
+            ];
+        }
+        return this;
+    }
+    /** @internal */ _off(type, filter) {
+        const typeLower = type.toLocaleLowerCase();
+        if (this.bindings[typeLower]) {
+            this.bindings[typeLower] = this.bindings[typeLower].filter((bind)=>{
+                var _a;
+                return !(((_a = bind.type) === null || _a === void 0 ? void 0 : _a.toLocaleLowerCase()) === typeLower && RealtimeChannel.isEqual(bind.filter, filter));
+            });
+        }
+        return this;
+    }
+    /** @internal */ static isEqual(obj1, obj2) {
+        if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+            return false;
+        }
+        for(const k in obj1){
+            if (obj1[k] !== obj2[k]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * Compares two optional filter values for equality.
+     * Treats undefined, null, and empty string as equivalent empty values.
+     * @internal
+     */ static isFilterValueEqual(serverValue, clientValue) {
+        const normalizedServer = serverValue !== null && serverValue !== void 0 ? serverValue : undefined;
+        const normalizedClient = clientValue !== null && clientValue !== void 0 ? clientValue : undefined;
+        return normalizedServer === normalizedClient;
+    }
+    /** @internal */ _rejoinUntilConnected() {
+        this.rejoinTimer.scheduleTimeout();
+        if (this.socket.isConnected()) {
+            this._rejoin();
+        }
+    }
+    /**
+     * Registers a callback that will be executed when the channel closes.
+     *
+     * @internal
+     */ _onClose(callback) {
+        this._on(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].close, {}, callback);
+    }
+    /**
+     * Registers a callback that will be executed when the channel encounteres an error.
+     *
+     * @internal
+     */ _onError(callback) {
+        this._on(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].error, {}, (reason)=>callback(reason));
+    }
+    /**
+     * Returns `true` if the socket is connected and the channel has been joined.
+     *
+     * @internal
+     */ _canPush() {
+        return this.socket.isConnected() && this._isJoined();
+    }
+    /** @internal */ _rejoin(timeout = this.timeout) {
+        if (this._isLeaving()) {
+            return;
+        }
+        this.socket._leaveOpenTopic(this.topic);
+        this.state = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_STATES"].joining;
+        this.joinPush.resend(timeout);
+    }
+    /** @internal */ _getPayloadRecords(payload) {
+        const records = {
+            new: {},
+            old: {}
+        };
+        if (payload.type === 'INSERT' || payload.type === 'UPDATE') {
+            records.new = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$transformers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["convertChangeData"](payload.columns, payload.record);
+        }
+        if (payload.type === 'UPDATE' || payload.type === 'DELETE') {
+            records.old = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$transformers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["convertChangeData"](payload.columns, payload.old_record);
+        }
+        return records;
+    }
+} //# sourceMappingURL=RealtimeChannel.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>RealtimeClient
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$websocket$2d$factory$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/constants.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$serializer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/serializer.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$timer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/timer.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$transformers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/transformers.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeChannel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js [app-ssr] (ecmascript)");
+;
+;
+;
+;
+;
+;
+const noop = ()=>{};
+// Connection-related constants
+const CONNECTION_TIMEOUTS = {
+    HEARTBEAT_INTERVAL: 25000,
+    RECONNECT_DELAY: 10,
+    HEARTBEAT_TIMEOUT_FALLBACK: 100
+};
+const RECONNECT_INTERVALS = [
+    1000,
+    2000,
+    5000,
+    10000
+];
+const DEFAULT_RECONNECT_FALLBACK = 10000;
+const WORKER_SCRIPT = `
+  addEventListener("message", (e) => {
+    if (e.data.event === "start") {
+      setInterval(() => postMessage({ event: "keepAlive" }), e.data.interval);
+    }
+  });`;
+class RealtimeClient {
+    /**
+     * Initializes the Socket.
+     *
+     * @param endPoint The string WebSocket endpoint, ie, "ws://example.com/socket", "wss://example.com", "/socket" (inherited host & protocol)
+     * @param httpEndpoint The string HTTP endpoint, ie, "https://example.com", "/" (inherited host & protocol)
+     * @param options.transport The Websocket Transport, for example WebSocket. This can be a custom implementation
+     * @param options.timeout The default timeout in milliseconds to trigger push timeouts.
+     * @param options.params The optional params to pass when connecting.
+     * @param options.headers Deprecated: headers cannot be set on websocket connections and this option will be removed in the future.
+     * @param options.heartbeatIntervalMs The millisec interval to send a heartbeat message.
+     * @param options.heartbeatCallback The optional function to handle heartbeat status and latency.
+     * @param options.logger The optional function for specialized logging, ie: logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) }
+     * @param options.logLevel Sets the log level for Realtime
+     * @param options.encode The function to encode outgoing messages. Defaults to JSON: (payload, callback) => callback(JSON.stringify(payload))
+     * @param options.decode The function to decode incoming messages. Defaults to Serializer's decode.
+     * @param options.reconnectAfterMs he optional function that returns the millsec reconnect interval. Defaults to stepped backoff off.
+     * @param options.worker Use Web Worker to set a side flow. Defaults to false.
+     * @param options.workerUrl The URL of the worker script. Defaults to https://realtime.supabase.com/worker.js that includes a heartbeat event call to keep the connection alive.
+     * @param options.vsn The protocol version to use when connecting. Supported versions are "1.0.0" and "2.0.0". Defaults to "2.0.0".
+     * @example
+     * ```ts
+     * import RealtimeClient from '@supabase/realtime-js'
+     *
+     * const client = new RealtimeClient('https://xyzcompany.supabase.co/realtime/v1', {
+     *   params: { apikey: 'public-anon-key' },
+     * })
+     * client.connect()
+     * ```
+     */ constructor(endPoint, options){
+        var _a;
+        this.accessTokenValue = null;
+        this.apiKey = null;
+        this._manuallySetToken = false;
+        this.channels = new Array();
+        this.endPoint = '';
+        this.httpEndpoint = '';
+        /** @deprecated headers cannot be set on websocket connections */ this.headers = {};
+        this.params = {};
+        this.timeout = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DEFAULT_TIMEOUT"];
+        this.transport = null;
+        this.heartbeatIntervalMs = CONNECTION_TIMEOUTS.HEARTBEAT_INTERVAL;
+        this.heartbeatTimer = undefined;
+        this.pendingHeartbeatRef = null;
+        this.heartbeatCallback = noop;
+        this.ref = 0;
+        this.reconnectTimer = null;
+        this.vsn = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DEFAULT_VSN"];
+        this.logger = noop;
+        this.conn = null;
+        this.sendBuffer = [];
+        this.serializer = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$serializer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"]();
+        this.stateChangeCallbacks = {
+            open: [],
+            close: [],
+            error: [],
+            message: []
+        };
+        this.accessToken = null;
+        this._connectionState = 'disconnected';
+        this._wasManualDisconnect = false;
+        this._authPromise = null;
+        this._heartbeatSentAt = null;
+        /**
+         * Use either custom fetch, if provided, or default fetch to make HTTP requests
+         *
+         * @internal
+         */ this._resolveFetch = (customFetch)=>{
+            if (customFetch) {
+                return (...args)=>customFetch(...args);
+            }
+            return (...args)=>fetch(...args);
+        };
+        // Validate required parameters
+        if (!((_a = options === null || options === void 0 ? void 0 : options.params) === null || _a === void 0 ? void 0 : _a.apikey)) {
+            throw new Error('API key is required to connect to Realtime');
+        }
+        this.apiKey = options.params.apikey;
+        // Initialize endpoint URLs
+        this.endPoint = `${endPoint}/${__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TRANSPORTS"].websocket}`;
+        this.httpEndpoint = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$transformers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["httpEndpointURL"])(endPoint);
+        this._initializeOptions(options);
+        this._setupReconnectionTimer();
+        this.fetch = this._resolveFetch(options === null || options === void 0 ? void 0 : options.fetch);
+    }
+    /**
+     * Connects the socket, unless already connected.
+     */ connect() {
+        // Skip if already connecting, disconnecting, or connected
+        if (this.isConnecting() || this.isDisconnecting() || this.conn !== null && this.isConnected()) {
+            return;
+        }
+        this._setConnectionState('connecting');
+        // Trigger auth if needed and not already in progress
+        // This ensures auth is called for standalone RealtimeClient usage
+        // while avoiding race conditions with SupabaseClient's immediate setAuth call
+        if (this.accessToken && !this._authPromise) {
+            this._setAuthSafely('connect');
+        }
+        // Establish WebSocket connection
+        if (this.transport) {
+            // Use custom transport if provided
+            this.conn = new this.transport(this.endpointURL());
+        } else {
+            // Try to use native WebSocket
+            try {
+                this.conn = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$websocket$2d$factory$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].createWebSocket(this.endpointURL());
+            } catch (error) {
+                this._setConnectionState('disconnected');
+                const errorMessage = error.message;
+                // Provide helpful error message based on environment
+                if (errorMessage.includes('Node.js')) {
+                    throw new Error(`${errorMessage}\n\n` + 'To use Realtime in Node.js, you need to provide a WebSocket implementation:\n\n' + 'Option 1: Use Node.js 22+ which has native WebSocket support\n' + 'Option 2: Install and provide the "ws" package:\n\n' + '  npm install ws\n\n' + '  import ws from "ws"\n' + '  const client = new RealtimeClient(url, {\n' + '    ...options,\n' + '    transport: ws\n' + '  })');
+                }
+                throw new Error(`WebSocket not available: ${errorMessage}`);
+            }
+        }
+        this._setupConnectionHandlers();
+    }
+    /**
+     * Returns the URL of the websocket.
+     * @returns string The URL of the websocket.
+     */ endpointURL() {
+        return this._appendParams(this.endPoint, Object.assign({}, this.params, {
+            vsn: this.vsn
+        }));
+    }
+    /**
+     * Disconnects the socket.
+     *
+     * @param code A numeric status code to send on disconnect.
+     * @param reason A custom reason for the disconnect.
+     */ disconnect(code, reason) {
+        if (this.isDisconnecting()) {
+            return;
+        }
+        this._setConnectionState('disconnecting', true);
+        if (this.conn) {
+            // Setup fallback timer to prevent hanging in disconnecting state
+            const fallbackTimer = setTimeout(()=>{
+                this._setConnectionState('disconnected');
+            }, 100);
+            this.conn.onclose = ()=>{
+                clearTimeout(fallbackTimer);
+                this._setConnectionState('disconnected');
+            };
+            // Close the WebSocket connection if close method exists
+            if (typeof this.conn.close === 'function') {
+                if (code) {
+                    this.conn.close(code, reason !== null && reason !== void 0 ? reason : '');
+                } else {
+                    this.conn.close();
+                }
+            }
+            this._teardownConnection();
+        } else {
+            this._setConnectionState('disconnected');
+        }
+    }
+    /**
+     * Returns all created channels
+     */ getChannels() {
+        return this.channels;
+    }
+    /**
+     * Unsubscribes and removes a single channel
+     * @param channel A RealtimeChannel instance
+     */ async removeChannel(channel) {
+        const status = await channel.unsubscribe();
+        // Only remove from channels list if unsubscribe was successful
+        if (status === 'ok') {
+            this._remove(channel);
+        }
+        if (this.channels.length === 0) {
+            this.disconnect();
+        }
+        return status;
+    }
+    /**
+     * Unsubscribes and removes all channels
+     */ async removeAllChannels() {
+        const values_1 = await Promise.all(this.channels.map((channel)=>channel.unsubscribe()));
+        this.channels = [];
+        this.disconnect();
+        return values_1;
+    }
+    /**
+     * Logs the message.
+     *
+     * For customized logging, `this.logger` can be overridden.
+     */ log(kind, msg, data) {
+        this.logger(kind, msg, data);
+    }
+    /**
+     * Returns the current state of the socket.
+     */ connectionState() {
+        switch(this.conn && this.conn.readyState){
+            case __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SOCKET_STATES"].connecting:
+                return __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONNECTION_STATE"].Connecting;
+            case __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SOCKET_STATES"].open:
+                return __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONNECTION_STATE"].Open;
+            case __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SOCKET_STATES"].closing:
+                return __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONNECTION_STATE"].Closing;
+            default:
+                return __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONNECTION_STATE"].Closed;
+        }
+    }
+    /**
+     * Returns `true` is the connection is open.
+     */ isConnected() {
+        return this.connectionState() === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CONNECTION_STATE"].Open;
+    }
+    /**
+     * Returns `true` if the connection is currently connecting.
+     */ isConnecting() {
+        return this._connectionState === 'connecting';
+    }
+    /**
+     * Returns `true` if the connection is currently disconnecting.
+     */ isDisconnecting() {
+        return this._connectionState === 'disconnecting';
+    }
+    /**
+     * Creates (or reuses) a {@link RealtimeChannel} for the provided topic.
+     *
+     * Topics are automatically prefixed with `realtime:` to match the Realtime service.
+     * If a channel with the same topic already exists it will be returned instead of creating
+     * a duplicate connection.
+     */ channel(topic, params = {
+        config: {}
+    }) {
+        const realtimeTopic = `realtime:${topic}`;
+        const exists = this.getChannels().find((c)=>c.topic === realtimeTopic);
+        if (!exists) {
+            const chan = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeChannel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](`realtime:${topic}`, params, this);
+            this.channels.push(chan);
+            return chan;
+        } else {
+            return exists;
+        }
+    }
+    /**
+     * Push out a message if the socket is connected.
+     *
+     * If the socket is not connected, the message gets enqueued within a local buffer, and sent out when a connection is next established.
+     */ push(data) {
+        const { topic, event, payload, ref } = data;
+        const callback = ()=>{
+            this.encode(data, (result)=>{
+                var _a;
+                (_a = this.conn) === null || _a === void 0 ? void 0 : _a.send(result);
+            });
+        };
+        this.log('push', `${topic} ${event} (${ref})`, payload);
+        if (this.isConnected()) {
+            callback();
+        } else {
+            this.sendBuffer.push(callback);
+        }
+    }
+    /**
+     * Sets the JWT access token used for channel subscription authorization and Realtime RLS.
+     *
+     * If param is null it will use the `accessToken` callback function or the token set on the client.
+     *
+     * On callback used, it will set the value of the token internal to the client.
+     *
+     * When a token is explicitly provided, it will be preserved across channel operations
+     * (including removeChannel and resubscribe). The `accessToken` callback will not be
+     * invoked until `setAuth()` is called without arguments.
+     *
+     * @param token A JWT string to override the token set on the client.
+     *
+     * @example
+     * // Use a manual token (preserved across resubscribes, ignores accessToken callback)
+     * client.realtime.setAuth('my-custom-jwt')
+     *
+     * // Switch back to using the accessToken callback
+     * client.realtime.setAuth()
+     */ async setAuth(token = null) {
+        this._authPromise = this._performAuth(token);
+        try {
+            await this._authPromise;
+        } finally{
+            this._authPromise = null;
+        }
+    }
+    /**
+     * Returns true if the current access token was explicitly set via setAuth(token),
+     * false if it was obtained via the accessToken callback.
+     * @internal
+     */ _isManualToken() {
+        return this._manuallySetToken;
+    }
+    /**
+     * Sends a heartbeat message if the socket is connected.
+     */ async sendHeartbeat() {
+        var _a;
+        if (!this.isConnected()) {
+            try {
+                this.heartbeatCallback('disconnected');
+            } catch (e) {
+                this.log('error', 'error in heartbeat callback', e);
+            }
+            return;
+        }
+        // Handle heartbeat timeout and force reconnection if needed
+        if (this.pendingHeartbeatRef) {
+            this.pendingHeartbeatRef = null;
+            this._heartbeatSentAt = null;
+            this.log('transport', 'heartbeat timeout. Attempting to re-establish connection');
+            try {
+                this.heartbeatCallback('timeout');
+            } catch (e) {
+                this.log('error', 'error in heartbeat callback', e);
+            }
+            // Force reconnection after heartbeat timeout
+            this._wasManualDisconnect = false;
+            (_a = this.conn) === null || _a === void 0 ? void 0 : _a.close(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["WS_CLOSE_NORMAL"], 'heartbeat timeout');
+            setTimeout(()=>{
+                var _a;
+                if (!this.isConnected()) {
+                    (_a = this.reconnectTimer) === null || _a === void 0 ? void 0 : _a.scheduleTimeout();
+                }
+            }, CONNECTION_TIMEOUTS.HEARTBEAT_TIMEOUT_FALLBACK);
+            return;
+        }
+        // Send heartbeat message to server
+        this._heartbeatSentAt = Date.now();
+        this.pendingHeartbeatRef = this._makeRef();
+        this.push({
+            topic: 'phoenix',
+            event: 'heartbeat',
+            payload: {},
+            ref: this.pendingHeartbeatRef
+        });
+        try {
+            this.heartbeatCallback('sent');
+        } catch (e) {
+            this.log('error', 'error in heartbeat callback', e);
+        }
+        this._setAuthSafely('heartbeat');
+    }
+    /**
+     * Sets a callback that receives lifecycle events for internal heartbeat messages.
+     * Useful for instrumenting connection health (e.g. sent/ok/timeout/disconnected).
+     */ onHeartbeat(callback) {
+        this.heartbeatCallback = callback;
+    }
+    /**
+     * Flushes send buffer
+     */ flushSendBuffer() {
+        if (this.isConnected() && this.sendBuffer.length > 0) {
+            this.sendBuffer.forEach((callback)=>callback());
+            this.sendBuffer = [];
+        }
+    }
+    /**
+     * Return the next message ref, accounting for overflows
+     *
+     * @internal
+     */ _makeRef() {
+        let newRef = this.ref + 1;
+        if (newRef === this.ref) {
+            this.ref = 0;
+        } else {
+            this.ref = newRef;
+        }
+        return this.ref.toString();
+    }
+    /**
+     * Unsubscribe from channels with the specified topic.
+     *
+     * @internal
+     */ _leaveOpenTopic(topic) {
+        let dupChannel = this.channels.find((c)=>c.topic === topic && (c._isJoined() || c._isJoining()));
+        if (dupChannel) {
+            this.log('transport', `leaving duplicate topic "${topic}"`);
+            dupChannel.unsubscribe();
+        }
+    }
+    /**
+     * Removes a subscription from the socket.
+     *
+     * @param channel An open subscription.
+     *
+     * @internal
+     */ _remove(channel) {
+        this.channels = this.channels.filter((c)=>c.topic !== channel.topic);
+    }
+    /** @internal */ _onConnMessage(rawMessage) {
+        this.decode(rawMessage.data, (msg)=>{
+            // Handle heartbeat responses
+            if (msg.topic === 'phoenix' && msg.event === 'phx_reply' && msg.ref && msg.ref === this.pendingHeartbeatRef) {
+                const latency = this._heartbeatSentAt ? Date.now() - this._heartbeatSentAt : undefined;
+                try {
+                    this.heartbeatCallback(msg.payload.status === 'ok' ? 'ok' : 'error', latency);
+                } catch (e) {
+                    this.log('error', 'error in heartbeat callback', e);
+                }
+                this._heartbeatSentAt = null;
+                this.pendingHeartbeatRef = null;
+            }
+            // Log incoming message
+            const { topic, event, payload, ref } = msg;
+            const refString = ref ? `(${ref})` : '';
+            const status = payload.status || '';
+            this.log('receive', `${status} ${topic} ${event} ${refString}`.trim(), payload);
+            // Route message to appropriate channels
+            this.channels.filter((channel)=>channel._isMember(topic)).forEach((channel)=>channel._trigger(event, payload, ref));
+            this._triggerStateCallbacks('message', msg);
+        });
+    }
+    /**
+     * Clear specific timer
+     * @internal
+     */ _clearTimer(timer) {
+        var _a;
+        if (timer === 'heartbeat' && this.heartbeatTimer) {
+            clearInterval(this.heartbeatTimer);
+            this.heartbeatTimer = undefined;
+        } else if (timer === 'reconnect') {
+            (_a = this.reconnectTimer) === null || _a === void 0 ? void 0 : _a.reset();
+        }
+    }
+    /**
+     * Clear all timers
+     * @internal
+     */ _clearAllTimers() {
+        this._clearTimer('heartbeat');
+        this._clearTimer('reconnect');
+    }
+    /**
+     * Setup connection handlers for WebSocket events
+     * @internal
+     */ _setupConnectionHandlers() {
+        if (!this.conn) return;
+        // Set binary type if supported (browsers and most WebSocket implementations)
+        if ('binaryType' in this.conn) {
+            ;
+            this.conn.binaryType = 'arraybuffer';
+        }
+        this.conn.onopen = ()=>this._onConnOpen();
+        this.conn.onerror = (error)=>this._onConnError(error);
+        this.conn.onmessage = (event)=>this._onConnMessage(event);
+        this.conn.onclose = (event)=>this._onConnClose(event);
+        if (this.conn.readyState === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SOCKET_STATES"].open) {
+            this._onConnOpen();
+        }
+    }
+    /**
+     * Teardown connection and cleanup resources
+     * @internal
+     */ _teardownConnection() {
+        if (this.conn) {
+            if (this.conn.readyState === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SOCKET_STATES"].open || this.conn.readyState === __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SOCKET_STATES"].connecting) {
+                try {
+                    this.conn.close();
+                } catch (e) {
+                    this.log('error', 'Error closing connection', e);
+                }
+            }
+            this.conn.onopen = null;
+            this.conn.onerror = null;
+            this.conn.onmessage = null;
+            this.conn.onclose = null;
+            this.conn = null;
+        }
+        this._clearAllTimers();
+        this._terminateWorker();
+        this.channels.forEach((channel)=>channel.teardown());
+    }
+    /** @internal */ _onConnOpen() {
+        this._setConnectionState('connected');
+        this.log('transport', `connected to ${this.endpointURL()}`);
+        // Wait for any pending auth operations before flushing send buffer
+        // This ensures channel join messages include the correct access token
+        const authPromise = this._authPromise || (this.accessToken && !this.accessTokenValue ? this.setAuth() : Promise.resolve());
+        authPromise.then(()=>{
+            this.flushSendBuffer();
+        }).catch((e)=>{
+            this.log('error', 'error waiting for auth on connect', e);
+            // Proceed anyway to avoid hanging connections
+            this.flushSendBuffer();
+        });
+        this._clearTimer('reconnect');
+        if (!this.worker) {
+            this._startHeartbeat();
+        } else {
+            if (!this.workerRef) {
+                this._startWorkerHeartbeat();
+            }
+        }
+        this._triggerStateCallbacks('open');
+    }
+    /** @internal */ _startHeartbeat() {
+        this.heartbeatTimer && clearInterval(this.heartbeatTimer);
+        this.heartbeatTimer = setInterval(()=>this.sendHeartbeat(), this.heartbeatIntervalMs);
+    }
+    /** @internal */ _startWorkerHeartbeat() {
+        if (this.workerUrl) {
+            this.log('worker', `starting worker for from ${this.workerUrl}`);
+        } else {
+            this.log('worker', `starting default worker`);
+        }
+        const objectUrl = this._workerObjectUrl(this.workerUrl);
+        this.workerRef = new Worker(objectUrl);
+        this.workerRef.onerror = (error)=>{
+            this.log('worker', 'worker error', error.message);
+            this._terminateWorker();
+        };
+        this.workerRef.onmessage = (event)=>{
+            if (event.data.event === 'keepAlive') {
+                this.sendHeartbeat();
+            }
+        };
+        this.workerRef.postMessage({
+            event: 'start',
+            interval: this.heartbeatIntervalMs
+        });
+    }
+    /**
+     * Terminate the Web Worker and clear the reference
+     * @internal
+     */ _terminateWorker() {
+        if (this.workerRef) {
+            this.log('worker', 'terminating worker');
+            this.workerRef.terminate();
+            this.workerRef = undefined;
+        }
+    }
+    /** @internal */ _onConnClose(event) {
+        var _a;
+        this._setConnectionState('disconnected');
+        this.log('transport', 'close', event);
+        this._triggerChanError();
+        this._clearTimer('heartbeat');
+        // Only schedule reconnection if it wasn't a manual disconnect
+        if (!this._wasManualDisconnect) {
+            (_a = this.reconnectTimer) === null || _a === void 0 ? void 0 : _a.scheduleTimeout();
+        }
+        this._triggerStateCallbacks('close', event);
+    }
+    /** @internal */ _onConnError(error) {
+        this._setConnectionState('disconnected');
+        this.log('transport', `${error}`);
+        this._triggerChanError();
+        this._triggerStateCallbacks('error', error);
+        try {
+            this.heartbeatCallback('error');
+        } catch (e) {
+            this.log('error', 'error in heartbeat callback', e);
+        }
+    }
+    /** @internal */ _triggerChanError() {
+        this.channels.forEach((channel)=>channel._trigger(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].error));
+    }
+    /** @internal */ _appendParams(url, params) {
+        if (Object.keys(params).length === 0) {
+            return url;
+        }
+        const prefix = url.match(/\?/) ? '&' : '?';
+        const query = new URLSearchParams(params);
+        return `${url}${prefix}${query}`;
+    }
+    _workerObjectUrl(url) {
+        let result_url;
+        if (url) {
+            result_url = url;
+        } else {
+            const blob = new Blob([
+                WORKER_SCRIPT
+            ], {
+                type: 'application/javascript'
+            });
+            result_url = URL.createObjectURL(blob);
+        }
+        return result_url;
+    }
+    /**
+     * Set connection state with proper state management
+     * @internal
+     */ _setConnectionState(state, manual = false) {
+        this._connectionState = state;
+        if (state === 'connecting') {
+            this._wasManualDisconnect = false;
+        } else if (state === 'disconnecting') {
+            this._wasManualDisconnect = manual;
+        }
+    }
+    /**
+     * Perform the actual auth operation
+     * @internal
+     */ async _performAuth(token = null) {
+        let tokenToSend;
+        let isManualToken = false;
+        if (token) {
+            tokenToSend = token;
+            // Track if this is a manually-provided token
+            isManualToken = true;
+        } else if (this.accessToken) {
+            // Call the accessToken callback to get fresh token
+            try {
+                tokenToSend = await this.accessToken();
+            } catch (e) {
+                this.log('error', 'Error fetching access token from callback', e);
+                // Fall back to cached value if callback fails
+                tokenToSend = this.accessTokenValue;
+            }
+        } else {
+            tokenToSend = this.accessTokenValue;
+        }
+        // Track whether this token was manually set or fetched via callback
+        if (isManualToken) {
+            this._manuallySetToken = true;
+        } else if (this.accessToken) {
+            // If we used the callback, clear the manual flag
+            this._manuallySetToken = false;
+        }
+        if (this.accessTokenValue != tokenToSend) {
+            this.accessTokenValue = tokenToSend;
+            this.channels.forEach((channel)=>{
+                const payload = {
+                    access_token: tokenToSend,
+                    version: __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DEFAULT_VERSION"]
+                };
+                tokenToSend && channel.updateJoinPayload(payload);
+                if (channel.joinedOnce && channel._isJoined()) {
+                    channel._push(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CHANNEL_EVENTS"].access_token, {
+                        access_token: tokenToSend
+                    });
+                }
+            });
+        }
+    }
+    /**
+     * Wait for any in-flight auth operations to complete
+     * @internal
+     */ async _waitForAuthIfNeeded() {
+        if (this._authPromise) {
+            await this._authPromise;
+        }
+    }
+    /**
+     * Safely call setAuth with standardized error handling
+     * @internal
+     */ _setAuthSafely(context = 'general') {
+        // Only refresh auth if using callback-based tokens
+        if (!this._isManualToken()) {
+            this.setAuth().catch((e)=>{
+                this.log('error', `Error setting auth in ${context}`, e);
+            });
+        }
+    }
+    /**
+     * Trigger state change callbacks with proper error handling
+     * @internal
+     */ _triggerStateCallbacks(event, data) {
+        try {
+            this.stateChangeCallbacks[event].forEach((callback)=>{
+                try {
+                    callback(data);
+                } catch (e) {
+                    this.log('error', `error in ${event} callback`, e);
+                }
+            });
+        } catch (e) {
+            this.log('error', `error triggering ${event} callbacks`, e);
+        }
+    }
+    /**
+     * Setup reconnection timer with proper configuration
+     * @internal
+     */ _setupReconnectionTimer() {
+        this.reconnectTimer = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$timer$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"](async ()=>{
+            setTimeout(async ()=>{
+                await this._waitForAuthIfNeeded();
+                if (!this.isConnected()) {
+                    this.connect();
+                }
+            }, CONNECTION_TIMEOUTS.RECONNECT_DELAY);
+        }, this.reconnectAfterMs);
+    }
+    /**
+     * Initialize client options with defaults
+     * @internal
+     */ _initializeOptions(options) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        // Set defaults
+        this.transport = (_a = options === null || options === void 0 ? void 0 : options.transport) !== null && _a !== void 0 ? _a : null;
+        this.timeout = (_b = options === null || options === void 0 ? void 0 : options.timeout) !== null && _b !== void 0 ? _b : __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DEFAULT_TIMEOUT"];
+        this.heartbeatIntervalMs = (_c = options === null || options === void 0 ? void 0 : options.heartbeatIntervalMs) !== null && _c !== void 0 ? _c : CONNECTION_TIMEOUTS.HEARTBEAT_INTERVAL;
+        this.worker = (_d = options === null || options === void 0 ? void 0 : options.worker) !== null && _d !== void 0 ? _d : false;
+        this.accessToken = (_e = options === null || options === void 0 ? void 0 : options.accessToken) !== null && _e !== void 0 ? _e : null;
+        this.heartbeatCallback = (_f = options === null || options === void 0 ? void 0 : options.heartbeatCallback) !== null && _f !== void 0 ? _f : noop;
+        this.vsn = (_g = options === null || options === void 0 ? void 0 : options.vsn) !== null && _g !== void 0 ? _g : __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DEFAULT_VSN"];
+        // Handle special cases
+        if (options === null || options === void 0 ? void 0 : options.params) this.params = options.params;
+        if (options === null || options === void 0 ? void 0 : options.logger) this.logger = options.logger;
+        if ((options === null || options === void 0 ? void 0 : options.logLevel) || (options === null || options === void 0 ? void 0 : options.log_level)) {
+            this.logLevel = options.logLevel || options.log_level;
+            this.params = Object.assign(Object.assign({}, this.params), {
+                log_level: this.logLevel
+            });
+        }
+        // Set up functions with defaults
+        this.reconnectAfterMs = (_h = options === null || options === void 0 ? void 0 : options.reconnectAfterMs) !== null && _h !== void 0 ? _h : (tries)=>{
+            return RECONNECT_INTERVALS[tries - 1] || DEFAULT_RECONNECT_FALLBACK;
+        };
+        switch(this.vsn){
+            case __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["VSN_1_0_0"]:
+                this.encode = (_j = options === null || options === void 0 ? void 0 : options.encode) !== null && _j !== void 0 ? _j : (payload, callback)=>{
+                    return callback(JSON.stringify(payload));
+                };
+                this.decode = (_k = options === null || options === void 0 ? void 0 : options.decode) !== null && _k !== void 0 ? _k : (payload, callback)=>{
+                    return callback(JSON.parse(payload));
+                };
+                break;
+            case __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["VSN_2_0_0"]:
+                this.encode = (_l = options === null || options === void 0 ? void 0 : options.encode) !== null && _l !== void 0 ? _l : this.serializer.encode.bind(this.serializer);
+                this.decode = (_m = options === null || options === void 0 ? void 0 : options.decode) !== null && _m !== void 0 ? _m : this.serializer.decode.bind(this.serializer);
+                break;
+            default:
+                throw new Error(`Unsupported serializer version: ${this.vsn}`);
+        }
+        // Handle worker setup
+        if (this.worker) {
+            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            ;
+            this.workerUrl = options === null || options === void 0 ? void 0 : options.workerUrl;
+        }
+    }
+} //# sourceMappingURL=RealtimeClient.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/index.js [app-ssr] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeChannel$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeChannel.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimePresence$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimePresence.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$lib$2f$websocket$2d$factory$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/lib/websocket-factory.js [app-ssr] (ecmascript)");
+;
+;
+;
+;
+;
+ //# sourceMappingURL=index.js.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js [app-ssr] (ecmascript) <export default as RealtimeClient>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "RealtimeClient",
+    ()=>__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"]
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js [app-ssr] (ecmascript)");
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/iceberg-js/dist/index.mjs [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "IcebergError",
+    ()=>IcebergError,
+    "IcebergRestCatalog",
+    ()=>IcebergRestCatalog,
+    "getCurrentSchema",
+    ()=>getCurrentSchema,
+    "isDecimalType",
+    ()=>isDecimalType,
+    "isFixedType",
+    ()=>isFixedType,
+    "parseDecimalType",
+    ()=>parseDecimalType,
+    "parseFixedType",
+    ()=>parseFixedType,
+    "typesEqual",
+    ()=>typesEqual
+]);
+// src/errors/IcebergError.ts
+var IcebergError = class extends Error {
+    constructor(message, opts){
+        super(message);
+        this.name = "IcebergError";
+        this.status = opts.status;
+        this.icebergType = opts.icebergType;
+        this.icebergCode = opts.icebergCode;
+        this.details = opts.details;
+        this.isCommitStateUnknown = opts.icebergType === "CommitStateUnknownException" || [
+            500,
+            502,
+            504
+        ].includes(opts.status) && opts.icebergType?.includes("CommitState") === true;
+    }
+    /**
+   * Returns true if the error is a 404 Not Found error.
+   */ isNotFound() {
+        return this.status === 404;
+    }
+    /**
+   * Returns true if the error is a 409 Conflict error.
+   */ isConflict() {
+        return this.status === 409;
+    }
+    /**
+   * Returns true if the error is a 419 Authentication Timeout error.
+   */ isAuthenticationTimeout() {
+        return this.status === 419;
+    }
+};
+// src/utils/url.ts
+function buildUrl(baseUrl, path, query) {
+    const url = new URL(path, baseUrl);
+    if (query) {
+        for (const [key, value] of Object.entries(query)){
+            if (value !== void 0) {
+                url.searchParams.set(key, value);
+            }
+        }
+    }
+    return url.toString();
+}
+// src/http/createFetchClient.ts
+async function buildAuthHeaders(auth) {
+    if (!auth || auth.type === "none") {
+        return {};
+    }
+    if (auth.type === "bearer") {
+        return {
+            Authorization: `Bearer ${auth.token}`
+        };
+    }
+    if (auth.type === "header") {
+        return {
+            [auth.name]: auth.value
+        };
+    }
+    if (auth.type === "custom") {
+        return await auth.getHeaders();
+    }
+    return {};
+}
+function createFetchClient(options) {
+    const fetchFn = options.fetchImpl ?? globalThis.fetch;
+    return {
+        async request ({ method, path, query, body, headers }) {
+            const url = buildUrl(options.baseUrl, path, query);
+            const authHeaders = await buildAuthHeaders(options.auth);
+            const res = await fetchFn(url, {
+                method,
+                headers: {
+                    ...body ? {
+                        "Content-Type": "application/json"
+                    } : {},
+                    ...authHeaders,
+                    ...headers
+                },
+                body: body ? JSON.stringify(body) : void 0
+            });
+            const text = await res.text();
+            const isJson = (res.headers.get("content-type") || "").includes("application/json");
+            const data = isJson && text ? JSON.parse(text) : text;
+            if (!res.ok) {
+                const errBody = isJson ? data : void 0;
+                const errorDetail = errBody?.error;
+                throw new IcebergError(errorDetail?.message ?? `Request failed with status ${res.status}`, {
+                    status: res.status,
+                    icebergType: errorDetail?.type,
+                    icebergCode: errorDetail?.code,
+                    details: errBody
+                });
+            }
+            return {
+                status: res.status,
+                headers: res.headers,
+                data
+            };
+        }
+    };
+}
+// src/catalog/namespaces.ts
+function namespaceToPath(namespace) {
+    return namespace.join("");
+}
+var NamespaceOperations = class {
+    constructor(client, prefix = ""){
+        this.client = client;
+        this.prefix = prefix;
+    }
+    async listNamespaces(parent) {
+        const query = parent ? {
+            parent: namespaceToPath(parent.namespace)
+        } : void 0;
+        const response = await this.client.request({
+            method: "GET",
+            path: `${this.prefix}/namespaces`,
+            query
+        });
+        return response.data.namespaces.map((ns)=>({
+                namespace: ns
+            }));
+    }
+    async createNamespace(id, metadata) {
+        const request = {
+            namespace: id.namespace,
+            properties: metadata?.properties
+        };
+        const response = await this.client.request({
+            method: "POST",
+            path: `${this.prefix}/namespaces`,
+            body: request
+        });
+        return response.data;
+    }
+    async dropNamespace(id) {
+        await this.client.request({
+            method: "DELETE",
+            path: `${this.prefix}/namespaces/${namespaceToPath(id.namespace)}`
+        });
+    }
+    async loadNamespaceMetadata(id) {
+        const response = await this.client.request({
+            method: "GET",
+            path: `${this.prefix}/namespaces/${namespaceToPath(id.namespace)}`
+        });
+        return {
+            properties: response.data.properties
+        };
+    }
+    async namespaceExists(id) {
+        try {
+            await this.client.request({
+                method: "HEAD",
+                path: `${this.prefix}/namespaces/${namespaceToPath(id.namespace)}`
+            });
+            return true;
+        } catch (error) {
+            if (error instanceof IcebergError && error.status === 404) {
+                return false;
+            }
+            throw error;
+        }
+    }
+    async createNamespaceIfNotExists(id, metadata) {
+        try {
+            return await this.createNamespace(id, metadata);
+        } catch (error) {
+            if (error instanceof IcebergError && error.status === 409) {
+                return;
+            }
+            throw error;
+        }
+    }
+};
+// src/catalog/tables.ts
+function namespaceToPath2(namespace) {
+    return namespace.join("");
+}
+var TableOperations = class {
+    constructor(client, prefix = "", accessDelegation){
+        this.client = client;
+        this.prefix = prefix;
+        this.accessDelegation = accessDelegation;
+    }
+    async listTables(namespace) {
+        const response = await this.client.request({
+            method: "GET",
+            path: `${this.prefix}/namespaces/${namespaceToPath2(namespace.namespace)}/tables`
+        });
+        return response.data.identifiers;
+    }
+    async createTable(namespace, request) {
+        const headers = {};
+        if (this.accessDelegation) {
+            headers["X-Iceberg-Access-Delegation"] = this.accessDelegation;
+        }
+        const response = await this.client.request({
+            method: "POST",
+            path: `${this.prefix}/namespaces/${namespaceToPath2(namespace.namespace)}/tables`,
+            body: request,
+            headers
+        });
+        return response.data.metadata;
+    }
+    async updateTable(id, request) {
+        const response = await this.client.request({
+            method: "POST",
+            path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+            body: request
+        });
+        return {
+            "metadata-location": response.data["metadata-location"],
+            metadata: response.data.metadata
+        };
+    }
+    async dropTable(id, options) {
+        await this.client.request({
+            method: "DELETE",
+            path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+            query: {
+                purgeRequested: String(options?.purge ?? false)
+            }
+        });
+    }
+    async loadTable(id) {
+        const headers = {};
+        if (this.accessDelegation) {
+            headers["X-Iceberg-Access-Delegation"] = this.accessDelegation;
+        }
+        const response = await this.client.request({
+            method: "GET",
+            path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+            headers
+        });
+        return response.data.metadata;
+    }
+    async tableExists(id) {
+        const headers = {};
+        if (this.accessDelegation) {
+            headers["X-Iceberg-Access-Delegation"] = this.accessDelegation;
+        }
+        try {
+            await this.client.request({
+                method: "HEAD",
+                path: `${this.prefix}/namespaces/${namespaceToPath2(id.namespace)}/tables/${id.name}`,
+                headers
+            });
+            return true;
+        } catch (error) {
+            if (error instanceof IcebergError && error.status === 404) {
+                return false;
+            }
+            throw error;
+        }
+    }
+    async createTableIfNotExists(namespace, request) {
+        try {
+            return await this.createTable(namespace, request);
+        } catch (error) {
+            if (error instanceof IcebergError && error.status === 409) {
+                return await this.loadTable({
+                    namespace: namespace.namespace,
+                    name: request.name
+                });
+            }
+            throw error;
+        }
+    }
+};
+// src/catalog/IcebergRestCatalog.ts
+var IcebergRestCatalog = class {
+    /**
+   * Creates a new Iceberg REST Catalog client.
+   *
+   * @param options - Configuration options for the catalog client
+   */ constructor(options){
+        let prefix = "v1";
+        if (options.catalogName) {
+            prefix += `/${options.catalogName}`;
+        }
+        const baseUrl = options.baseUrl.endsWith("/") ? options.baseUrl : `${options.baseUrl}/`;
+        this.client = createFetchClient({
+            baseUrl,
+            auth: options.auth,
+            fetchImpl: options.fetch
+        });
+        this.accessDelegation = options.accessDelegation?.join(",");
+        this.namespaceOps = new NamespaceOperations(this.client, prefix);
+        this.tableOps = new TableOperations(this.client, prefix, this.accessDelegation);
+    }
+    /**
+   * Lists all namespaces in the catalog.
+   *
+   * @param parent - Optional parent namespace to list children under
+   * @returns Array of namespace identifiers
+   *
+   * @example
+   * ```typescript
+   * // List all top-level namespaces
+   * const namespaces = await catalog.listNamespaces();
+   *
+   * // List namespaces under a parent
+   * const children = await catalog.listNamespaces({ namespace: ['analytics'] });
+   * ```
+   */ async listNamespaces(parent) {
+        return this.namespaceOps.listNamespaces(parent);
+    }
+    /**
+   * Creates a new namespace in the catalog.
+   *
+   * @param id - Namespace identifier to create
+   * @param metadata - Optional metadata properties for the namespace
+   * @returns Response containing the created namespace and its properties
+   *
+   * @example
+   * ```typescript
+   * const response = await catalog.createNamespace(
+   *   { namespace: ['analytics'] },
+   *   { properties: { owner: 'data-team' } }
+   * );
+   * console.log(response.namespace); // ['analytics']
+   * console.log(response.properties); // { owner: 'data-team', ... }
+   * ```
+   */ async createNamespace(id, metadata) {
+        return this.namespaceOps.createNamespace(id, metadata);
+    }
+    /**
+   * Drops a namespace from the catalog.
+   *
+   * The namespace must be empty (contain no tables) before it can be dropped.
+   *
+   * @param id - Namespace identifier to drop
+   *
+   * @example
+   * ```typescript
+   * await catalog.dropNamespace({ namespace: ['analytics'] });
+   * ```
+   */ async dropNamespace(id) {
+        await this.namespaceOps.dropNamespace(id);
+    }
+    /**
+   * Loads metadata for a namespace.
+   *
+   * @param id - Namespace identifier to load
+   * @returns Namespace metadata including properties
+   *
+   * @example
+   * ```typescript
+   * const metadata = await catalog.loadNamespaceMetadata({ namespace: ['analytics'] });
+   * console.log(metadata.properties);
+   * ```
+   */ async loadNamespaceMetadata(id) {
+        return this.namespaceOps.loadNamespaceMetadata(id);
+    }
+    /**
+   * Lists all tables in a namespace.
+   *
+   * @param namespace - Namespace identifier to list tables from
+   * @returns Array of table identifiers
+   *
+   * @example
+   * ```typescript
+   * const tables = await catalog.listTables({ namespace: ['analytics'] });
+   * console.log(tables); // [{ namespace: ['analytics'], name: 'events' }, ...]
+   * ```
+   */ async listTables(namespace) {
+        return this.tableOps.listTables(namespace);
+    }
+    /**
+   * Creates a new table in the catalog.
+   *
+   * @param namespace - Namespace to create the table in
+   * @param request - Table creation request including name, schema, partition spec, etc.
+   * @returns Table metadata for the created table
+   *
+   * @example
+   * ```typescript
+   * const metadata = await catalog.createTable(
+   *   { namespace: ['analytics'] },
+   *   {
+   *     name: 'events',
+   *     schema: {
+   *       type: 'struct',
+   *       fields: [
+   *         { id: 1, name: 'id', type: 'long', required: true },
+   *         { id: 2, name: 'timestamp', type: 'timestamp', required: true }
+   *       ],
+   *       'schema-id': 0
+   *     },
+   *     'partition-spec': {
+   *       'spec-id': 0,
+   *       fields: [
+   *         { source_id: 2, field_id: 1000, name: 'ts_day', transform: 'day' }
+   *       ]
+   *     }
+   *   }
+   * );
+   * ```
+   */ async createTable(namespace, request) {
+        return this.tableOps.createTable(namespace, request);
+    }
+    /**
+   * Updates an existing table's metadata.
+   *
+   * Can update the schema, partition spec, or properties of a table.
+   *
+   * @param id - Table identifier to update
+   * @param request - Update request with fields to modify
+   * @returns Response containing the metadata location and updated table metadata
+   *
+   * @example
+   * ```typescript
+   * const response = await catalog.updateTable(
+   *   { namespace: ['analytics'], name: 'events' },
+   *   {
+   *     properties: { 'read.split.target-size': '134217728' }
+   *   }
+   * );
+   * console.log(response['metadata-location']); // s3://...
+   * console.log(response.metadata); // TableMetadata object
+   * ```
+   */ async updateTable(id, request) {
+        return this.tableOps.updateTable(id, request);
+    }
+    /**
+   * Drops a table from the catalog.
+   *
+   * @param id - Table identifier to drop
+   *
+   * @example
+   * ```typescript
+   * await catalog.dropTable({ namespace: ['analytics'], name: 'events' });
+   * ```
+   */ async dropTable(id, options) {
+        await this.tableOps.dropTable(id, options);
+    }
+    /**
+   * Loads metadata for a table.
+   *
+   * @param id - Table identifier to load
+   * @returns Table metadata including schema, partition spec, location, etc.
+   *
+   * @example
+   * ```typescript
+   * const metadata = await catalog.loadTable({ namespace: ['analytics'], name: 'events' });
+   * console.log(metadata.schema);
+   * console.log(metadata.location);
+   * ```
+   */ async loadTable(id) {
+        return this.tableOps.loadTable(id);
+    }
+    /**
+   * Checks if a namespace exists in the catalog.
+   *
+   * @param id - Namespace identifier to check
+   * @returns True if the namespace exists, false otherwise
+   *
+   * @example
+   * ```typescript
+   * const exists = await catalog.namespaceExists({ namespace: ['analytics'] });
+   * console.log(exists); // true or false
+   * ```
+   */ async namespaceExists(id) {
+        return this.namespaceOps.namespaceExists(id);
+    }
+    /**
+   * Checks if a table exists in the catalog.
+   *
+   * @param id - Table identifier to check
+   * @returns True if the table exists, false otherwise
+   *
+   * @example
+   * ```typescript
+   * const exists = await catalog.tableExists({ namespace: ['analytics'], name: 'events' });
+   * console.log(exists); // true or false
+   * ```
+   */ async tableExists(id) {
+        return this.tableOps.tableExists(id);
+    }
+    /**
+   * Creates a namespace if it does not exist.
+   *
+   * If the namespace already exists, returns void. If created, returns the response.
+   *
+   * @param id - Namespace identifier to create
+   * @param metadata - Optional metadata properties for the namespace
+   * @returns Response containing the created namespace and its properties, or void if it already exists
+   *
+   * @example
+   * ```typescript
+   * const response = await catalog.createNamespaceIfNotExists(
+   *   { namespace: ['analytics'] },
+   *   { properties: { owner: 'data-team' } }
+   * );
+   * if (response) {
+   *   console.log('Created:', response.namespace);
+   * } else {
+   *   console.log('Already exists');
+   * }
+   * ```
+   */ async createNamespaceIfNotExists(id, metadata) {
+        return this.namespaceOps.createNamespaceIfNotExists(id, metadata);
+    }
+    /**
+   * Creates a table if it does not exist.
+   *
+   * If the table already exists, returns its metadata instead.
+   *
+   * @param namespace - Namespace to create the table in
+   * @param request - Table creation request including name, schema, partition spec, etc.
+   * @returns Table metadata for the created or existing table
+   *
+   * @example
+   * ```typescript
+   * const metadata = await catalog.createTableIfNotExists(
+   *   { namespace: ['analytics'] },
+   *   {
+   *     name: 'events',
+   *     schema: {
+   *       type: 'struct',
+   *       fields: [
+   *         { id: 1, name: 'id', type: 'long', required: true },
+   *         { id: 2, name: 'timestamp', type: 'timestamp', required: true }
+   *       ],
+   *       'schema-id': 0
+   *     }
+   *   }
+   * );
+   * ```
+   */ async createTableIfNotExists(namespace, request) {
+        return this.tableOps.createTableIfNotExists(namespace, request);
+    }
+};
+// src/catalog/types.ts
+var DECIMAL_REGEX = /^decimal\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)$/;
+var FIXED_REGEX = /^fixed\s*\[\s*(\d+)\s*\]$/;
+function parseDecimalType(type) {
+    const match = type.match(DECIMAL_REGEX);
+    if (!match) return null;
+    return {
+        precision: parseInt(match[1], 10),
+        scale: parseInt(match[2], 10)
+    };
+}
+function parseFixedType(type) {
+    const match = type.match(FIXED_REGEX);
+    if (!match) return null;
+    return {
+        length: parseInt(match[1], 10)
+    };
+}
+function isDecimalType(type) {
+    return DECIMAL_REGEX.test(type);
+}
+function isFixedType(type) {
+    return FIXED_REGEX.test(type);
+}
+function typesEqual(a, b) {
+    const decimalA = parseDecimalType(a);
+    const decimalB = parseDecimalType(b);
+    if (decimalA && decimalB) {
+        return decimalA.precision === decimalB.precision && decimalA.scale === decimalB.scale;
+    }
+    const fixedA = parseFixedType(a);
+    const fixedB = parseFixedType(b);
+    if (fixedA && fixedB) {
+        return fixedA.length === fixedB.length;
+    }
+    return a === b;
+}
+function getCurrentSchema(metadata) {
+    return metadata.schemas.find((s)=>s["schema-id"] === metadata["current-schema-id"]);
+}
+;
+ //# sourceMappingURL=index.mjs.map
+ //# sourceMappingURL=index.mjs.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/storage-js/dist/index.mjs [app-ssr] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "StorageAnalyticsClient",
+    ()=>StorageAnalyticsClient,
+    "StorageApiError",
+    ()=>StorageApiError,
+    "StorageClient",
+    ()=>StorageClient,
+    "StorageError",
+    ()=>StorageError,
+    "StorageUnknownError",
+    ()=>StorageUnknownError,
+    "StorageVectorsApiError",
+    ()=>StorageVectorsApiError,
+    "StorageVectorsClient",
+    ()=>StorageVectorsClient,
+    "StorageVectorsError",
+    ()=>StorageVectorsError,
+    "StorageVectorsErrorCode",
+    ()=>StorageVectorsErrorCode,
+    "StorageVectorsUnknownError",
+    ()=>StorageVectorsUnknownError,
+    "VectorBucketApi",
+    ()=>VectorBucketApi,
+    "VectorBucketScope",
+    ()=>VectorBucketScope,
+    "VectorDataApi",
+    ()=>VectorDataApi,
+    "VectorIndexApi",
+    ()=>VectorIndexApi,
+    "VectorIndexScope",
+    ()=>VectorIndexScope,
+    "isStorageError",
+    ()=>isStorageError,
+    "isStorageVectorsError",
+    ()=>isStorageVectorsError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$iceberg$2d$js$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/iceberg-js/dist/index.mjs [app-ssr] (ecmascript)");
+;
+//#region src/lib/common/errors.ts
+/**
+* Base error class for all Storage errors
+* Supports both 'storage' and 'vectors' namespaces
+*/ var StorageError = class extends Error {
+    constructor(message, namespace = "storage", status, statusCode){
+        super(message);
+        this.__isStorageError = true;
+        this.namespace = namespace;
+        this.name = namespace === "vectors" ? "StorageVectorsError" : "StorageError";
+        this.status = status;
+        this.statusCode = statusCode;
+    }
+};
+/**
+* Type guard to check if an error is a StorageError
+* @param error - The error to check
+* @returns True if the error is a StorageError
+*/ function isStorageError(error) {
+    return typeof error === "object" && error !== null && "__isStorageError" in error;
+}
+/**
+* API error returned from Storage service
+* Includes HTTP status code and service-specific error code
+*/ var StorageApiError = class extends StorageError {
+    constructor(message, status, statusCode, namespace = "storage"){
+        super(message, namespace, status, statusCode);
+        this.name = namespace === "vectors" ? "StorageVectorsApiError" : "StorageApiError";
+        this.status = status;
+        this.statusCode = statusCode;
+    }
+    toJSON() {
+        return {
+            name: this.name,
+            message: this.message,
+            status: this.status,
+            statusCode: this.statusCode
+        };
+    }
+};
+/**
+* Unknown error that doesn't match expected error patterns
+* Wraps the original error for debugging
+*/ var StorageUnknownError = class extends StorageError {
+    constructor(message, originalError, namespace = "storage"){
+        super(message, namespace);
+        this.name = namespace === "vectors" ? "StorageVectorsUnknownError" : "StorageUnknownError";
+        this.originalError = originalError;
+    }
+};
+/**
+* @deprecated Use StorageError with namespace='vectors' instead
+* Alias for backward compatibility with existing vector storage code
+*/ var StorageVectorsError = class extends StorageError {
+    constructor(message){
+        super(message, "vectors");
+    }
+};
+/**
+* Type guard to check if an error is a StorageVectorsError
+* @param error - The error to check
+* @returns True if the error is a StorageVectorsError
+*/ function isStorageVectorsError(error) {
+    return isStorageError(error) && error["namespace"] === "vectors";
+}
+/**
+* @deprecated Use StorageApiError with namespace='vectors' instead
+* Alias for backward compatibility with existing vector storage code
+*/ var StorageVectorsApiError = class extends StorageApiError {
+    constructor(message, status, statusCode){
+        super(message, status, statusCode, "vectors");
+    }
+};
+/**
+* @deprecated Use StorageUnknownError with namespace='vectors' instead
+* Alias for backward compatibility with existing vector storage code
+*/ var StorageVectorsUnknownError = class extends StorageUnknownError {
+    constructor(message, originalError){
+        super(message, originalError, "vectors");
+    }
+};
+/**
+* Error codes specific to S3 Vectors API
+* Maps AWS service errors to application-friendly error codes
+*/ let StorageVectorsErrorCode = /* @__PURE__ */ function(StorageVectorsErrorCode$1) {
+    /** Internal server fault (HTTP 500) */ StorageVectorsErrorCode$1["InternalError"] = "InternalError";
+    /** Resource already exists / conflict (HTTP 409) */ StorageVectorsErrorCode$1["S3VectorConflictException"] = "S3VectorConflictException";
+    /** Resource not found (HTTP 404) */ StorageVectorsErrorCode$1["S3VectorNotFoundException"] = "S3VectorNotFoundException";
+    /** Delete bucket while not empty (HTTP 400) */ StorageVectorsErrorCode$1["S3VectorBucketNotEmpty"] = "S3VectorBucketNotEmpty";
+    /** Exceeds bucket quota/limit (HTTP 400) */ StorageVectorsErrorCode$1["S3VectorMaxBucketsExceeded"] = "S3VectorMaxBucketsExceeded";
+    /** Exceeds index quota/limit (HTTP 400) */ StorageVectorsErrorCode$1["S3VectorMaxIndexesExceeded"] = "S3VectorMaxIndexesExceeded";
+    return StorageVectorsErrorCode$1;
+}({});
+//#endregion
+//#region src/lib/common/helpers.ts
+/**
+* Resolves the fetch implementation to use
+* Uses custom fetch if provided, otherwise uses native fetch
+*
+* @param customFetch - Optional custom fetch implementation
+* @returns Resolved fetch function
+*/ const resolveFetch = (customFetch)=>{
+    if (customFetch) return (...args)=>customFetch(...args);
+    return (...args)=>fetch(...args);
+};
+/**
+* Determine if input is a plain object
+* An object is plain if it's created by either {}, new Object(), or Object.create(null)
+*
+* @param value - Value to check
+* @returns True if value is a plain object
+* @source https://github.com/sindresorhus/is-plain-obj
+*/ const isPlainObject = (value)=>{
+    if (typeof value !== "object" || value === null) return false;
+    const prototype = Object.getPrototypeOf(value);
+    return (prototype === null || prototype === Object.prototype || Object.getPrototypeOf(prototype) === null) && !(Symbol.toStringTag in value) && !(Symbol.iterator in value);
+};
+/**
+* Recursively converts object keys from snake_case to camelCase
+* Used for normalizing API responses
+*
+* @param item - Object to convert
+* @returns Converted object with camelCase keys
+*/ const recursiveToCamel = (item)=>{
+    if (Array.isArray(item)) return item.map((el)=>recursiveToCamel(el));
+    else if (typeof item === "function" || item !== Object(item)) return item;
+    const result = {};
+    Object.entries(item).forEach(([key, value])=>{
+        const newKey = key.replace(/([-_][a-z])/gi, (c)=>c.toUpperCase().replace(/[-_]/g, ""));
+        result[newKey] = recursiveToCamel(value);
+    });
+    return result;
+};
+/**
+* Validates if a given bucket name is valid according to Supabase Storage API rules
+* Mirrors backend validation from: storage/src/storage/limits.ts:isValidBucketName()
+*
+* Rules:
+* - Length: 1-100 characters
+* - Allowed characters: alphanumeric (a-z, A-Z, 0-9), underscore (_), and safe special characters
+* - Safe special characters: ! - . * ' ( ) space & $ @ = ; : + , ?
+* - Forbidden: path separators (/, \), path traversal (..), leading/trailing whitespace
+*
+* AWS S3 Reference: https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
+*
+* @param bucketName - The bucket name to validate
+* @returns true if valid, false otherwise
+*/ const isValidBucketName = (bucketName)=>{
+    if (!bucketName || typeof bucketName !== "string") return false;
+    if (bucketName.length === 0 || bucketName.length > 100) return false;
+    if (bucketName.trim() !== bucketName) return false;
+    if (bucketName.includes("/") || bucketName.includes("\\")) return false;
+    return /^[\w!.\*'() &$@=;:+,?-]+$/.test(bucketName);
+};
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/typeof.js
+function _typeof(o) {
+    "@babel/helpers - typeof";
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
+        return typeof o$1;
+    } : function(o$1) {
+        return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+    }, _typeof(o);
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/toPrimitive.js
+function toPrimitive(t, r) {
+    if ("object" != _typeof(t) || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+        var i = e.call(t, r || "default");
+        if ("object" != _typeof(i)) return i;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/toPropertyKey.js
+function toPropertyKey(t) {
+    var i = toPrimitive(t, "string");
+    return "symbol" == _typeof(i) ? i : i + "";
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/defineProperty.js
+function _defineProperty(e, r, t) {
+    return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+        value: t,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+    }) : e[r] = t, e;
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/objectSpread2.js
+function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+        var o = Object.getOwnPropertySymbols(e);
+        r && (o = o.filter(function(r$1) {
+            return Object.getOwnPropertyDescriptor(e, r$1).enumerable;
+        })), t.push.apply(t, o);
+    }
+    return t;
+}
+function _objectSpread2(e) {
+    for(var r = 1; r < arguments.length; r++){
+        var t = null != arguments[r] ? arguments[r] : {};
+        r % 2 ? ownKeys(Object(t), !0).forEach(function(r$1) {
+            _defineProperty(e, r$1, t[r$1]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r$1) {
+            Object.defineProperty(e, r$1, Object.getOwnPropertyDescriptor(t, r$1));
+        });
+    }
+    return e;
+}
+//#endregion
+//#region src/lib/common/fetch.ts
+/**
+* Extracts error message from various error response formats
+* @param err - Error object from API
+* @returns Human-readable error message
+*/ const _getErrorMessage = (err)=>{
+    var _err$error;
+    return err.msg || err.message || err.error_description || (typeof err.error === "string" ? err.error : (_err$error = err.error) === null || _err$error === void 0 ? void 0 : _err$error.message) || JSON.stringify(err);
+};
+/**
+* Handles fetch errors and converts them to Storage error types
+* @param error - The error caught from fetch
+* @param reject - Promise rejection function
+* @param options - Fetch options that may affect error handling
+* @param namespace - Error namespace ('storage' or 'vectors')
+*/ const handleError = async (error, reject, options, namespace)=>{
+    if (error && typeof error === "object" && "status" in error && "ok" in error && typeof error.status === "number" && !(options === null || options === void 0 ? void 0 : options.noResolveJson)) {
+        const responseError = error;
+        const status = responseError.status || 500;
+        if (typeof responseError.json === "function") responseError.json().then((err)=>{
+            const statusCode = (err === null || err === void 0 ? void 0 : err.statusCode) || (err === null || err === void 0 ? void 0 : err.code) || status + "";
+            reject(new StorageApiError(_getErrorMessage(err), status, statusCode, namespace));
+        }).catch(()=>{
+            if (namespace === "vectors") {
+                const statusCode = status + "";
+                reject(new StorageApiError(responseError.statusText || `HTTP ${status} error`, status, statusCode, namespace));
+            } else {
+                const statusCode = status + "";
+                reject(new StorageApiError(responseError.statusText || `HTTP ${status} error`, status, statusCode, namespace));
+            }
+        });
+        else {
+            const statusCode = status + "";
+            reject(new StorageApiError(responseError.statusText || `HTTP ${status} error`, status, statusCode, namespace));
+        }
+    } else reject(new StorageUnknownError(_getErrorMessage(error), error, namespace));
+};
+/**
+* Builds request parameters for fetch calls
+* @param method - HTTP method
+* @param options - Custom fetch options
+* @param parameters - Additional fetch parameters like AbortSignal
+* @param body - Request body (will be JSON stringified if plain object)
+* @returns Complete fetch request parameters
+*/ const _getRequestParams = (method, options, parameters, body)=>{
+    const params = {
+        method,
+        headers: (options === null || options === void 0 ? void 0 : options.headers) || {}
+    };
+    if (method === "GET" || method === "HEAD" || !body) return _objectSpread2(_objectSpread2({}, params), parameters);
+    if (isPlainObject(body)) {
+        params.headers = _objectSpread2({
+            "Content-Type": "application/json"
+        }, options === null || options === void 0 ? void 0 : options.headers);
+        params.body = JSON.stringify(body);
+    } else params.body = body;
+    if (options === null || options === void 0 ? void 0 : options.duplex) params.duplex = options.duplex;
+    return _objectSpread2(_objectSpread2({}, params), parameters);
+};
+/**
+* Internal request handler that wraps fetch with error handling
+* @param fetcher - Fetch function to use
+* @param method - HTTP method
+* @param url - Request URL
+* @param options - Custom fetch options
+* @param parameters - Additional fetch parameters
+* @param body - Request body
+* @param namespace - Error namespace ('storage' or 'vectors')
+* @returns Promise with parsed response or error
+*/ async function _handleRequest(fetcher, method, url, options, parameters, body, namespace) {
+    return new Promise((resolve, reject)=>{
+        fetcher(url, _getRequestParams(method, options, parameters, body)).then((result)=>{
+            if (!result.ok) throw result;
+            if (options === null || options === void 0 ? void 0 : options.noResolveJson) return result;
+            if (namespace === "vectors") {
+                const contentType = result.headers.get("content-type");
+                if (result.headers.get("content-length") === "0" || result.status === 204) return {};
+                if (!contentType || !contentType.includes("application/json")) return {};
+            }
+            return result.json();
+        }).then((data)=>resolve(data)).catch((error)=>handleError(error, reject, options, namespace));
+    });
+}
+/**
+* Creates a fetch API with the specified namespace
+* @param namespace - Error namespace ('storage' or 'vectors')
+* @returns Object with HTTP method functions
+*/ function createFetchApi(namespace = "storage") {
+    return {
+        get: async (fetcher, url, options, parameters)=>{
+            return _handleRequest(fetcher, "GET", url, options, parameters, void 0, namespace);
+        },
+        post: async (fetcher, url, body, options, parameters)=>{
+            return _handleRequest(fetcher, "POST", url, options, parameters, body, namespace);
+        },
+        put: async (fetcher, url, body, options, parameters)=>{
+            return _handleRequest(fetcher, "PUT", url, options, parameters, body, namespace);
+        },
+        head: async (fetcher, url, options, parameters)=>{
+            return _handleRequest(fetcher, "HEAD", url, _objectSpread2(_objectSpread2({}, options), {}, {
+                noResolveJson: true
+            }), parameters, void 0, namespace);
+        },
+        remove: async (fetcher, url, body, options, parameters)=>{
+            return _handleRequest(fetcher, "DELETE", url, options, parameters, body, namespace);
+        }
+    };
+}
+const defaultApi = createFetchApi("storage");
+const { get, post, put, head, remove } = defaultApi;
+const vectorsApi = createFetchApi("vectors");
+//#endregion
+//#region src/lib/common/BaseApiClient.ts
+/**
+* @ignore
+* Base API client class for all Storage API classes
+* Provides common infrastructure for error handling and configuration
+*
+* @typeParam TError - The error type (StorageError or subclass)
+*/ var BaseApiClient = class {
+    /**
+	* Creates a new BaseApiClient instance
+	* @param url - Base URL for API requests
+	* @param headers - Default headers for API requests
+	* @param fetch - Optional custom fetch implementation
+	* @param namespace - Error namespace ('storage' or 'vectors')
+	*/ constructor(url, headers = {}, fetch$1, namespace = "storage"){
+        this.shouldThrowOnError = false;
+        this.url = url;
+        this.headers = headers;
+        this.fetch = resolveFetch(fetch$1);
+        this.namespace = namespace;
+    }
+    /**
+	* Enable throwing errors instead of returning them.
+	* When enabled, errors are thrown instead of returned in { data, error } format.
+	*
+	* @returns this - For method chaining
+	*/ throwOnError() {
+        this.shouldThrowOnError = true;
+        return this;
+    }
+    /**
+	* Handles API operation with standardized error handling
+	* Eliminates repetitive try-catch blocks across all API methods
+	*
+	* This wrapper:
+	* 1. Executes the operation
+	* 2. Returns { data, error: null } on success
+	* 3. Returns { data: null, error } on failure (if shouldThrowOnError is false)
+	* 4. Throws error on failure (if shouldThrowOnError is true)
+	*
+	* @typeParam T - The expected data type from the operation
+	* @param operation - Async function that performs the API call
+	* @returns Promise with { data, error } tuple
+	*
+	* @example
+	* ```typescript
+	* async listBuckets() {
+	*   return this.handleOperation(async () => {
+	*     return await get(this.fetch, `${this.url}/bucket`, {
+	*       headers: this.headers,
+	*     })
+	*   })
+	* }
+	* ```
+	*/ async handleOperation(operation) {
+        var _this = this;
+        try {
+            return {
+                data: await operation(),
+                error: null
+            };
+        } catch (error) {
+            if (_this.shouldThrowOnError) throw error;
+            if (isStorageError(error)) return {
+                data: null,
+                error
+            };
+            throw error;
+        }
+    }
+};
+//#endregion
+//#region src/packages/StreamDownloadBuilder.ts
+var StreamDownloadBuilder = class {
+    constructor(downloadFn, shouldThrowOnError){
+        this.downloadFn = downloadFn;
+        this.shouldThrowOnError = shouldThrowOnError;
+    }
+    then(onfulfilled, onrejected) {
+        return this.execute().then(onfulfilled, onrejected);
+    }
+    async execute() {
+        var _this = this;
+        try {
+            return {
+                data: (await _this.downloadFn()).body,
+                error: null
+            };
+        } catch (error) {
+            if (_this.shouldThrowOnError) throw error;
+            if (isStorageError(error)) return {
+                data: null,
+                error
+            };
+            throw error;
+        }
+    }
+};
+//#endregion
+//#region src/packages/BlobDownloadBuilder.ts
+let _Symbol$toStringTag;
+_Symbol$toStringTag = Symbol.toStringTag;
+var BlobDownloadBuilder = class {
+    constructor(downloadFn, shouldThrowOnError){
+        this.downloadFn = downloadFn;
+        this.shouldThrowOnError = shouldThrowOnError;
+        this[_Symbol$toStringTag] = "BlobDownloadBuilder";
+        this.promise = null;
+    }
+    asStream() {
+        return new StreamDownloadBuilder(this.downloadFn, this.shouldThrowOnError);
+    }
+    then(onfulfilled, onrejected) {
+        return this.getPromise().then(onfulfilled, onrejected);
+    }
+    catch(onrejected) {
+        return this.getPromise().catch(onrejected);
+    }
+    finally(onfinally) {
+        return this.getPromise().finally(onfinally);
+    }
+    getPromise() {
+        if (!this.promise) this.promise = this.execute();
+        return this.promise;
+    }
+    async execute() {
+        var _this = this;
+        try {
+            return {
+                data: await (await _this.downloadFn()).blob(),
+                error: null
+            };
+        } catch (error) {
+            if (_this.shouldThrowOnError) throw error;
+            if (isStorageError(error)) return {
+                data: null,
+                error
+            };
+            throw error;
+        }
+    }
+};
+//#endregion
+//#region src/packages/StorageFileApi.ts
+const DEFAULT_SEARCH_OPTIONS = {
+    limit: 100,
+    offset: 0,
+    sortBy: {
+        column: "name",
+        order: "asc"
+    }
+};
+const DEFAULT_FILE_OPTIONS = {
+    cacheControl: "3600",
+    contentType: "text/plain;charset=UTF-8",
+    upsert: false
+};
+var StorageFileApi = class extends BaseApiClient {
+    constructor(url, headers = {}, bucketId, fetch$1){
+        super(url, headers, fetch$1, "storage");
+        this.bucketId = bucketId;
+    }
+    /**
+	* Uploads a file to an existing bucket or replaces an existing file at the specified path with a new one.
+	*
+	* @param method HTTP method.
+	* @param path The relative file path. Should be of the format `folder/subfolder/filename.png`. The bucket must already exist before attempting to upload.
+	* @param fileBody The body of the file to be stored in the bucket.
+	*/ async uploadOrUpdate(method, path, fileBody, fileOptions) {
+        var _this = this;
+        return _this.handleOperation(async ()=>{
+            let body;
+            const options = _objectSpread2(_objectSpread2({}, DEFAULT_FILE_OPTIONS), fileOptions);
+            let headers = _objectSpread2(_objectSpread2({}, _this.headers), method === "POST" && {
+                "x-upsert": String(options.upsert)
+            });
+            const metadata = options.metadata;
+            if (typeof Blob !== "undefined" && fileBody instanceof Blob) {
+                body = new FormData();
+                body.append("cacheControl", options.cacheControl);
+                if (metadata) body.append("metadata", _this.encodeMetadata(metadata));
+                body.append("", fileBody);
+            } else if (typeof FormData !== "undefined" && fileBody instanceof FormData) {
+                body = fileBody;
+                if (!body.has("cacheControl")) body.append("cacheControl", options.cacheControl);
+                if (metadata && !body.has("metadata")) body.append("metadata", _this.encodeMetadata(metadata));
+            } else {
+                body = fileBody;
+                headers["cache-control"] = `max-age=${options.cacheControl}`;
+                headers["content-type"] = options.contentType;
+                if (metadata) headers["x-metadata"] = _this.toBase64(_this.encodeMetadata(metadata));
+                if ((typeof ReadableStream !== "undefined" && body instanceof ReadableStream || body && typeof body === "object" && "pipe" in body && typeof body.pipe === "function") && !options.duplex) options.duplex = "half";
+            }
+            if (fileOptions === null || fileOptions === void 0 ? void 0 : fileOptions.headers) headers = _objectSpread2(_objectSpread2({}, headers), fileOptions.headers);
+            const cleanPath = _this._removeEmptyFolders(path);
+            const _path = _this._getFinalPath(cleanPath);
+            const data = await (method == "PUT" ? put : post)(_this.fetch, `${_this.url}/object/${_path}`, body, _objectSpread2({
+                headers
+            }, (options === null || options === void 0 ? void 0 : options.duplex) ? {
+                duplex: options.duplex
+            } : {}));
+            return {
+                path: cleanPath,
+                id: data.Id,
+                fullPath: data.Key
+            };
+        });
+    }
+    /**
+	* Uploads a file to an existing bucket.
+	*
+	* @category File Buckets
+	* @param path The file path, including the file name. Should be of the format `folder/subfolder/filename.png`. The bucket must already exist before attempting to upload.
+	* @param fileBody The body of the file to be stored in the bucket.
+	* @param fileOptions Optional file upload options including cacheControl, contentType, upsert, and metadata.
+	* @returns Promise with response containing file path, id, and fullPath or error
+	*
+	* @example Upload file
+	* ```js
+	* const avatarFile = event.target.files[0]
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .upload('public/avatar1.png', avatarFile, {
+	*     cacheControl: '3600',
+	*     upsert: false
+	*   })
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "path": "public/avatar1.png",
+	*     "fullPath": "avatars/public/avatar1.png"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*
+	* @example Upload file using `ArrayBuffer` from base64 file data
+	* ```js
+	* import { decode } from 'base64-arraybuffer'
+	*
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .upload('public/avatar1.png', decode('base64FileData'), {
+	*     contentType: 'image/png'
+	*   })
+	* ```
+	*/ async upload(path, fileBody, fileOptions) {
+        return this.uploadOrUpdate("POST", path, fileBody, fileOptions);
+    }
+    /**
+	* Upload a file with a token generated from `createSignedUploadUrl`.
+	*
+	* @category File Buckets
+	* @param path The file path, including the file name. Should be of the format `folder/subfolder/filename.png`. The bucket must already exist before attempting to upload.
+	* @param token The token generated from `createSignedUploadUrl`
+	* @param fileBody The body of the file to be stored in the bucket.
+	* @param fileOptions HTTP headers (cacheControl, contentType, etc.).
+	* **Note:** The `upsert` option has no effect here. To enable upsert behavior,
+	* pass `{ upsert: true }` when calling `createSignedUploadUrl()` instead.
+	* @returns Promise with response containing file path and fullPath or error
+	*
+	* @example Upload to a signed URL
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .uploadToSignedUrl('folder/cat.jpg', 'token-from-createSignedUploadUrl', file)
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "path": "folder/cat.jpg",
+	*     "fullPath": "avatars/folder/cat.jpg"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async uploadToSignedUrl(path, token, fileBody, fileOptions) {
+        var _this3 = this;
+        const cleanPath = _this3._removeEmptyFolders(path);
+        const _path = _this3._getFinalPath(cleanPath);
+        const url = new URL(_this3.url + `/object/upload/sign/${_path}`);
+        url.searchParams.set("token", token);
+        return _this3.handleOperation(async ()=>{
+            let body;
+            const options = _objectSpread2({
+                upsert: DEFAULT_FILE_OPTIONS.upsert
+            }, fileOptions);
+            const headers = _objectSpread2(_objectSpread2({}, _this3.headers), {
+                "x-upsert": String(options.upsert)
+            });
+            if (typeof Blob !== "undefined" && fileBody instanceof Blob) {
+                body = new FormData();
+                body.append("cacheControl", options.cacheControl);
+                body.append("", fileBody);
+            } else if (typeof FormData !== "undefined" && fileBody instanceof FormData) {
+                body = fileBody;
+                body.append("cacheControl", options.cacheControl);
+            } else {
+                body = fileBody;
+                headers["cache-control"] = `max-age=${options.cacheControl}`;
+                headers["content-type"] = options.contentType;
+            }
+            return {
+                path: cleanPath,
+                fullPath: (await put(_this3.fetch, url.toString(), body, {
+                    headers
+                })).Key
+            };
+        });
+    }
+    /**
+	* Creates a signed upload URL.
+	* Signed upload URLs can be used to upload files to the bucket without further authentication.
+	* They are valid for 2 hours.
+	*
+	* @category File Buckets
+	* @param path The file path, including the current file name. For example `folder/image.png`.
+	* @param options.upsert If set to true, allows the file to be overwritten if it already exists.
+	* @returns Promise with response containing signed upload URL, token, and path or error
+	*
+	* @example Create Signed Upload URL
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .createSignedUploadUrl('folder/cat.jpg')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "signedUrl": "https://example.supabase.co/storage/v1/object/upload/sign/avatars/folder/cat.jpg?token=<TOKEN>",
+	*     "path": "folder/cat.jpg",
+	*     "token": "<TOKEN>"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async createSignedUploadUrl(path, options) {
+        var _this4 = this;
+        return _this4.handleOperation(async ()=>{
+            let _path = _this4._getFinalPath(path);
+            const headers = _objectSpread2({}, _this4.headers);
+            if (options === null || options === void 0 ? void 0 : options.upsert) headers["x-upsert"] = "true";
+            const data = await post(_this4.fetch, `${_this4.url}/object/upload/sign/${_path}`, {}, {
+                headers
+            });
+            const url = new URL(_this4.url + data.url);
+            const token = url.searchParams.get("token");
+            if (!token) throw new StorageError("No token returned by API");
+            return {
+                signedUrl: url.toString(),
+                path,
+                token
+            };
+        });
+    }
+    /**
+	* Replaces an existing file at the specified path with a new one.
+	*
+	* @category File Buckets
+	* @param path The relative file path. Should be of the format `folder/subfolder/filename.png`. The bucket must already exist before attempting to update.
+	* @param fileBody The body of the file to be stored in the bucket.
+	* @param fileOptions Optional file upload options including cacheControl, contentType, upsert, and metadata.
+	* @returns Promise with response containing file path, id, and fullPath or error
+	*
+	* @example Update file
+	* ```js
+	* const avatarFile = event.target.files[0]
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .update('public/avatar1.png', avatarFile, {
+	*     cacheControl: '3600',
+	*     upsert: true
+	*   })
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "path": "public/avatar1.png",
+	*     "fullPath": "avatars/public/avatar1.png"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*
+	* @example Update file using `ArrayBuffer` from base64 file data
+	* ```js
+	* import {decode} from 'base64-arraybuffer'
+	*
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .update('public/avatar1.png', decode('base64FileData'), {
+	*     contentType: 'image/png'
+	*   })
+	* ```
+	*/ async update(path, fileBody, fileOptions) {
+        return this.uploadOrUpdate("PUT", path, fileBody, fileOptions);
+    }
+    /**
+	* Moves an existing file to a new path in the same bucket.
+	*
+	* @category File Buckets
+	* @param fromPath The original file path, including the current file name. For example `folder/image.png`.
+	* @param toPath The new file path, including the new file name. For example `folder/image-new.png`.
+	* @param options The destination options.
+	* @returns Promise with response containing success message or error
+	*
+	* @example Move file
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .move('public/avatar1.png', 'private/avatar2.png')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "message": "Successfully moved"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async move(fromPath, toPath, options) {
+        var _this6 = this;
+        return _this6.handleOperation(async ()=>{
+            return await post(_this6.fetch, `${_this6.url}/object/move`, {
+                bucketId: _this6.bucketId,
+                sourceKey: fromPath,
+                destinationKey: toPath,
+                destinationBucket: options === null || options === void 0 ? void 0 : options.destinationBucket
+            }, {
+                headers: _this6.headers
+            });
+        });
+    }
+    /**
+	* Copies an existing file to a new path in the same bucket.
+	*
+	* @category File Buckets
+	* @param fromPath The original file path, including the current file name. For example `folder/image.png`.
+	* @param toPath The new file path, including the new file name. For example `folder/image-copy.png`.
+	* @param options The destination options.
+	* @returns Promise with response containing copied file path or error
+	*
+	* @example Copy file
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .copy('public/avatar1.png', 'private/avatar2.png')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "path": "avatars/private/avatar2.png"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async copy(fromPath, toPath, options) {
+        var _this7 = this;
+        return _this7.handleOperation(async ()=>{
+            return {
+                path: (await post(_this7.fetch, `${_this7.url}/object/copy`, {
+                    bucketId: _this7.bucketId,
+                    sourceKey: fromPath,
+                    destinationKey: toPath,
+                    destinationBucket: options === null || options === void 0 ? void 0 : options.destinationBucket
+                }, {
+                    headers: _this7.headers
+                })).Key
+            };
+        });
+    }
+    /**
+	* Creates a signed URL. Use a signed URL to share a file for a fixed amount of time.
+	*
+	* @category File Buckets
+	* @param path The file path, including the current file name. For example `folder/image.png`.
+	* @param expiresIn The number of seconds until the signed URL expires. For example, `60` for a URL which is valid for one minute.
+	* @param options.download triggers the file as a download if set to true. Set this parameter as the name of the file if you want to trigger the download with a different filename.
+	* @param options.transform Transform the asset before serving it to the client.
+	* @returns Promise with response containing signed URL or error
+	*
+	* @example Create Signed URL
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .createSignedUrl('folder/avatar1.png', 60)
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "signedUrl": "https://example.supabase.co/storage/v1/object/sign/avatars/folder/avatar1.png?token=<TOKEN>"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*
+	* @example Create a signed URL for an asset with transformations
+	* ```js
+	* const { data } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .createSignedUrl('folder/avatar1.png', 60, {
+	*     transform: {
+	*       width: 100,
+	*       height: 100,
+	*     }
+	*   })
+	* ```
+	*
+	* @example Create a signed URL which triggers the download of the asset
+	* ```js
+	* const { data } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .createSignedUrl('folder/avatar1.png', 60, {
+	*     download: true,
+	*   })
+	* ```
+	*/ async createSignedUrl(path, expiresIn, options) {
+        var _this8 = this;
+        return _this8.handleOperation(async ()=>{
+            let _path = _this8._getFinalPath(path);
+            let data = await post(_this8.fetch, `${_this8.url}/object/sign/${_path}`, _objectSpread2({
+                expiresIn
+            }, (options === null || options === void 0 ? void 0 : options.transform) ? {
+                transform: options.transform
+            } : {}), {
+                headers: _this8.headers
+            });
+            const downloadQueryParam = (options === null || options === void 0 ? void 0 : options.download) ? `&download=${options.download === true ? "" : options.download}` : "";
+            return {
+                signedUrl: encodeURI(`${_this8.url}${data.signedURL}${downloadQueryParam}`)
+            };
+        });
+    }
+    /**
+	* Creates multiple signed URLs. Use a signed URL to share a file for a fixed amount of time.
+	*
+	* @category File Buckets
+	* @param paths The file paths to be downloaded, including the current file names. For example `['folder/image.png', 'folder2/image2.png']`.
+	* @param expiresIn The number of seconds until the signed URLs expire. For example, `60` for URLs which are valid for one minute.
+	* @param options.download triggers the file as a download if set to true. Set this parameter as the name of the file if you want to trigger the download with a different filename.
+	* @returns Promise with response containing array of objects with signedUrl, path, and error or error
+	*
+	* @example Create Signed URLs
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .createSignedUrls(['folder/avatar1.png', 'folder/avatar2.png'], 60)
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": [
+	*     {
+	*       "error": null,
+	*       "path": "folder/avatar1.png",
+	*       "signedURL": "/object/sign/avatars/folder/avatar1.png?token=<TOKEN>",
+	*       "signedUrl": "https://example.supabase.co/storage/v1/object/sign/avatars/folder/avatar1.png?token=<TOKEN>"
+	*     },
+	*     {
+	*       "error": null,
+	*       "path": "folder/avatar2.png",
+	*       "signedURL": "/object/sign/avatars/folder/avatar2.png?token=<TOKEN>",
+	*       "signedUrl": "https://example.supabase.co/storage/v1/object/sign/avatars/folder/avatar2.png?token=<TOKEN>"
+	*     }
+	*   ],
+	*   "error": null
+	* }
+	* ```
+	*/ async createSignedUrls(paths, expiresIn, options) {
+        var _this9 = this;
+        return _this9.handleOperation(async ()=>{
+            const data = await post(_this9.fetch, `${_this9.url}/object/sign/${_this9.bucketId}`, {
+                expiresIn,
+                paths
+            }, {
+                headers: _this9.headers
+            });
+            const downloadQueryParam = (options === null || options === void 0 ? void 0 : options.download) ? `&download=${options.download === true ? "" : options.download}` : "";
+            return data.map((datum)=>_objectSpread2(_objectSpread2({}, datum), {}, {
+                    signedUrl: datum.signedURL ? encodeURI(`${_this9.url}${datum.signedURL}${downloadQueryParam}`) : null
+                }));
+        });
+    }
+    /**
+	* Downloads a file from a private bucket. For public buckets, make a request to the URL returned from `getPublicUrl` instead.
+	*
+	* @category File Buckets
+	* @param path The full path and file name of the file to be downloaded. For example `folder/image.png`.
+	* @param options.transform Transform the asset before serving it to the client.
+	* @param parameters Additional fetch parameters like signal for cancellation. Supports standard fetch options including cache control.
+	* @returns BlobDownloadBuilder instance for downloading the file
+	*
+	* @example Download file
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .download('folder/avatar1.png')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": <BLOB>,
+	*   "error": null
+	* }
+	* ```
+	*
+	* @example Download file with transformations
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .download('folder/avatar1.png', {
+	*     transform: {
+	*       width: 100,
+	*       height: 100,
+	*       quality: 80
+	*     }
+	*   })
+	* ```
+	*
+	* @example Download with cache control (useful in Edge Functions)
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .download('folder/avatar1.png', {}, { cache: 'no-store' })
+	* ```
+	*
+	* @example Download with abort signal
+	* ```js
+	* const controller = new AbortController()
+	* setTimeout(() => controller.abort(), 5000)
+	*
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .download('folder/avatar1.png', {}, { signal: controller.signal })
+	* ```
+	*/ download(path, options, parameters) {
+        const renderPath = typeof (options === null || options === void 0 ? void 0 : options.transform) !== "undefined" ? "render/image/authenticated" : "object";
+        const transformationQuery = this.transformOptsToQueryString((options === null || options === void 0 ? void 0 : options.transform) || {});
+        const queryString = transformationQuery ? `?${transformationQuery}` : "";
+        const _path = this._getFinalPath(path);
+        const downloadFn = ()=>get(this.fetch, `${this.url}/${renderPath}/${_path}${queryString}`, {
+                headers: this.headers,
+                noResolveJson: true
+            }, parameters);
+        return new BlobDownloadBuilder(downloadFn, this.shouldThrowOnError);
+    }
+    /**
+	* Retrieves the details of an existing file.
+	*
+	* @category File Buckets
+	* @param path The file path, including the file name. For example `folder/image.png`.
+	* @returns Promise with response containing file metadata or error
+	*
+	* @example Get file info
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .info('folder/avatar1.png')
+	* ```
+	*/ async info(path) {
+        var _this10 = this;
+        const _path = _this10._getFinalPath(path);
+        return _this10.handleOperation(async ()=>{
+            return recursiveToCamel(await get(_this10.fetch, `${_this10.url}/object/info/${_path}`, {
+                headers: _this10.headers
+            }));
+        });
+    }
+    /**
+	* Checks the existence of a file.
+	*
+	* @category File Buckets
+	* @param path The file path, including the file name. For example `folder/image.png`.
+	* @returns Promise with response containing boolean indicating file existence or error
+	*
+	* @example Check file existence
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .exists('folder/avatar1.png')
+	* ```
+	*/ async exists(path) {
+        var _this11 = this;
+        const _path = _this11._getFinalPath(path);
+        try {
+            await head(_this11.fetch, `${_this11.url}/object/${_path}`, {
+                headers: _this11.headers
+            });
+            return {
+                data: true,
+                error: null
+            };
+        } catch (error) {
+            if (_this11.shouldThrowOnError) throw error;
+            if (isStorageError(error) && error instanceof StorageUnknownError) {
+                const originalError = error.originalError;
+                if ([
+                    400,
+                    404
+                ].includes(originalError === null || originalError === void 0 ? void 0 : originalError.status)) return {
+                    data: false,
+                    error
+                };
+            }
+            throw error;
+        }
+    }
+    /**
+	* A simple convenience function to get the URL for an asset in a public bucket. If you do not want to use this function, you can construct the public URL by concatenating the bucket URL with the path to the asset.
+	* This function does not verify if the bucket is public. If a public URL is created for a bucket which is not public, you will not be able to download the asset.
+	*
+	* @category File Buckets
+	* @param path The path and name of the file to generate the public URL for. For example `folder/image.png`.
+	* @param options.download Triggers the file as a download if set to true. Set this parameter as the name of the file if you want to trigger the download with a different filename.
+	* @param options.transform Transform the asset before serving it to the client.
+	* @returns Object with public URL
+	*
+	* @example Returns the URL for an asset in a public bucket
+	* ```js
+	* const { data } = supabase
+	*   .storage
+	*   .from('public-bucket')
+	*   .getPublicUrl('folder/avatar1.png')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "publicUrl": "https://example.supabase.co/storage/v1/object/public/public-bucket/folder/avatar1.png"
+	*   }
+	* }
+	* ```
+	*
+	* @example Returns the URL for an asset in a public bucket with transformations
+	* ```js
+	* const { data } = supabase
+	*   .storage
+	*   .from('public-bucket')
+	*   .getPublicUrl('folder/avatar1.png', {
+	*     transform: {
+	*       width: 100,
+	*       height: 100,
+	*     }
+	*   })
+	* ```
+	*
+	* @example Returns the URL which triggers the download of an asset in a public bucket
+	* ```js
+	* const { data } = supabase
+	*   .storage
+	*   .from('public-bucket')
+	*   .getPublicUrl('folder/avatar1.png', {
+	*     download: true,
+	*   })
+	* ```
+	*/ getPublicUrl(path, options) {
+        const _path = this._getFinalPath(path);
+        const _queryString = [];
+        const downloadQueryParam = (options === null || options === void 0 ? void 0 : options.download) ? `download=${options.download === true ? "" : options.download}` : "";
+        if (downloadQueryParam !== "") _queryString.push(downloadQueryParam);
+        const renderPath = typeof (options === null || options === void 0 ? void 0 : options.transform) !== "undefined" ? "render/image" : "object";
+        const transformationQuery = this.transformOptsToQueryString((options === null || options === void 0 ? void 0 : options.transform) || {});
+        if (transformationQuery !== "") _queryString.push(transformationQuery);
+        let queryString = _queryString.join("&");
+        if (queryString !== "") queryString = `?${queryString}`;
+        return {
+            data: {
+                publicUrl: encodeURI(`${this.url}/${renderPath}/public/${_path}${queryString}`)
+            }
+        };
+    }
+    /**
+	* Deletes files within the same bucket
+	*
+	* @category File Buckets
+	* @param paths An array of files to delete, including the path and file name. For example [`'folder/image.png'`].
+	* @returns Promise with response containing array of deleted file objects or error
+	*
+	* @example Delete file
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .remove(['folder/avatar1.png'])
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": [],
+	*   "error": null
+	* }
+	* ```
+	*/ async remove(paths) {
+        var _this12 = this;
+        return _this12.handleOperation(async ()=>{
+            return await remove(_this12.fetch, `${_this12.url}/object/${_this12.bucketId}`, {
+                prefixes: paths
+            }, {
+                headers: _this12.headers
+            });
+        });
+    }
+    /**
+	* Get file metadata
+	* @param id the file id to retrieve metadata
+	*/ /**
+	* Update file metadata
+	* @param id the file id to update metadata
+	* @param meta the new file metadata
+	*/ /**
+	* Lists all the files and folders within a path of the bucket.
+	*
+	* @category File Buckets
+	* @param path The folder path.
+	* @param options Search options including limit (defaults to 100), offset, sortBy, and search
+	* @param parameters Optional fetch parameters including signal for cancellation
+	* @returns Promise with response containing array of files or error
+	*
+	* @example List files in a bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .list('folder', {
+	*     limit: 100,
+	*     offset: 0,
+	*     sortBy: { column: 'name', order: 'asc' },
+	*   })
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": [
+	*     {
+	*       "name": "avatar1.png",
+	*       "id": "e668cf7f-821b-4a2f-9dce-7dfa5dd1cfd2",
+	*       "updated_at": "2024-05-22T23:06:05.580Z",
+	*       "created_at": "2024-05-22T23:04:34.443Z",
+	*       "last_accessed_at": "2024-05-22T23:04:34.443Z",
+	*       "metadata": {
+	*         "eTag": "\"c5e8c553235d9af30ef4f6e280790b92\"",
+	*         "size": 32175,
+	*         "mimetype": "image/png",
+	*         "cacheControl": "max-age=3600",
+	*         "lastModified": "2024-05-22T23:06:05.574Z",
+	*         "contentLength": 32175,
+	*         "httpStatusCode": 200
+	*       }
+	*     }
+	*   ],
+	*   "error": null
+	* }
+	* ```
+	*
+	* @example Search files in a bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .from('avatars')
+	*   .list('folder', {
+	*     limit: 100,
+	*     offset: 0,
+	*     sortBy: { column: 'name', order: 'asc' },
+	*     search: 'jon'
+	*   })
+	* ```
+	*/ async list(path, options, parameters) {
+        var _this13 = this;
+        return _this13.handleOperation(async ()=>{
+            const body = _objectSpread2(_objectSpread2(_objectSpread2({}, DEFAULT_SEARCH_OPTIONS), options), {}, {
+                prefix: path || ""
+            });
+            return await post(_this13.fetch, `${_this13.url}/object/list/${_this13.bucketId}`, body, {
+                headers: _this13.headers
+            }, parameters);
+        });
+    }
+    /**
+	* @experimental this method signature might change in the future
+	*
+	* @category File Buckets
+	* @param options search options
+	* @param parameters
+	*/ async listV2(options, parameters) {
+        var _this14 = this;
+        return _this14.handleOperation(async ()=>{
+            const body = _objectSpread2({}, options);
+            return await post(_this14.fetch, `${_this14.url}/object/list-v2/${_this14.bucketId}`, body, {
+                headers: _this14.headers
+            }, parameters);
+        });
+    }
+    encodeMetadata(metadata) {
+        return JSON.stringify(metadata);
+    }
+    toBase64(data) {
+        if (typeof Buffer !== "undefined") return Buffer.from(data).toString("base64");
+        return btoa(data);
+    }
+    _getFinalPath(path) {
+        return `${this.bucketId}/${path.replace(/^\/+/, "")}`;
+    }
+    _removeEmptyFolders(path) {
+        return path.replace(/^\/|\/$/g, "").replace(/\/+/g, "/");
+    }
+    transformOptsToQueryString(transform) {
+        const params = [];
+        if (transform.width) params.push(`width=${transform.width}`);
+        if (transform.height) params.push(`height=${transform.height}`);
+        if (transform.resize) params.push(`resize=${transform.resize}`);
+        if (transform.format) params.push(`format=${transform.format}`);
+        if (transform.quality) params.push(`quality=${transform.quality}`);
+        return params.join("&");
+    }
+};
+//#endregion
+//#region src/lib/version.ts
+const version = "2.95.3";
+//#endregion
+//#region src/lib/constants.ts
+const DEFAULT_HEADERS = {
+    "X-Client-Info": `storage-js/${version}`
+};
+//#endregion
+//#region src/packages/StorageBucketApi.ts
+var StorageBucketApi = class extends BaseApiClient {
+    constructor(url, headers = {}, fetch$1, opts){
+        const baseUrl = new URL(url);
+        if (opts === null || opts === void 0 ? void 0 : opts.useNewHostname) {
+            if (/supabase\.(co|in|red)$/.test(baseUrl.hostname) && !baseUrl.hostname.includes("storage.supabase.")) baseUrl.hostname = baseUrl.hostname.replace("supabase.", "storage.supabase.");
+        }
+        const finalUrl = baseUrl.href.replace(/\/$/, "");
+        const finalHeaders = _objectSpread2(_objectSpread2({}, DEFAULT_HEADERS), headers);
+        super(finalUrl, finalHeaders, fetch$1, "storage");
+    }
+    /**
+	* Retrieves the details of all Storage buckets within an existing project.
+	*
+	* @category File Buckets
+	* @param options Query parameters for listing buckets
+	* @param options.limit Maximum number of buckets to return
+	* @param options.offset Number of buckets to skip
+	* @param options.sortColumn Column to sort by ('id', 'name', 'created_at', 'updated_at')
+	* @param options.sortOrder Sort order ('asc' or 'desc')
+	* @param options.search Search term to filter bucket names
+	* @returns Promise with response containing array of buckets or error
+	*
+	* @example List buckets
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .listBuckets()
+	* ```
+	*
+	* @example List buckets with options
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .listBuckets({
+	*     limit: 10,
+	*     offset: 0,
+	*     sortColumn: 'created_at',
+	*     sortOrder: 'desc',
+	*     search: 'prod'
+	*   })
+	* ```
+	*/ async listBuckets(options) {
+        var _this = this;
+        return _this.handleOperation(async ()=>{
+            const queryString = _this.listBucketOptionsToQueryString(options);
+            return await get(_this.fetch, `${_this.url}/bucket${queryString}`, {
+                headers: _this.headers
+            });
+        });
+    }
+    /**
+	* Retrieves the details of an existing Storage bucket.
+	*
+	* @category File Buckets
+	* @param id The unique identifier of the bucket you would like to retrieve.
+	* @returns Promise with response containing bucket details or error
+	*
+	* @example Get bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .getBucket('avatars')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "id": "avatars",
+	*     "name": "avatars",
+	*     "owner": "",
+	*     "public": false,
+	*     "file_size_limit": 1024,
+	*     "allowed_mime_types": [
+	*       "image/png"
+	*     ],
+	*     "created_at": "2024-05-22T22:26:05.100Z",
+	*     "updated_at": "2024-05-22T22:26:05.100Z"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async getBucket(id) {
+        var _this2 = this;
+        return _this2.handleOperation(async ()=>{
+            return await get(_this2.fetch, `${_this2.url}/bucket/${id}`, {
+                headers: _this2.headers
+            });
+        });
+    }
+    /**
+	* Creates a new Storage bucket
+	*
+	* @category File Buckets
+	* @param id A unique identifier for the bucket you are creating.
+	* @param options.public The visibility of the bucket. Public buckets don't require an authorization token to download objects, but still require a valid token for all other operations. By default, buckets are private.
+	* @param options.fileSizeLimit specifies the max file size in bytes that can be uploaded to this bucket.
+	* The global file size limit takes precedence over this value.
+	* The default value is null, which doesn't set a per bucket file size limit.
+	* @param options.allowedMimeTypes specifies the allowed mime types that this bucket can accept during upload.
+	* The default value is null, which allows files with all mime types to be uploaded.
+	* Each mime type specified can be a wildcard, e.g. image/*, or a specific mime type, e.g. image/png.
+	* @param options.type (private-beta) specifies the bucket type. see `BucketType` for more details.
+	*   - default bucket type is `STANDARD`
+	* @returns Promise with response containing newly created bucket name or error
+	*
+	* @example Create bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .createBucket('avatars', {
+	*     public: false,
+	*     allowedMimeTypes: ['image/png'],
+	*     fileSizeLimit: 1024
+	*   })
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "name": "avatars"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async createBucket(id, options = {
+        public: false
+    }) {
+        var _this3 = this;
+        return _this3.handleOperation(async ()=>{
+            return await post(_this3.fetch, `${_this3.url}/bucket`, {
+                id,
+                name: id,
+                type: options.type,
+                public: options.public,
+                file_size_limit: options.fileSizeLimit,
+                allowed_mime_types: options.allowedMimeTypes
+            }, {
+                headers: _this3.headers
+            });
+        });
+    }
+    /**
+	* Updates a Storage bucket
+	*
+	* @category File Buckets
+	* @param id A unique identifier for the bucket you are updating.
+	* @param options.public The visibility of the bucket. Public buckets don't require an authorization token to download objects, but still require a valid token for all other operations.
+	* @param options.fileSizeLimit specifies the max file size in bytes that can be uploaded to this bucket.
+	* The global file size limit takes precedence over this value.
+	* The default value is null, which doesn't set a per bucket file size limit.
+	* @param options.allowedMimeTypes specifies the allowed mime types that this bucket can accept during upload.
+	* The default value is null, which allows files with all mime types to be uploaded.
+	* Each mime type specified can be a wildcard, e.g. image/*, or a specific mime type, e.g. image/png.
+	* @returns Promise with response containing success message or error
+	*
+	* @example Update bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .updateBucket('avatars', {
+	*     public: false,
+	*     allowedMimeTypes: ['image/png'],
+	*     fileSizeLimit: 1024
+	*   })
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "message": "Successfully updated"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async updateBucket(id, options) {
+        var _this4 = this;
+        return _this4.handleOperation(async ()=>{
+            return await put(_this4.fetch, `${_this4.url}/bucket/${id}`, {
+                id,
+                name: id,
+                public: options.public,
+                file_size_limit: options.fileSizeLimit,
+                allowed_mime_types: options.allowedMimeTypes
+            }, {
+                headers: _this4.headers
+            });
+        });
+    }
+    /**
+	* Removes all objects inside a single bucket.
+	*
+	* @category File Buckets
+	* @param id The unique identifier of the bucket you would like to empty.
+	* @returns Promise with success message or error
+	*
+	* @example Empty bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .emptyBucket('avatars')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "message": "Successfully emptied"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async emptyBucket(id) {
+        var _this5 = this;
+        return _this5.handleOperation(async ()=>{
+            return await post(_this5.fetch, `${_this5.url}/bucket/${id}/empty`, {}, {
+                headers: _this5.headers
+            });
+        });
+    }
+    /**
+	* Deletes an existing bucket. A bucket can't be deleted with existing objects inside it.
+	* You must first `empty()` the bucket.
+	*
+	* @category File Buckets
+	* @param id The unique identifier of the bucket you would like to delete.
+	* @returns Promise with success message or error
+	*
+	* @example Delete bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .deleteBucket('avatars')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "message": "Successfully deleted"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async deleteBucket(id) {
+        var _this6 = this;
+        return _this6.handleOperation(async ()=>{
+            return await remove(_this6.fetch, `${_this6.url}/bucket/${id}`, {}, {
+                headers: _this6.headers
+            });
+        });
+    }
+    listBucketOptionsToQueryString(options) {
+        const params = {};
+        if (options) {
+            if ("limit" in options) params.limit = String(options.limit);
+            if ("offset" in options) params.offset = String(options.offset);
+            if (options.search) params.search = options.search;
+            if (options.sortColumn) params.sortColumn = options.sortColumn;
+            if (options.sortOrder) params.sortOrder = options.sortOrder;
+        }
+        return Object.keys(params).length > 0 ? "?" + new URLSearchParams(params).toString() : "";
+    }
+};
+//#endregion
+//#region src/packages/StorageAnalyticsClient.ts
+/**
+* Client class for managing Analytics Buckets using Iceberg tables
+* Provides methods for creating, listing, and deleting analytics buckets
+*/ var StorageAnalyticsClient = class extends BaseApiClient {
+    /**
+	* @alpha
+	*
+	* Creates a new StorageAnalyticsClient instance
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Analytics Buckets
+	* @param url - The base URL for the storage API
+	* @param headers - HTTP headers to include in requests
+	* @param fetch - Optional custom fetch implementation
+	*
+	* @example
+	* ```typescript
+	* const client = new StorageAnalyticsClient(url, headers)
+	* ```
+	*/ constructor(url, headers = {}, fetch$1){
+        const finalUrl = url.replace(/\/$/, "");
+        const finalHeaders = _objectSpread2(_objectSpread2({}, DEFAULT_HEADERS), headers);
+        super(finalUrl, finalHeaders, fetch$1, "storage");
+    }
+    /**
+	* @alpha
+	*
+	* Creates a new analytics bucket using Iceberg tables
+	* Analytics buckets are optimized for analytical queries and data processing
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Analytics Buckets
+	* @param name A unique name for the bucket you are creating
+	* @returns Promise with response containing newly created analytics bucket or error
+	*
+	* @example Create analytics bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .analytics
+	*   .createBucket('analytics-data')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "name": "analytics-data",
+	*     "type": "ANALYTICS",
+	*     "format": "iceberg",
+	*     "created_at": "2024-05-22T22:26:05.100Z",
+	*     "updated_at": "2024-05-22T22:26:05.100Z"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async createBucket(name) {
+        var _this = this;
+        return _this.handleOperation(async ()=>{
+            return await post(_this.fetch, `${_this.url}/bucket`, {
+                name
+            }, {
+                headers: _this.headers
+            });
+        });
+    }
+    /**
+	* @alpha
+	*
+	* Retrieves the details of all Analytics Storage buckets within an existing project
+	* Only returns buckets of type 'ANALYTICS'
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Analytics Buckets
+	* @param options Query parameters for listing buckets
+	* @param options.limit Maximum number of buckets to return
+	* @param options.offset Number of buckets to skip
+	* @param options.sortColumn Column to sort by ('name', 'created_at', 'updated_at')
+	* @param options.sortOrder Sort order ('asc' or 'desc')
+	* @param options.search Search term to filter bucket names
+	* @returns Promise with response containing array of analytics buckets or error
+	*
+	* @example List analytics buckets
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .analytics
+	*   .listBuckets({
+	*     limit: 10,
+	*     offset: 0,
+	*     sortColumn: 'created_at',
+	*     sortOrder: 'desc'
+	*   })
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": [
+	*     {
+	*       "name": "analytics-data",
+	*       "type": "ANALYTICS",
+	*       "format": "iceberg",
+	*       "created_at": "2024-05-22T22:26:05.100Z",
+	*       "updated_at": "2024-05-22T22:26:05.100Z"
+	*     }
+	*   ],
+	*   "error": null
+	* }
+	* ```
+	*/ async listBuckets(options) {
+        var _this2 = this;
+        return _this2.handleOperation(async ()=>{
+            const queryParams = new URLSearchParams();
+            if ((options === null || options === void 0 ? void 0 : options.limit) !== void 0) queryParams.set("limit", options.limit.toString());
+            if ((options === null || options === void 0 ? void 0 : options.offset) !== void 0) queryParams.set("offset", options.offset.toString());
+            if (options === null || options === void 0 ? void 0 : options.sortColumn) queryParams.set("sortColumn", options.sortColumn);
+            if (options === null || options === void 0 ? void 0 : options.sortOrder) queryParams.set("sortOrder", options.sortOrder);
+            if (options === null || options === void 0 ? void 0 : options.search) queryParams.set("search", options.search);
+            const queryString = queryParams.toString();
+            const url = queryString ? `${_this2.url}/bucket?${queryString}` : `${_this2.url}/bucket`;
+            return await get(_this2.fetch, url, {
+                headers: _this2.headers
+            });
+        });
+    }
+    /**
+	* @alpha
+	*
+	* Deletes an existing analytics bucket
+	* A bucket can't be deleted with existing objects inside it
+	* You must first empty the bucket before deletion
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Analytics Buckets
+	* @param bucketName The unique identifier of the bucket you would like to delete
+	* @returns Promise with response containing success message or error
+	*
+	* @example Delete analytics bucket
+	* ```js
+	* const { data, error } = await supabase
+	*   .storage
+	*   .analytics
+	*   .deleteBucket('analytics-data')
+	* ```
+	*
+	* Response:
+	* ```json
+	* {
+	*   "data": {
+	*     "message": "Successfully deleted"
+	*   },
+	*   "error": null
+	* }
+	* ```
+	*/ async deleteBucket(bucketName) {
+        var _this3 = this;
+        return _this3.handleOperation(async ()=>{
+            return await remove(_this3.fetch, `${_this3.url}/bucket/${bucketName}`, {}, {
+                headers: _this3.headers
+            });
+        });
+    }
+    /**
+	* @alpha
+	*
+	* Get an Iceberg REST Catalog client configured for a specific analytics bucket
+	* Use this to perform advanced table and namespace operations within the bucket
+	* The returned client provides full access to the Apache Iceberg REST Catalog API
+	* with the Supabase `{ data, error }` pattern for consistent error handling on all operations.
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Analytics Buckets
+	* @param bucketName - The name of the analytics bucket (warehouse) to connect to
+	* @returns The wrapped Iceberg catalog client
+	* @throws {StorageError} If the bucket name is invalid
+	*
+	* @example Get catalog and create table
+	* ```js
+	* // First, create an analytics bucket
+	* const { data: bucket, error: bucketError } = await supabase
+	*   .storage
+	*   .analytics
+	*   .createBucket('analytics-data')
+	*
+	* // Get the Iceberg catalog for that bucket
+	* const catalog = supabase.storage.analytics.from('analytics-data')
+	*
+	* // Create a namespace
+	* const { error: nsError } = await catalog.createNamespace({ namespace: ['default'] })
+	*
+	* // Create a table with schema
+	* const { data: tableMetadata, error: tableError } = await catalog.createTable(
+	*   { namespace: ['default'] },
+	*   {
+	*     name: 'events',
+	*     schema: {
+	*       type: 'struct',
+	*       fields: [
+	*         { id: 1, name: 'id', type: 'long', required: true },
+	*         { id: 2, name: 'timestamp', type: 'timestamp', required: true },
+	*         { id: 3, name: 'user_id', type: 'string', required: false }
+	*       ],
+	*       'schema-id': 0,
+	*       'identifier-field-ids': [1]
+	*     },
+	*     'partition-spec': {
+	*       'spec-id': 0,
+	*       fields: []
+	*     },
+	*     'write-order': {
+	*       'order-id': 0,
+	*       fields: []
+	*     },
+	*     properties: {
+	*       'write.format.default': 'parquet'
+	*     }
+	*   }
+	* )
+	* ```
+	*
+	* @example List tables in namespace
+	* ```js
+	* const catalog = supabase.storage.analytics.from('analytics-data')
+	*
+	* // List all tables in the default namespace
+	* const { data: tables, error: listError } = await catalog.listTables({ namespace: ['default'] })
+	* if (listError) {
+	*   if (listError.isNotFound()) {
+	*     console.log('Namespace not found')
+	*   }
+	*   return
+	* }
+	* console.log(tables) // [{ namespace: ['default'], name: 'events' }]
+	* ```
+	*
+	* @example Working with namespaces
+	* ```js
+	* const catalog = supabase.storage.analytics.from('analytics-data')
+	*
+	* // List all namespaces
+	* const { data: namespaces } = await catalog.listNamespaces()
+	*
+	* // Create namespace with properties
+	* await catalog.createNamespace(
+	*   { namespace: ['production'] },
+	*   { properties: { owner: 'data-team', env: 'prod' } }
+	* )
+	* ```
+	*
+	* @example Cleanup operations
+	* ```js
+	* const catalog = supabase.storage.analytics.from('analytics-data')
+	*
+	* // Drop table with purge option (removes all data)
+	* const { error: dropError } = await catalog.dropTable(
+	*   { namespace: ['default'], name: 'events' },
+	*   { purge: true }
+	* )
+	*
+	* if (dropError?.isNotFound()) {
+	*   console.log('Table does not exist')
+	* }
+	*
+	* // Drop namespace (must be empty)
+	* await catalog.dropNamespace({ namespace: ['default'] })
+	* ```
+	*
+	* @remarks
+	* This method provides a bridge between Supabase's bucket management and the standard
+	* Apache Iceberg REST Catalog API. The bucket name maps to the Iceberg warehouse parameter.
+	* All authentication and configuration is handled automatically using your Supabase credentials.
+	*
+	* **Error Handling**: Invalid bucket names throw immediately. All catalog
+	* operations return `{ data, error }` where errors are `IcebergError` instances from iceberg-js.
+	* Use helper methods like `error.isNotFound()` or check `error.status` for specific error handling.
+	* Use `.throwOnError()` on the analytics client if you prefer exceptions for catalog operations.
+	*
+	* **Cleanup Operations**: When using `dropTable`, the `purge: true` option permanently
+	* deletes all table data. Without it, the table is marked as deleted but data remains.
+	*
+	* **Library Dependency**: The returned catalog wraps `IcebergRestCatalog` from iceberg-js.
+	* For complete API documentation and advanced usage, refer to the
+	* [iceberg-js documentation](https://supabase.github.io/iceberg-js/).
+	*/ from(bucketName) {
+        var _this4 = this;
+        if (!isValidBucketName(bucketName)) throw new StorageError("Invalid bucket name: File, folder, and bucket names must follow AWS object key naming guidelines and should avoid the use of any other characters.");
+        const catalog = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$iceberg$2d$js$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["IcebergRestCatalog"]({
+            baseUrl: this.url,
+            catalogName: bucketName,
+            auth: {
+                type: "custom",
+                getHeaders: async ()=>_this4.headers
+            },
+            fetch: this.fetch
+        });
+        const shouldThrowOnError = this.shouldThrowOnError;
+        return new Proxy(catalog, {
+            get (target, prop) {
+                const value = target[prop];
+                if (typeof value !== "function") return value;
+                return async (...args)=>{
+                    try {
+                        return {
+                            data: await value.apply(target, args),
+                            error: null
+                        };
+                    } catch (error) {
+                        if (shouldThrowOnError) throw error;
+                        return {
+                            data: null,
+                            error
+                        };
+                    }
+                };
+            }
+        });
+    }
+};
+//#endregion
+//#region src/packages/VectorIndexApi.ts
+/**
+* @hidden
+* Base implementation for vector index operations.
+* Use {@link VectorBucketScope} via `supabase.storage.vectors.from('bucket')` instead.
+*/ var VectorIndexApi = class extends BaseApiClient {
+    /** Creates a new VectorIndexApi instance */ constructor(url, headers = {}, fetch$1){
+        const finalUrl = url.replace(/\/$/, "");
+        const finalHeaders = _objectSpread2(_objectSpread2({}, DEFAULT_HEADERS), {}, {
+            "Content-Type": "application/json"
+        }, headers);
+        super(finalUrl, finalHeaders, fetch$1, "vectors");
+    }
+    /** Creates a new vector index within a bucket */ async createIndex(options) {
+        var _this = this;
+        return _this.handleOperation(async ()=>{
+            return await vectorsApi.post(_this.fetch, `${_this.url}/CreateIndex`, options, {
+                headers: _this.headers
+            }) || {};
+        });
+    }
+    /** Retrieves metadata for a specific vector index */ async getIndex(vectorBucketName, indexName) {
+        var _this2 = this;
+        return _this2.handleOperation(async ()=>{
+            return await vectorsApi.post(_this2.fetch, `${_this2.url}/GetIndex`, {
+                vectorBucketName,
+                indexName
+            }, {
+                headers: _this2.headers
+            });
+        });
+    }
+    /** Lists vector indexes within a bucket with optional filtering and pagination */ async listIndexes(options) {
+        var _this3 = this;
+        return _this3.handleOperation(async ()=>{
+            return await vectorsApi.post(_this3.fetch, `${_this3.url}/ListIndexes`, options, {
+                headers: _this3.headers
+            });
+        });
+    }
+    /** Deletes a vector index and all its data */ async deleteIndex(vectorBucketName, indexName) {
+        var _this4 = this;
+        return _this4.handleOperation(async ()=>{
+            return await vectorsApi.post(_this4.fetch, `${_this4.url}/DeleteIndex`, {
+                vectorBucketName,
+                indexName
+            }, {
+                headers: _this4.headers
+            }) || {};
+        });
+    }
+};
+//#endregion
+//#region src/packages/VectorDataApi.ts
+/**
+* @hidden
+* Base implementation for vector data operations.
+* Use {@link VectorIndexScope} via `supabase.storage.vectors.from('bucket').index('idx')` instead.
+*/ var VectorDataApi = class extends BaseApiClient {
+    /** Creates a new VectorDataApi instance */ constructor(url, headers = {}, fetch$1){
+        const finalUrl = url.replace(/\/$/, "");
+        const finalHeaders = _objectSpread2(_objectSpread2({}, DEFAULT_HEADERS), {}, {
+            "Content-Type": "application/json"
+        }, headers);
+        super(finalUrl, finalHeaders, fetch$1, "vectors");
+    }
+    /** Inserts or updates vectors in batch (1-500 per request) */ async putVectors(options) {
+        var _this = this;
+        if (options.vectors.length < 1 || options.vectors.length > 500) throw new Error("Vector batch size must be between 1 and 500 items");
+        return _this.handleOperation(async ()=>{
+            return await vectorsApi.post(_this.fetch, `${_this.url}/PutVectors`, options, {
+                headers: _this.headers
+            }) || {};
+        });
+    }
+    /** Retrieves vectors by their keys in batch */ async getVectors(options) {
+        var _this2 = this;
+        return _this2.handleOperation(async ()=>{
+            return await vectorsApi.post(_this2.fetch, `${_this2.url}/GetVectors`, options, {
+                headers: _this2.headers
+            });
+        });
+    }
+    /** Lists vectors in an index with pagination */ async listVectors(options) {
+        var _this3 = this;
+        if (options.segmentCount !== void 0) {
+            if (options.segmentCount < 1 || options.segmentCount > 16) throw new Error("segmentCount must be between 1 and 16");
+            if (options.segmentIndex !== void 0) {
+                if (options.segmentIndex < 0 || options.segmentIndex >= options.segmentCount) throw new Error(`segmentIndex must be between 0 and ${options.segmentCount - 1}`);
+            }
+        }
+        return _this3.handleOperation(async ()=>{
+            return await vectorsApi.post(_this3.fetch, `${_this3.url}/ListVectors`, options, {
+                headers: _this3.headers
+            });
+        });
+    }
+    /** Queries for similar vectors using approximate nearest neighbor search */ async queryVectors(options) {
+        var _this4 = this;
+        return _this4.handleOperation(async ()=>{
+            return await vectorsApi.post(_this4.fetch, `${_this4.url}/QueryVectors`, options, {
+                headers: _this4.headers
+            });
+        });
+    }
+    /** Deletes vectors by their keys in batch (1-500 per request) */ async deleteVectors(options) {
+        var _this5 = this;
+        if (options.keys.length < 1 || options.keys.length > 500) throw new Error("Keys batch size must be between 1 and 500 items");
+        return _this5.handleOperation(async ()=>{
+            return await vectorsApi.post(_this5.fetch, `${_this5.url}/DeleteVectors`, options, {
+                headers: _this5.headers
+            }) || {};
+        });
+    }
+};
+//#endregion
+//#region src/packages/VectorBucketApi.ts
+/**
+* @hidden
+* Base implementation for vector bucket operations.
+* Use {@link StorageVectorsClient} via `supabase.storage.vectors` instead.
+*/ var VectorBucketApi = class extends BaseApiClient {
+    /** Creates a new VectorBucketApi instance */ constructor(url, headers = {}, fetch$1){
+        const finalUrl = url.replace(/\/$/, "");
+        const finalHeaders = _objectSpread2(_objectSpread2({}, DEFAULT_HEADERS), {}, {
+            "Content-Type": "application/json"
+        }, headers);
+        super(finalUrl, finalHeaders, fetch$1, "vectors");
+    }
+    /** Creates a new vector bucket */ async createBucket(vectorBucketName) {
+        var _this = this;
+        return _this.handleOperation(async ()=>{
+            return await vectorsApi.post(_this.fetch, `${_this.url}/CreateVectorBucket`, {
+                vectorBucketName
+            }, {
+                headers: _this.headers
+            }) || {};
+        });
+    }
+    /** Retrieves metadata for a specific vector bucket */ async getBucket(vectorBucketName) {
+        var _this2 = this;
+        return _this2.handleOperation(async ()=>{
+            return await vectorsApi.post(_this2.fetch, `${_this2.url}/GetVectorBucket`, {
+                vectorBucketName
+            }, {
+                headers: _this2.headers
+            });
+        });
+    }
+    /** Lists vector buckets with optional filtering and pagination */ async listBuckets(options = {}) {
+        var _this3 = this;
+        return _this3.handleOperation(async ()=>{
+            return await vectorsApi.post(_this3.fetch, `${_this3.url}/ListVectorBuckets`, options, {
+                headers: _this3.headers
+            });
+        });
+    }
+    /** Deletes a vector bucket (must be empty first) */ async deleteBucket(vectorBucketName) {
+        var _this4 = this;
+        return _this4.handleOperation(async ()=>{
+            return await vectorsApi.post(_this4.fetch, `${_this4.url}/DeleteVectorBucket`, {
+                vectorBucketName
+            }, {
+                headers: _this4.headers
+            }) || {};
+        });
+    }
+};
+//#endregion
+//#region src/packages/StorageVectorsClient.ts
+/**
+*
+* @alpha
+*
+* Main client for interacting with S3 Vectors API
+* Provides access to bucket, index, and vector data operations
+*
+* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+*
+* **Usage Patterns:**
+*
+* ```typescript
+* const { data, error } = await supabase
+*  .storage
+*  .vectors
+*  .createBucket('embeddings-prod')
+*
+* // Access index operations via buckets
+* const bucket = supabase.storage.vectors.from('embeddings-prod')
+* await bucket.createIndex({
+*   indexName: 'documents',
+*   dataType: 'float32',
+*   dimension: 1536,
+*   distanceMetric: 'cosine'
+* })
+*
+* // Access vector operations via index
+* const index = bucket.index('documents')
+* await index.putVectors({
+*   vectors: [
+*     { key: 'doc-1', data: { float32: [...] }, metadata: { title: 'Intro' } }
+*   ]
+* })
+*
+* // Query similar vectors
+* const { data } = await index.queryVectors({
+*   queryVector: { float32: [...] },
+*   topK: 5,
+*   returnDistance: true
+* })
+* ```
+*/ var StorageVectorsClient = class extends VectorBucketApi {
+    /**
+	* @alpha
+	*
+	* Creates a StorageVectorsClient that can manage buckets, indexes, and vectors.
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param url - Base URL of the Storage Vectors REST API.
+	* @param options.headers - Optional headers (for example `Authorization`) applied to every request.
+	* @param options.fetch - Optional custom `fetch` implementation for non-browser runtimes.
+	*
+	* @example
+	* ```typescript
+	* const client = new StorageVectorsClient(url, options)
+	* ```
+	*/ constructor(url, options = {}){
+        super(url, options.headers || {}, options.fetch);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Access operations for a specific vector bucket
+	* Returns a scoped client for index and vector operations within the bucket
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param vectorBucketName - Name of the vector bucket
+	* @returns Bucket-scoped client with index and vector operations
+	*
+	* @example
+	* ```typescript
+	* const bucket = supabase.storage.vectors.from('embeddings-prod')
+	* ```
+	*/ from(vectorBucketName) {
+        return new VectorBucketScope(this.url, this.headers, vectorBucketName, this.fetch);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Creates a new vector bucket
+	* Vector buckets are containers for vector indexes and their data
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param vectorBucketName - Unique name for the vector bucket
+	* @returns Promise with empty response on success or error
+	*
+	* @example
+	* ```typescript
+	* const { data, error } = await supabase
+	*   .storage
+	*   .vectors
+	*   .createBucket('embeddings-prod')
+	* ```
+	*/ async createBucket(vectorBucketName) {
+        var _superprop_getCreateBucket = ()=>super.createBucket, _this = this;
+        return _superprop_getCreateBucket().call(_this, vectorBucketName);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Retrieves metadata for a specific vector bucket
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param vectorBucketName - Name of the vector bucket
+	* @returns Promise with bucket metadata or error
+	*
+	* @example
+	* ```typescript
+	* const { data, error } = await supabase
+	*   .storage
+	*   .vectors
+	*   .getBucket('embeddings-prod')
+	*
+	* console.log('Bucket created:', data?.vectorBucket.creationTime)
+	* ```
+	*/ async getBucket(vectorBucketName) {
+        var _superprop_getGetBucket = ()=>super.getBucket, _this2 = this;
+        return _superprop_getGetBucket().call(_this2, vectorBucketName);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Lists all vector buckets with optional filtering and pagination
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Optional filters (prefix, maxResults, nextToken)
+	* @returns Promise with list of buckets or error
+	*
+	* @example
+	* ```typescript
+	* const { data, error } = await supabase
+	*   .storage
+	*   .vectors
+	*   .listBuckets({ prefix: 'embeddings-' })
+	*
+	* data?.vectorBuckets.forEach(bucket => {
+	*   console.log(bucket.vectorBucketName)
+	* })
+	* ```
+	*/ async listBuckets(options = {}) {
+        var _superprop_getListBuckets = ()=>super.listBuckets, _this3 = this;
+        return _superprop_getListBuckets().call(_this3, options);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Deletes a vector bucket (bucket must be empty)
+	* All indexes must be deleted before deleting the bucket
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param vectorBucketName - Name of the vector bucket to delete
+	* @returns Promise with empty response on success or error
+	*
+	* @example
+	* ```typescript
+	* const { data, error } = await supabase
+	*   .storage
+	*   .vectors
+	*   .deleteBucket('embeddings-old')
+	* ```
+	*/ async deleteBucket(vectorBucketName) {
+        var _superprop_getDeleteBucket = ()=>super.deleteBucket, _this4 = this;
+        return _superprop_getDeleteBucket().call(_this4, vectorBucketName);
+    }
+};
+/**
+*
+* @alpha
+*
+* Scoped client for operations within a specific vector bucket
+* Provides index management and access to vector operations
+*
+* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+*/ var VectorBucketScope = class extends VectorIndexApi {
+    /**
+	* @alpha
+	*
+	* Creates a helper that automatically scopes all index operations to the provided bucket.
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @example
+	* ```typescript
+	* const bucket = supabase.storage.vectors.from('embeddings-prod')
+	* ```
+	*/ constructor(url, headers, vectorBucketName, fetch$1){
+        super(url, headers, fetch$1);
+        this.vectorBucketName = vectorBucketName;
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Creates a new vector index in this bucket
+	* Convenience method that automatically includes the bucket name
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Index configuration (vectorBucketName is automatically set)
+	* @returns Promise with empty response on success or error
+	*
+	* @example
+	* ```typescript
+	* const bucket = supabase.storage.vectors.from('embeddings-prod')
+	* await bucket.createIndex({
+	*   indexName: 'documents-openai',
+	*   dataType: 'float32',
+	*   dimension: 1536,
+	*   distanceMetric: 'cosine',
+	*   metadataConfiguration: {
+	*     nonFilterableMetadataKeys: ['raw_text']
+	*   }
+	* })
+	* ```
+	*/ async createIndex(options) {
+        var _superprop_getCreateIndex = ()=>super.createIndex, _this5 = this;
+        return _superprop_getCreateIndex().call(_this5, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this5.vectorBucketName
+        }));
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Lists indexes in this bucket
+	* Convenience method that automatically includes the bucket name
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Listing options (vectorBucketName is automatically set)
+	* @returns Promise with response containing indexes array and pagination token or error
+	*
+	* @example
+	* ```typescript
+	* const bucket = supabase.storage.vectors.from('embeddings-prod')
+	* const { data } = await bucket.listIndexes({ prefix: 'documents-' })
+	* ```
+	*/ async listIndexes(options = {}) {
+        var _superprop_getListIndexes = ()=>super.listIndexes, _this6 = this;
+        return _superprop_getListIndexes().call(_this6, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this6.vectorBucketName
+        }));
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Retrieves metadata for a specific index in this bucket
+	* Convenience method that automatically includes the bucket name
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param indexName - Name of the index to retrieve
+	* @returns Promise with index metadata or error
+	*
+	* @example
+	* ```typescript
+	* const bucket = supabase.storage.vectors.from('embeddings-prod')
+	* const { data } = await bucket.getIndex('documents-openai')
+	* console.log('Dimension:', data?.index.dimension)
+	* ```
+	*/ async getIndex(indexName) {
+        var _superprop_getGetIndex = ()=>super.getIndex, _this7 = this;
+        return _superprop_getGetIndex().call(_this7, _this7.vectorBucketName, indexName);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Deletes an index from this bucket
+	* Convenience method that automatically includes the bucket name
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param indexName - Name of the index to delete
+	* @returns Promise with empty response on success or error
+	*
+	* @example
+	* ```typescript
+	* const bucket = supabase.storage.vectors.from('embeddings-prod')
+	* await bucket.deleteIndex('old-index')
+	* ```
+	*/ async deleteIndex(indexName) {
+        var _superprop_getDeleteIndex = ()=>super.deleteIndex, _this8 = this;
+        return _superprop_getDeleteIndex().call(_this8, _this8.vectorBucketName, indexName);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Access operations for a specific index within this bucket
+	* Returns a scoped client for vector data operations
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param indexName - Name of the index
+	* @returns Index-scoped client with vector data operations
+	*
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	*
+	* // Insert vectors
+	* await index.putVectors({
+	*   vectors: [
+	*     { key: 'doc-1', data: { float32: [...] }, metadata: { title: 'Intro' } }
+	*   ]
+	* })
+	*
+	* // Query similar vectors
+	* const { data } = await index.queryVectors({
+	*   queryVector: { float32: [...] },
+	*   topK: 5
+	* })
+	* ```
+	*/ index(indexName) {
+        return new VectorIndexScope(this.url, this.headers, this.vectorBucketName, indexName, this.fetch);
+    }
+};
+/**
+*
+* @alpha
+*
+* Scoped client for operations within a specific vector index
+* Provides vector data operations (put, get, list, query, delete)
+*
+* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+*/ var VectorIndexScope = class extends VectorDataApi {
+    /**
+	*
+	* @alpha
+	*
+	* Creates a helper that automatically scopes all vector operations to the provided bucket/index names.
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	* ```
+	*/ constructor(url, headers, vectorBucketName, indexName, fetch$1){
+        super(url, headers, fetch$1);
+        this.vectorBucketName = vectorBucketName;
+        this.indexName = indexName;
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Inserts or updates vectors in this index
+	* Convenience method that automatically includes bucket and index names
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Vector insertion options (bucket and index names automatically set)
+	* @returns Promise with empty response on success or error
+	*
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	* await index.putVectors({
+	*   vectors: [
+	*     {
+	*       key: 'doc-1',
+	*       data: { float32: [0.1, 0.2, ...] },
+	*       metadata: { title: 'Introduction', page: 1 }
+	*     }
+	*   ]
+	* })
+	* ```
+	*/ async putVectors(options) {
+        var _superprop_getPutVectors = ()=>super.putVectors, _this9 = this;
+        return _superprop_getPutVectors().call(_this9, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this9.vectorBucketName,
+            indexName: _this9.indexName
+        }));
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Retrieves vectors by keys from this index
+	* Convenience method that automatically includes bucket and index names
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Vector retrieval options (bucket and index names automatically set)
+	* @returns Promise with response containing vectors array or error
+	*
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	* const { data } = await index.getVectors({
+	*   keys: ['doc-1', 'doc-2'],
+	*   returnMetadata: true
+	* })
+	* ```
+	*/ async getVectors(options) {
+        var _superprop_getGetVectors = ()=>super.getVectors, _this10 = this;
+        return _superprop_getGetVectors().call(_this10, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this10.vectorBucketName,
+            indexName: _this10.indexName
+        }));
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Lists vectors in this index with pagination
+	* Convenience method that automatically includes bucket and index names
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Listing options (bucket and index names automatically set)
+	* @returns Promise with response containing vectors array and pagination token or error
+	*
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	* const { data } = await index.listVectors({
+	*   maxResults: 500,
+	*   returnMetadata: true
+	* })
+	* ```
+	*/ async listVectors(options = {}) {
+        var _superprop_getListVectors = ()=>super.listVectors, _this11 = this;
+        return _superprop_getListVectors().call(_this11, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this11.vectorBucketName,
+            indexName: _this11.indexName
+        }));
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Queries for similar vectors in this index
+	* Convenience method that automatically includes bucket and index names
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Query options (bucket and index names automatically set)
+	* @returns Promise with response containing matches array of similar vectors ordered by distance or error
+	*
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	* const { data } = await index.queryVectors({
+	*   queryVector: { float32: [0.1, 0.2, ...] },
+	*   topK: 5,
+	*   filter: { category: 'technical' },
+	*   returnDistance: true,
+	*   returnMetadata: true
+	* })
+	* ```
+	*/ async queryVectors(options) {
+        var _superprop_getQueryVectors = ()=>super.queryVectors, _this12 = this;
+        return _superprop_getQueryVectors().call(_this12, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this12.vectorBucketName,
+            indexName: _this12.indexName
+        }));
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Deletes vectors by keys from this index
+	* Convenience method that automatically includes bucket and index names
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @param options - Deletion options (bucket and index names automatically set)
+	* @returns Promise with empty response on success or error
+	*
+	* @example
+	* ```typescript
+	* const index = supabase.storage.vectors.from('embeddings-prod').index('documents-openai')
+	* await index.deleteVectors({
+	*   keys: ['doc-1', 'doc-2', 'doc-3']
+	* })
+	* ```
+	*/ async deleteVectors(options) {
+        var _superprop_getDeleteVectors = ()=>super.deleteVectors, _this13 = this;
+        return _superprop_getDeleteVectors().call(_this13, _objectSpread2(_objectSpread2({}, options), {}, {
+            vectorBucketName: _this13.vectorBucketName,
+            indexName: _this13.indexName
+        }));
+    }
+};
+//#endregion
+//#region src/StorageClient.ts
+var StorageClient = class extends StorageBucketApi {
+    /**
+	* Creates a client for Storage buckets, files, analytics, and vectors.
+	*
+	* @category File Buckets
+	* @example
+	* ```ts
+	* import { StorageClient } from '@supabase/storage-js'
+	*
+	* const storage = new StorageClient('https://xyzcompany.supabase.co/storage/v1', {
+	*   apikey: 'public-anon-key',
+	* })
+	* const avatars = storage.from('avatars')
+	* ```
+	*/ constructor(url, headers = {}, fetch$1, opts){
+        super(url, headers, fetch$1, opts);
+    }
+    /**
+	* Perform file operation in a bucket.
+	*
+	* @category File Buckets
+	* @param id The bucket id to operate on.
+	*
+	* @example
+	* ```typescript
+	* const avatars = supabase.storage.from('avatars')
+	* ```
+	*/ from(id) {
+        return new StorageFileApi(this.url, this.headers, id, this.fetch);
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Access vector storage operations.
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Vector Buckets
+	* @returns A StorageVectorsClient instance configured with the current storage settings.
+	*/ get vectors() {
+        return new StorageVectorsClient(this.url + "/vector", {
+            headers: this.headers,
+            fetch: this.fetch
+        });
+    }
+    /**
+	*
+	* @alpha
+	*
+	* Access analytics storage operations using Iceberg tables.
+	*
+	* **Public alpha:** This API is part of a public alpha release and may not be available to your account type.
+	*
+	* @category Analytics Buckets
+	* @returns A StorageAnalyticsClient instance configured with the current storage settings.
+	*/ get analytics() {
+        return new StorageAnalyticsClient(this.url + "/iceberg", this.headers, this.fetch);
+    }
+};
+;
+ //# sourceMappingURL=index.mjs.map
+}),
+"[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/supabase-js/dist/index.mjs [app-ssr] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "SupabaseClient",
+    ()=>SupabaseClient,
+    "createClient",
+    ()=>createClient
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$types$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/types.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$FunctionsClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/functions-js/dist/module/FunctionsClient.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$postgrest$2d$js$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/postgrest-js/dist/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RealtimeClient$3e$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js [app-ssr] (ecmascript) <export default as RealtimeClient>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$storage$2d$js$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/storage-js/dist/index.mjs [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$auth$2d$js$2f$dist$2f$module$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/auth-js/dist/module/index.js [app-ssr] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$auth$2d$js$2f$dist$2f$module$2f$AuthClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__AuthClient$3e$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@supabase/auth-js/dist/module/AuthClient.js [app-ssr] (ecmascript) <export default as AuthClient>");
+;
+;
+;
+;
+;
+;
+;
+//#region src/lib/version.ts
+const version = "2.95.3";
+//#endregion
+//#region src/lib/constants.ts
+let JS_ENV = "";
+if (typeof Deno !== "undefined") JS_ENV = "deno";
+else if (typeof document !== "undefined") JS_ENV = "web";
+else if (typeof navigator !== "undefined" && navigator.product === "ReactNative") JS_ENV = "react-native";
+else JS_ENV = "node";
+const DEFAULT_HEADERS = {
+    "X-Client-Info": `supabase-js-${JS_ENV}/${version}`
+};
+const DEFAULT_GLOBAL_OPTIONS = {
+    headers: DEFAULT_HEADERS
+};
+const DEFAULT_DB_OPTIONS = {
+    schema: "public"
+};
+const DEFAULT_AUTH_OPTIONS = {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: "implicit"
+};
+const DEFAULT_REALTIME_OPTIONS = {};
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/typeof.js
+function _typeof(o) {
+    "@babel/helpers - typeof";
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o$1) {
+        return typeof o$1;
+    } : function(o$1) {
+        return o$1 && "function" == typeof Symbol && o$1.constructor === Symbol && o$1 !== Symbol.prototype ? "symbol" : typeof o$1;
+    }, _typeof(o);
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/toPrimitive.js
+function toPrimitive(t, r) {
+    if ("object" != _typeof(t) || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+        var i = e.call(t, r || "default");
+        if ("object" != _typeof(i)) return i;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/toPropertyKey.js
+function toPropertyKey(t) {
+    var i = toPrimitive(t, "string");
+    return "symbol" == _typeof(i) ? i : i + "";
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/defineProperty.js
+function _defineProperty(e, r, t) {
+    return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+        value: t,
+        enumerable: !0,
+        configurable: !0,
+        writable: !0
+    }) : e[r] = t, e;
+}
+//#endregion
+//#region \0@oxc-project+runtime@0.101.0/helpers/objectSpread2.js
+function ownKeys(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+        var o = Object.getOwnPropertySymbols(e);
+        r && (o = o.filter(function(r$1) {
+            return Object.getOwnPropertyDescriptor(e, r$1).enumerable;
+        })), t.push.apply(t, o);
+    }
+    return t;
+}
+function _objectSpread2(e) {
+    for(var r = 1; r < arguments.length; r++){
+        var t = null != arguments[r] ? arguments[r] : {};
+        r % 2 ? ownKeys(Object(t), !0).forEach(function(r$1) {
+            _defineProperty(e, r$1, t[r$1]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r$1) {
+            Object.defineProperty(e, r$1, Object.getOwnPropertyDescriptor(t, r$1));
+        });
+    }
+    return e;
+}
+//#endregion
+//#region src/lib/fetch.ts
+const resolveFetch = (customFetch)=>{
+    if (customFetch) return (...args)=>customFetch(...args);
+    return (...args)=>fetch(...args);
+};
+const resolveHeadersConstructor = ()=>{
+    return Headers;
+};
+const fetchWithAuth = (supabaseKey, getAccessToken, customFetch)=>{
+    const fetch$1 = resolveFetch(customFetch);
+    const HeadersConstructor = resolveHeadersConstructor();
+    return async (input, init)=>{
+        var _await$getAccessToken;
+        const accessToken = (_await$getAccessToken = await getAccessToken()) !== null && _await$getAccessToken !== void 0 ? _await$getAccessToken : supabaseKey;
+        let headers = new HeadersConstructor(init === null || init === void 0 ? void 0 : init.headers);
+        if (!headers.has("apikey")) headers.set("apikey", supabaseKey);
+        if (!headers.has("Authorization")) headers.set("Authorization", `Bearer ${accessToken}`);
+        return fetch$1(input, _objectSpread2(_objectSpread2({}, init), {}, {
+            headers
+        }));
+    };
+};
+//#endregion
+//#region src/lib/helpers.ts
+function ensureTrailingSlash(url) {
+    return url.endsWith("/") ? url : url + "/";
+}
+function applySettingDefaults(options, defaults) {
+    var _DEFAULT_GLOBAL_OPTIO, _globalOptions$header;
+    const { db: dbOptions, auth: authOptions, realtime: realtimeOptions, global: globalOptions } = options;
+    const { db: DEFAULT_DB_OPTIONS$1, auth: DEFAULT_AUTH_OPTIONS$1, realtime: DEFAULT_REALTIME_OPTIONS$1, global: DEFAULT_GLOBAL_OPTIONS$1 } = defaults;
+    const result = {
+        db: _objectSpread2(_objectSpread2({}, DEFAULT_DB_OPTIONS$1), dbOptions),
+        auth: _objectSpread2(_objectSpread2({}, DEFAULT_AUTH_OPTIONS$1), authOptions),
+        realtime: _objectSpread2(_objectSpread2({}, DEFAULT_REALTIME_OPTIONS$1), realtimeOptions),
+        storage: {},
+        global: _objectSpread2(_objectSpread2(_objectSpread2({}, DEFAULT_GLOBAL_OPTIONS$1), globalOptions), {}, {
+            headers: _objectSpread2(_objectSpread2({}, (_DEFAULT_GLOBAL_OPTIO = DEFAULT_GLOBAL_OPTIONS$1 === null || DEFAULT_GLOBAL_OPTIONS$1 === void 0 ? void 0 : DEFAULT_GLOBAL_OPTIONS$1.headers) !== null && _DEFAULT_GLOBAL_OPTIO !== void 0 ? _DEFAULT_GLOBAL_OPTIO : {}), (_globalOptions$header = globalOptions === null || globalOptions === void 0 ? void 0 : globalOptions.headers) !== null && _globalOptions$header !== void 0 ? _globalOptions$header : {})
+        }),
+        accessToken: async ()=>""
+    };
+    if (options.accessToken) result.accessToken = options.accessToken;
+    else delete result.accessToken;
+    return result;
+}
+/**
+* Validates a Supabase client URL
+*
+* @param {string} supabaseUrl - The Supabase client URL string.
+* @returns {URL} - The validated base URL.
+* @throws {Error}
+*/ function validateSupabaseUrl(supabaseUrl) {
+    const trimmedUrl = supabaseUrl === null || supabaseUrl === void 0 ? void 0 : supabaseUrl.trim();
+    if (!trimmedUrl) throw new Error("supabaseUrl is required.");
+    if (!trimmedUrl.match(/^https?:\/\//i)) throw new Error("Invalid supabaseUrl: Must be a valid HTTP or HTTPS URL.");
+    try {
+        return new URL(ensureTrailingSlash(trimmedUrl));
+    } catch (_unused) {
+        throw Error("Invalid supabaseUrl: Provided URL is malformed.");
+    }
+}
+//#endregion
+//#region src/lib/SupabaseAuthClient.ts
+var SupabaseAuthClient = class extends __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$auth$2d$js$2f$dist$2f$module$2f$AuthClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__AuthClient$3e$__["AuthClient"] {
+    constructor(options){
+        super(options);
+    }
+};
+//#endregion
+//#region src/SupabaseClient.ts
+/**
+* Supabase Client.
+*
+* An isomorphic Javascript client for interacting with Postgres.
+*/ var SupabaseClient = class {
+    /**
+	* Create a new client for use in the browser.
+	* @param supabaseUrl The unique Supabase URL which is supplied when you create a new project in your project dashboard.
+	* @param supabaseKey The unique Supabase Key which is supplied when you create a new project in your project dashboard.
+	* @param options.db.schema You can switch in between schemas. The schema needs to be on the list of exposed schemas inside Supabase.
+	* @param options.auth.autoRefreshToken Set to "true" if you want to automatically refresh the token before expiring.
+	* @param options.auth.persistSession Set to "true" if you want to automatically save the user session into local storage.
+	* @param options.auth.detectSessionInUrl Set to "true" if you want to automatically detects OAuth grants in the URL and signs in the user.
+	* @param options.realtime Options passed along to realtime-js constructor.
+	* @param options.storage Options passed along to the storage-js constructor.
+	* @param options.global.fetch A custom fetch implementation.
+	* @param options.global.headers Any additional headers to send with each network request.
+	* @example
+	* ```ts
+	* import { createClient } from '@supabase/supabase-js'
+	*
+	* const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+	* const { data } = await supabase.from('profiles').select('*')
+	* ```
+	*/ constructor(supabaseUrl, supabaseKey, options){
+        var _settings$auth$storag, _settings$global$head;
+        this.supabaseUrl = supabaseUrl;
+        this.supabaseKey = supabaseKey;
+        const baseUrl = validateSupabaseUrl(supabaseUrl);
+        if (!supabaseKey) throw new Error("supabaseKey is required.");
+        this.realtimeUrl = new URL("realtime/v1", baseUrl);
+        this.realtimeUrl.protocol = this.realtimeUrl.protocol.replace("http", "ws");
+        this.authUrl = new URL("auth/v1", baseUrl);
+        this.storageUrl = new URL("storage/v1", baseUrl);
+        this.functionsUrl = new URL("functions/v1", baseUrl);
+        const defaultStorageKey = `sb-${baseUrl.hostname.split(".")[0]}-auth-token`;
+        const DEFAULTS = {
+            db: DEFAULT_DB_OPTIONS,
+            realtime: DEFAULT_REALTIME_OPTIONS,
+            auth: _objectSpread2(_objectSpread2({}, DEFAULT_AUTH_OPTIONS), {}, {
+                storageKey: defaultStorageKey
+            }),
+            global: DEFAULT_GLOBAL_OPTIONS
+        };
+        const settings = applySettingDefaults(options !== null && options !== void 0 ? options : {}, DEFAULTS);
+        this.storageKey = (_settings$auth$storag = settings.auth.storageKey) !== null && _settings$auth$storag !== void 0 ? _settings$auth$storag : "";
+        this.headers = (_settings$global$head = settings.global.headers) !== null && _settings$global$head !== void 0 ? _settings$global$head : {};
+        if (!settings.accessToken) {
+            var _settings$auth;
+            this.auth = this._initSupabaseAuthClient((_settings$auth = settings.auth) !== null && _settings$auth !== void 0 ? _settings$auth : {}, this.headers, settings.global.fetch);
+        } else {
+            this.accessToken = settings.accessToken;
+            this.auth = new Proxy({}, {
+                get: (_, prop)=>{
+                    throw new Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(prop)} is not possible`);
+                }
+            });
+        }
+        this.fetch = fetchWithAuth(supabaseKey, this._getAccessToken.bind(this), settings.global.fetch);
+        this.realtime = this._initRealtimeClient(_objectSpread2({
+            headers: this.headers,
+            accessToken: this._getAccessToken.bind(this)
+        }, settings.realtime));
+        if (this.accessToken) Promise.resolve(this.accessToken()).then((token)=>this.realtime.setAuth(token)).catch((e)=>console.warn("Failed to set initial Realtime auth token:", e));
+        this.rest = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$postgrest$2d$js$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PostgrestClient"](new URL("rest/v1", baseUrl).href, {
+            headers: this.headers,
+            schema: settings.db.schema,
+            fetch: this.fetch,
+            timeout: settings.db.timeout,
+            urlLengthLimit: settings.db.urlLengthLimit
+        });
+        this.storage = new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$storage$2d$js$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["StorageClient"](this.storageUrl.href, this.headers, this.fetch, options === null || options === void 0 ? void 0 : options.storage);
+        if (!settings.accessToken) this._listenForAuthEvents();
+    }
+    /**
+	* Supabase Functions allows you to deploy and invoke edge functions.
+	*/ get functions() {
+        return new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$functions$2d$js$2f$dist$2f$module$2f$FunctionsClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FunctionsClient"](this.functionsUrl.href, {
+            headers: this.headers,
+            customFetch: this.fetch
+        });
+    }
+    /**
+	* Perform a query on a table or a view.
+	*
+	* @param relation - The table or view name to query
+	*/ from(relation) {
+        return this.rest.from(relation);
+    }
+    /**
+	* Select a schema to query or perform an function (rpc) call.
+	*
+	* The schema needs to be on the list of exposed schemas inside Supabase.
+	*
+	* @param schema - The schema to query
+	*/ schema(schema) {
+        return this.rest.schema(schema);
+    }
+    /**
+	* Perform a function call.
+	*
+	* @param fn - The function name to call
+	* @param args - The arguments to pass to the function call
+	* @param options - Named parameters
+	* @param options.head - When set to `true`, `data` will not be returned.
+	* Useful if you only need the count.
+	* @param options.get - When set to `true`, the function will be called with
+	* read-only access mode.
+	* @param options.count - Count algorithm to use to count rows returned by the
+	* function. Only applicable for [set-returning
+	* functions](https://www.postgresql.org/docs/current/functions-srf.html).
+	*
+	* `"exact"`: Exact but slow count algorithm. Performs a `COUNT(*)` under the
+	* hood.
+	*
+	* `"planned"`: Approximated but fast count algorithm. Uses the Postgres
+	* statistics under the hood.
+	*
+	* `"estimated"`: Uses exact count for low numbers and planned count for high
+	* numbers.
+	*/ rpc(fn, args = {}, options = {
+        head: false,
+        get: false,
+        count: void 0
+    }) {
+        return this.rest.rpc(fn, args, options);
+    }
+    /**
+	* Creates a Realtime channel with Broadcast, Presence, and Postgres Changes.
+	*
+	* @param {string} name - The name of the Realtime channel.
+	* @param {Object} opts - The options to pass to the Realtime channel.
+	*
+	*/ channel(name, opts = {
+        config: {}
+    }) {
+        return this.realtime.channel(name, opts);
+    }
+    /**
+	* Returns all Realtime channels.
+	*/ getChannels() {
+        return this.realtime.getChannels();
+    }
+    /**
+	* Unsubscribes and removes Realtime channel from Realtime client.
+	*
+	* @param {RealtimeChannel} channel - The name of the Realtime channel.
+	*
+	*/ removeChannel(channel) {
+        return this.realtime.removeChannel(channel);
+    }
+    /**
+	* Unsubscribes and removes all Realtime channels from Realtime client.
+	*/ removeAllChannels() {
+        return this.realtime.removeAllChannels();
+    }
+    async _getAccessToken() {
+        var _this = this;
+        var _data$session$access_, _data$session;
+        if (_this.accessToken) return await _this.accessToken();
+        const { data } = await _this.auth.getSession();
+        return (_data$session$access_ = (_data$session = data.session) === null || _data$session === void 0 ? void 0 : _data$session.access_token) !== null && _data$session$access_ !== void 0 ? _data$session$access_ : _this.supabaseKey;
+    }
+    _initSupabaseAuthClient({ autoRefreshToken, persistSession, detectSessionInUrl, storage, userStorage, storageKey, flowType, lock, debug, throwOnError }, headers, fetch$1) {
+        const authHeaders = {
+            Authorization: `Bearer ${this.supabaseKey}`,
+            apikey: `${this.supabaseKey}`
+        };
+        return new SupabaseAuthClient({
+            url: this.authUrl.href,
+            headers: _objectSpread2(_objectSpread2({}, authHeaders), headers),
+            storageKey,
+            autoRefreshToken,
+            persistSession,
+            detectSessionInUrl,
+            storage,
+            userStorage,
+            flowType,
+            lock,
+            debug,
+            throwOnError,
+            fetch: fetch$1,
+            hasCustomAuthorizationHeader: Object.keys(this.headers).some((key)=>key.toLowerCase() === "authorization")
+        });
+    }
+    _initRealtimeClient(options) {
+        return new __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$supabase$2f$realtime$2d$js$2f$dist$2f$module$2f$RealtimeClient$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RealtimeClient$3e$__["RealtimeClient"](this.realtimeUrl.href, _objectSpread2(_objectSpread2({}, options), {}, {
+            params: _objectSpread2(_objectSpread2({}, {
+                apikey: this.supabaseKey
+            }), options === null || options === void 0 ? void 0 : options.params)
+        }));
+    }
+    _listenForAuthEvents() {
+        return this.auth.onAuthStateChange((event, session)=>{
+            this._handleTokenChanged(event, "CLIENT", session === null || session === void 0 ? void 0 : session.access_token);
+        });
+    }
+    _handleTokenChanged(event, source, token) {
+        if ((event === "TOKEN_REFRESHED" || event === "SIGNED_IN") && this.changedAccessToken !== token) {
+            this.changedAccessToken = token;
+            this.realtime.setAuth(token);
+        } else if (event === "SIGNED_OUT") {
+            this.realtime.setAuth();
+            if (source == "STORAGE") this.auth.signOut();
+            this.changedAccessToken = void 0;
+        }
+    }
+};
+//#endregion
+//#region src/index.ts
+/**
+* Creates a new Supabase Client.
+*
+* @example
+* ```ts
+* import { createClient } from '@supabase/supabase-js'
+*
+* const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+* const { data, error } = await supabase.from('profiles').select('*')
+* ```
+*/ const createClient = (supabaseUrl, supabaseKey, options)=>{
+    return new SupabaseClient(supabaseUrl, supabaseKey, options);
+};
+function shouldShowDeprecationWarning() {
+    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+    ;
+    const _process = globalThis["process"];
+    if (!_process) return false;
+    const processVersion = _process["version"];
+    if (processVersion === void 0 || processVersion === null) return false;
+    const versionMatch = processVersion.match(/^v(\d+)\./);
+    if (!versionMatch) return false;
+    return parseInt(versionMatch[1], 10) <= 18;
+}
+if (shouldShowDeprecationWarning()) console.warn("⚠️  Node.js 18 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 20 or later. For more information, visit: https://github.com/orgs/supabase/discussions/37217");
+;
+ //# sourceMappingURL=index.mjs.map
+}),
+];
+
+//# sourceMappingURL=5be21_85381429._.js.map

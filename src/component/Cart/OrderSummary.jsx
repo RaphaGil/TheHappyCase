@@ -1,5 +1,7 @@
+'use client';
+
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const OrderSummary = ({ totalPrice, onCheckout }) => (
   <div className="lg:col-span-1">
@@ -15,7 +17,7 @@ const OrderSummary = ({ totalPrice, onCheckout }) => (
         </div>
         <p className="text-xs text-gray-500 text-center mb-4 font-light font-inter">
           <Link
-            to="/shipping"
+            href="/shipping"
             className="text-gray-500 hover:text-gray-900 underline transition-colors"
           >
             Shipping

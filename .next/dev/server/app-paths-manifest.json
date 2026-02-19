@@ -1,0 +1,9 @@
+{
+  "/Charms/[type]/page": "app/Charms/[type]/page.js",
+  "/Charms/page": "app/Charms/page.js",
+  "/CreateYours/page": "app/CreateYours/page.js",
+  "/api/create-payment-intent/route": "app/api/create-payment-intent/route.js",
+  "/api/inventory/route": "app/api/inventory/route.js",
+  "/checkout/page": "app/checkout/page.js",
+  "/page": "app/page.js"
+}

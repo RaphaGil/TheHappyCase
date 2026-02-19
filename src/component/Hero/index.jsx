@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { normalizeImagePath } from '../../utils/imagePath';
 // Defer slick carousel CSS - load asynchronously if needed
 // import 'slick-carousel/slick/slick.css'; 
@@ -10,14 +12,14 @@ const videoSrc = normalizeImagePath('/assets/videos/hero.webm');
 
 function Hero() {
   const videoRef = useRef(null);
-  const navigate = useNavigate();
+  const router = useRouter();
   const [buttonVisible, setButtonVisible] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    navigate('/CreateYours');
+    router.push('/CreateYours');
   };
   
   useEffect(() => {

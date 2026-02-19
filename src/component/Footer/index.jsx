@@ -1,11 +1,14 @@
+'use client';
+
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faEtsy, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
-import LogoImg from '/assets/logo.webp';
+
+const LogoImg = '/assets/logo.webp';
 function Footer() {
   const currentYear = new Date().getFullYear();
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
@@ -21,7 +24,7 @@ function Footer() {
           {/* Company Info */}
           <div className="space-y-5 pb-6 md:pb-0  md:border-0">
             <div className="flex items-center mb-2">
-              <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
+              <Link href="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
                 <div
                   className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-fredoka"
                 >
@@ -98,22 +101,22 @@ function Footer() {
             {quickLinksOpen && (
               <ul className="md:hidden space-y-3 ">
                 <li>
-                  <Link to="/about" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/about" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                    About 
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                    Home
                   </Link>
                 </li>
                 {/* <li>
-                  <Link to="/DesignIdeas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
+                  <Link href="/DesignIdeas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                     Design Ideas
                   </Link>
                 </li> */}
                 <li>
-                  <Link to="/CreateYours" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/CreateYours" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Create Yours
                   </Link>
                 </li>
@@ -122,22 +125,22 @@ function Footer() {
             {/* Desktop: Always visible content */}
             <ul className="hidden md:block ">
               <li>
-                <Link to="/about" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/about" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                  About 
                 </Link>
               </li>
               <li>
-                <Link to="/" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                  Home
                 </Link>
               </li>
               {/* <li>
-                <Link to="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
+                <Link href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                   Design Ideas
                 </Link>
               </li> */}
               <li>
-                <Link to="/CreateYours" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/CreateYours" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Create Yours
                 </Link>
               </li>
@@ -165,12 +168,12 @@ function Footer() {
             {customerServiceOpen && (
               <ul className="md:hidden space-y-3 ">
                 <li>
-                  <Link to="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Shipping and Processing Times
                   </Link>
                 </li>
                 <li>
-                  <Link to="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Refund Policy
                   </Link>
                 </li>
@@ -179,12 +182,12 @@ function Footer() {
             {/* Desktop: Always visible content */}
             <ul className="hidden md:block space-y-1 ">
               <li>
-                <Link to="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Shipping and Processing Times
                 </Link>
               </li>
               <li>
-                <Link to="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Refund Policy
                 </Link>
               </li>

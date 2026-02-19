@@ -220,11 +220,14 @@ const fetchInventoryFromSupabase = async () => {
         });
         
         // If it's a network error in development, provide helpful message
-        if (import.meta.env.DEV && fetchError.name === 'TypeError' && fetchError.message === 'Failed to fetch') {
+        const isDev = typeof process !== 'undefined' 
+          ? process.env?.NODE_ENV === 'development'
+          : typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+        if (isDev && fetchError.name === 'TypeError' && fetchError.message === 'Failed to fetch') {
           console.error('[INVENTORY] 💡 TROUBLESHOOTING:');
           console.error('   1. Make sure the Express server is running: npm run server');
           console.error('   2. Check that the server is listening on port 3001');
-          console.error('   3. Verify VITE_API_URL is not set (should use Vite proxy in dev)');
+          console.error('   3. Verify NEXT_PUBLIC_API_URL is not set (should use relative paths in dev)');
           console.error('   4. Check browser console for CORS errors');
         }
         

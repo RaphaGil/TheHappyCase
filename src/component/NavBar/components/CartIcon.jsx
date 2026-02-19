@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useCart } from '../../../context/CartContext';
 
 const CartIcon = ({ isMobile = false }) => {
@@ -8,7 +10,7 @@ const CartIcon = ({ isMobile = false }) => {
 
   return (
     <Link
-      to="/cart"
+      href="/cart"
       className={`${isMobile ? 'flex md:hidden' : 'hidden md:flex'} items-center p-2 text-gray-900 hover:text-gray-700 relative transition-colors z-10`}
       aria-label="Go to cart"
     >

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { getMaxAvailableQuantity } from '../utils/inventory';
 import { areItemsIdentical } from '../utils/cartHelpers';
@@ -106,10 +108,18 @@ const cartReducer = (state, action) => {
         ...state,
         items: state.items.filter((item, index) => index !== action.payload),
       };
+    case 'LOAD_CART':
+      // Load cart items from action payload (used for hydration from localStorage)
+      return {
+        ...state,
+        items: action.payload || [],
+      };
     case 'CLEAR_CART':
       // Clear localStorage when cart is cleared
       try {
-        localStorage.removeItem(CART_STORAGE_KEY);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem(CART_STORAGE_KEY);
+        }
       } catch (error) {
         console.error('Error clearing cart from localStorage:', error);
       }
@@ -213,6 +223,11 @@ const cartReducer = (state, action) => {
 
 // Load cart from localStorage on initialization
 const loadCartFromStorage = () => {
+  // Check if we're in the browser (localStorage is only available client-side)
+  if (typeof window === 'undefined') {
+    return [];
+  }
+  
   try {
     const storedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (storedCart) {
@@ -240,34 +255,52 @@ const loadCartFromStorage = () => {
   } catch (error) {
     console.error('Error loading cart from localStorage:', error);
     // If there's an error, clear the corrupted data
-    localStorage.removeItem(CART_STORAGE_KEY);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    }
   }
   return [];
 };
 
-// Initial state with cart loaded from localStorage
+// Initial state - start with empty array, load from localStorage in useEffect
 const initialState = {
-  items: loadCartFromStorage(),
+  items: [],
   checkoutSession: null,
   isDrawerOpen: false,
 };
 
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  // Load cart from localStorage on mount (client-side only)
+  useEffect(() => {
+    const loadedCart = loadCartFromStorage();
+    // Dispatch LOAD_CART action to set cart items
+    dispatch({ type: 'LOAD_CART', payload: loadedCart });
+    setIsHydrated(true);
+  }, []);
 
   // Save cart to localStorage whenever items change
   useEffect(() => {
+    // Only save after hydration to avoid SSR issues
+    if (!isHydrated) return;
+    
     try {
-      if (state.items && state.items.length > 0) {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
-      } else {
-        // Clear localStorage if cart is empty
-        localStorage.removeItem(CART_STORAGE_KEY);
+      if (typeof window !== 'undefined') {
+        if (state.items && state.items.length > 0) {
+          localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state.items));
+        } else {
+          // Clear localStorage if cart is empty
+          if (typeof window !== 'undefined') {
+          localStorage.removeItem(CART_STORAGE_KEY);
+        }
+        }
       }
     } catch (error) {
       console.error('Error saving cart to localStorage:', error);
     }
-  }, [state.items]);
+  }, [state.items, isHydrated]);
 
   const addToCart = (product) => {
     console.log('🛒 Adding item to cart:', {

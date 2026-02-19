@@ -17,9 +17,10 @@
  */
 
 // API URL based on environment
-// Use empty string for relative paths (Netlify Functions) unless VITE_API_URL is explicitly set
+// Use empty string for relative paths (Netlify Functions) unless NEXT_PUBLIC_API_URL is explicitly set
 // This allows Netlify to route /api/* requests to the appropriate Netlify Functions
-const API_URL = import.meta.env.VITE_API_URL || '';
+// In Next.js, use NEXT_PUBLIC_ prefix for client-accessible env variables
+const API_URL = (typeof process !== 'undefined' ? process.env?.NEXT_PUBLIC_API_URL || process.env?.VITE_API_URL : '') || '';
 
 /**
  * Get the base URL for API calls
@@ -38,9 +39,11 @@ export const getApiUrl = (endpoint) => {
   // Ensure endpoint starts with /
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  // In development mode, always use relative paths so Vite proxy works
-  // This allows Vite dev server to proxy /api/* requests to Express server on port 3001
-  const isDevelopment = import.meta.env.DEV || import.meta.env.MODE === 'development';
+  // In development mode, always use relative paths so Next.js can proxy to Express server
+  // This allows Next.js dev server to proxy /api/* requests to Express server on port 3001
+  const isDevelopment = typeof process !== 'undefined' 
+    ? process.env?.NODE_ENV === 'development'
+    : typeof window !== 'undefined' && window.location?.hostname === 'localhost';
   
   if (isDevelopment) {
     // Use relative path - Vite proxy will handle routing to Express server

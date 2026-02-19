@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { getSupabaseClient } from '../../../utils/supabaseClient';
@@ -48,7 +50,7 @@ const DashboardIcon = ({ isMobile = false }) => {
 
   return (
     <Link
-      to="/dashboard"
+      href="/dashboard"
       className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
       aria-label="Go to dashboard"
     >

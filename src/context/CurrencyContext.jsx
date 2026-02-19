@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CurrencyContext = createContext();
@@ -23,8 +25,11 @@ const currencySymbols = {
 
 export const CurrencyProvider = ({ children }) => {
   const [currency, setCurrency] = useState(() => {
-    // Get from localStorage or default to GBP
+    // Get from localStorage or default to GBP (only in browser)
     // If USD is saved, reset to GBP since USD is no longer available
+    if (typeof window === 'undefined') {
+      return 'GBP';
+    }
     const saved = localStorage.getItem('selectedCurrency');
     return (saved && saved !== 'USD') ? saved : 'GBP';
   });
@@ -65,9 +70,9 @@ export const CurrencyProvider = ({ children }) => {
       setRatesLoading(true);
       try {
         // Check if we should try the backend endpoint
-        // Only try backend if VITE_API_URL is set or we're on localhost (Express server)
-        const apiUrl = import.meta.env.VITE_API_URL || '';
-        const isLocalhost = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1');
+        // Only try backend if NEXT_PUBLIC_API_URL is set or we're on localhost (Express server)
+        const apiUrl = (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) || '';
+        const isLocalhost = typeof window !== 'undefined' && (window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1'));
         const shouldTryBackend = apiUrl || isLocalhost;
         
         if (shouldTryBackend) {
@@ -92,7 +97,7 @@ export const CurrencyProvider = ({ children }) => {
               } catch (jsonError) {
                 // If JSON parsing fails, fallback to direct API
                 // This is expected if backend returns invalid JSON
-                if (import.meta.env.DEV && response.status === 200) {
+                if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development' && response.status === 200) {
                   // Only log in dev if we got a 200 but couldn't parse it
                   console.debug('ℹ️ Failed to parse backend response as JSON, using direct API:', jsonError.message);
                 }
@@ -108,7 +113,7 @@ export const CurrencyProvider = ({ children }) => {
             // Backend fetch failed (network error, CORS, etc.) - silently fallback
             // This is expected in production when backend isn't available
             // Only log network errors in development
-            if (import.meta.env.DEV && backendError.name !== 'AbortError') {
+            if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development' && backendError.name !== 'AbortError') {
               console.debug('ℹ️ Backend endpoint unavailable, using direct API:', backendError.message);
             }
           }
@@ -133,8 +138,10 @@ export const CurrencyProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Save to localStorage when currency changes
-    localStorage.setItem('selectedCurrency', currency);
+    // Save to localStorage when currency changes (only in browser)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedCurrency', currency);
+    }
   }, [currency]);
 
   const convertPrice = (priceInGBP) => {

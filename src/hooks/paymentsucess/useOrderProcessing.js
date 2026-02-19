@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect, useState, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 import { getApiUrl } from '../../utils/apiConfig';
 import { getSupabaseClient } from '../../utils/supabaseClient';
 
@@ -12,11 +14,11 @@ const supabase = getSupabaseClient();
  * Hook to handle order processing (saving to Supabase and sending confirmation email)
  */
 export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [orderSaved, setOrderSaved] = useState(false);
   const [recoveredData, setRecoveredData] = useState(null); // Store recovered data from sessionStorage
-  const sessionId = searchParams.get('session_id');
+  const sessionId = searchParams?.get('session_id');
   const processingRef = useRef(false); // Prevent multiple simultaneous calls
   const orderDataRef = useRef({ paymentIntent, customerInfo, items }); // Store order data in ref
   const recoveryAttemptedRef = useRef(false); // Track if we've attempted recovery

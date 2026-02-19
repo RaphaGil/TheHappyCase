@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const ShippingInfoModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -41,7 +43,7 @@ const ShippingInfoModal = ({ isOpen, onClose }) => {
         </div>
         <div className="flex justify-end">
           <Link
-            to="/shipping"
+            href="/shipping"
             className="text-xs text-gray-500 hover:text-gray-900 underline transition-colors font-light font-inter"
             onClick={onClose}
           >

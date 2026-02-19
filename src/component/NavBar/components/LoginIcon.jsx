@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faShoppingBag, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { getSupabaseClient } from '../../../utils/supabaseClient';
@@ -8,7 +11,7 @@ import { getSupabaseClient } from '../../../utils/supabaseClient';
 const supabase = getSupabaseClient();
 
 const LoginIcon = ({ isMobile = false }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -72,7 +75,7 @@ const LoginIcon = ({ isMobile = false }) => {
     setIsDropdownOpen(false);
     
     // Navigate to home
-    navigate('/');
+    router.push('/');
   };
 
   const toggleDropdown = (e) => {
@@ -86,7 +89,7 @@ const LoginIcon = ({ isMobile = false }) => {
     const linkTo = (isLoggedIn && userEmail) ? '/my-orders' : '/login';
     return (
       <Link
-        to={linkTo}
+        href={linkTo}
         className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
         aria-label={isLoggedIn && userEmail ? 'View my orders' : 'Log in or create an account'}
       >
@@ -133,7 +136,7 @@ const LoginIcon = ({ isMobile = false }) => {
 
             {/* My Orders Link */}
             <Link
-              to="/my-orders"
+              href="/my-orders"
               onClick={() => setIsDropdownOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors font-inter"
             >
@@ -158,7 +161,7 @@ const LoginIcon = ({ isMobile = false }) => {
   // Not logged in - simple link to login
   return (
     <Link
-      to="/login"
+      href="/login"
       className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
       aria-label="Log in or create an account"
     >

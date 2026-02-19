@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useCart } from '../../../context/CartContext';
-import LogoImg from '/assets/logo.webp';
+
 const CheckoutHeader = () => {
   const { getTotalQuantity } = useCart();
   const totalQuantity = getTotalQuantity();
@@ -9,11 +11,11 @@ const CheckoutHeader = () => {
   return (
     <div className="border-b border-gray-200 bg-white">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 lg:px-6 py-5">
-        <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
-           <img src={LogoImg} alt="The Happy Case Logo" className="h-14 w-auto " />
+        <Link href="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
+           <img src="/assets/logo.webp" alt="The Happy Case Logo" className="h-14 w-auto " />
         </Link>
         <Link
-          to="/cart"
+          href="/cart"
           className="relative flex items-center justify-center p-2 text-gray-900 hover:text-gray-700 transition-colors z-10"
           aria-label="Go to cart"
         >

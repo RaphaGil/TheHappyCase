@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faChartLine, faShoppingBag, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import NavigationLinks from './NavigationLinks';
@@ -14,7 +17,7 @@ const supabase = getSupabaseClient();
 const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 
 const MobileMenu = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [userEmail, setUserEmail] = useState(null);
@@ -40,7 +43,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
     
     // Close menu and navigate to home
     onClose();
-    navigate('/');
+    router.push('/');
   };
 
   // Check login state whenever menu opens or component mounts
@@ -162,7 +165,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 
                 {/* My Orders Link */}
                 <Link
-                  to="/my-orders"
+                  href="/my-orders"
                   onClick={onClose}
                   className="px-4 py-3 hover:underline font-light transition-colors text-sm tracking-wider flex items-center gap-3 border-t border-yellow-200"
                   style={{color: '#6b7280'}}
@@ -188,7 +191,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
             ) : (
               // Not logged in: Show login link
               <Link
-                to="/login"
+                href="/login"
                 onClick={onClose}
                 className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
                 style={{color: '#6b7280'}}
@@ -205,7 +208,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
           {!checkingAuth && isAuthorized && (
             <li>
               <Link
-                to="/dashboard"
+                href="/dashboard"
                 onClick={onClose}
                 className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-blue-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
                 style={{color: '#6b7280'}}

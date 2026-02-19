@@ -1,14 +1,17 @@
+'use client';
+
 import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 
 const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const handleContinueShopping = () => {
     onClose();
     // If on Create Yours page, refresh it
-    if (location.pathname === '/CreateYours') {
+    if (pathname === '/CreateYours') {
       setTimeout(() => {
         window.location.reload();
       }, 100);
@@ -17,7 +20,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
 
   const handleCheckout = () => {
     onClose();
-    navigate('/checkout');
+    router.push('/checkout');
   };
 
   return (
@@ -32,7 +35,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
       </div>
      
       <p className="text-xs text-gray-500 text-center mb-4 font-light font-inter">
-        <Link to="/shipping" className="text-gray-500 hover:text-gray-900 underline transition-colors">
+        <Link href="/shipping" className="text-gray-500 hover:text-gray-900 underline transition-colors">
           Shipping
         </Link> calculated at checkout.
       </p>

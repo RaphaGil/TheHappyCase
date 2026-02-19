@@ -1,6 +1,9 @@
+'use client';
+
 // React & Router
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 // Stripe
 import { loadStripe } from '@stripe/stripe-js';
@@ -26,7 +29,29 @@ import ShippingInfoModal from './components/ShippingInfoModal';
 
 // --- Constants ---
 // Get Stripe publishable key from environment
-const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+// In Next.js, NEXT_PUBLIC_* variables are injected at build time and available via process.env
+// Access them directly - they're available in both server and client code
+const getStripeKey = () => {
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 
+           process.env.VITE_STRIPE_PUBLISHABLE_KEY || 
+           '';
+  }
+  return '';
+};
+
+const stripePublishableKey = getStripeKey();
+
+// Debug logging in development
+if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
+  console.log('[Checkout] Stripe key check:', {
+    hasProcess: typeof process !== 'undefined',
+    hasEnv: typeof process !== 'undefined' && !!process.env,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: typeof process !== 'undefined' ? !!process.env?.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY : false,
+    VITE_STRIPE_PUBLISHABLE_KEY: typeof process !== 'undefined' ? !!process.env?.VITE_STRIPE_PUBLISHABLE_KEY : false,
+    stripePublishableKey: stripePublishableKey ? `${stripePublishableKey.substring(0, 20)}...` : 'NOT SET',
+  });
+}
 
 // Validate Stripe key format (silent validation)
 
@@ -71,7 +96,7 @@ const CheckoutForm = () => {
   // --- Hooks ---
   const stripe = useStripe();
   const elements = useElements();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { cart, getTotalPrice, clearCart, incrementItemQty, decrementItemQty, removeFromCart } = useCart();
   const { formatPrice, setCurrency, currency } = useCurrency();
 
@@ -233,9 +258,9 @@ const CheckoutForm = () => {
   // Redirect if cart is empty
   useEffect(() => {
     if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
-      navigate('/cart');
+      router.push('/cart');
     }
-  }, [cart, navigate]);
+  }, [cart, router]);
 
   // Reset payment element ready state when elements change
   useEffect(() => {
@@ -299,9 +324,9 @@ const CheckoutForm = () => {
   useEffect(() => {
     // Don't redirect if we're navigating to success page
     if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
-      navigate('/cart');
+      router.push('/cart');
     }
-  }, [cart, navigate]);
+  }, [cart, router]);
 
 
   const handleInputChange = (e) => {
@@ -451,16 +476,18 @@ const CheckoutForm = () => {
         isNavigatingToSuccessRef.current = true; // Set flag to prevent redirect
         const cartItemsCopy = [...cart]; // Create a copy to preserve cart data
         clearCart(); // Clear cart before navigation
-        navigate('/payment-success', { 
-          state: { 
+        // Store data in sessionStorage since Next.js doesn't support navigation state
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('paymentSuccessData', JSON.stringify({
             paymentIntent,
             customerInfo,
             items: cartItemsCopy,
             shippingCost,
             totalWithShipping,
             subtotal,
-          } 
-        });
+          }));
+        }
+        router.push('/payment-success');
       } else if (paymentIntent && paymentIntent.status === 'requires_action') {
         // Payment requires additional action (e.g., 3D Secure)
         // Stripe will handle redirect automatically to return_url
@@ -472,16 +499,18 @@ const CheckoutForm = () => {
         isNavigatingToSuccessRef.current = true; // Set flag to prevent redirect
         const cartItemsCopy = [...cart]; // Create a copy to preserve cart data
         clearCart(); // Clear cart before navigation
-        navigate('/payment-success', { 
-          state: { 
+        // Store data in sessionStorage since Next.js doesn't support navigation state
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('paymentSuccessData', JSON.stringify({
             paymentIntent,
             customerInfo,
             items: cartItemsCopy,
             shippingCost,
             totalWithShipping,
             subtotal,
-          } 
-        });
+          }));
+        }
+        router.push('/payment-success');
       }
       } catch (err) {
         setError('An error occurred while processing your payment.');
@@ -593,28 +622,28 @@ const CheckoutForm = () => {
         <div className="max-w-6xl mx-auto px-4 lg:px-6">
           <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs text-gray-600 font-light font-inter">
             <Link 
-              to="/returns" 
+              href="/returns" 
               className="hover:text-gray-900 transition-colors underline"
             >
               Refund Policy
             </Link>
             <span className="text-gray-300">|</span>
             <Link 
-              to="/shipping" 
+              href="/shipping" 
               className="hover:text-gray-900 transition-colors underline"
             >
               Shipping
             </Link>
             <span className="text-gray-300">|</span>
             <Link 
-              to="/returns" 
+              href="/returns" 
               className="hover:text-gray-900 transition-colors underline"
             >
               Cancellations
             </Link>
             <span className="text-gray-300">|</span>
             <Link 
-              to="/about" 
+              href="/about" 
               className="hover:text-gray-900 transition-colors underline"
             >
               Contact
@@ -629,7 +658,7 @@ const CheckoutForm = () => {
 const Checkout = () => {
   const { cart, getTotalPrice } = useCart();
   const { currency, convertPrice } = useCurrency();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [options, setOptions] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paymentError, setPaymentError] = useState(null);
@@ -637,10 +666,12 @@ const Checkout = () => {
 
   useEffect(() => {
     // Don't redirect to cart if we're already on a different page (e.g., payment-success)
-    const currentPath = window.location.pathname;
-    if (cart.length === 0 && (currentPath === '/checkout' || currentPath.includes('/checkout'))) {
-      navigate('/cart');
-      return;
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      if (cart.length === 0 && (currentPath === '/checkout' || currentPath.includes('/checkout'))) {
+        router.push('/cart');
+        return;
+      }
     }
 
     // Only initialize payment options once when we have items in cart
@@ -773,7 +804,10 @@ const Checkout = () => {
                 Stripe Configuration Missing
               </h2>
               <p className="text-yellow-700 mb-4 font-inter">
-                Please set VITE_STRIPE_PUBLISHABLE_KEY in your environment variables.
+                Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment variables.
+              </p>
+              <p className="text-xs text-yellow-600 mb-2 font-inter">
+                (Also supports VITE_STRIPE_PUBLISHABLE_KEY for backward compatibility)
               </p>
               <p className="text-sm text-yellow-600 font-inter">
                 The Stripe publishable key is required to process payments.

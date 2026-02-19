@@ -23,6 +23,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "fabric": "^6.5.4",
+    "next": "^16.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-helmet-async": "^2.0.5",
@@ -45,16 +46,16 @@
     "vite": "^5.4.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "npm run copy-products-json && vite build",
+    "dev": "next dev",
+    "build": "npm run copy-products-json && next build",
     "copy-products-json": "node -e \"const fs = require('fs'); const path = require('path'); const src = 'src/data/products.json'; const dest1 = 'netlify/functions/products.json'; const dest2 = 'netlify/functions/data/products.json'; fs.mkdirSync(path.dirname(dest2), { recursive: true }); fs.copyFileSync(src, dest1); fs.copyFileSync(src, dest2);\"",
-    "preview": "vite preview",
+    "start": "next start",
+    "preview": "next build && next start",
     "server": "node server.js",
     "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "push": "npm run deploy",
-    "postbuild": "(react-snap || echo '⚠️ react-snap failed (port or headless Chrome issue), continuing...') || true"
+    "push": "npm run deploy"
   },
   "reactSnap": {
     "port": 48763,

@@ -35,9 +35,12 @@ export const normalizeImagePath = (imagePath) => {
   // Remove any double slashes and ensure proper encoding
   normalizedPath = normalizedPath.replace(/\/+/g, '/');
   
-  // Handle base URL for Vite
+  // Handle base URL for Next.js
   // BASE_URL will be '/' for root deployment, './' for relative, or '/subdir/' for subdirectory
-  const baseUrl = import.meta.env.BASE_URL || '/';
+  // In Next.js, base path is typically '/' unless configured otherwise
+  const baseUrl = (typeof process !== 'undefined' 
+    ? process.env?.NEXT_PUBLIC_BASE_URL || process.env?.BASE_URL 
+    : '') || '/';
   
   // If path starts with /, handle based on base URL
   if (normalizedPath.startsWith('/')) {

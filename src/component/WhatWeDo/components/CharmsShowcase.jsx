@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { normalizeImagePath } from '../../../utils/imagePath';
 
 const CharmsShowcase = () => {
@@ -28,7 +30,7 @@ const CharmsShowcase = () => {
                 Colorful Charms
               </h2>
               <Link
-                to="/ColorfulCharms"
+                href="/ColorfulCharms"
                 className="px-6 md:px-8 py-2.5 md:py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
               >
                 Shop Now
@@ -58,7 +60,7 @@ const CharmsShowcase = () => {
                 Bronze Charms
               </h2>
               <Link
-                to="/BronzeCharms"
+                href="/BronzeCharms"
                 className="px-6 md:px-8 py-2.5 md:py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
               >
                 Shop Now

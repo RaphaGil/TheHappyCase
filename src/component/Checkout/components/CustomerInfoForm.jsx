@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authenticatedEmail, onSignIn, onSignOut }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [showLoginDropdown, setShowLoginDropdown] = useState(false);
   const dropdownRef = useRef(null);
   
@@ -30,7 +32,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
   const handleConfirmLogin = () => {
     setShowLoginDropdown(false);
     // Navigate to login page with return URL to come back to checkout
-    navigate('/login?redirect=/checkout');
+    router.push('/login?redirect=/checkout');
   };
 
   const handleCancelLogin = () => {

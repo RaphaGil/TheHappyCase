@@ -52,7 +52,8 @@ const CaseItem = ({
   const basePreview = hasValidDesignImage ? item.designImage : (item.caseImage || item.image);
   
   // Debug logging for image display
-  if (import.meta.env.DEV || item.customDesign) {
+  const isDevelopment = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
+  if (isDevelopment || item.customDesign) {
     console.log('🖼️ CaseItem - Image display debug:', {
       itemId: item.id,
       itemName: item.caseName || item.name,

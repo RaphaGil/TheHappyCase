@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import AddToCartBtn from '../../AddToCartBtn';
 
 const PriceAndCTA = ({
@@ -14,7 +16,7 @@ const PriceAndCTA = ({
   onDecrementQuantity,
   onAddToCart
 }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -85,7 +87,7 @@ const PriceAndCTA = ({
       <button
         onClick={() => {
           window.scrollTo({ top: 0, behavior: 'instant' });
-          navigate(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
+          router.push(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
         }}
         className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
       >

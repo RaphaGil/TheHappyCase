@@ -1,11 +1,13 @@
+'use client';
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 
 const TwoBigImagesSection = ({ image1, image2 }) => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
-  const navigate = useNavigate();
+  const router = useRouter();
   const normalizedImage1 = normalizeImagePath(image1);
   const normalizedImage2 = normalizeImagePath(image2);
 
@@ -33,7 +35,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
             <button
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'instant' });
-                navigate('/CreateYours');
+                router.push('/CreateYours');
               }}
               className="px-8 py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 shadow-lg"
             >
@@ -63,7 +65,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
             <button
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'instant' });
-                navigate('/CreateYours');
+                router.push('/CreateYours');
               }}
               className="px-8 py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 shadow-lg"
             >

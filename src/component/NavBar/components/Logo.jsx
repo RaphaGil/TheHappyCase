@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 
 const Logo = () => {
   return (
-    <Link to="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
+    <Link href="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
       {/* Mobile: Logo Image */}
       <img 
         src="/assets/logo.webp" 

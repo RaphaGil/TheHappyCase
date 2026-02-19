@@ -1,5 +1,8 @@
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useCart } from '../../context/CartContext';
 import { getMaxAvailableQuantity, getCachedInventory, refreshInventoryFromSupabase } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
@@ -31,8 +34,9 @@ const TYPE_TO_PATH = {
 };
 
 export const usePassportCases = () => {
-  const { type: pathType } = useParams();
-  const navigate = useNavigate();
+  const params = useParams();
+  const pathType = params?.type;
+  const router = useRouter();
   const { addToCart, cart } = useCart();
   
   // Convert URL path parameter to internal case type
@@ -124,7 +128,7 @@ export const usePassportCases = () => {
     setQuantity(1); // Reset quantity when case type changes
     // Navigate to the new path based on the case type
     const pathType = TYPE_TO_PATH[type] || 'Economy';
-    navigate(`/PassportCases/${pathType}`, { replace: true });
+    router.push(`/PassportCases/${pathType}`);
     // Set first available color as default (prefer non-sold-out colors)
     const productsWithQuantities = getProductsWithQuantities();
     const caseData = productsWithQuantities.cases.find(c => c.type === type);
