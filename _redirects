@@ -6,5 +6,5 @@
 /api/create-payment-intent    /.netlify/functions/create-payment-intent    200
 /api/inventory                /.netlify/functions/inventory                 200
 
-# SPA fallback (must be last)
- /*    /index.html   200
+# Note: No SPA fallback needed - Next.js static export generates HTML files for each route
+# The netlify.toml redirects handle the routing correctly
