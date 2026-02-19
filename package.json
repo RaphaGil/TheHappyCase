@@ -54,7 +54,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "push": "npm run deploy",
-    "postbuild": "if [ \"$NETLIFY\" != \"true\" ]; then (react-snap || echo '⚠️ react-snap failed (port may be in use), continuing build...') || true; fi"
+    "postbuild": "(react-snap || echo '⚠️ react-snap failed (port or headless Chrome issue), continuing...') || true"
   },
   "reactSnap": {
     "port": 48763,
