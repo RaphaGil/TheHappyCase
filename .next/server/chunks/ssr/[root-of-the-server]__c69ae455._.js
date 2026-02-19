@@ -1,0 +1,3 @@
+module.exports=[93695,(a,b,c)=>{b.exports=a.x("next/dist/shared/lib/no-fallback-error.external.js",()=>require("next/dist/shared/lib/no-fallback-error.external.js"))},23419,a=>{a.n(a.i(14627))},1464,a=>{a.n(a.i(11274))},59585,a=>{a.n(a.i(38890))},38561,a=>{a.n(a.i(39027))},54474,a=>{a.n(a.i(62659))},28757,a=>{"use strict";a.i(15821);var b=a.i(79965);function c(){(0,b.redirect)("/Charms/Colorful")}a.s(["default",()=>c])}];
+
+//# sourceMappingURL=%5Broot-of-the-server%5D__c69ae455._.js.map
