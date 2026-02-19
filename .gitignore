@@ -41,3 +41,6 @@ out/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Build backup directory (temporary files moved during build)
+.build-backup/

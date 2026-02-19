@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { existsSync, renameSync } from 'fs';
+import { existsSync, renameSync, mkdirSync, rmSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -7,13 +7,26 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = join(__dirname, '..');
 const apiDir = join(projectRoot, 'src/app/api');
-const apiBackupDir = join(projectRoot, 'src/app/api.backup');
+// Move backup outside src/app so Next.js doesn't try to process it as a route
+const apiBackupDir = join(projectRoot, '.build-backup/api');
 const sitemapFile = join(projectRoot, 'src/app/sitemap.js');
-const sitemapBackupFile = join(projectRoot, 'src/app/sitemap.js.backup');
+const sitemapBackupFile = join(projectRoot, '.build-backup/sitemap.js');
 const robotsFile = join(projectRoot, 'src/app/robots.js');
-const robotsBackupFile = join(projectRoot, 'src/app/robots.js.backup');
+const robotsBackupFile = join(projectRoot, '.build-backup/robots.js');
 
 try {
+  // Create backup directory if it doesn't exist (outside src/app so Next.js doesn't scan it)
+  const backupDir = join(projectRoot, '.build-backup');
+  if (!existsSync(backupDir)) {
+    mkdirSync(backupDir, { recursive: true });
+  }
+
+  // Clean up any existing backup from previous failed builds
+  if (existsSync(apiBackupDir)) {
+    console.log('🧹 Cleaning up existing backup...');
+    rmSync(apiBackupDir, { recursive: true, force: true });
+  }
+
   // Step 1: Temporarily move API directory out of the way
   if (existsSync(apiDir)) {
     console.log('📦 Temporarily moving API routes out of the way for static export...');
