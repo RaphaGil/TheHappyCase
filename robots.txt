@@ -1,5 +1,3 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow: /
-
-Sitemap: https://thehappycase.store/sitemap.xml
+Disallow:
+Sitemap: https://yourdomain.com/sitemap.xml
