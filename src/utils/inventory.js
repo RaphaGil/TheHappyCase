@@ -14,6 +14,12 @@ let isInitializing = false; // Track if we're in the initial load phase
  * @returns {Promise<Object|null>} - Inventory quantities object or null if failed
  */
 const fetchInventoryFromSupabase = async () => {
+  // Skip fetching during server-side rendering or static generation (build time)
+  // Inventory will be fetched client-side when the app runs in the browser
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   // If there's already a fetch in progress, wait for it
   if (inventoryFetchPromise) {
     return inventoryFetchPromise;
