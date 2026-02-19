@@ -20,6 +20,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Skip trailing slash redirects (not needed for static export)
+  trailingSlash: false,
 };
 
 export default nextConfig;

@@ -9,6 +9,9 @@ import Products from '../../../data/products.json';
  * 
  * In development: Can proxy to Express server if running, or call Supabase directly
  * In production: Calls Supabase directly (Netlify function also available)
+ * 
+ * Note: This route is handled by Netlify Functions in production.
+ * During static export, this directory is temporarily moved to prevent build errors.
  */
 
 // Helper to send JSON response

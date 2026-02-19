@@ -5,6 +5,9 @@ import Stripe from 'stripe';
  * 
  * Creates a Stripe payment intent for checkout.
  * Requires STRIPE_SECRET_KEY in environment variables.
+ * 
+ * Note: This route is handled by Netlify Functions in production.
+ * During static export, this directory is temporarily moved to prevent build errors.
  */
 
 // Helper function to get Stripe instance with validation

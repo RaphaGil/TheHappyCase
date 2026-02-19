@@ -47,7 +47,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "npm run copy-products-json && next build",
+    "build": "npm run copy-products-json && node scripts/build-without-api.js",
+    "build:next": "next build",
     "copy-products-json": "node -e \"const fs = require('fs'); const path = require('path'); const src = 'src/data/products.json'; const dest1 = 'netlify/functions/products.json'; const dest2 = 'netlify/functions/data/products.json'; fs.mkdirSync(path.dirname(dest2), { recursive: true }); fs.copyFileSync(src, dest1); fs.copyFileSync(src, dest2);\"",
     "start": "next start",
     "preview": "next build && next start",
