@@ -55,7 +55,7 @@
     "server": "node server.js",
     "dev:full": "concurrently \"npm run dev\"  \"npm run server\"",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d out",
     "push": "npm run deploy"
   },
   "reactSnap": {
