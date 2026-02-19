@@ -1,6 +1,9 @@
-# Allow all crawlers
+# *
 User-agent: *
-Disallow:
+Allow: /
 
-# Optional: add sitemap
+# Host
+Host: https://thehappycase.store
+
+# Sitemaps
 Sitemap: https://thehappycase.store/sitemap.xml
