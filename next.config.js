@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { dirname, resolve } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -8,10 +8,10 @@ const __dirname = dirname(__filename);
 const nextConfig = {
   // Set the workspace root to silence the lockfile warning
   // This tells Next.js/Turbopack where the project root is
-  experimental: {
-    turbo: {
-      root: __dirname,
-    },
+  // Using absolute path as required by Turbopack
+  outputFileTracingRoot: resolve(__dirname),
+  turbopack: {
+    root: resolve(__dirname),
   },
 };
 

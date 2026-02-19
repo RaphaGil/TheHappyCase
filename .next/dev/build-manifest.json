@@ -4,22 +4,22 @@
   },
   "devFiles": [],
   "polyfillFiles": [
-    "static/chunks/5be21_next_dist_build_polyfills_polyfill-nomodule.js"
+    "static/chunks/node_modules_next_dist_build_polyfills_polyfill-nomodule.js"
   ],
   "lowPriorityFiles": [
     "static/development/_ssgManifest.js",
     "static/development/_buildManifest.js"
   ],
   "rootMainFiles": [
-    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_cc52ef6d._.js",
-    "static/chunks/5be21_next_dist_compiled_react-dom_458fd666._.js",
-    "static/chunks/5be21_next_dist_compiled_react-server-dom-turbopack_dec65d51._.js",
-    "static/chunks/5be21_next_dist_compiled_next-devtools_index_d40e37fb.js",
-    "static/chunks/5be21_next_dist_compiled_f54f241a._.js",
-    "static/chunks/5be21_next_dist_client_e4283ff7._.js",
-    "static/chunks/5be21_next_dist_fbb9c359._.js",
-    "static/chunks/5be21_13b575ed._.js",
-    "static/chunks/Desktop_HappyCase_TheHappy_TheHappyCase_a0ff3932._.js",
-    "static/chunks/turbopack-Desktop_HappyCase_TheHappy_TheHappyCase_166e193a._.js"
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_69b6f293._.js",
+    "static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
+    "static/chunks/node_modules_next_dist_compiled_react-server-dom-turbopack_9212ccad._.js",
+    "static/chunks/node_modules_next_dist_compiled_next-devtools_index_1dd7fb59.js",
+    "static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js",
+    "static/chunks/node_modules_next_dist_client_17643121._.js",
+    "static/chunks/node_modules_next_dist_f3530cac._.js",
+    "static/chunks/node_modules_b7c5773f._.js",
+    "static/chunks/_a0ff3932._.js",
+    "static/chunks/turbopack-_96eef455._.js"
   ]
 }

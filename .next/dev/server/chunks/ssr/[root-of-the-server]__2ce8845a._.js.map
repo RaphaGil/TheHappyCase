@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///Users/raphaeladoamaralgil/Desktop/HappyCase/TheHappy/TheHappyCase/src/app/PassportCases/page.jsx"],"sourcesContent":["import { redirect } from 'next/navigation';\n\nexport default function PassportCasesRedirect() {\n  redirect('/PassportCases/Economy');\n}\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEe,SAAS;IACtB,IAAA,qPAAQ,EAAC;AACX"}}]
-}

@@ -1,3 +1,0 @@
-module.exports=[13505,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(52756);a.n(d("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},68648,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(52756);a.n(d("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/client/components/builtin/global-error.js"))},62659,a=>{"use strict";a.i(13505);var b=a.i(68648);a.n(b)}];
-
-//# sourceMappingURL=5be21_next_dist_client_components_builtin_global-error_c3e209b2.js.map
