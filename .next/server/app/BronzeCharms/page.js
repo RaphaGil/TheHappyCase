@@ -1,5 +1,5 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/BronzeCharms/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__c2c08056._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__640971ba._.js")
 R.c("server/chunks/ssr/5be21_next_dist_b7dcc96b._.js")
 R.c("server/chunks/ssr/Desktop_HappyCase_TheHappy_TheHappyCase_b4642b7d._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__bc1193b9._.js")
