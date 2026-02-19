@@ -76,12 +76,20 @@ const Dashboard = () => {
   /* -------------------- LOAD INVENTORY FROM SUPABASE -------------------- */
   // Track if inventory is already being loaded to prevent duplicate fetches (React StrictMode)
   // Use module-level variable that persists across component remounts
-  if (!window.__dashboardInventoryLoading) {
-    window.__dashboardInventoryLoading = false;
-    window.__dashboardInventoryLoaded = false;
-  }
+  // Initialize window variables safely (only in browser)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (!window.__dashboardInventoryLoading) {
+        window.__dashboardInventoryLoading = false;
+        window.__dashboardInventoryLoaded = false;
+      }
+    }
+  }, []);
 
   useEffect(() => {
+    // Skip if running on server
+    if (typeof window === 'undefined') return;
+    
     // Check if already loading/loaded (using module-level variable to persist across StrictMode)
     if (window.__dashboardInventoryLoading) {
       console.log('⏭️ Dashboard: Already loading (skipping StrictMode duplicate)');
@@ -148,8 +156,10 @@ const Dashboard = () => {
           setInventorySource('supabase');
           
           console.log('✅ Dashboard: Inventory loaded from Supabase inventory_items table');
-          window.__dashboardInventoryLoaded = true;
-          window.__dashboardInventoryLoading = false;
+          if (typeof window !== 'undefined') {
+            window.__dashboardInventoryLoaded = true;
+            window.__dashboardInventoryLoading = false;
+          }
           setLoadingInventory(false);
           return;
         }
@@ -166,8 +176,10 @@ const Dashboard = () => {
           setInventorySource('default');
           console.warn('⚠️ Dashboard: Using default quantities from products.json');
         }
-        window.__dashboardInventoryLoaded = true;
-        window.__dashboardInventoryLoading = false;
+        if (typeof window !== 'undefined') {
+          window.__dashboardInventoryLoaded = true;
+          window.__dashboardInventoryLoading = false;
+        }
         setLoadingInventory(false);
       } catch (error) {
         console.error('\n❌ ========== DASHBOARD INVENTORY LOAD ERROR ==========');
@@ -179,14 +191,18 @@ const Dashboard = () => {
         console.error('========================================================\n');
         
         // Reset loading flag on error so retry is possible
-        window.__dashboardInventoryLoading = false;
+        if (typeof window !== 'undefined') {
+          window.__dashboardInventoryLoading = false;
+        }
         
         // Use default products.json as fallback (no localStorage)
         setProducts(Products);
         setInventorySource('default');
         console.warn('⚠️ Dashboard: Failed to load from Supabase, using default quantities from products.json');
-        window.__dashboardInventoryLoaded = true;
-        window.__dashboardInventoryLoading = false;
+        if (typeof window !== 'undefined') {
+          window.__dashboardInventoryLoaded = true;
+          window.__dashboardInventoryLoading = false;
+        }
         setLoadingInventory(false);
       }
     };
@@ -473,13 +489,15 @@ const Dashboard = () => {
           setInventorySource('supabase');
           
           // Broadcast inventory update event so other pages can refresh their cache
-          window.dispatchEvent(new CustomEvent('inventoryUpdated', {
-            detail: { 
-              timestamp: Date.now(),
-              updatedCount: data.updatedCount 
-            }
-          }));
-          console.log('📢 Broadcasted inventoryUpdated event to refresh other pages');
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('inventoryUpdated', {
+              detail: { 
+                timestamp: Date.now(),
+                updatedCount: data.updatedCount 
+              }
+            }));
+            console.log('📢 Broadcasted inventoryUpdated event to refresh other pages');
+          }
         }
         
         setSaved(true);
