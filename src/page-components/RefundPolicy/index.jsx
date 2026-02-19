@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 const RefundPolicy = () => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [openSections, setOpenSections] = useState({
     customised: false,
     nonCustomised: false,
@@ -13,7 +15,7 @@ const RefundPolicy = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, [pathname]);
 
   const toggleSection = (section) => {
     setOpenSections(prev => ({

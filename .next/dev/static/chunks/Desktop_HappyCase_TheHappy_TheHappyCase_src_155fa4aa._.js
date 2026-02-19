@@ -1369,6 +1369,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var _this = ("TURBOPACK compile-time value", void 0);
 ;
 var _s = __turbopack_context__.k.signature();
+'use client';
 ;
 ;
 var PaymentSection = function(param) {
@@ -1532,7 +1533,7 @@ var PaymentSection = function(param) {
                 children: "Payment"
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                lineNumber: 198,
+                lineNumber: 200,
                 columnNumber: 7
             }, _this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1544,7 +1545,7 @@ var PaymentSection = function(param) {
                         children: "Loading payment form..."
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                        lineNumber: 207,
+                        lineNumber: 209,
                         columnNumber: 11
                     }, _this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1586,18 +1587,18 @@ var PaymentSection = function(param) {
                             }
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                            lineNumber: 213,
+                            lineNumber: 215,
                             columnNumber: 11
                         }, _this)
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                        lineNumber: 212,
+                        lineNumber: 214,
                         columnNumber: 9
                     }, _this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                lineNumber: 202,
+                lineNumber: 204,
                 columnNumber: 7
             }, _this),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1605,13 +1606,13 @@ var PaymentSection = function(param) {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                lineNumber: 258,
+                lineNumber: 260,
                 columnNumber: 9
             }, _this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-        lineNumber: 197,
+        lineNumber: 199,
         columnNumber: 5
     }, _this);
 };

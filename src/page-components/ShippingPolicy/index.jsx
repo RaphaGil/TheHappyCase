@@ -1,13 +1,15 @@
+'use client';
+
 import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 const ShippingPolicy = () => {
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Scroll to top when component mounts or route changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <div className="min-h-screen bg-white py-12 md:py-16">

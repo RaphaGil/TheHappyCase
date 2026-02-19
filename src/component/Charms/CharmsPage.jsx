@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
 import CharmsHeader from './CharmsHeader';

@@ -2039,6 +2039,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var _this = ("TURBOPACK compile-time value", void 0);
 ;
 var _s = __turbopack_context__.k.signature();
+'use client';
 ;
 ;
 ;
@@ -2105,7 +2106,7 @@ var CurrencySelector = function(param) {
                             children: getCurrencyDisplayWithFlag()
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                            lineNumber: 55,
+                            lineNumber: 57,
                             columnNumber: 11
                         }, _this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$react$2d$fontawesome$2f$index$2e$es$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FontAwesomeIcon"], {
@@ -2113,13 +2114,13 @@ var CurrencySelector = function(param) {
                             className: "ml-2 text-base transition-transform duration-200 ".concat(isCurrencyDropdownOpen ? 'rotate-180' : '')
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                            lineNumber: 56,
+                            lineNumber: 58,
                             columnNumber: 11
                         }, _this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                    lineNumber: 47,
+                    lineNumber: 49,
                     columnNumber: 9
                 }, _this),
                 isCurrencyDropdownOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2148,7 +2149,7 @@ var CurrencySelector = function(param) {
                                                 children: curr.flag
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                                lineNumber: 72,
+                                                lineNumber: 74,
                                                 columnNumber: 21
                                             }, _this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2159,13 +2160,13 @@ var CurrencySelector = function(param) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                                lineNumber: 73,
+                                                lineNumber: 75,
                                                 columnNumber: 21
                                             }, _this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                        lineNumber: 71,
+                                        lineNumber: 73,
                                         columnNumber: 19
                                     }, _this),
                                     curr.name !== 'Euro' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2173,30 +2174,30 @@ var CurrencySelector = function(param) {
                                         children: curr.name
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                        lineNumber: 75,
+                                        lineNumber: 77,
                                         columnNumber: 44
                                     }, _this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                lineNumber: 70,
+                                lineNumber: 72,
                                 columnNumber: 17
                             }, _this)
                         }, curr.code, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                            lineNumber: 61,
+                            lineNumber: 63,
                             columnNumber: 15
                         }, _this);
                     })
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                    lineNumber: 59,
+                    lineNumber: 61,
                     columnNumber: 11
                 }, _this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-            lineNumber: 46,
+            lineNumber: 48,
             columnNumber: 7
         }, _this);
     }
@@ -2218,7 +2219,7 @@ var CurrencySelector = function(param) {
                         children: getCurrencyDisplayWithFlag()
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                        lineNumber: 96,
+                        lineNumber: 98,
                         columnNumber: 9
                     }, _this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$fortawesome$2f$react$2d$fontawesome$2f$index$2e$es$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FontAwesomeIcon"], {
@@ -2226,13 +2227,13 @@ var CurrencySelector = function(param) {
                         className: "text-[6px] md:text-xs transition-transform ml-1 ".concat(isCurrencyDropdownOpen ? 'rotate-180' : '')
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                        lineNumber: 97,
+                        lineNumber: 99,
                         columnNumber: 9
                     }, _this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                lineNumber: 88,
+                lineNumber: 90,
                 columnNumber: 7
             }, _this),
             isCurrencyDropdownOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2263,7 +2264,7 @@ var CurrencySelector = function(param) {
                                             children: curr.flag
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                            lineNumber: 113,
+                                            lineNumber: 115,
                                             columnNumber: 19
                                         }, _this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2274,13 +2275,13 @@ var CurrencySelector = function(param) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                            lineNumber: 114,
+                                            lineNumber: 116,
                                             columnNumber: 19
                                         }, _this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                    lineNumber: 112,
+                                    lineNumber: 114,
                                     columnNumber: 17
                                 }, _this),
                                 curr.name !== 'Euro' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2288,30 +2289,30 @@ var CurrencySelector = function(param) {
                                     children: curr.name
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                                    lineNumber: 116,
+                                    lineNumber: 118,
                                     columnNumber: 42
                                 }, _this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                            lineNumber: 111,
+                            lineNumber: 113,
                             columnNumber: 15
                         }, _this)
                     }, curr.code, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                        lineNumber: 102,
+                        lineNumber: 104,
                         columnNumber: 13
                     }, _this);
                 })
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-                lineNumber: 100,
+                lineNumber: 102,
                 columnNumber: 9
             }, _this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/CurrencySelector.jsx",
-        lineNumber: 87,
+        lineNumber: 89,
         columnNumber: 5
     }, _this);
 };
@@ -2347,6 +2348,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var _this = ("TURBOPACK compile-time value", void 0);
 ;
 var _s = __turbopack_context__.k.signature();
+'use client';
 ;
 ;
 ;
@@ -2398,7 +2400,7 @@ var PromotionalBanner = function() {
                     className: "lg:w-20"
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-                    lineNumber: 33,
+                    lineNumber: 35,
                     columnNumber: 9
                 }, _this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2408,12 +2410,12 @@ var PromotionalBanner = function() {
                         children: bannerMessages[currentBannerIndex]
                     }, currentBannerIndex, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-                        lineNumber: 37,
+                        lineNumber: 39,
                         columnNumber: 11
                     }, _this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-                    lineNumber: 36,
+                    lineNumber: 38,
                     columnNumber: 9
                 }, _this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2421,31 +2423,31 @@ var PromotionalBanner = function() {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$component$2f$NavBar$2f$components$2f$SocialMediaIcons$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-                            lineNumber: 47,
+                            lineNumber: 49,
                             columnNumber: 11
                         }, _this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$component$2f$NavBar$2f$components$2f$CurrencySelector$2e$jsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             variant: "desktop"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-                            lineNumber: 48,
+                            lineNumber: 50,
                             columnNumber: 11
                         }, _this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-                    lineNumber: 46,
+                    lineNumber: 48,
                     columnNumber: 9
                 }, _this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-            lineNumber: 31,
+            lineNumber: 33,
             columnNumber: 7
         }, _this)
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/NavBar/components/PromotionalBanner.jsx",
-        lineNumber: 30,
+        lineNumber: 32,
         columnNumber: 5
     }, _this);
 };

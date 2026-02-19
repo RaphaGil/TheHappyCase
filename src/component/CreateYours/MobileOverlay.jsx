@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import ColorSelector from '../ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../data/constants.js';

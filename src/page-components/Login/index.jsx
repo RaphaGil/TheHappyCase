@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseClient } from '../../utils/supabaseClient';
 import { getApiUrl } from '../../utils/apiConfig';
 import OrderItem from '../../component/PaymentSucess/OrderItem';
@@ -32,8 +34,8 @@ const formatOrderDate = (dateInput) => {
 };
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const initialEmail = searchParams.get('email') || '';
   
   const [email, setEmail] = useState(initialEmail);
@@ -69,7 +71,7 @@ const Login = () => {
         handleSendCodeAutomatically(initialEmail);
       }
     }
-  }, [navigate, searchParams, initialEmail]);
+  }, [router, searchParams, initialEmail]);
 
   // Fetch orders for a user
   // Always use email to fetch orders to include purchases made without login
@@ -292,7 +294,7 @@ const Login = () => {
     setError('');
     setSuccess(false);
     // Update URL to remove email parameter
-    navigate('/login');
+    router.push('/login');
   };
 
   const handleLogout = () => {
@@ -467,7 +469,7 @@ const Login = () => {
                   You haven't placed any orders yet. Start shopping to see your orders here!
                 </p>
                 <button
-                  onClick={() => navigate('/')}
+                  onClick={() => router.push('/')}
                   className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-md transition-colors font-inter"
                 >
                   Start Shopping

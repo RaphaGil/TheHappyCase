@@ -13,6 +13,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var _this = ("TURBOPACK compile-time value", void 0);
 ;
 var _s = __turbopack_context__.k.signature();
+'use client';
 ;
 var InventoryAlertModal = function(param) {
     var show = param.show, onClose = param.onClose, message = param.message, _param_type = param.type, type = _param_type === void 0 ? 'warning' : _param_type;
@@ -61,12 +62,12 @@ var InventoryAlertModal = function(param) {
                                     d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                                    lineNumber: 36,
+                                    lineNumber: 38,
                                     columnNumber: 17
                                 }, _this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                                lineNumber: 35,
+                                lineNumber: 37,
                                 columnNumber: 15
                             }, _this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                 className: "w-6 h-6 text-orange-600",
@@ -80,17 +81,17 @@ var InventoryAlertModal = function(param) {
                                     d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                                    lineNumber: 40,
+                                    lineNumber: 42,
                                     columnNumber: 17
                                 }, _this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                                lineNumber: 39,
+                                lineNumber: 41,
                                 columnNumber: 15
                             }, _this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                            lineNumber: 31,
+                            lineNumber: 33,
                             columnNumber: 11
                         }, _this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -98,20 +99,20 @@ var InventoryAlertModal = function(param) {
                             children: isError ? 'Out of Stock' : 'Limited Inventory'
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                            lineNumber: 44,
+                            lineNumber: 46,
                             columnNumber: 11
                         }, _this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "w-12 h-px ".concat(isError ? 'bg-red-300' : 'bg-orange-300')
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                            lineNumber: 49,
+                            lineNumber: 51,
                             columnNumber: 11
                         }, _this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                    lineNumber: 30,
+                    lineNumber: 32,
                     columnNumber: 9
                 }, _this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -121,12 +122,12 @@ var InventoryAlertModal = function(param) {
                         children: message
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                        lineNumber: 54,
+                        lineNumber: 56,
                         columnNumber: 11
                     }, _this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                    lineNumber: 53,
+                    lineNumber: 55,
                     columnNumber: 9
                 }, _this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -137,23 +138,23 @@ var InventoryAlertModal = function(param) {
                         children: "OK"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                        lineNumber: 63,
+                        lineNumber: 65,
                         columnNumber: 11
                     }, _this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-                    lineNumber: 62,
+                    lineNumber: 64,
                     columnNumber: 9
                 }, _this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-            lineNumber: 25,
+            lineNumber: 27,
             columnNumber: 7
         }, _this)
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/InventoryAlertModal/index.jsx",
-        lineNumber: 21,
+        lineNumber: 23,
         columnNumber: 5
     }, _this);
 };

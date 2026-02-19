@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo, useEffect } from "react";
 import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
 import { getMaxAvailableQuantity } from "../../utils/inventory";

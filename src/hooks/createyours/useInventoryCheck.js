@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { getColorName } from '../../utils/createyours/helpers';

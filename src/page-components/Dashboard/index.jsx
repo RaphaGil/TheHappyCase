@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Products from '../../data/products.json';
 import { getApiUrl } from '../../utils/apiConfig';
 import DashboardTabs from '../../component/Dashboard/DashboardTabs';
@@ -11,7 +13,7 @@ import { getSupabaseClient } from '../../utils/supabaseClient';
 const supabase = getSupabaseClient();
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('inventory');
   const [products, setProducts] = useState(Products);
   const [saved, setSaved] = useState(false);
@@ -574,7 +576,7 @@ const Dashboard = () => {
               </p>
             )}
             <button
-              onClick={() => navigate('/')}
+              onClick={() => router.push('/')}
               className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-md transition-colors font-inter"
             >
               Go to Home

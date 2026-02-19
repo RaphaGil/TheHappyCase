@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import reviewsData from '../../data/reviews.json';
 import ReviewHeader from './components/ReviewHeader';

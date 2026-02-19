@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 import { isObjectOverBoundary, constrainObjectPosition } from '../../utils/canvas/canvasUtils';
 

@@ -1,15 +1,17 @@
+'use client';
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 
 const ActionButtons = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 md:mt-12">
       <button
-        onClick={() => navigate('/')}
+        onClick={() => router.push('/')}
         className="px-6 py-3 rounded-md font-medium inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white transition-all duration-200 font-inter"
       >
         <FontAwesomeIcon icon={faHome} className="mr-2" />

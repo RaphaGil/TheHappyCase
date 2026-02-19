@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '../../utils/supabaseClient';
 import { getApiUrl } from '../../utils/apiConfig';
 import OrderItem from '../../component/PaymentSucess/OrderItem';
@@ -36,7 +38,7 @@ const formatOrderDate = (dateInput) => {
 };
 
 const MyOrders = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -51,7 +53,7 @@ const MyOrders = () => {
 
     if (!isLoggedIn || !userEmail) {
       // Redirect to login with return path
-      navigate('/login?redirect=/my-orders');
+      router.push('/login?redirect=/my-orders');
       return;
     }
 
@@ -89,7 +91,7 @@ const MyOrders = () => {
       // No Supabase, use email filtering
       fetchUserOrders(null, userEmail);
     }
-  }, [navigate]);
+  }, [router]);
 
   const fetchUserOrders = async (userId = null, email = null) => {
     setLoading(true);
@@ -167,7 +169,7 @@ const MyOrders = () => {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userId'); // Clear user ID
-    navigate('/login');
+    router.push('/login');
   };
 
   const userEmail = localStorage.getItem('userEmail');
@@ -228,7 +230,7 @@ const MyOrders = () => {
             <div className="flex items-center gap-3 self-start">
               {isAuthorized && (
                 <button
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => router.push('/dashboard')}
                   className="px-4 py-2 text-sm text-white bg-gray-900 hover:bg-gray-800 rounded-md transition-colors font-inter flex items-center gap-2"
                 >
                   <FontAwesomeIcon icon={faChartLine} className="w-4 h-4" />
@@ -260,7 +262,7 @@ const MyOrders = () => {
               You haven't placed any orders yet. Start shopping to see your orders here!
             </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => router.push('/')}
               className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-md transition-colors font-inter"
             >
               Start Shopping

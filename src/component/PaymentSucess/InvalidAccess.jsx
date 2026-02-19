@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 const InvalidAccess = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -14,7 +16,7 @@ const InvalidAccess = () => {
           This page can only be accessed after a successful payment.
         </p>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => router.push('/')}
           className="px-6 py-3 rounded-md bg-gray-900 hover:bg-gray-800 text-white transition-all duration-200 font-inter"
         >
           Go Home

@@ -25,3 +25,8 @@
 [00:00:14.406] Browser LOG     ✅ CartContext - Item successfully added to cart state: {"allItemsInCart":[{"category":"colorful","hasCaseImage":false,"hasDesignImage":false,"hasImage":true,"itemNumber":1,"name":"Heart Globe","pin":{"name":"Heart Globe","src":"/images/ColorfulPins/heartglobe.webp"},"price":2,"quantity":1,"type":"charm"}],"cartSize":1,"item":{"caseImage":"none","category":"colorful","designImage":"none","id":"charm-1771506426352-8qlv0e3ak","image":"/images/ColorfulPins/heartglobe.webp","name":"Heart Globe","pin":{"id":3,"name":"Heart Globe","price":2,"size":0.7,"src":"/images/ColorfulPins/heartglobe.webp"},"price":2,"quantity":1,"totalPrice":2,"type":"charm"}}
 [00:00:14.406] Browser LOG     ✅ CartContext - Item successfully added to cart state: {"allItemsInCart":[{"category":"colorful","hasCaseImage":false,"hasDesignImage":false,"hasImage":true,"itemNumber":1,"name":"Heart Globe","pin":{"name":"Heart Globe","src":"/images/ColorfulPins/heartglobe.webp"},"price":2,"quantity":1,"type":"charm"}],"cartSize":1,"item":{"caseImage":"none","category":"colorful","designImage":"none","id":"charm-1771506426352-8qlv0e3ak","image":"/images/ColorfulPins/heartglobe.webp","name":"Heart Globe","pin":{"id":3,"name":"Heart Globe","price":2,"size":0.7,"src":"/images/ColorfulPins/heartglobe.webp"},"price":2,"quantity":1,"totalPrice":2,"type":"charm"}}
 [00:00:17.037] Browser WARN    You may test your Stripe.js integration over HTTP. However, live Stripe.js integrations must use HTTPS.
+[00:06:03.992] Server  LOG     ✓ Compiled in 9.3s
+[00:06:08.360] Server  LOG     ✓ Compiled in 920ms
+[00:06:09.976] Server  LOG     ✓ Compiled in 1107ms
+[00:06:16.094] Server  LOG     ✓ Compiled in 5.6s
+[00:06:22.889] Server  LOG     ✓ Compiled in 1758ms

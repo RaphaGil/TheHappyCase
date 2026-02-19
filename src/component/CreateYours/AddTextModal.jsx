@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect } from 'react';
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../../data/constants';
 

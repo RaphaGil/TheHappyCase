@@ -1211,6 +1211,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f40$stripe$2f$react$2d$stripe$2d$js$2f$dist$2f$react$2d$stripe$2e$esm$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/@stripe/react-stripe-js/dist/react-stripe.esm.mjs [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 ;
@@ -1343,7 +1344,7 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
                 children: "Payment"
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                lineNumber: 198,
+                lineNumber: 200,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1355,7 +1356,7 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
                         children: "Loading payment form..."
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                        lineNumber: 207,
+                        lineNumber: 209,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1396,18 +1397,18 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
                             }
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                            lineNumber: 213,
+                            lineNumber: 215,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                        lineNumber: 212,
+                        lineNumber: 214,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                lineNumber: 202,
+                lineNumber: 204,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1415,13 +1416,13 @@ const PaymentSection = ({ paymentElementReady, error, onPaymentReady, onPaymentE
                 children: error
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-                lineNumber: 258,
+                lineNumber: 260,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Checkout/components/PaymentSection.jsx",
-        lineNumber: 197,
+        lineNumber: 199,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

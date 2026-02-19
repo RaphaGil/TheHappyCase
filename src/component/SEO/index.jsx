@@ -1,9 +1,11 @@
+'use client';
+
 /**
  * SEO component – react-helmet-async for every page.
  * Rendered once in App.jsx; updates title, description, canonical, og:* and twitter:* from current route.
  */
 import { Helmet } from 'react-helmet-async';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 
 // In Next.js, use process.env.NEXT_PUBLIC_* for client-accessible env variables
 const getSiteUrl = () => {
@@ -122,7 +124,7 @@ function getMetaForPath(pathname) {
 }
 
 export default function SEO() {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const normalizedPath = pathname.replace(/\/+$/, '') || '/';
   const meta = getMetaForPath(normalizedPath);
   const canonicalUrl = `${SITE_URL}${normalizedPath === '/' ? '' : normalizedPath}`;

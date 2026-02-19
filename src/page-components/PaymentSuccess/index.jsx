@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useEffect } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'next/navigation';
 import { useOrderProcessing } from '../../hooks/paymentsucess/useOrderProcessing';
 import { calculateTotalAmount } from '../../utils/paymentsucess/helpers';
 import LoadingState from '../../component/PaymentSucess/LoadingState';
@@ -11,8 +13,24 @@ import ActionButtons from '../../component/PaymentSucess/ActionButtons';
 import ContactInfo from '../../component/PaymentSucess/ContactInfo';
 
 const PaymentSuccess = () => {
-  const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  // In Next.js, we get payment data from URL params or sessionStorage instead of location.state
+  const sessionId = searchParams?.get('session_id');
+  
+  // Try to get payment data from sessionStorage (set by checkout page)
+  const [paymentData, setPaymentData] = React.useState(null);
+  
+  useEffect(() => {
+    const stored = sessionStorage.getItem('paymentSuccessData');
+    if (stored) {
+      try {
+        setPaymentData(JSON.parse(stored));
+      } catch (e) {
+        console.error('Failed to parse payment data from sessionStorage:', e);
+      }
+    }
+  }, []);
+  
   const { 
     paymentIntent, 
     customerInfo, 
@@ -21,15 +39,14 @@ const PaymentSuccess = () => {
     vatAmount = 0, 
     totalWithShipping, 
     subtotal 
-  } = location.state || {};
-  const sessionId = searchParams.get('session_id');
+  } = paymentData || {};
 
   const { loading } = useOrderProcessing(paymentIntent, customerInfo, items);
 
   // Scroll to top when page loads
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [location.pathname]);
+  }, []);
 
   if (loading) {
     return <LoadingState />;

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as fabric from 'fabric';
 import CanvasControls from './components/CanvasControls';

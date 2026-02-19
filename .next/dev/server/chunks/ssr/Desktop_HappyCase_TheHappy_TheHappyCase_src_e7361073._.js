@@ -232,6 +232,7 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$fabric$2f$dist$2f$index$2e$min$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/fabric/dist/index.min.mjs [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 const useCanvasBorders = (fabricCanvas, caseInstanceRef, boundaryRectRef, caseBorderRectRef, borderRectsRef)=>{
@@ -313,6 +314,7 @@ __turbopack_context__.s([
     ()=>useCanvasControls
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+'use client';
 ;
 const useCanvasControls = ()=>{
     const [controlsPosition, setControlsPosition] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
@@ -552,6 +554,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$hooks$2f$canvas$2f$useCanvasControls$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/hooks/canvas/useCanvasControls.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$canvas$2f$imageExport$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/canvas/imageExport.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$imagePath$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/imagePath.js [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 ;
@@ -1249,7 +1252,7 @@ const Canvas = ({ selectedCaseType, selectedColor, selectedPins, onPinSelect, on
                     }
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Canvas/index.jsx",
-                    lineNumber: 777,
+                    lineNumber: 779,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$component$2f$Canvas$2f$components$2f$CanvasControls$2e$jsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -1260,18 +1263,18 @@ const Canvas = ({ selectedCaseType, selectedColor, selectedPins, onPinSelect, on
                     onDelete: handleDelete
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Canvas/index.jsx",
-                    lineNumber: 788,
+                    lineNumber: 790,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Canvas/index.jsx",
-            lineNumber: 776,
+            lineNumber: 778,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/Canvas/index.jsx",
-        lineNumber: 775,
+        lineNumber: 777,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2175,6 +2178,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$data$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/data/constants.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$inventory$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/inventory.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$imagePath$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/imagePath.js [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 ;
@@ -2337,12 +2341,12 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory, onDropdownTog
                                     decoding: "async"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                                    lineNumber: 98,
+                                    lineNumber: 100,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                                lineNumber: 97,
+                                lineNumber: 99,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             isActive && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2357,23 +2361,23 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory, onDropdownTog
                                         clipRule: "evenodd"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                                        lineNumber: 113,
+                                        lineNumber: 115,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                                    lineNumber: 108,
+                                    lineNumber: 110,
                                     columnNumber: 19
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                                lineNumber: 107,
+                                lineNumber: 109,
                                 columnNumber: 17
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 93,
+                        lineNumber: 95,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2381,7 +2385,7 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory, onDropdownTog
                         children: opt.label
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 123,
+                        lineNumber: 125,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2389,19 +2393,19 @@ const CategorySelector = ({ selectedCategory, setSelectedCategory, onDropdownTog
                         children: opt.price
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 130,
+                        lineNumber: 132,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, opt.value, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 77,
+                lineNumber: 79,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0));
         })
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-        lineNumber: 71,
+        lineNumber: 73,
         columnNumber: 3
     }, ("TURBOPACK compile-time value", void 0));
 const SubCategoryTabs = ({ selectedCategory, subCategory, setSubCategory, getSubCategoryCount })=>{
@@ -2431,19 +2435,19 @@ const SubCategoryTabs = ({ selectedCategory, subCategory, setSubCategory, getSub
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 178,
+                        lineNumber: 180,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, key, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 170,
+                lineNumber: 172,
                 columnNumber: 11
             }, ("TURBOPACK compile-time value", void 0));
         })
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-        lineNumber: 154,
+        lineNumber: 156,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2477,12 +2481,12 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick })=>{
                             loading: "lazy"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                            lineNumber: 208,
+                            lineNumber: 210,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 207,
+                        lineNumber: 209,
                         columnNumber: 9
                     }, ("TURBOPACK compile-time value", void 0)),
                     isSelected && !isSoldOut && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2490,7 +2494,7 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick })=>{
                         children: "✓"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 218,
+                        lineNumber: 220,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     sizeLabel && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2498,13 +2502,13 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick })=>{
                         children: sizeLabel
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 223,
+                        lineNumber: 225,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 206,
+                lineNumber: 208,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2512,7 +2516,7 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick })=>{
                 children: pin.name
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 228,
+                lineNumber: 230,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             isSoldOut && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2520,13 +2524,13 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick })=>{
                 children: "Sold Out"
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 232,
+                lineNumber: 234,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-        lineNumber: 200,
+        lineNumber: 202,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2610,18 +2614,18 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
                     onClick: handleClick
                 }, uniqueKey, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                    lineNumber: 328,
+                    lineNumber: 330,
                     columnNumber: 13
                 }, ("TURBOPACK compile-time value", void 0));
             })
         }, void 0, false, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-            lineNumber: 309,
+            lineNumber: 311,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-        lineNumber: 308,
+        lineNumber: 310,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -2670,7 +2674,7 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
                 getPreviewImage: getPreviewImage
             }, void 0, false, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 407,
+                lineNumber: 409,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             selectedCategory && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2683,7 +2687,7 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
                         getSubCategoryCount: getSubCategoryCount
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 416,
+                        lineNumber: 418,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0)),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(PinGrid, {
@@ -2695,19 +2699,19 @@ const PinSelector = ({ pins, selectedCategory, setSelectedCategory, selectedPins
                         selectedCategory: selectedCategory
                     }, void 0, false, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                        lineNumber: 423,
+                        lineNumber: 425,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-                lineNumber: 415,
+                lineNumber: 417,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0))
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/PinSelector/index.jsx",
-        lineNumber: 406,
+        lineNumber: 408,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -3099,6 +3103,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheH
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$data$2f$filterHelpers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/data/filterHelpers.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$inventory$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/inventory.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$imagePath$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/imagePath.js [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 ;
@@ -3138,7 +3143,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                            lineNumber: 51,
+                            lineNumber: 53,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3156,23 +3161,23 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                    lineNumber: 61,
+                                    lineNumber: 63,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                lineNumber: 60,
+                                lineNumber: 62,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                            lineNumber: 56,
+                            lineNumber: 58,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                    lineNumber: 50,
+                    lineNumber: 52,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3255,7 +3260,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                        lineNumber: 145,
+                                                        lineNumber: 147,
                                                         columnNumber: 27
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     isSelected && !soldOut && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3270,23 +3275,23 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                                 clipRule: "evenodd"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                lineNumber: 157,
+                                                                lineNumber: 159,
                                                                 columnNumber: 33
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                            lineNumber: 156,
+                                                            lineNumber: 158,
                                                             columnNumber: 31
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                        lineNumber: 155,
+                                                        lineNumber: 157,
                                                         columnNumber: 29
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                lineNumber: 144,
+                                                lineNumber: 146,
                                                 columnNumber: 25
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3294,7 +3299,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                 children: opt.label
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                lineNumber: 163,
+                                                lineNumber: 165,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             soldOut && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3302,24 +3307,24 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                 children: "Sold Out"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                lineNumber: 167,
+                                                lineNumber: 169,
                                                 columnNumber: 25
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, opt.value, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                        lineNumber: 128,
+                                        lineNumber: 130,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0));
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                lineNumber: 70,
+                                lineNumber: 72,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                            lineNumber: 69,
+                            lineNumber: 71,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         mobileCurrentStep === 'color' && selectedCaseType && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3331,12 +3336,12 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                 cart: cart
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                lineNumber: 178,
+                                lineNumber: 180,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                            lineNumber: 177,
+                            lineNumber: 179,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         mobileCurrentStep === 'charms' && selectedCaseType && selectedColor && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3361,7 +3366,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                                 className: "w-full h-full object-contain"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                lineNumber: 204,
+                                                                lineNumber: 206,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             selectedCategory === cat.value && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3376,23 +3381,23 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                                         clipRule: "evenodd"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                        lineNumber: 212,
+                                                                        lineNumber: 214,
                                                                         columnNumber: 33
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                    lineNumber: 211,
+                                                                    lineNumber: 213,
                                                                     columnNumber: 31
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                lineNumber: 210,
+                                                                lineNumber: 212,
                                                                 columnNumber: 29
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                        lineNumber: 201,
+                                                        lineNumber: 203,
                                                         columnNumber: 25
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3400,23 +3405,23 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                         children: cat.label
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                        lineNumber: 218,
+                                                        lineNumber: 220,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, cat.value || 'all', true, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                lineNumber: 194,
+                                                lineNumber: 196,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                        lineNumber: 192,
+                                        lineNumber: 194,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                    lineNumber: 191,
+                                    lineNumber: 193,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 selectedCategory && filterTabs.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3434,7 +3439,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                     children: selectedFilterLabel
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                    lineNumber: 232,
+                                                    lineNumber: 234,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
@@ -3449,18 +3454,18 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                         d: "M19 9l-7 7-7-7"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                        lineNumber: 241,
+                                                        lineNumber: 243,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                    lineNumber: 235,
+                                                    lineNumber: 237,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                            lineNumber: 227,
+                                            lineNumber: 229,
                                             columnNumber: 19
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         isDropdownOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -3470,7 +3475,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                     onClick: ()=>setIsDropdownOpen(false)
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                    lineNumber: 248,
+                                                    lineNumber: 250,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3487,12 +3492,12 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                             children: label
                                                         }, key, false, {
                                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                            lineNumber: 255,
+                                                            lineNumber: 257,
                                                             columnNumber: 27
                                                         }, ("TURBOPACK compile-time value", void 0)))
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                    lineNumber: 253,
+                                                    lineNumber: 255,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
@@ -3500,7 +3505,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                    lineNumber: 226,
+                                    lineNumber: 228,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 selectedCategory && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3589,7 +3594,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                                     className: `max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                    lineNumber: 375,
+                                                                    lineNumber: 377,
                                                                     columnNumber: 31
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 isSelected && !isSoldOut && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3604,17 +3609,17 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                                             clipRule: "evenodd"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                            lineNumber: 383,
+                                                                            lineNumber: 385,
                                                                             columnNumber: 37
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                        lineNumber: 382,
+                                                                        lineNumber: 384,
                                                                         columnNumber: 35
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                    lineNumber: 381,
+                                                                    lineNumber: 383,
                                                                     columnNumber: 33
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 sizeLabel && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3622,13 +3627,13 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                                     children: sizeLabel
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                                    lineNumber: 388,
+                                                                    lineNumber: 390,
                                                                     columnNumber: 33
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                            lineNumber: 374,
+                                                            lineNumber: 376,
                                                             columnNumber: 29
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3639,7 +3644,7 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                             children: pin.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                            lineNumber: 393,
+                                                            lineNumber: 395,
                                                             columnNumber: 29
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         isSoldOut && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3647,52 +3652,52 @@ const MobileOverlay = ({ mobileCurrentStep, setMobileCurrentStep, selectedCaseTy
                                                             children: "Sold Out"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                            lineNumber: 399,
+                                                            lineNumber: 401,
                                                             columnNumber: 31
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, pin.name, true, {
                                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                                    lineNumber: 366,
+                                                    lineNumber: 368,
                                                     columnNumber: 27
                                                 }, ("TURBOPACK compile-time value", void 0));
                                             })
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                            lineNumber: 282,
+                                            lineNumber: 284,
                                             columnNumber: 21
                                         }, ("TURBOPACK compile-time value", void 0))
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                        lineNumber: 281,
+                                        lineNumber: 283,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                                    lineNumber: 279,
+                                    lineNumber: 281,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                            lineNumber: 189,
+                            lineNumber: 191,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-                    lineNumber: 67,
+                    lineNumber: 69,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-            lineNumber: 43,
+            lineNumber: 45,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/MobileOverlay.jsx",
-        lineNumber: 42,
+        lineNumber: 44,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -4634,6 +4639,7 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
@@ -4655,7 +4661,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                             children: selectedCase.name
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                            lineNumber: 21,
+                            lineNumber: 23,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4674,23 +4680,23 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                    lineNumber: 30,
+                                    lineNumber: 32,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                lineNumber: 29,
+                                lineNumber: 31,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                            lineNumber: 24,
+                            lineNumber: 26,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                    lineNumber: 20,
+                    lineNumber: 22,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4705,12 +4711,12 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                     children: "Specifications"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                    lineNumber: 46,
+                                    lineNumber: 48,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                lineNumber: 42,
+                                lineNumber: 44,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             isSpecificationsOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4724,7 +4730,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Dimensions"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 54,
+                                                lineNumber: 56,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4732,13 +4738,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.dimensions
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 55,
+                                                lineNumber: 57,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 53,
+                                        lineNumber: 55,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.size && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4749,7 +4755,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Size"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 61,
+                                                lineNumber: 63,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4757,13 +4763,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.size
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 62,
+                                                lineNumber: 64,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 60,
+                                        lineNumber: 62,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.weight && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4774,7 +4780,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Weight"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 68,
+                                                lineNumber: 70,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4782,13 +4788,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.weight
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 69,
+                                                lineNumber: 71,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 67,
+                                        lineNumber: 69,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.material && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4799,7 +4805,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Material"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 75,
+                                                lineNumber: 77,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4807,13 +4813,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.material
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 76,
+                                                lineNumber: 78,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 74,
+                                        lineNumber: 76,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.closure && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4824,7 +4830,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Closure"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 82,
+                                                lineNumber: 84,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4832,13 +4838,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.closure
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 83,
+                                                lineNumber: 85,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 81,
+                                        lineNumber: 83,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.cardSlots && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4849,7 +4855,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Card Slots"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 89,
+                                                lineNumber: 91,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4857,13 +4863,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.cardSlots
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 90,
+                                                lineNumber: 92,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 88,
+                                        lineNumber: 90,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.interior && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4874,7 +4880,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Interior"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 96,
+                                                lineNumber: 98,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4882,13 +4888,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.interior
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 97,
+                                                lineNumber: 99,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 95,
+                                        lineNumber: 97,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.rfid && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4899,7 +4905,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "RFID Protection"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 103,
+                                                lineNumber: 105,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4907,13 +4913,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.rfid
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 104,
+                                                lineNumber: 106,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 102,
+                                        lineNumber: 104,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.features && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4924,7 +4930,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Features"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 110,
+                                                lineNumber: 112,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4932,13 +4938,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.features
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 111,
+                                                lineNumber: 113,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 109,
+                                        lineNumber: 111,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.passportCapacity && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4949,7 +4955,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Capacity"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 117,
+                                                lineNumber: 119,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4957,13 +4963,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.passportCapacity
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 118,
+                                                lineNumber: 120,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 116,
+                                        lineNumber: 118,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.care && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4974,7 +4980,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Care Instructions"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 124,
+                                                lineNumber: 126,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4982,13 +4988,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.care
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 125,
+                                                lineNumber: 127,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 123,
+                                        lineNumber: 125,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     specifications.warranty && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4999,7 +5005,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: "Warranty"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 131,
+                                                lineNumber: 133,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -5007,41 +5013,41 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase })=>{
                                                 children: specifications.warranty
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                                lineNumber: 132,
+                                                lineNumber: 134,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                        lineNumber: 130,
+                                        lineNumber: 132,
                                         columnNumber: 21
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                                lineNumber: 51,
+                                lineNumber: 53,
                                 columnNumber: 17
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                        lineNumber: 41,
+                        lineNumber: 43,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-                    lineNumber: 36,
+                    lineNumber: 38,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-            lineNumber: 15,
+            lineNumber: 17,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/ItemDescriptionModal.jsx",
-        lineNumber: 11,
+        lineNumber: 13,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -5242,6 +5248,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$data$2f$constants$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/data/constants.js [app-ssr] (ecmascript)");
+'use client';
 ;
 ;
 ;
@@ -5318,7 +5325,7 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                             children: "Add Text"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                            lineNumber: 95,
+                            lineNumber: 97,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5337,23 +5344,23 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                                    lineNumber: 104,
+                                    lineNumber: 106,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                                lineNumber: 103,
+                                lineNumber: 105,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                            lineNumber: 98,
+                            lineNumber: 100,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                    lineNumber: 94,
+                    lineNumber: 96,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5387,7 +5394,7 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                                     maxLength: 40
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                                    lineNumber: 112,
+                                    lineNumber: 114,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -5399,13 +5406,13 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                                    lineNumber: 132,
+                                    lineNumber: 134,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                            lineNumber: 111,
+                            lineNumber: 113,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         customTextError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5413,7 +5420,7 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                             children: customTextError
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                            lineNumber: 138,
+                            lineNumber: 140,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         customTextAdded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5421,7 +5428,7 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                             children: "Text added to your design! You can drag it to reposition it."
                         }, void 0, false, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                            lineNumber: 143,
+                            lineNumber: 145,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5434,7 +5441,7 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                                     children: "Add Text"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                                    lineNumber: 149,
+                                    lineNumber: 151,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5444,30 +5451,30 @@ const AddTextModal = ({ show, onClose, customText, setCustomText, customTextErro
                                     children: "Clear"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                                    lineNumber: 156,
+                                    lineNumber: 158,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                            lineNumber: 148,
+                            lineNumber: 150,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-                    lineNumber: 110,
+                    lineNumber: 112,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-            lineNumber: 89,
+            lineNumber: 91,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/component/CreateYours/AddTextModal.jsx",
-        lineNumber: 85,
+        lineNumber: 87,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
@@ -5569,6 +5576,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$inventory$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/inventory.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$HappyCase$2f$TheHappy$2f$TheHappyCase$2f$src$2f$utils$2f$createyours$2f$helpers$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/Desktop/HappyCase/TheHappy/TheHappyCase/src/utils/createyours/helpers.js [app-ssr] (ecmascript) <locals>");
+'use client';
 ;
 ;
 ;
