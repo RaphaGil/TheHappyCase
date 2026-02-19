@@ -45,13 +45,22 @@ const MyOrders = () => {
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
 
   useEffect(() => {
+    // Skip if running on server
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+    
     // Check if user is logged in
-    const userEmail = localStorage.getItem('userEmail');
+    const emailFromStorage = localStorage.getItem('userEmail');
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    setUserEmail(emailFromStorage);
 
-    if (!isLoggedIn || !userEmail) {
+    if (!isLoggedIn || !emailFromStorage) {
       // Redirect to login with return path
       router.push('/login?redirect=/my-orders');
       return;
@@ -59,10 +68,10 @@ const MyOrders = () => {
 
     // Check if user is authorized for dashboard access
     // First check localStorage email as fallback
-    const emailFromStorage = userEmail?.toLowerCase().trim();
+    const emailFromStorageLower = emailFromStorage?.toLowerCase().trim();
     const authorizedEmail = AUTHORIZED_EMAIL.toLowerCase().trim();
     
-    if (emailFromStorage === authorizedEmail) {
+    if (emailFromStorageLower === authorizedEmail) {
       setIsAuthorized(true);
     }
 
@@ -77,19 +86,19 @@ const MyOrders = () => {
           if (data.user?.id) {
             setUserId(data.user.id);
             // Fetch orders with user_id
-            fetchUserOrders(data.user.id, userEmail);
+            fetchUserOrders(data.user.id, emailFromStorage);
           } else {
             // Fallback to email if no user ID
-            fetchUserOrders(null, userEmail);
+            fetchUserOrders(null, emailFromStorage);
           }
         } else {
           // If Supabase auth fails, fall back to email filtering
-          fetchUserOrders(null, userEmail);
+          fetchUserOrders(null, emailFromStorage);
         }
       });
     } else {
       // No Supabase, use email filtering
-      fetchUserOrders(null, userEmail);
+      fetchUserOrders(null, emailFromStorage);
     }
   }, [router]);
 
@@ -166,13 +175,13 @@ const MyOrders = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userId'); // Clear user ID
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('userId'); // Clear user ID
+    }
     router.push('/login');
   };
-
-  const userEmail = localStorage.getItem('userEmail');
 
   if (loading) {
     return (
