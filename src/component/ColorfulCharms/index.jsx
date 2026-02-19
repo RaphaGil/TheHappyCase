@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Products from '../../data/products.json';
 import CharmsPage from '../Charms/CharmsPage';
