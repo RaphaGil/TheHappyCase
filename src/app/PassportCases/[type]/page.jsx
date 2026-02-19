@@ -1,5 +1,14 @@
 import PassportCases from '@/page-components/PassportCases';
 
+export async function generateStaticParams() {
+  // Generate static pages for all passport case types
+  return [
+    { type: 'Economy' },
+    { type: 'FirstClass' },
+    { type: 'BusinessClass' },
+  ];
+}
+
 export async function generateMetadata({ params }) {
   const { type } = await params;
   const typeMap = {
