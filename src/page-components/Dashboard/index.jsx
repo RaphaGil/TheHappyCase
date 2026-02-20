@@ -246,7 +246,10 @@ const Dashboard = () => {
 
     // If Supabase is available, check Supabase auth (more secure)
     if (!supabase) {
-      console.warn('⚠️ Supabase client not initialized. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env');
+      // Only warn in development to avoid console noise in production
+      if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
+        console.warn('⚠️ Supabase client not initialized. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env');
+      }
       // Without Supabase and no matching localStorage email, deny access
       setAuthReady(true);
       setIsAuthorized(false);

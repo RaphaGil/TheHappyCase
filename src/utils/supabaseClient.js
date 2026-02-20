@@ -47,12 +47,15 @@ export const getSupabaseClient = () => {
         detectSessionInUrl: true
       }
     });
-    console.log('✅ Supabase client initialized (singleton)');
+    // Only log success in development to avoid console noise in production
+    if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
+      console.log('✅ Supabase client initialized (singleton)');
+    }
     return supabaseInstance;
   }
 
-  // Only warn in browser (not during SSR)
-  if (typeof window !== 'undefined') {
+  // Only warn in development and in browser (not during SSR)
+  if (typeof window !== 'undefined' && typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
     console.warn('⚠️ Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env');
     console.warn('   Make sure to restart your Next.js dev server after changing .env files');
     console.warn('   Current values:', {
