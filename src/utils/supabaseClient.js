@@ -16,14 +16,15 @@ export const getSupabaseClient = () => {
 
   // In Next.js, NEXT_PUBLIC_* variables are injected at build time
   // Access them directly - they're available in both server and client code
-  let supabaseUrl = '';
-  let supabaseAnonKey = '';
-
-  // Try to get from process.env (works in both server and client in Next.js)
-  if (typeof process !== 'undefined' && process.env) {
-    supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
-    supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '';
-  }
+  // process.env is available in Next.js client-side code for NEXT_PUBLIC_* variables
+  const supabaseUrl = 
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 
+    process.env.VITE_SUPABASE_URL || 
+    '';
+  const supabaseAnonKey = 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
+    process.env.VITE_SUPABASE_ANON_KEY || 
+    '';
 
   // Debug logging (only in development)
   if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
