@@ -1,4 +1,4 @@
-import RefundPolicy from '@/app/Refund-policy/RefundPolicy';
+import RefundPolicy from '../Refund-policy/RefundPolicy.jsx';
 
 export const metadata = {
   title: 'Returns & Refund Policy',
