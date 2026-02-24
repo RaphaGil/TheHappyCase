@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import PaymentSuccess from '@/page-components/PaymentSuccess';
+import PaymentSuccess from './PaymentSuccess';
 
 export const metadata = {
   title: 'Order Confirmed',

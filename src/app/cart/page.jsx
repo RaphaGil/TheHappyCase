@@ -1,4 +1,4 @@
-import CartPage from '@/page-components/Cart';
+import CartPage from './CartPage';
 
 export const metadata = {
   title: 'Shopping Cart',

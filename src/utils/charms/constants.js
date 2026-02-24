@@ -29,7 +29,9 @@ export const COLORFUL_CATEGORIES = [
   { key: 'travel', label: 'TRAVEL' },
   { key: 'disney', label: 'DISNEY' },
   { key: 'drinks', label: 'DRINKS' },
+  { key: 'food', label: 'FOOD' },
   { key: 'inspiration', label: 'INSPIRATION' },
+  { key: 'flags', label: 'FLAGS' },
   { key: 'hearts', label: 'HEARTS' },
   { key: 'nature', label: 'NATURE' },
   { key: 'camera', label: 'CAMERA' }

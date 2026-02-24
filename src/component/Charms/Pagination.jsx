@@ -14,7 +14,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPrevious, onNext 
             aria-label="Previous page"
           >
             <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
         )}
@@ -26,7 +26,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, onPrevious, onNext 
             aria-label="Next page"
           >
             <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5l7 7-7 7" />
             </svg>
           </button>
         )}

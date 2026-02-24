@@ -8,24 +8,24 @@ const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.webp`;
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'The Happy Case - Custom Passport Cases with Personalized Charms',
+    default: 'The Happy Case - Custom Passport Cases with Charms',
     template: '%s | The Happy Case',
   },
-  description: 'Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins. Perfect travel gift.',
-  keywords: ['passport case', 'custom passport holder', 'travel gifts', 'personalized passport cover', 'charm passport case'],
+  description: 'Create custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flagsand custom text. RFID-protected, water-resistant passport covers perfect for travelers.',
+  keywords: ['passport case', 'custom passport holder', 'travel gifts', 'personalized passport cover', 'charm passport case', 'country flags', 'bronze pins', 'colorful pins', 'hand made gifts', 'travel gifts', 'personalized gifts', 'custom gifts', 'custom passport cases', 'custom passport holders', 'custom passport cases with charms', 'custom passport holders with charms', 'custom passport cases with charms and pins', 'custom passport holders with charms and pins'],
   authors: [{ name: 'The Happy Case' }],
   openGraph: {
     type: 'website',
     siteName: 'The Happy Case',
-    title: 'The Happy Case - Custom Passport Cases with Personalized Charms',
-    description: 'Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins. Perfect travel gift.',
+    title: 'The Happy Case - Custom Passport Cases with Charms',
+    description: 'Create custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flags and custom text. RFID-protected, water-resistant passport covers perfect for travelers. Free shipping available.',
     images: [{ url: DEFAULT_IMAGE }],
     locale: 'en_GB',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The Happy Case - Custom Passport Cases with Personalized Charms',
-    description: 'Create custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins.',
+    title: 'The Happy Case - Custom Passport Cases with  Charms',
+    description: 'Create custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flags and custom text. RFID-protected, water-resistant passport covers perfect for travelers.',
     images: [DEFAULT_IMAGE],
   },
   robots: {
@@ -68,7 +68,7 @@ export default function RootLayout({ children }) {
               name: 'The Happy Case',
               url: SITE_URL,
               logo: DEFAULT_IMAGE,
-              description: 'Custom passport cases with personalized charms. Choose from 3 case styles, 40+ design ideas, and bronze or colorful pins.',
+              description: 'Custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flags and custom text. RFID-protected, water-resistant passport covers perfect for travelers.',
             }),
           }}
         />

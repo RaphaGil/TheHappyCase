@@ -177,6 +177,11 @@ function Footer() {
                     Refund Policy
                   </Link>
                 </li>
+                <li>
+                  <Link href="/Privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                    Privacy Policy
+                  </Link>
+                </li>
               </ul>
             )}
             {/* Desktop: Always visible content */}
@@ -189,6 +194,11 @@ function Footer() {
               <li>
                 <Link href="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/Privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  Privacy Policy
                 </Link>
               </li>
             </ul>

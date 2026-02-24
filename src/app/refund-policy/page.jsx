@@ -1,4 +1,4 @@
-import RefundPolicy from '@/page-components/RefundPolicy';
+import RefundPolicy from './RefundPolicy';
 
 export const metadata = {
   title: 'Refund Policy',

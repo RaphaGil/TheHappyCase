@@ -13,7 +13,7 @@ const TwoBigImagesSection = ({ image1, image2 }) => {
 
   return (
     <div ref={sectionRef} className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
+      <div className="grid grid-cols-2 gap-2 md:gap-4">
         {/* First Image */}
         <div className="relative w-full h-[400px] sm:h-[500px] md:h-[700px] lg:h-[800px] overflow-hidden bg-gray-100">
           <img

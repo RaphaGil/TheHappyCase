@@ -39,15 +39,35 @@ export const getApiUrl = (endpoint) => {
   // Ensure endpoint starts with /
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  // In development mode, always use relative paths so Next.js can proxy to Express server
-  // This allows Next.js dev server to proxy /api/* requests to Express server on port 3001
-  const isDevelopment = typeof process !== 'undefined' 
-    ? process.env?.NODE_ENV === 'development'
-    : typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+  // In development mode, use Express server URL (port 3001)
+  // Next.js static export doesn't support API routes, so we need to point directly to Express
+  // Check multiple ways to detect development mode for better reliability
+  const nodeEnv = typeof process !== 'undefined' ? process.env?.NODE_ENV : null;
+  const isLocalhost = typeof window !== 'undefined' && 
+    (window.location?.hostname === 'localhost' || 
+     window.location?.hostname === '127.0.0.1' ||
+     window.location?.hostname?.startsWith('localhost'));
+  
+  // Prioritize localhost detection - if we're on localhost, assume development
+  // This works even if NODE_ENV isn't set in the browser
+  const isDevelopment = nodeEnv === 'development' || isLocalhost;
+  
+  // Debug logging (only in development)
+  if (isDevelopment || isLocalhost) {
+    console.log('[API_CONFIG] Environment detection:', {
+      nodeEnv,
+      isLocalhost,
+      isDevelopment,
+      hostname: typeof window !== 'undefined' ? window.location?.hostname : 'N/A',
+      endpoint: cleanEndpoint
+    });
+  }
   
   if (isDevelopment) {
-    // Use relative path - Vite proxy will handle routing to Express server
-    return cleanEndpoint;
+    // Point to Express server running on port 3001
+    const devUrl = `http://localhost:3001${cleanEndpoint}`;
+    console.log('[API_CONFIG] Using development URL:', devUrl);
+    return devUrl;
   }
   
   // In production, use API_URL if set, otherwise use relative paths for Netlify Functions

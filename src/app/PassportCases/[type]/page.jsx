@@ -1,4 +1,4 @@
-import PassportCases from '@/page-components/PassportCases';
+import PassportCases from '../PassportCases';
 
 export async function generateStaticParams() {
   // Generate static pages for all passport case types

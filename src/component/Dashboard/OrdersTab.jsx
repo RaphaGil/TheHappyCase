@@ -418,7 +418,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                               className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
                             >
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                               </svg>
                               View Tracking
                             </a>
@@ -469,7 +469,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
+                        strokeWidth={1}
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
@@ -486,7 +486,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="font-semibold mb-3 text-gray-900 flex items-center gap-2">
                       <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       Dispatch Information
                     </h4>
@@ -517,7 +517,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                             className="text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1 break-all"
                           >
                             <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
                             <span className="break-all">{order.tracking.tracking_link}</span>
                           </a>

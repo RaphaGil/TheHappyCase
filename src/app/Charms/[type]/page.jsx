@@ -1,4 +1,4 @@
-import Charms from '@/page-components/Charms';
+import Charms from '../CharmsPage';
 
 export async function generateStaticParams() {
   // Generate static pages for all charm types
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
     },
     Bronze: {
       title: 'Bronze Passport Charms',
-      description: 'Bronze passport charms and pins. Classic metallic finishes.',
+      description: 'Bronze passport charms and pins. Classic bronze finishes.',
     },
   };
   

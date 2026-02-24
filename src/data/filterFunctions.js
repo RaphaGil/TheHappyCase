@@ -3,6 +3,13 @@
 export const filterColorfulCharms = (pin, selectedCategory) => {
   const pinNameLower = pin.name.toLowerCase();
   
+  if (selectedCategory === 'food') {
+    return (
+      pinNameLower.includes('pizza') ||
+      pinNameLower.includes('chocolate') ||
+      pinNameLower.includes('icecream') 
+    );
+  }
   if (selectedCategory === 'drinks') {
     return (
       pinNameLower.includes('beer') ||

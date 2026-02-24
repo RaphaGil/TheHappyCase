@@ -1,4 +1,4 @@
-import DesignIdeas from '@/page-components/DesignIdeas';
+import DesignIdeas from './DesignIdeasPage';
 
 export const metadata = {
   title: 'Passport Case Design Ideas',

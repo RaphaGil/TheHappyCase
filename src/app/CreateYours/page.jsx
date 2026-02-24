@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import CreateYours from '@/page-components/CreateYours';
+import CreateYours from './CreateYoursPage';
 
 export const metadata = {
   title: 'Create Your Own Passport Cover',

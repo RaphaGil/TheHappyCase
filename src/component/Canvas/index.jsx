@@ -725,6 +725,22 @@ const Canvas = ({
     return exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef);
   }, []);
 
+  // Clear canvas: remove all pins and text (e.g. after add to cart)
+  const clearCanvas = useCallback(() => {
+    if (!fabricCanvas.current) return;
+    const canvas = fabricCanvas.current;
+    const objects = canvas.getObjects();
+    objects.forEach((obj) => {
+      removeBorderRect(obj);
+      canvas.remove(obj);
+    });
+    borderRectsRef.current.clear();
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    setSelectedPin(null);
+    setShowControls(false);
+  }, [removeBorderRect]);
+
   // Control handlers
   const handleRotateLeft = () => {
     if (selectedPin) {
@@ -757,12 +773,12 @@ const Canvas = ({
     }
   };
 
-  // Expose pin selection method globally
+  // Expose pin selection and clear methods globally
   useEffect(() => {
     window.addPinToCanvas = handlePinSelection;
     window.addTextToCanvas = handleAddText;
-    // Expose getter so parent can fetch current composed design image
     window.getDesignImageDataURL = getDesignImageDataURL;
+    window.clearCanvas = clearCanvas;
     if (onSaveImage) {
       onSaveImage(handleSaveImage);
     }
@@ -770,8 +786,9 @@ const Canvas = ({
       delete window.addPinToCanvas;
       delete window.addTextToCanvas;
       delete window.getDesignImageDataURL;
+      delete window.clearCanvas;
     };
-  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage]);
+  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage, clearCanvas]);
 
   return (
     <div className="w-full h-full flex flex-col  sm:items-center ">

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Products from '../data/products.json';
 import { areItemsIdentical } from './cartHelpers';
 import { getApiUrl } from './apiConfig';
@@ -62,7 +63,19 @@ const fetchInventoryFromSupabase = async () => {
       };
       
       try {
+        // Detect environment early for better logging
+        const isDev = typeof process !== 'undefined' 
+          ? process.env?.NODE_ENV === 'development'
+          : typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+        
         console.log('[INVENTORY] 🔍 Fetching inventory from:', apiUrl);
+        console.log('[INVENTORY] 🔍 Environment:', {
+          isDev,
+          nodeEnv: typeof process !== 'undefined' ? process.env?.NODE_ENV : 'N/A (browser)',
+          hostname: typeof window !== 'undefined' ? window.location?.hostname : 'N/A (server)',
+          apiUrl
+        });
+        
         const response = await fetch(apiUrl, {
           signal: controller.signal,
           headers: {
@@ -74,16 +87,104 @@ const fetchInventoryFromSupabase = async () => {
         
         console.log('[INVENTORY] 📡 Response status:', response.status, response.statusText);
         
+        // Handle 404 by trying fallback URL first (production only)
+        if (response.status === 404) {
+          // Double-check: if URL is relative and hostname is localhost, we're in dev
+          const isRelativeUrl = !apiUrl.startsWith('http://') && !apiUrl.startsWith('https://');
+          const isLocalhost = typeof window !== 'undefined' && 
+            (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1');
+          const definitelyDev = isDev || (isRelativeUrl && isLocalhost);
+          
+          if (definitelyDev) {
+            console.warn('[INVENTORY] ⚠️ 404 - API endpoint not found. Make sure Express server is running: npm run server');
+            console.warn('[INVENTORY] ⚠️ Expected URL in dev:', 'http://localhost:3001/api/inventory');
+            console.warn('[INVENTORY] ⚠️ Actual URL used:', apiUrl);
+            console.warn('[INVENTORY] ⚠️ Development mode detected - skipping Netlify function fallback');
+            // In development, don't try Netlify function fallback (it doesn't exist locally)
+            // Just fail gracefully - inventory will show as unlimited stock
+          } else {
+            // In production, try direct function URL as fallback (in case redirect rule isn't working)
+            console.log('[INVENTORY] 🔄 404 detected, trying fallback URL...');
+            const functionUrl = apiUrl.replace('/api/inventory', '/.netlify/functions/inventory');
+            try {
+              const directResponse = await fetch(functionUrl, {
+                signal: controller.signal,
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+              if (directResponse.ok) {
+                const data = await safeParseJSON(directResponse);
+                if (data.success && data.inventory) {
+                  const quantities = {
+                    cases: data.inventory.cases,
+                    caseColors: data.inventory.caseColors,
+                    pins: data.inventory.pins
+                  };
+                  
+                  // Update in-memory cache
+                  inventoryCache = quantities;
+                  inventoryCacheTimestamp = Date.now();
+                  
+                  console.log('[INVENTORY] ✅ Fallback URL succeeded, inventory loaded');
+                  return quantities;
+                }
+              } else {
+                // eslint-disable-next-line no-console
+                console.error('[INVENTORY] ❌ Fallback URL also returned:', directResponse.status);
+                // eslint-disable-next-line no-console
+                console.error('[INVENTORY] ❌ Original URL:', apiUrl);
+                // eslint-disable-next-line no-console
+                console.error('[INVENTORY] ❌ Fallback URL:', functionUrl);
+                // eslint-disable-next-line no-console
+                console.error('[INVENTORY] ❌ Status:', directResponse.status, directResponse.statusText);
+                // eslint-disable-next-line no-console
+                console.error('[INVENTORY] 💡 Troubleshooting: Both API endpoint and Netlify function returned 404.');
+                // eslint-disable-next-line no-console
+                console.error('[INVENTORY] 💡 Check: 1) Function is deployed 2) Redirect rules in netlify.toml 3) Environment variables set');
+              }
+            } catch (directError) {
+              // eslint-disable-next-line no-console
+              console.error('[INVENTORY] ❌ Fallback URL failed:', directError.message);
+              // Fall through to error handling
+            }
+          }
+        }
+        
         if (!response.ok) {
           // Log error response for debugging
           try {
             const errorText = await response.text();
-            console.error('[INVENTORY] ❌ Error response body:', errorText);
+            
+            // Check if response is HTML (likely Next.js 404 page or SPA fallback)
+            if (errorText.trim().startsWith('<!DOCTYPE') || errorText.trim().startsWith('<html')) {
+              console.error('[INVENTORY] ❌ Received HTML instead of JSON - API endpoint not found');
+              console.error('[INVENTORY] ❌ This usually means:');
+              console.error('[INVENTORY] ❌   1. In development: Express server not running on port 3001');
+              console.error('[INVENTORY] ❌   2. In production: Netlify function not deployed or redirect not working');
+              console.error('[INVENTORY] ❌ URL attempted:', apiUrl);
+              console.error('[INVENTORY] ❌ Expected in dev:', 'http://localhost:3001/api/inventory');
+              
+              // In development, provide specific guidance
+              const isDev = typeof process !== 'undefined' 
+                ? process.env?.NODE_ENV === 'development'
+                : typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+              
+              if (isDev || (typeof window !== 'undefined' && window.location?.hostname === 'localhost')) {
+                console.error('[INVENTORY] 💡 SOLUTION: Start Express server with: npm run server');
+              }
+              
+              // Don't log the full HTML body as it's too verbose
+              return null; // Fail gracefully
+            }
+            
+            // Try to parse as JSON
             try {
               const errorJson = JSON.parse(errorText);
               console.error('[INVENTORY] ❌ Error details:', errorJson);
             } catch (e) {
-              // Not JSON, that's okay
+              // Not JSON, log first 200 chars
+              console.error('[INVENTORY] ❌ Error response (first 200 chars):', errorText.substring(0, 200));
             }
           } catch (e) {
             console.error('[INVENTORY] ❌ Could not read error response:', e);
@@ -181,35 +282,6 @@ const fetchInventoryFromSupabase = async () => {
             
             console.log('[INVENTORY] ✅ STEP 5.7: Inventory fetch complete and cache ready');
             return quantities;
-          }
-        } else if (response.status === 404) {
-          // If 404, try direct function URL as fallback (in case redirect rule isn't working)
-          const functionUrl = apiUrl.replace('/api/inventory', '/.netlify/functions/inventory');
-          try {
-            const directResponse = await fetch(functionUrl, {
-              signal: controller.signal,
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            if (directResponse.ok) {
-              const data = await safeParseJSON(directResponse);
-              if (data.success && data.inventory) {
-                const quantities = {
-                  cases: data.inventory.cases,
-                  caseColors: data.inventory.caseColors,
-                  pins: data.inventory.pins
-                };
-                
-                // Update in-memory cache
-                inventoryCache = quantities;
-                inventoryCacheTimestamp = Date.now();
-                
-                return quantities;
-              }
-            }
-          } catch (directError) {
-            // Fall through to error handling
           }
         }
       } catch (fetchError) {

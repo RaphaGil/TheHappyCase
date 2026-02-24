@@ -16,6 +16,7 @@ const ColorfulCharms = () => {
       categories={[
         { key: 'all', label: 'ALL' },
         { key: 'drinks', label: 'DRINKS' },
+        { key: 'food', label: 'FOOD' },
         { key: 'travel', label: 'TRAVEL' },
         { key: 'inspiration', label: 'INSPIRATION' },
         { key: 'flags', label: 'FLAGS' },

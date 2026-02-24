@@ -39,7 +39,7 @@ const MobileOrderSummary = ({
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 9l-7 7-7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 9l-7 7-7-7" />
             </svg>
           </span>
         </button>

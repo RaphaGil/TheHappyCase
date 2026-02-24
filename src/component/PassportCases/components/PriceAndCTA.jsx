@@ -36,7 +36,7 @@ const PriceAndCTA = ({
               aria-label="Decrease quantity"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 12H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 12H4" />
               </svg>
             </button>
             <span className="text-sm font-medium text-gray-900 text-center font-inter min-w-[2.5rem] px-3 b flex items-center justify-center h-full">
@@ -48,7 +48,7 @@ const PriceAndCTA = ({
               aria-label="Increase quantity"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v16m8-8H4" />
               </svg>
             </button>
           </div>

@@ -424,6 +424,54 @@
         "price": 2,
         "size": 0.5,
         "continent": "americas"
+      },
+      {
+        "id": 29,
+        "name": "France Flag",
+        "src": "/images/Flags/france.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 30,
+        "name": "Iceland Flag",
+        "src": "/images/Flags/iceland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 31,
+        "name": "Romania Flag",
+        "src": "/images/Flags/romania.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 32,
+        "name": "Ecuador Flag",
+        "src": "/images/Flags/ecuador.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 33,
+        "name": "Chile Flag",
+        "src": "/images/Flags/chile.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 34,
+        "name": "Argentina Flag",
+        "src": "/images/Flags/argentina.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
       }
     ],
     "colorful": [
@@ -606,7 +654,8 @@
         "name": "London Phone",
         "src": "/images/ColorfulPins/telephone.webp",
         "price": 2,
-        "size": 0.85
+        "size": 0.85,
+        "subCategory": "travel"
       },
       {
         "id": 24,
@@ -645,7 +694,8 @@
         "name": "Wave",
         "src": "/images/ColorfulPins/wave.webp",
         "price": 3.5,
-        "size": 0.6
+        "size": 0.6, 
+        "subCategory": "nature"
       },
       {
         "id": 29,
@@ -732,7 +782,63 @@
         "name": "Love",
         "src": "/images/ColorfulPins/love.webp",
         "price": 2,
-        "size": 0.8,
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
+        "id": 40,
+        "name": "Pizza",
+        "src": "/images/ColorfulPins/pizza.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "food"
+      },
+      {
+        "id": 41,
+        "name": "Chocolate",
+        "src": "/images/ColorfulPins/chocolate.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "food"
+      },
+      {
+        "id": 42,
+        "name": "Black Cat",
+        "src": "/images/ColorfulPins/blackcat.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "animal"
+      },
+      {
+        "id": 43,
+        "name": "White Dog",
+        "src": "/images/ColorfulPins/whitedog.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "animal"
+      },
+      {
+        "id": 44,
+        "name": "Black Dog",
+        "src": "/images/ColorfulPins/blackdog.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "animal"
+      },
+      {
+        "id": 45,
+        "name": "Happy",
+        "src": "/images/ColorfulPins/happy.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 46,
+        "name": "Blue Luggage",
+        "src": "/images/ColorfulPins/blueluggage.webp",
+        "price": 1,
+        "size": 0.6,
         "subCategory": "travel"
       }
     ],
@@ -742,7 +848,7 @@
         "name": "Airplane",
         "src": "/images/BronzePins/airplane.webp",
         "price": 1,
-        "size": 0.7,
+        "size": 0.5,
         "subCategory": "travel"
       },
       {
@@ -1019,6 +1125,7 @@
         "size": 0.5,
         "subCategory": "animals"
       }
+    
     ]
   }
 }

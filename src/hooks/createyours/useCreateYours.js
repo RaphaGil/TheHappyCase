@@ -373,12 +373,14 @@ export const useCreateYours = () => {
       addToCart(charmProduct);
     });
     
-    // Clear canvas and reset state
+    // Clear canvas and reset design state
     if (typeof window !== 'undefined' && window.clearCanvas) {
       window.clearCanvas();
     }
     setSelectedPins([]);
     setQuantity(0);
+    setCustomText('');
+    setCustomTextAdded(false);
   };
 
   // Handle pin selection callback from Canvas
