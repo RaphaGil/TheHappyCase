@@ -15,7 +15,7 @@ const CheckoutHeader = () => {
            <img src="/assets/logo.webp" alt="The Happy Case Logo" className="h-14 w-auto " />
         </Link>
         <Link
-          href="/cart"
+          href="/Cart"
           className="relative flex items-center justify-center p-2 text-gray-900 hover:text-gray-700 transition-colors z-10"
           aria-label="Go to cart"
         >

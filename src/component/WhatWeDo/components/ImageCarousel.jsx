@@ -21,7 +21,7 @@ const ImageCarousel = () => {
 
   const handlePersonalise = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    router.push('/CreateYours');
+    router.push('/custom-passport-holder');
   };
 
   return (

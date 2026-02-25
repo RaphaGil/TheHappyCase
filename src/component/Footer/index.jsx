@@ -116,7 +116,7 @@ function Footer() {
                   </Link>
                 </li> */}
                 <li>
-                  <Link href="/CreateYours" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/custom-passport-holder" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Create Yours
                   </Link>
                 </li>
@@ -140,7 +140,7 @@ function Footer() {
                 </Link>
               </li> */}
               <li>
-                <Link href="/CreateYours" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/custom-passport-holder" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Create Yours
                 </Link>
               </li>
@@ -182,6 +182,11 @@ function Footer() {
                     Privacy Policy
                   </Link>
                 </li>
+                <li>
+                  <Link href="/faq" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                    FAQ
+                  </Link>
+                </li>
               </ul>
             )}
             {/* Desktop: Always visible content */}
@@ -199,6 +204,11 @@ function Footer() {
               <li>
                 <Link href="/Privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  FAQ
                 </Link>
               </li>
             </ul>
@@ -233,11 +243,18 @@ function Footer() {
             
             {/* Payment Methods */}
             <div className="flex items-center space-x-4">
-              <div className="flex space-x-3 items-center">
+              <div className="flex space-x-3 items-center flex-wrap gap-y-2">
                 <FontAwesomeIcon icon={faCcVisa} className="text-xl" style={{color: '#1434CB'}} />
                 <FontAwesomeIcon icon={faCcMastercard} className="text-xl" style={{color: '#EB001B'}} />
                 <FontAwesomeIcon icon={faCcAmex} className="text-xl" style={{color: '#006FCF'}} />
                 <FontAwesomeIcon icon={faCcPaypal} className="text-xl" style={{color: '#003087'}} />
+                <img
+                  src="https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg"
+                  alt="Klarna"
+                  className="h-5 w-auto"
+                  width={60}
+                  height={20}
+                />
               </div>
             </div>
 

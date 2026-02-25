@@ -2,14 +2,17 @@
 
 import React, { useState, useMemo } from 'react';
 import { getApiUrl } from '../../utils/apiConfig';
+import { getOrderDisplayId } from '../../utils/paymentsucess/helpers';
 
 const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all'); // 'all' | 'succeeded' | 'dispatched'
   const [updatingOrders, setUpdatingOrders] = useState(new Set());
   const [dispatchModal, setDispatchModal] = useState(null); // { orderId, currentDispatched }
   const [trackingNumber, setTrackingNumber] = useState('');
   const [trackingLink, setTrackingLink] = useState('');
+  const [trackingCarrier, setTrackingCarrier] = useState('');
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -40,12 +43,13 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     // If dispatching (turning on) or editing, show modal to enter/edit tracking info
     if (!currentDispatched) {
       setTrackingNumber(order?.tracking?.tracking_number || '');
-      setTrackingLink(order?.metadata?.tracking_link || '');
+      setTrackingLink(order?.tracking?.tracking_link || order?.metadata?.tracking_link || '');
+      setTrackingCarrier('EVRI');
       setDispatchModal({ orderId, currentDispatched });
     } else {
       // If undispatching (turning off), show confirmation or update directly
       if (window.confirm('Are you sure you want to mark this order as not dispatched? This will clear tracking information.')) {
-        handleDispatchedUpdate(orderId, false, '', '');
+        handleDispatchedUpdate(orderId, false, '', '', '');
       }
     }
   };
@@ -53,11 +57,12 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   const handleEditTracking = (orderId) => {
     const order = orders.find(o => o.order_id === orderId);
     setTrackingNumber(order?.tracking?.tracking_number || '');
-    setTrackingLink(order?.tracking?.tracking_link || '');
+    setTrackingLink(order?.tracking?.tracking_link || order?.metadata?.tracking_link || '');
+    setTrackingCarrier('EVRI');
     setDispatchModal({ orderId, currentDispatched: isDispatched(order) });
   };
 
-  const handleDispatchedUpdate = async (orderId, dispatched, trackingNumber, trackingLink) => {
+  const handleDispatchedUpdate = async (orderId, dispatched, trackingNumber, trackingLink, carrier) => {
     setUpdatingOrders(prev => new Set(prev).add(orderId));
 
     try {
@@ -67,6 +72,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
         dispatched, 
         tracking_number: trackingNumber,
         tracking_link: trackingLink,
+        carrier,
         apiUrl 
       });
 
@@ -74,7 +80,8 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
       const requestBody = {
         dispatched,
         tracking_number: trackingNumber ? trackingNumber.trim() : '',
-        tracking_link: trackingLink ? trackingLink.trim() : ''
+        tracking_link: trackingLink ? trackingLink.trim() : '',
+        carrier: carrier ? String(carrier).trim() : ''
       };
 
       console.log('📤 Sending dispatch update:', requestBody);
@@ -106,11 +113,19 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
 
       const data = await response.json();
       console.log('✅ Dispatched status updated:', data);
+
+      // Show feedback about tracking email (only when we just dispatched)
+      if (data.dispatchEmailSent) {
+        alert('Order marked as dispatched. Tracking email with tracking info sent to the customer.');
+      } else if (data.dispatchEmailError) {
+        alert(`Order marked as dispatched, but the tracking email could not be sent: ${data.dispatchEmailError}. Check server logs and RESEND_API_KEY in .env`);
+      }
       
       // Close modal and reset form
       setDispatchModal(null);
       setTrackingNumber('');
       setTrackingLink('');
+      setTrackingCarrier('');
       
       // Update local orders state
       if (onRefresh) {
@@ -131,14 +146,13 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
 
   const handleDispatchSubmit = () => {
     if (dispatchModal) {
-      // If editing, preserve the current dispatched status; if new, set to dispatched
-      const order = orders.find(o => o.order_id === dispatchModal.orderId);
-      const shouldBeDispatched = dispatchModal.currentDispatched !== false ? true : false;
+      // Submitting the modal always means "mark as dispatched" (first time) or "update tracking" (edit). Carrier is always EVRI.
       handleDispatchedUpdate(
         dispatchModal.orderId,
-        shouldBeDispatched,
+        true,
         trackingNumber,
-        trackingLink
+        trackingLink,
+        'EVRI'
       );
     }
   };
@@ -173,17 +187,29 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     });
   }, [orders]);
 
-  // Filter orders by selected month
+  // Filter orders by selected month and status
   const filteredOrders = useMemo(() => {
-    if (selectedMonth === 'all') return orders;
-    
-    const [year, month] = selectedMonth.split('-').map(Number);
-    return orders.filter(order => {
-      if (!order.order_date) return false;
-      const date = new Date(order.order_date);
-      return date.getFullYear() === year && date.getMonth() === month - 1;
-    });
-  }, [orders, selectedMonth]);
+    let result = orders;
+
+    // Filter by month
+    if (selectedMonth !== 'all') {
+      const [year, month] = selectedMonth.split('-').map(Number);
+      result = result.filter(order => {
+        if (!order.order_date) return false;
+        const date = new Date(order.order_date);
+        return date.getFullYear() === year && date.getMonth() === month - 1;
+      });
+    }
+
+    // Filter by status (succeeded = not dispatched, dispatched = dispatched)
+    if (selectedStatus === 'succeeded') {
+      result = result.filter(order => order.metadata?.dispatched !== true);
+    } else if (selectedStatus === 'dispatched') {
+      result = result.filter(order => order.metadata?.dispatched === true);
+    }
+
+    return result;
+  }, [orders, selectedMonth, selectedStatus]);
 
   // Calculate totals for filtered orders
   const filteredTotal = useMemo(() => {
@@ -234,7 +260,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     );
   }
 
-  if (filteredOrders.length === 0 && selectedMonth !== 'all') {
+  if (filteredOrders.length === 0 && (selectedMonth !== 'all' || selectedStatus !== 'all')) {
     return (
       <div className="space-y-4">
         {/* Header with filter */}
@@ -242,16 +268,25 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
           <div className="flex-1">
             <h2 className="text-lg font-semibold">Orders</h2>
             <p className="text-sm text-gray-600">
-              {orders.length} total order(s) • {filteredOrders.length} in selected period
+              {orders.length} total order(s) • {filteredOrders.length} match filters
             </p>
           </div>
-          <div className="flex gap-3 items-center">
+          <div className="flex flex-wrap gap-3 items-center">
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white"
+            >
+              <option value="all">All Orders</option>
+              <option value="succeeded">Succeeded</option>
+              <option value="dispatched">Dispatched</option>
+            </select>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
+              className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white"
             >
-              <option value="all">All Orders</option>
+              <option value="all">All Months</option>
               {availableMonths.map((month) => (
                 <option key={month.key} value={month.key}>
                   {month.label}
@@ -270,9 +305,9 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
         </div>
 
         <div className="bg-white border rounded-lg p-8 text-center">
-          <p className="text-gray-600">No orders found for the selected period.</p>
+          <p className="text-gray-600">No orders found for the selected filters.</p>
           <button
-            onClick={() => setSelectedMonth('all')}
+            onClick={() => { setSelectedMonth('all'); setSelectedStatus('all'); }}
             className="mt-4 px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-800 text-sm"
           >
             Show All Orders
@@ -289,11 +324,17 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
         <div className="flex-1">
           <h2 className="text-lg font-semibold">Orders</h2>
           <div className="text-sm text-gray-600">
-            {selectedMonth === 'all' ? (
+            {selectedMonth === 'all' && selectedStatus === 'all' ? (
               <span>{filteredOrders.length} order(s) found</span>
             ) : (
               <span>
-                {filteredOrders.length} order(s) in {availableMonths.find(m => m.key === selectedMonth)?.label || 'selected period'}
+                {filteredOrders.length} order(s)
+                {selectedStatus !== 'all' && (
+                  <span> ({selectedStatus === 'succeeded' ? 'Succeeded' : 'Dispatched'})</span>
+                )}
+                {selectedMonth !== 'all' && (
+                  <span> in {availableMonths.find(m => m.key === selectedMonth)?.label || 'selected period'}</span>
+                )}
                 {filteredTotal > 0 && filteredOrders.length > 0 && (
                   <span className="ml-2 font-medium">
                     • Total: {formatCurrency(filteredTotal, filteredOrders[0]?.currency || 'gbp')}
@@ -301,20 +342,29 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                 )}
               </span>
             )}
-            {selectedMonth !== 'all' && (
+            {(selectedMonth !== 'all' || selectedStatus !== 'all') && (
               <span className="text-gray-400 ml-2">
                 (of {orders.length} total)
               </span>
             )}
           </div>
         </div>
-        <div className="flex gap-3 items-center">
+        <div className="flex flex-wrap gap-3 items-center">
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white"
+          >
+            <option value="all">All Orders</option>
+            <option value="succeeded">Succeeded</option>
+            <option value="dispatched">Dispatched</option>
+          </select>
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm bg-white"
           >
-            <option value="all">All Orders</option>
+            <option value="all">All Months</option>
             {availableMonths.map((month) => (
               <option key={month.key} value={month.key}>
                 {month.label}
@@ -337,16 +387,6 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
         const isExpanded = expandedOrder === order.order_id;
         const items = order.items || [];
         const shippingAddress = order.shipping_address || {};
-        // Debug: Log tracking info to see what we're getting
-        if (order.tracking && (order.tracking.tracking_number || order.tracking.tracking_link)) {
-          console.log('Order tracking info:', {
-            orderId: order.order_id,
-            tracking: order.tracking,
-            tracking_number: order.tracking.tracking_number,
-            tracking_link: order.tracking.tracking_link,
-            dispatched: order.metadata?.dispatched
-          });
-        }
 
         return (
           <div
@@ -361,26 +401,20 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   onClick={() => toggleOrder(order.order_id)}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-lg">Order #{order.order_id?.substring(0, 20)}...</h3>
+                    <h3 className="font-semibold text-lg">Order #{getOrderDisplayId(order)}</h3>
                     <span
                       className={`px-2 py-1 text-xs rounded ${
-                        order.status === 'succeeded'
+                        isDispatched(order)
+                          ? 'bg-blue-100 text-blue-800'
+                          : order.status === 'succeeded'
                           ? 'bg-green-100 text-green-800'
                           : order.status === 'pending'
                           ? 'bg-yellow-100 text-yellow-800'
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {order.status || 'unknown'}
+                      {isDispatched(order) ? 'Dispatched' : (order.status || 'unknown')}
                     </span>
-                    {isDispatched(order) && (
-                      <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        Dispatched
-                      </span>
-                    )}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
                     <div>
@@ -396,9 +430,15 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                     </div>
                   </div>
                   {/* Tracking Information - Visible in Header */}
-                  {(order.tracking?.tracking_number || order.tracking?.tracking_link) && (
+                  {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.tracking?.carrier || order.metadata?.carrier) && (
                     <div className="mt-3 pt-3 border-t border-gray-200">
                       <div className="flex flex-wrap items-center gap-4 text-sm">
+                        {(order.tracking?.carrier || order.metadata?.carrier) && (
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-gray-700">Carrier:</span>
+                            <span className="text-gray-900">{order.tracking?.carrier || order.metadata?.carrier}</span>
+                          </div>
+                        )}
                         {order.tracking?.tracking_number && (
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-gray-700">Tracking #:</span>
@@ -482,7 +522,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             {isExpanded && (
               <div className="border-t bg-gray-50 p-6">
                 {/* Dispatch Information - Prominent Section */}
-                {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.metadata?.dispatched_at) && (
+                {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.tracking?.carrier || order.metadata?.carrier || order.metadata?.dispatched_at) && (
                   <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="font-semibold mb-3 text-gray-900 flex items-center gap-2">
                       <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -497,6 +537,12 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                           <span className="text-gray-900">
                             {formatDate(order.metadata.dispatched_at)}
                           </span>
+                        </div>
+                      )}
+                      {(order.tracking?.carrier || order.metadata?.carrier) && (
+                        <div className="text-sm">
+                          <span className="font-medium text-gray-700">Carrier:</span>{' '}
+                          <span className="text-gray-900">{order.tracking?.carrier || order.metadata?.carrier}</span>
                         </div>
                       )}
                       {order.tracking?.tracking_number && (
@@ -733,26 +779,34 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Carrier
+                </label>
+                <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-900 font-medium">
+                  EVRI
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Tracking Number
                 </label>
                 <input
                   type="text"
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="e.g., 1Z999AA10123456784"
+                  placeholder="e.g., 16 digit Evri tracking number"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tracking Link
+                  Tracking Link (sent to customer in email)
                 </label>
                 <input
                   type="url"
                   value={trackingLink}
                   onChange={(e) => setTrackingLink(e.target.value)}
-                  placeholder="https://tracking.example.com/..."
+                  placeholder="https://www.evri.com/track-a-parcel or your tracking URL"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>
@@ -764,6 +818,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   setDispatchModal(null);
                   setTrackingNumber('');
                   setTrackingLink('');
+                  setTrackingCarrier('');
                 }}
                 className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                 disabled={updatingOrders.has(dispatchModal.orderId)}

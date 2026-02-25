@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Login from '../../Login/LoginPage.jsx';
+import Login from '@/component/LoginPage';
 
 export const metadata = {
   title: 'Verify Code',

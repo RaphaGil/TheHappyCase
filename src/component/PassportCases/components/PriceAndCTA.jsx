@@ -87,7 +87,7 @@ const PriceAndCTA = ({
       <button
         onClick={() => {
           window.scrollTo({ top: 0, behavior: 'instant' });
-          router.push(`/CreateYours?case=${selectedCaseType}&color=${selectedColor}`);
+          router.push(`/custom-passport-holder?case=${selectedCaseType}&color=${selectedColor}`);
         }}
         className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
       >

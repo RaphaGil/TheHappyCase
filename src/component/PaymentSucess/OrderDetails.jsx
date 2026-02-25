@@ -2,7 +2,7 @@ import React from 'react';
 import OrderItem from './OrderItem';
 import { formatDate } from '../../utils/paymentsucess/helpers';
 
-const OrderDetails = ({ orderId, orderDate, subtotal, shippingCost, vatAmount, totalAmount, orderStatus, items }) => {
+const OrderDetails = ({ orderNumber, orderDate, subtotal, shippingCost, vatAmount, totalAmount, orderStatus, items }) => {
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 md:p-8">
       <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
@@ -11,8 +11,8 @@ const OrderDetails = ({ orderId, orderDate, subtotal, shippingCost, vatAmount, t
       
       <div className="space-y-4 mb-6">
         <div className="flex justify-between items-center py-2 border-b border-gray-100">
-          <span className="text-gray-600 font-medium font-inter">Order ID:</span>
-          <span className="text-gray-900 font-mono text-sm">{orderId}</span>
+          <span className="text-gray-600 font-medium font-inter">Order</span>
+          <span className="text-gray-900 font-mono text-sm font-semibold">{orderNumber}</span>
         </div>
         <div className="flex justify-between items-center py-2 border-b border-gray-100">
           <span className="text-gray-600 font-medium font-inter">Date:</span>

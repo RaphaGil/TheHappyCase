@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Login from './LoginPage';
+import Login from '@/component/LoginPage';
 
 export const metadata = {
   title: 'Login',

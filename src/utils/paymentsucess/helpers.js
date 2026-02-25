@@ -27,3 +27,43 @@ export const calculateTotalAmount = (items) => {
     return sum + (itemPrice * quantity);
   }, 0);
 };
+
+/**
+ * Generate a unique order number for the order summary (not derived from payment ID).
+ * Format: THC- + 8 alphanumeric chars (e.g. THC-M3K9A2BX).
+ */
+export const generateOrderNumber = () => {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  const bytes = typeof crypto !== 'undefined' && crypto.getRandomValues
+    ? crypto.getRandomValues(new Uint8Array(8))
+    : [];
+  for (let i = 0; i < 8; i++) {
+    code += chars[(bytes[i] || Math.floor(Math.random() * chars.length)) % chars.length];
+  }
+  return `THC-${code}`;
+};
+
+/**
+ * Order # = last 8 chars of payment intent id (e.g. 0AHYE3CX). Same format everywhere.
+ */
+export const getOrderNumberFromPaymentIntentId = (paymentIntentId) => {
+  if (!paymentIntentId || paymentIntentId === 'N/A') return 'N/A';
+  return String(paymentIntentId).slice(-8).toUpperCase();
+};
+
+/**
+ * Customer-facing order number. Uses last 8 chars of order id so payment success and My orders match.
+ */
+export const getDisplayOrderNumber = (orderId, _generatedOrderNumber) => {
+  return getOrderNumberFromPaymentIntentId(orderId);
+};
+
+/**
+ * Same order # as order summary – use for My orders / Dashboard.
+ * Prefers order_number from DB, then last 8 chars of order_id.
+ */
+export const getOrderDisplayId = (order) => {
+  if (!order) return 'N/A';
+  return order.order_number || getOrderNumberFromPaymentIntentId(order.order_id) || 'N/A';
+};

@@ -19,7 +19,7 @@ function Hero() {
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    router.push('/CreateYours');
+    router.push('/custom-passport-holder');
   };
   
   useEffect(() => {
@@ -150,7 +150,7 @@ function Hero() {
             transition: 'opacity 0.5s ease-in'
           }}
         >
-          <source src={videoSrc} type="video/mp4" />
+          <source src={videoSrc} type="video/webm" />
           Your browser does not support the video tag.
         </video>
         

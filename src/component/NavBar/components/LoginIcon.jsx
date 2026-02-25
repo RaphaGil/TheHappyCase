@@ -86,7 +86,7 @@ const LoginIcon = ({ isMobile = false }) => {
 
   // Mobile version - simple link
   if (isMobile) {
-    const linkTo = (isLoggedIn && userEmail) ? '/my-orders' : '/login';
+    const linkTo = (isLoggedIn && userEmail) ? '/My-orders' : '/Login';
     return (
       <Link
         href={linkTo}
@@ -136,7 +136,7 @@ const LoginIcon = ({ isMobile = false }) => {
 
             {/* My Orders Link */}
             <Link
-              href="/my-orders"
+              href="/My-orders"
               onClick={() => setIsDropdownOpen(false)}
               className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors font-inter"
             >
@@ -161,7 +161,7 @@ const LoginIcon = ({ isMobile = false }) => {
   // Not logged in - simple link to login
   return (
     <Link
-      href="/login"
+      href="/Login"
       className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
       aria-label="Log in or create an account"
     >

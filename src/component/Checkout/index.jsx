@@ -16,6 +16,7 @@ import { useCurrency } from '../../context/CurrencyContext';
 // Utils
 import { createPaymentIntent } from '../../utils/mockPaymentAPI';
 import { getMaxAvailableQuantity, refreshInventoryFromSupabase } from '../../utils/inventory';
+import { getOrderNumberFromPaymentIntentId } from '../../utils/paymentsucess/helpers';
 
 // Components
 import InternationalNote from '../InternationalNote';
@@ -51,6 +52,24 @@ if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
     VITE_STRIPE_PUBLISHABLE_KEY: typeof process !== 'undefined' ? !!process.env?.VITE_STRIPE_PUBLISHABLE_KEY : false,
     stripePublishableKey: stripePublishableKey ? `${stripePublishableKey.substring(0, 20)}...` : 'NOT SET',
   });
+  // Warn if using live key on localhost – use test keys locally to avoid 400 and Stripe’s HTTPS warning
+  if (stripePublishableKey && stripePublishableKey.startsWith('pk_live_') && typeof window !== 'undefined' && (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1')) {
+    console.warn(
+      '[Checkout] Live Stripe key (pk_live_...) on localhost (HTTP). Use test keys locally: set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_... and STRIPE_SECRET_KEY=sk_test_... in your backend. This avoids the 400 error and Stripe’s “live integrations must use HTTPS” warning.'
+    );
+  }
+}
+
+// In development over HTTP (localhost), Stripe.js logs a warning that live integrations must use HTTPS.
+// Suppress that single warning so the console stays clean; it does not apply to local testing.
+if (typeof window !== 'undefined' && (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1') && !console.__stripeHttpWarnPatched) {
+  const _originalWarn = console.warn;
+  console.warn = (...args) => {
+    const msg = typeof args[0] === 'string' ? args[0] : String(args[0] ?? '');
+    if (msg.includes('Stripe.js') && msg.includes('HTTP')) return;
+    _originalWarn.apply(console, args);
+  };
+  console.__stripeHttpWarnPatched = true;
 }
 
 // Validate Stripe key format (silent validation)
@@ -92,7 +111,7 @@ const CURRENCY_MULTIPLIERS = {
   'vnd': 1,  // Vietnamese Dong doesn't use decimals
 };
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }) => {
   // --- Hooks ---
   const stripe = useStripe();
   const elements = useElements();
@@ -122,9 +141,10 @@ const CheckoutForm = () => {
     },
   });
 
-  // --- Refs ---
+  // --- Refs --- (use parent ref when provided so redirect-to-cart is skipped when navigating to success)
   const errorTimeoutsRef = useRef({});
-  const isNavigatingToSuccessRef = useRef(false);
+  const localNavigateSuccessRef = useRef(false);
+  const isNavigatingToSuccessRef = isNavigatingToSuccessRefProp ?? localNavigateSuccessRef;
 
   // --- Computed Values ---
   const subtotal = getTotalPrice();
@@ -258,7 +278,7 @@ const CheckoutForm = () => {
   // Redirect if cart is empty
   useEffect(() => {
     if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
-      router.push('/cart');
+      router.push('/Cart');
     }
   }, [cart, router]);
 
@@ -324,7 +344,7 @@ const CheckoutForm = () => {
   useEffect(() => {
     // Don't redirect if we're navigating to success page
     if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
-      router.push('/cart');
+      router.push('/Cart');
     }
   }, [cart, router]);
 
@@ -440,12 +460,23 @@ const CheckoutForm = () => {
         setLoading(false);
         return;
       }
+      // Store pending order data before confirm (order # set after we have payment intent id)
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('paymentSuccessData', JSON.stringify({
+            paymentIntent: null,
+            customerInfo,
+            items: [...cart],
+            shippingCost,
+            totalWithShipping,
+            subtotal,
+          }));
+        }
       // Confirm the payment with Stripe
       // The clientSecret is automatically retrieved from Elements context
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/payment-success`,
+          return_url: `${window.location.origin}/Payment-success`,
           payment_method_data: {
             billing_details: {
               name: customerInfo.name,
@@ -472,13 +503,16 @@ const CheckoutForm = () => {
       }
 
       if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // Payment succeeded - navigate to success page
-        isNavigatingToSuccessRef.current = true; // Set flag to prevent redirect
-        const cartItemsCopy = [...cart]; // Create a copy to preserve cart data
-        clearCart(); // Clear cart before navigation
-        // Store data in sessionStorage since Next.js doesn't support navigation state
+        // Payment succeeded - order # = last 8 chars of payment intent id (e.g. 0AHYE3CX)
+        isNavigatingToSuccessRef.current = true;
+        const cartItemsCopy = [...cart];
+        clearCart();
         if (typeof window !== 'undefined') {
+          const prev = JSON.parse(sessionStorage.getItem('paymentSuccessData') || '{}');
+          const orderNumber = getOrderNumberFromPaymentIntentId(paymentIntent.id);
           sessionStorage.setItem('paymentSuccessData', JSON.stringify({
+            ...prev,
+            orderNumber,
             paymentIntent,
             customerInfo,
             items: cartItemsCopy,
@@ -487,21 +521,22 @@ const CheckoutForm = () => {
             subtotal,
           }));
         }
-        router.push('/payment-success');
+        router.push('/Payment-success');
       } else if (paymentIntent && paymentIntent.status === 'requires_action') {
         // Payment requires additional action (e.g., 3D Secure)
         // Stripe will handle redirect automatically to return_url
         // After redirect completes, user will land on payment-success page
       } else if (paymentIntent) {
         // Other status (processing, requires_confirmation, etc.)
-        // For most cases, we still show success as the payment was initiated
-        // Note: 'processing' status means payment is being processed and may take time
-        isNavigatingToSuccessRef.current = true; // Set flag to prevent redirect
-        const cartItemsCopy = [...cart]; // Create a copy to preserve cart data
-        clearCart(); // Clear cart before navigation
-        // Store data in sessionStorage since Next.js doesn't support navigation state
+        isNavigatingToSuccessRef.current = true;
+        const cartItemsCopy = [...cart];
+        clearCart();
         if (typeof window !== 'undefined') {
+          const prev = JSON.parse(sessionStorage.getItem('paymentSuccessData') || '{}');
+          const orderNumber = getOrderNumberFromPaymentIntentId(paymentIntent.id);
           sessionStorage.setItem('paymentSuccessData', JSON.stringify({
+            ...prev,
+            orderNumber,
             paymentIntent,
             customerInfo,
             items: cartItemsCopy,
@@ -510,7 +545,7 @@ const CheckoutForm = () => {
             subtotal,
           }));
         }
-        router.push('/payment-success');
+        router.push('/Payment-success');
       }
       } catch (err) {
         setError('An error occurred while processing your payment.');
@@ -663,13 +698,14 @@ const Checkout = () => {
   const [loading, setLoading] = useState(true);
   const [paymentError, setPaymentError] = useState(null);
   const hasInitializedRef = useRef(false);
+  const isNavigatingToSuccessRef = useRef(false);
 
   useEffect(() => {
-    // Don't redirect to cart if we're already on a different page (e.g., payment-success)
+    // Don't redirect to cart if we're already on a different page or navigating to payment success
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
-      if (cart.length === 0 && (currentPath === '/checkout' || currentPath.includes('/checkout'))) {
-        router.push('/cart');
+      if (cart.length === 0 && (currentPath === '/Checkout' || currentPath.includes('/Checkout')) && !isNavigatingToSuccessRef.current) {
+        router.push('/Cart');
         return;
       }
     }
@@ -825,7 +861,7 @@ const Checkout = () => {
       <div className="flex-1 flex items-stretch bg-white py-10">
         <div className="flex-1 max-w-6xl mx-auto px-4 lg:px-6">
           <Elements stripe={stripePromise} options={options}>
-            <CheckoutForm />
+            <CheckoutForm isNavigatingToSuccessRef={isNavigatingToSuccessRef} />
           </Elements>
         </div>
       </div>

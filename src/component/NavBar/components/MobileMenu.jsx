@@ -165,7 +165,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 
                 {/* My Orders Link */}
                 <Link
-                  href="/my-orders"
+                  href="/My-orders"
                   onClick={onClose}
                   className="px-4 py-3 hover:underline font-light transition-colors text-sm tracking-wider flex items-center gap-3 border-t border-yellow-200"
                   style={{color: '#6b7280'}}
@@ -191,7 +191,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
             ) : (
               // Not logged in: Show login link
               <Link
-                href="/login"
+                href="/Login"
                 onClick={onClose}
                 className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
                 style={{color: '#6b7280'}}
@@ -208,7 +208,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
           {!checkingAuth && isAuthorized && (
             <li>
               <Link
-                href="/dashboard"
+                href="/Dashboard"
                 onClick={onClose}
                 className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-blue-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
                 style={{color: '#6b7280'}}

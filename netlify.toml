@@ -17,6 +17,19 @@ to = "/sitemap.xml"
 status = 200
 force = true
 
+# SEO-friendly URL redirects (301 = permanent)
+[[redirects]]
+from = "/CreateYours"
+to = "/custom-passport-holder"
+status = 301
+force = true
+
+[[redirects]]
+from = "/CreateYours/"
+to = "/custom-passport-holder"
+status = 301
+force = true
+
 # API routes - redirect to Netlify Functions
 [[redirects]]
 from = "/api/create-payment-intent"
@@ -26,6 +39,11 @@ status = 200
 [[redirects]]
 from = "/api/inventory"
 to = "/.netlify/functions/inventory"
+status = 200
+
+[[redirects]]
+from = "/api/save-order"
+to = "/.netlify/functions/save-order"
 status = 200
 
 # Next.js static export generates HTML files for each route,

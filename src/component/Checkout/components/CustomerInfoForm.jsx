@@ -32,7 +32,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
   const handleConfirmLogin = () => {
     setShowLoginDropdown(false);
     // Navigate to login page with return URL to come back to checkout
-    router.push('/login?redirect=/checkout');
+    router.push('/Login?redirect=/Checkout');
   };
 
   const handleCancelLogin = () => {
@@ -136,7 +136,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           <input
             type="text"
             name="name"
-            value={customerInfo.name}
+            value={customerInfo.name ?? ''}
             onChange={onInputChange}
             required
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
@@ -150,7 +150,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           <input
             type="text"
             name="surname"
-            value={customerInfo.surname}
+            value={customerInfo.surname ?? ''}
             onChange={onInputChange}
             required
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
@@ -169,7 +169,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
         <input
           type="text"
           name="address.line1"
-          value={customerInfo.address.line1}
+          value={customerInfo.address?.line1 ?? ''}
           onChange={onInputChange}
           required
           className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
@@ -184,7 +184,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
         <input
           type="text"
           name="address.line2"
-          value={customerInfo.address.line2}
+          value={customerInfo.address?.line2 ?? ''}
           onChange={onInputChange}
           className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
           style={{ fontSize: '16px' }}
@@ -199,7 +199,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           <input
             type="text"
             name="address.city"
-            value={customerInfo.address.city}
+            value={customerInfo.address?.city ?? ''}
             onChange={onInputChange}
             required
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
@@ -209,12 +209,12 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
         
         <div>
           <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
-            {customerInfo.address.country === 'GB' ? 'Postcode' : 'Postal Code'} *
+            {(customerInfo.address?.country ?? '') === 'GB' ? 'Postcode' : 'Postal Code'} *
           </label>
           <input
             type="text"
             name="address.postal_code"
-            value={customerInfo.address.postal_code}
+            value={customerInfo.address?.postal_code ?? ''}
             onChange={onInputChange}
             required
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
@@ -228,7 +228,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           </label>
           <select
             name="address.country"
-            value={customerInfo.address.country}
+            value={customerInfo.address?.country ?? ''}
             onChange={onInputChange}
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 font-light font-inter text-base"
             style={{ fontSize: '16px' }}

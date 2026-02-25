@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '../../utils/supabaseClient';
 import { getApiUrl } from '../../utils/apiConfig';
 import OrderItem from '../../component/PaymentSucess/OrderItem';
+import { getOrderDisplayId } from '../../utils/paymentsucess/helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 
@@ -62,7 +63,7 @@ const MyOrders = () => {
 
     if (!isLoggedIn || !emailFromStorage) {
       // Redirect to login with return path
-      router.push('/login?redirect=/my-orders');
+      router.push('/Login?redirect=/My-orders');
       return;
     }
 
@@ -180,7 +181,7 @@ const MyOrders = () => {
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('userId'); // Clear user ID
     }
-    router.push('/login');
+    router.push('/Login');
   };
 
   if (loading) {
@@ -239,7 +240,7 @@ const MyOrders = () => {
             <div className="flex items-center gap-3 self-start">
               {isAuthorized && (
                 <button
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => router.push('/Dashboard')}
                   className="px-4 py-2 text-sm text-white bg-gray-900 hover:bg-gray-800 rounded-md transition-colors font-inter flex items-center gap-2"
                 >
                   <FontAwesomeIcon icon={faChartLine} className="w-4 h-4" />
@@ -286,7 +287,7 @@ const MyOrders = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-1 font-inter">
-                        Order #{order.order_id.slice(-8).toUpperCase()}
+                        Order #{getOrderDisplayId(order)}
                       </h3>
                       <p className="text-sm text-gray-600 font-inter">
                         Placed on {formatOrderDate(order.order_date)}

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getApiUrl } from '../../utils/apiConfig';
+import { getOrderNumberFromPaymentIntentId } from '../../utils/paymentsucess/helpers';
 import { getSupabaseClient } from '../../utils/supabaseClient';
 
 const SESSION_STORAGE_KEY = 'thehappycase_order_data';
@@ -13,26 +14,27 @@ const supabase = getSupabaseClient();
 /**
  * Hook to handle order processing (saving to Supabase and sending confirmation email)
  */
-export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
+export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumberFromPayload) => {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [orderSaved, setOrderSaved] = useState(false);
   const [recoveredData, setRecoveredData] = useState(null); // Store recovered data from sessionStorage
   const sessionId = searchParams?.get('session_id');
   const processingRef = useRef(false); // Prevent multiple simultaneous calls
-  const orderDataRef = useRef({ paymentIntent, customerInfo, items }); // Store order data in ref
-  const recoveryAttemptedRef = useRef(false); // Track if we've attempted recovery
+  const orderDataRef = useRef({ paymentIntent, customerInfo, items, orderNumber: orderNumberFromPayload });
+  const recoveryAttemptedRef = useRef(false);
 
   // Update ref when props change
   useEffect(() => {
     if (paymentIntent && customerInfo && items) {
-      orderDataRef.current = { paymentIntent, customerInfo, items };
+      orderDataRef.current = { paymentIntent, customerInfo, items, orderNumber: orderNumberFromPayload };
       // Save to sessionStorage as backup
       try {
         sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
           paymentIntent,
           customerInfo,
           items,
+          orderNumber: orderNumberFromPayload,
           timestamp: Date.now()
         }));
       } catch (e) {
@@ -44,28 +46,40 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
       }
       recoveryAttemptedRef.current = false;
     }
-  }, [paymentIntent, customerInfo, items, recoveredData]);
+  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, recoveredData]);
 
-  // Try to recover from sessionStorage if props are missing but sessionId exists
+  // Try to recover from sessionStorage if props are missing (e.g. after redirect or new tab)
+  // Check both keys: paymentSuccessData (set by Checkout) and thehappycase_order_data (set by this hook)
   useEffect(() => {
-    if ((!paymentIntent || !customerInfo || !items) && sessionId && !recoveredData && !recoveryAttemptedRef.current) {
-      recoveryAttemptedRef.current = true;
-      try {
-        const stored = sessionStorage.getItem(SESSION_STORAGE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          // Only use if less than 1 hour old
-          if (Date.now() - parsed.timestamp < 3600000) {
-            console.log('📦 Recovering order data from sessionStorage');
-            setRecoveredData(parsed);
-            orderDataRef.current = parsed;
-          }
+    if (paymentIntent && customerInfo && items) return;
+    if (recoveredData || recoveryAttemptedRef.current) return;
+
+    recoveryAttemptedRef.current = true;
+    const maxAge = 3600000; // 1 hour
+    try {
+      for (const key of ['paymentSuccessData', SESSION_STORAGE_KEY]) {
+        const stored = sessionStorage.getItem(key);
+        if (!stored) continue;
+        const parsed = JSON.parse(stored);
+        const ts = parsed?.timestamp;
+        if (ts != null && Date.now() - ts > maxAge) continue;
+        if (parsed?.customerInfo?.email && Array.isArray(parsed?.items) && parsed.items.length > 0) {
+          const payload = {
+            paymentIntent: parsed.paymentIntent ?? orderDataRef.current?.paymentIntent,
+            customerInfo: parsed.customerInfo,
+            items: parsed.items,
+            orderNumber: parsed.orderNumber ?? orderDataRef.current?.orderNumber,
+          };
+          console.log('📦 Recovering order data from sessionStorage:', key);
+          setRecoveredData(payload);
+          orderDataRef.current = payload;
+          break;
         }
-      } catch (e) {
-        console.warn('⚠️ Could not recover from sessionStorage:', e);
       }
+    } catch (e) {
+      console.warn('⚠️ Could not recover from sessionStorage:', e);
     }
-  }, [paymentIntent, customerInfo, items, sessionId, recoveredData]);
+  }, [paymentIntent, customerInfo, items, recoveredData]);
 
   // Save order to Supabase and send confirmation email
   useEffect(() => {
@@ -73,6 +87,10 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
     const orderPaymentIntent = paymentIntent || recoveredData?.paymentIntent || orderDataRef.current.paymentIntent;
     const orderCustomerInfo = customerInfo || recoveredData?.customerInfo || orderDataRef.current.customerInfo;
     const orderItems = items || recoveredData?.items || orderDataRef.current.items;
+    // Same order # as payment success: last 8 chars of payment intent id (e.g. 0AHYE3CX)
+    const derivedOrderNumber = orderPaymentIntent?.id ? getOrderNumberFromPaymentIntentId(orderPaymentIntent.id) : null;
+    const orderNumber = (derivedOrderNumber && derivedOrderNumber !== 'N/A' ? derivedOrderNumber : null)
+      || orderNumberFromPayload || recoveredData?.orderNumber || orderDataRef.current.orderNumber;
 
     // Only process if we have paymentIntent, customerInfo, and items, and haven't processed yet
     if (orderPaymentIntent && orderCustomerInfo?.email && orderItems && orderItems.length > 0 && !orderSaved && !processingRef.current) {
@@ -116,25 +134,64 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
           console.log('  - Customer Email:', orderCustomerInfo?.email);
           console.log('  - User ID:', userId || 'N/A');
           console.log('  - Items:', orderItems?.length || 0);
-          
-          // First, save order to Supabase
-          const saveOrderResponse = await fetch(getApiUrl('/api/save-order'), {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              paymentIntent: orderPaymentIntent,
-              customerInfo: orderCustomerInfo,
-              items: orderItems,
-              userId: userId, // Include user_id if available
-            }),
-          });
+
+          // Normalize payload so backend always receives valid shape
+          const paymentIntentPayload = {
+            id: orderPaymentIntent.id,
+            status: orderPaymentIntent.status || 'succeeded',
+            created: orderPaymentIntent.created ?? Math.floor(Date.now() / 1000),
+            currency: orderPaymentIntent.currency || 'gbp',
+            metadata: orderPaymentIntent.metadata || {},
+          };
+          const itemsPayload = orderItems.map((item) => ({
+            ...item,
+            quantity: item.quantity ?? 1,
+            totalPrice: item.totalPrice ?? item.price ?? item.basePrice ?? 0,
+            price: item.price ?? item.totalPrice ?? item.basePrice ?? 0,
+          }));
+
+          // Sends to /api/save-order → Netlify function → Supabase (order_number = generated code, not payment ID)
+          const savePayload = {
+            paymentIntent: paymentIntentPayload,
+            order_number: orderNumber,
+            customerInfo: orderCustomerInfo,
+            items: itemsPayload,
+            userId: userId,
+          };
+
+          const trySave = async (url) => {
+            const res = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(savePayload),
+            });
+            return { res, text: await res.text() };
+          };
+
+          const primaryUrl = getApiUrl('/api/save-order');
+          let result = await trySave(primaryUrl);
+
+          // Retry once after 2s on failure (cold start, network, or 503 Supabase not configured)
+          if (!result.res.ok && result.res.status !== 400) {
+            console.warn('⚠️ Save-order failed, retrying in 2s...', result.res.status);
+            await new Promise((r) => setTimeout(r, 2000));
+            result = await trySave(primaryUrl);
+          }
+
+          // If relative URL failed (e.g. 404 on Netlify), retry with explicit backend URL if set
+          const apiBase = typeof process !== 'undefined' ? process.env?.NEXT_PUBLIC_API_URL || process.env?.VITE_API_URL : '';
+          if (!result.res.ok && apiBase && primaryUrl === '/api/save-order') {
+            const fallbackUrl = `${apiBase.replace(/\/$/, '')}/api/save-order`;
+            console.warn('⚠️ Retrying save-order with backend URL:', fallbackUrl);
+            result = await trySave(fallbackUrl);
+          }
+
+          const saveOrderResponse = result.res;
+          const responseText = result.text;
 
           console.log('📤 Order save response status:', saveOrderResponse.status);
           
           // Check if response has content
-          const responseText = await saveOrderResponse.text();
           let saveOrderResult;
           
           if (!responseText || responseText.trim() === '') {
@@ -168,21 +225,18 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
               console.log('✅ Order saved to Supabase successfully:', saveOrderResult.order_id);
             }
             setOrderSaved(true);
-            // Clear sessionStorage after successful save (optional - keep for recovery)
-            // sessionStorage.removeItem(SESSION_STORAGE_KEY);
           } else {
-            console.error('❌ Failed to save order:', {
-              status: saveOrderResponse.status,
-              success: saveOrderResult.success,
-              error: saveOrderResult.error || saveOrderResult.message,
-              details: saveOrderResult.details
-            });
+            const serverMsg = saveOrderResult.message || saveOrderResult.error || 'Unknown error';
+            console.error('❌ Order not saved to Supabase:', serverMsg);
+            if (saveOrderResult.missing) {
+              console.error('   Missing env in Netlify:', saveOrderResult.missing.join(', '));
+            }
+            console.error('   Full response:', { status: saveOrderResponse.status, ...saveOrderResult });
             // If it's a duplicate key error but server returned success, mark as saved
             if (saveOrderResult.success && (saveOrderResult.message?.includes('already exists') || saveOrderResult.warning)) {
               console.log('⚠️ Duplicate order detected, marking as saved to prevent retries');
               setOrderSaved(true);
             }
-            // Continue with email even if order save fails
           }
 
           // Then, send order confirmation email (always attempt, even if order save failed)
@@ -250,7 +304,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items) => {
 
       saveOrderAndSendEmail();
     }
-  }, [paymentIntent, customerInfo, items, orderSaved, sessionId, recoveredData]);
+  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, orderSaved, sessionId, recoveredData]);
 
   // Handle Stripe redirect with session_id - try to fetch and process order
   useEffect(() => {

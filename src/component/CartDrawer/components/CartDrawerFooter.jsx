@@ -11,7 +11,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
   const handleContinueShopping = () => {
     onClose();
     // If on Create Yours page, refresh it
-    if (pathname === '/CreateYours') {
+    if (pathname === '/custom-passport-holder') {
       setTimeout(() => {
         window.location.reload();
       }, 100);
@@ -20,7 +20,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
 
   const handleCheckout = () => {
     onClose();
-    router.push('/checkout');
+    router.push('/Checkout');
   };
 
   return (

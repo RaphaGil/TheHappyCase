@@ -34,12 +34,12 @@ const CartPage = () => {
 
   const handleCheckout = () => {
     if (cart.length > 0) {
-      router.push("/checkout");
+      router.push("/Checkout");
     }
   };
 
   const handleContinueShopping = () => {
-    router.push("/CreateYours");
+    router.push("/custom-passport-holder");
   };
 
   const formattedTotalPrice = formatPrice(getTotalPrice());

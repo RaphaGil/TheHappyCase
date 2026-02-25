@@ -13,7 +13,7 @@ const CharmsBestSellers = () => {
     <div ref={sectionRef} className="w-full mt-12 md:mt-16 mb-12 md:mb-16">
       <div className="text-center mb-6 md:mb-8">
         <h2 className="text-xl md:text-2xl font-light text-gray-900 font-inter tracking-title">
-          CHARMS BEST SELLERS
+          BEST SELLING CHARMS
         </h2>
       
       </div>

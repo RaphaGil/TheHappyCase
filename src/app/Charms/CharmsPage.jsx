@@ -237,7 +237,7 @@ const Charms = () => {
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-3 sm:mb-4"></div>
           <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light px-4 font-inter">
-            <Link href="/CreateYours" className="text-gray-900 hover:text-gray-700 underline transition-colors">Create</Link> your custom case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself.
+            <Link href="/custom-passport-holder" className="text-gray-900 hover:text-gray-700 underline transition-colors">Create</Link> your custom case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself.
           </p>
         </div>
 

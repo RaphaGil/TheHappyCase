@@ -26,7 +26,7 @@ const BronzeCharms = () => {
       searchPlaceholder="Search charms..."
       inlineTabs={true}
       callToActionLinks={[
-        { path: '/CreateYours', label: 'Start Creating' },
+        { path: '/custom-passport-holder', label: 'Start Creating' },
         { path: '/ColorfulCharms', label: 'Colorful Charms' },
         { path: '/Flags', label: 'Flags' }
       ]}

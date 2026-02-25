@@ -3,6 +3,7 @@
 // Install dependencies: npm install express stripe cors dotenv resend @supabase/supabase-js
 
 import "dotenv/config";
+import { config as dotenvConfig } from "dotenv";
 import express from "express";
 import cors from "cors";
 import { Resend } from "resend";
@@ -11,6 +12,9 @@ import Stripe from "stripe";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+
+// Load .env.local so backend sees RESEND_API_KEY etc. when only .env.local exists (e.g. Next.js setup)
+try { dotenvConfig({ path: join(process.cwd(), ".env.local") }); } catch (_) {}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1278,10 +1282,11 @@ app.post("/api/save-order", async (req, res) => {
       return sendErrorResponse(400, 'Request body is required');
     }
 
-    const { paymentIntent, customerInfo, items, userId } = req.body;
+    const { paymentIntent, customerInfo, items, userId, order_number: orderNumberFromBody } = req.body;
 
     console.log("\n📦 Received order save request:");
     console.log("  - Payment Intent ID:", paymentIntent?.id || "MISSING");
+    console.log("  - Order # (from body):", orderNumberFromBody || "(will generate)");
     console.log("  - Customer Email:", customerInfo?.email || "MISSING");
     console.log("  - User ID:", userId || "N/A");
     console.log("  - Items Count:", items?.length || 0);
@@ -1681,9 +1686,20 @@ app.post("/api/save-order", async (req, res) => {
       }));
     }
 
+    // Order # = code generated in order summary (from frontend). Not the payment ID.
+    const orderNumber = orderNumberFromBody && String(orderNumberFromBody).trim()
+      ? String(orderNumberFromBody).trim()
+      : (() => {
+          const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+          let code = 'THC-';
+          for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+          return code;
+        })();
+
     // Prepare order data - matches SUPABASE_ORDERS_SCHEMA.sql structure
     const orderData = {
-      order_id: orderId, // VARCHAR(255) PRIMARY KEY
+      order_id: orderId, // VARCHAR(255) PRIMARY KEY (payment intent id)
+      order_number: orderNumber, // Order # generated in order summary
       payment_intent_id: paymentIntent.id, // VARCHAR(255)
       customer_email: customerInfo.email, // VARCHAR(255) NOT NULL
       customer_name: customerInfo.name || null, // VARCHAR(255)
@@ -2408,15 +2424,18 @@ app.get("/get-orders", async (req, res) => {
           }
         }
 
-        // Get tracking data from the map we created earlier
+        // Get tracking data from the map we created earlier; merge in carrier from metadata if not in tracking table
         const trackingData = trackingMap[order.order_id] || null;
+        const trackingWithCarrier = trackingData
+          ? { ...trackingData, carrier: trackingData.carrier || sanitizedMetadata?.carrier || null }
+          : (sanitizedMetadata?.carrier ? { carrier: sanitizedMetadata.carrier } : null);
 
         // Return sanitized order with all original fields
         const sanitizedOrder = {
           ...order,
           metadata: sanitizedMetadata,
           items: sanitizedItems,
-          tracking: trackingData
+          tracking: trackingWithCarrier
         };
 
         return sanitizedOrder;
@@ -2587,6 +2606,163 @@ app.get("/get-orders", async (req, res) => {
   }
 });
 
+// --- Send "Your pack is on its way" dispatch notification email (uses same Resend config as order confirmation) ---
+// Returns { sent: boolean, reason?: string } so caller can log and surface to client.
+async function sendDispatchNotificationEmail({ to, customerName, orderNumber, trackingNumber, carrier, trackingLink, deliveryEstimate, items, totalAmount, orderDate, shippingAddress, currency }) {
+  if (!to || typeof to !== 'string' || !to.trim()) {
+    console.warn('📧 Dispatch email skipped: no customer email');
+    return { sent: false, reason: 'no_customer_email' };
+  }
+  const toEmail = to.trim();
+
+  // Same Resend config as order confirmation: RESEND_API_KEY + FROM_EMAIL
+  // Server loads .env from project root; ensure RESEND_API_KEY is in .env (not only .env.local)
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const placeholderKey = 're_iV7Ucv7i_M6Bbi2iwk9HFxBzfNSsJqJWY';
+
+  console.log('\n📧 [Dispatch email] RESEND_API_KEY set:', !!resendApiKey, '| length:', resendApiKey?.length ?? 0, '| is placeholder:', resendApiKey === placeholderKey);
+
+  if (!resendApiKey || resendApiKey === placeholderKey) {
+    console.log('📧 DISPATCH EMAIL SKIPPED – Resend not configured. Set RESEND_API_KEY in .env (root) and restart server.');
+    console.log('   Get key: https://resend.com/api-keys | Would send to:', toEmail.replace(/(.{2}).*(@.*)/, '$1***$2'), '| Order:', orderNumber);
+    return { sent: false, reason: 'resend_not_configured' };
+  }
+
+  if (!resendApiKey.startsWith('re_') || resendApiKey.length < 20) {
+    console.error('❌ Dispatch email: Invalid Resend API key format (must start with re_ and be at least 20 chars)');
+    return { sent: false, reason: 'invalid_resend_key' };
+  }
+
+  let fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
+  const emailDomain = fromEmail.split('@')[1]?.toLowerCase();
+  const unverifiedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+  if (emailDomain && unverifiedDomains.includes(emailDomain)) {
+    console.warn('⚠️ FROM_EMAIL is unverified domain; using onboarding@resend.dev for dispatch email');
+    fromEmail = 'onboarding@resend.dev';
+  }
+
+  const websiteUrl = process.env.FRONTEND_URL || (process.env.CUSTOM_DOMAIN ? `https://${process.env.CUSTOM_DOMAIN}` : 'https://thehappycase.store');
+  const logoUrl = `${websiteUrl}/assets/logo.webp`;
+
+  const fontFamily = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  const textDark = '#1E3A8A';
+  const textMuted = '#64748B';
+  const gray900 = '#111827';
+  const gray600 = '#4b5563';
+  const gray200 = '#e5e7eb';
+  const accentBg = '#fef9c3';
+  const successGreen = '#16a34a';
+
+  const formatOrderDate = (d) => {
+    if (!d) return '';
+    const date = new Date(d);
+    return date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+  const formatPrice = (amt, curr = 'gbp') =>
+    new Intl.NumberFormat('en-GB', { style: 'currency', currency: (curr || 'gbp').toUpperCase() }).format(amt || 0);
+
+  const itemsToDisplay = Array.isArray(items) ? items : [];
+  let orderItemsHtml = '';
+  if (itemsToDisplay.length > 0) {
+    orderItemsHtml = itemsToDisplay.map((item) => {
+      const name = item.caseName || item.name || 'Custom Case';
+      const qty = item.quantity || 1;
+      let price = 0;
+      if (item.total_price != null) price = parseFloat(item.total_price) || 0;
+      else if (item.unit_price != null) price = (parseFloat(item.unit_price) || 0) * qty;
+      else if (item.totalPrice != null) price = parseFloat(item.totalPrice) || 0;
+      else if (item.price != null) price = (parseFloat(item.price) || 0) * qty;
+      return `<tr><td style="padding: 10px 12px; border-bottom: 1px solid ${gray200}; font-family: ${fontFamily}; color: ${gray900};">${name} × ${qty}</td><td style="padding: 10px 12px; border-bottom: 1px solid ${gray200}; text-align: right; font-weight: 500; font-family: ${fontFamily};">${formatPrice(price, currency)}</td></tr>`;
+    }).join('');
+  } else {
+    orderItemsHtml = `<tr><td colspan="2" style="padding: 12px; text-align: center; color: ${gray600}; font-family: ${fontFamily};">Order details</td></tr>`;
+  }
+
+  const orderSection = (itemsToDisplay.length > 0 || totalAmount || orderNumber || orderDate) ? `
+    <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid ${gray200};">
+      <h2 style="margin: 0 0 16px; font-size: 18px; color: ${textDark}; font-family: ${fontFamily}; font-weight: 600;">Order information</h2>
+      ${orderNumber ? `<p style="margin: 0 0 12px; font-family: ${fontFamily}; color: ${gray600}; font-size: 14px;"><strong>Order #:</strong> ${orderNumber}</p>` : ''}
+      ${orderDate ? `<p style="margin: 0 0 12px; font-family: ${fontFamily}; color: ${gray600}; font-size: 14px;"><strong>Date:</strong> ${formatOrderDate(orderDate)}</p>` : ''}
+      ${itemsToDisplay.length > 0 ? `
+        <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+          <thead><tr style="background: ${accentBg};"><th style="padding: 10px 12px; text-align: left; font-family: ${fontFamily}; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: ${gray900};">Item</th><th style="padding: 10px 12px; text-align: right; font-family: ${fontFamily}; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: ${gray900};">Price</th></tr></thead>
+          <tbody>${orderItemsHtml}</tbody>
+          ${totalAmount ? `<tfoot><tr><td style="padding: 12px; font-family: ${fontFamily}; font-weight: 600; color: ${gray900};">Total</td><td style="padding: 12px; text-align: right; font-weight: 600; font-family: ${fontFamily}; color: ${gray900};">${formatPrice(totalAmount, currency)}</td></tr></tfoot>` : ''}
+        </table>
+      ` : totalAmount ? `<p style="margin: 12px 0 0; font-family: ${fontFamily}; font-weight: 600; color: ${gray900};">Total: ${formatPrice(totalAmount, currency)}</p>` : ''}
+      ${shippingAddress && (shippingAddress.line1 || shippingAddress.city) ? `
+        <p style="margin: 16px 0 0; font-family: ${fontFamily}; color: ${gray600}; font-size: 14px;"><strong>Shipping to:</strong><br/>
+        ${[shippingAddress.line1, shippingAddress.line2, shippingAddress.city, shippingAddress.state, shippingAddress.postal_code, shippingAddress.country].filter(Boolean).join(', ')}</p>
+      ` : ''}
+    </div>
+  ` : '';
+
+  const displayName = (customerName && typeof customerName === 'string' && customerName.trim()) ? customerName.trim() : null;
+  const greeting = displayName ? `Hi ${displayName},` : 'Hi there,';
+
+  const trackButtonUrl = trackingLink || 'https://www.evri.com/track-a-parcel';
+  const trackButton = `
+    <div style="text-align: center; margin: 28px 0;">
+      <a href="${trackButtonUrl}" style="display: inline-block; padding: 14px 32px; background-color: ${gray900}; color: #ffffff; font-family: ${fontFamily}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 8px;">Track your parcel</a>
+    </div>
+  `;
+
+  const hasAnyTracking = carrier || trackingNumber || trackingLink;
+  const trackSection = hasAnyTracking ? `
+    <div style="background-color: ${accentBg}; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid ${gray200};">
+      <h2 style="margin: 0 0 16px; font-size: 18px; color: ${textDark}; font-family: ${fontFamily}; font-weight: 600;">Tracking details</h2>
+      <table style="width: 100%; border-collapse: collapse; font-family: ${fontFamily};">
+        ${carrier ? `<tr><td style="padding: 8px 0; color: ${gray600}; font-size: 14px;">Carrier:</td><td style="padding: 8px 0; text-align: right; color: ${gray900};">${carrier}</td></tr>` : ''}
+        ${trackingNumber ? `<tr><td style="padding: 8px 0; color: ${gray600}; font-size: 14px;">Tracking number:</td><td style="padding: 8px 0; text-align: right; font-family: ${fontFamily}; color: ${gray900};">${trackingNumber}</td></tr>` : ''}
+      </table>
+    </div>
+  ` : '';
+
+  const emailHtml = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Your parcel is on its way</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></head>
+    <body style="font-family: ${fontFamily}; line-height: 1.6; color: ${gray900}; max-width: 600px; margin: 0 auto; padding: 20px; font-weight: 400;">
+      <div style="background-color: #ffffff; border: 1px solid ${gray200}; border-radius: 8px; padding: 30px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <img src="${logoUrl}" alt="The Happy Case" style="max-width: 200px; height: auto; margin-bottom: 16px;" />
+          <h1 style="color: ${successGreen}; margin: 0; font-size: 24px; font-family: ${fontFamily}; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">Your parcel is on its way</h1>
+        </div>
+        <p style="margin: 0 0 16px; font-family: ${fontFamily};">${greeting}</p>
+        <p style="margin: 0 0 16px; font-family: ${fontFamily};">Your item has been dispatched and is on its way to you. <strong>Expected delivery:</strong> <strong>${deliveryEstimate}</strong>.</p>
+        ${trackButton}
+        ${orderSection}
+        ${trackSection}
+        <p style="margin: 20px 0 0; color: ${textMuted}; font-size: 14px; font-family: ${fontFamily};">Thank you for shopping with The Happy Case.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    console.log('📧 [Dispatch email] Sending via Resend – From:', fromEmail, '| To:', toEmail.replace(/(.{2}).*(@.*)/, '$1***$2'), '| Order:', orderNumber);
+
+    const resend = new Resend(resendApiKey);
+    const { data, error } = await resend.emails.send({
+      from: `The Happy Case <${fromEmail}>`,
+      to: toEmail,
+      subject: `Your order <${orderNumber} is on its way`,
+      html: emailHtml,
+    });
+
+    if (error) {
+      console.error('❌ Dispatch email Resend error:', error.message || JSON.stringify(error));
+      return { sent: false, reason: error.message || 'resend_error' };
+    }
+    console.log('📧 Dispatch notification email sent. Resend ID:', data?.id || 'N/A');
+    if (data?.id) console.log('   Status: https://resend.com/emails/' + data.id);
+    return { sent: true };
+  } catch (err) {
+    console.error('❌ sendDispatchNotificationEmail error:', err.message || err);
+    return { sent: false, reason: err.message || 'send_failed' };
+  }
+}
+
 // --- Update Order Dispatched Status ---
 // Support both PATCH and PUT for compatibility
 app.patch("/api/orders/:orderId/dispatched", async (req, res) => {
@@ -2603,6 +2779,7 @@ async function handleDispatchedUpdate(req, res) {
     dispatched: req.body?.dispatched,
     tracking_number: req.body?.tracking_number,
     tracking_link: req.body?.tracking_link,
+    carrier: req.body?.carrier,
     method: req.method
   });
   
@@ -2615,7 +2792,7 @@ async function handleDispatchedUpdate(req, res) {
     }
 
     const { orderId } = req.params;
-    const { dispatched, tracking_number, tracking_link } = req.body;
+    const { dispatched, tracking_number, tracking_link, carrier } = req.body;
 
     console.log('📦 Received tracking data:', {
       tracking_number: tracking_number,
@@ -2675,11 +2852,17 @@ async function handleDispatchedUpdate(req, res) {
       ? tracking_link.trim()
       : null;
 
+    const processedCarrier = (carrier && typeof carrier === 'string' && carrier.trim().length > 0)
+      ? carrier.trim()
+      : null;
+
     console.log('📦 Processed tracking data:', {
       processedTrackingNumber,
       processedTrackingLink,
+      processedCarrier,
       original_tracking_number: tracking_number,
-      original_tracking_link: tracking_link
+      original_tracking_link: tracking_link,
+      original_carrier: carrier
     });
 
     // Update metadata with dispatched status (keep tracking info separate in tracking table)
@@ -2688,6 +2871,7 @@ async function handleDispatchedUpdate(req, res) {
       ...existingMetadata,
       dispatched: dispatched === true, // Ensure it's always a boolean
       dispatched_at: dispatched === true ? new Date().toISOString() : null, // Explicitly set to null when false
+      carrier: dispatched === true ? (processedCarrier || existingMetadata.carrier || null) : null,
     };
 
     // Remove tracking fields from metadata (they're now in tracking table)
@@ -2708,14 +2892,14 @@ async function handleDispatchedUpdate(req, res) {
       });
     }
 
-    // Update order metadata (dispatched status only)
+    // Update order metadata (dispatched status only); select all columns so we have customer_email for dispatch email
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .update({ 
         metadata: updatedMetadata
       })
       .eq('order_id', orderId)
-      .select();
+      .select('*');
 
     if (orderError) {
       console.error("❌ Error updating order dispatched status:", orderError);
@@ -2731,7 +2915,7 @@ async function handleDispatchedUpdate(req, res) {
       });
     }
 
-    // Upsert tracking information to tracking table
+    // Upsert tracking information to tracking table (carrier stored in metadata for display/email)
     const trackingData = {
       order_id: orderId,
       tracking_number: processedTrackingNumber,
@@ -2757,17 +2941,84 @@ async function handleDispatchedUpdate(req, res) {
       console.log('✅ Tracking information saved:', trackingResult);
     }
 
-    // Combine order and tracking data for response
+    // Combine order and tracking data for response (include carrier from metadata for display)
+    const trackingWithCarrier = {
+      ...(trackingResult || {}),
+      carrier: processedCarrier || updatedMetadata.carrier || null
+    };
     const responseOrder = {
       ...orderData[0],
-      tracking: trackingResult || null
+      tracking: Object.keys(trackingWithCarrier).length ? trackingWithCarrier : null
     };
 
-    console.log(`✅ Order ${orderId} marked as ${dispatched ? 'dispatched' : 'not dispatched'}`);
+    // When marking as dispatched, send "Your pack is on its way" email to the customer (uses same Resend as order confirmation)
+    let dispatchEmailSent = false;
+    let dispatchEmailError = null;
+    if (dispatched === true) {
+      let customerEmail = orderData[0]?.customer_email;
+      if (!customerEmail && orderId) {
+        const { data: orderRow } = await supabase.from('orders').select('customer_email').eq('order_id', orderId).single();
+        customerEmail = orderRow?.customer_email;
+      }
+      console.log('📧 [Dispatch] Order', orderId, '| customer_email present:', !!customerEmail, customerEmail ? '(will attempt email)' : '(email skipped)');
+      const orderNumber = orderData[0]?.order_number || (orderId && String(orderId).slice(-8).toUpperCase()) || orderId;
+      const trackingNum = processedTrackingNumber || trackingResult?.tracking_number;
+      const trackingUrl = processedTrackingLink || trackingResult?.tracking_link;
+      const carrierName = processedCarrier || updatedMetadata.carrier || 'Carrier';
+      const country = orderData[0]?.shipping_address?.country?.toUpperCase?.() || '';
+      const addWorkingDays = (date, days) => {
+        const d = new Date(date);
+        let added = 0;
+        while (added < days) {
+          d.setDate(d.getDate() + 1);
+          if (d.getDay() !== 0 && d.getDay() !== 6) added++;
+        }
+        return d;
+      };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const isUK = country === 'GB' || country === 'UK';
+      const minDays = isUK ? 3 : 10;
+      const maxDays = isUK ? 5 : 15;
+      const dateFrom = addWorkingDays(today, minDays);
+      const dateTo = addWorkingDays(today, maxDays);
+      const fmt = (d) => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+      const deliveryEstimate = isUK
+        ? `between ${fmt(dateFrom)} and ${fmt(dateTo)} (3–5 working days)`
+        : `between ${fmt(dateFrom)} and ${fmt(dateTo)} (10–15 working days, Europe/USA)`;
+      if (customerEmail) {
+        const order = orderData[0];
+        const emailResult = await sendDispatchNotificationEmail({
+          to: customerEmail,
+          customerName: order?.customer_name,
+          orderNumber,
+          trackingNumber: trackingNum,
+          carrier: carrierName,
+          trackingLink: trackingUrl,
+          deliveryEstimate,
+          items: order?.items,
+          totalAmount: order?.total_amount,
+          orderDate: order?.order_date,
+          shippingAddress: order?.shipping_address,
+          currency: order?.currency || 'gbp'
+        });
+        dispatchEmailSent = emailResult.sent === true;
+        dispatchEmailError = emailResult.reason || (emailResult.sent ? null : 'unknown');
+        if (!dispatchEmailSent) {
+          console.warn('📧 Dispatch email not sent. Reason:', dispatchEmailError);
+        }
+      } else {
+        dispatchEmailError = 'no_customer_email';
+        console.warn('📧 Dispatch email not sent: no customer_email for order', orderId);
+      }
+    }
+
+    console.log(`✅ Order ${orderId} marked as ${dispatched ? 'dispatched' : 'not dispatched'}${dispatched ? ` | email sent: ${dispatchEmailSent}` : ''}`);
     res.json({ 
       success: true,
       order: responseOrder,
-      message: `Order ${dispatched ? 'marked as dispatched' : 'marked as not dispatched'}`
+      message: `Order ${dispatched ? 'marked as dispatched' : 'marked as not dispatched'}`,
+      ...(dispatched && { dispatchEmailSent, ...(dispatchEmailError && { dispatchEmailError }) })
     });
   } catch (error) {
     console.error("Error updating dispatched status:", error);
@@ -2790,6 +3041,24 @@ app.get("/session-status", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving session:", error);
     res.status(500).json({ error: error.message || "Failed to retrieve session" });
+  }
+});
+
+// --- Payment Intent details (for success page after redirect e.g. 3DS, Klarna) ---
+app.get("/payment-intent-details", async (req, res) => {
+  try {
+    const { payment_intent } = req.query;
+    if (!payment_intent) return res.status(400).json({ error: "payment_intent is required" });
+
+    const pi = await stripe.paymentIntents.retrieve(payment_intent);
+    res.json({
+      id: pi.id,
+      status: pi.status,
+      created: pi.created,
+    });
+  } catch (error) {
+    console.error("Error retrieving payment intent:", error);
+    res.status(500).json({ error: error.message || "Failed to retrieve payment intent" });
   }
 });
 

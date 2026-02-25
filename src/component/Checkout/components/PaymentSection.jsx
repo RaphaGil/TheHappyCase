@@ -39,105 +39,28 @@ const PaymentSection = ({
         '[data-testid="payment-element"]'
       );
       if (!paymentElement) return;
+      // Never hide the root container so the card form always stays visible
+      paymentElement.style.display = "";
+      paymentElement.style.visibility = "";
+      paymentElement.style.opacity = "";
 
-      const blockedKeywords = [
-        "revolut",
-        "amazon",
-        "link",
-        "cash app",
-        "cashapp",
-      ];
+      // Only hide payment-method tabs, not every element containing these words (e.g. "link" in "terms link")
+      const blockedKeywords = ["revolut", "amazon pay", "cash app", "cashapp"];
+      const isLinkPaymentTab = (label) => /^(stripe\s+)?link$|^link\s*$/i.test(String(label || "").trim());
 
-      const allowedKeywords = [
-        "card",
-        "klarna",
-        "clearpay",
-        "afterpay",
-        "apple pay",
-        "google pay",
-      ];
-
-      // Hide blocked payment methods aggressively
-      const allElements = paymentElement.querySelectorAll(
-        '[role="tab"], ' +
-        '[role="button"], ' +
-        'button, ' +
-        '[aria-label*="Revolut"], ' +
-        '[aria-label*="revolut"], ' +
-        '[aria-label*="Amazon"], ' +
-        '[aria-label*="amazon"], ' +
-        '[aria-label*="Link"], ' +
-        '[aria-label*="link"], ' +
-        '[data-testid*="revolut"], ' +
-        '[data-testid*="amazon"], ' +
-        '[data-testid*="link"], ' +
-        '[id*="revolut"], ' +
-        '[id*="amazon"], ' +
-        '[id*="RevolutPay"], ' +
-        '[id*="AmazonPay"], ' +
-        '[class*="revolut"], ' +
-        '[class*="amazon"], ' +
-        'iframe[src*="revolut"], ' +
-        'iframe[src*="Revolut"], ' +
-        'iframe[src*="amazon"], ' +
-        'iframe[src*="Amazon"], ' +
-        'iframe[title*="revolut"], ' +
-        'iframe[title*="Revolut"], ' +
-        'iframe[title*="amazon"], ' +
-        'iframe[title*="Amazon"]'
-      );
-
-      allElements.forEach((element) => {
-        const label = (
-          element.getAttribute("aria-label") ||
-          element.textContent ||
-          element.getAttribute("data-testid") ||
-          ""
-        ).toLowerCase();
-
-        const isBlocked = blockedKeywords.some((k) => label.includes(k));
-
-        if (isBlocked) {
-          element.style.display = "none !important";
-          element.style.visibility = "hidden !important";
-          element.style.opacity = "0 !important";
-          element.style.height = "0 !important";
-          element.style.margin = "0 !important";
-          element.style.padding = "0 !important";
-          element.setAttribute("aria-hidden", "true");
-          element.setAttribute("hidden", "true");
-
-          // Hide panel linked to that tab too
-          const panelId = element.getAttribute("aria-controls");
-          if (panelId) {
-            const panel = document.getElementById(panelId);
-            if (panel) {
-              panel.style.display = "none";
-              panel.style.visibility = "hidden";
-              panel.setAttribute("aria-hidden", "true");
-            }
-          }
-        }
-      });
-
-      // Ensure allowed payment methods are visible
       const tabs = paymentElement.querySelectorAll('[role="tab"]');
-
       tabs.forEach((tab) => {
-        const label = (
-          tab.getAttribute("aria-label") ||
-          tab.textContent ||
-          ""
-        ).toLowerCase();
+        const rawLabel = tab.getAttribute("aria-label") || tab.textContent || "";
+        const label = rawLabel.toLowerCase().trim();
 
-        const isAllowed = allowedKeywords.some((k) => label.includes(k));
-        const isBlocked = blockedKeywords.some((k) => label.includes(k));
+        const isBlocked =
+          blockedKeywords.some((k) => label.includes(k)) ||
+          isLinkPaymentTab(rawLabel);
 
         if (isBlocked) {
           tab.style.display = "none";
           tab.style.visibility = "hidden";
           tab.setAttribute("aria-hidden", "true");
-          
           const panelId = tab.getAttribute("aria-controls");
           if (panelId) {
             const panel = document.getElementById(panelId);
@@ -147,16 +70,19 @@ const PaymentSection = ({
               panel.setAttribute("aria-hidden", "true");
             }
           }
-        } else if (isAllowed) {
+        } else {
           tab.style.display = "";
           tab.style.visibility = "visible";
+          tab.style.opacity = "";
           tab.setAttribute("aria-hidden", "false");
-          
-          // Ensure Klarna stays visible
-          if (label.includes("klarna")) {
-            tab.style.display = "block";
-            tab.style.visibility = "visible";
-            tab.style.opacity = "1";
+          const panelId = tab.getAttribute("aria-controls");
+          if (panelId) {
+            const panel = document.getElementById(panelId);
+            if (panel) {
+              panel.style.display = "";
+              panel.style.visibility = "visible";
+              panel.setAttribute("aria-hidden", "false");
+            }
           }
         }
       });
@@ -203,7 +129,7 @@ const PaymentSection = ({
 
       <div
         ref={paymentElementRef}
-        className="p-3 sm:p-4 border border-gray-200 rounded-sm overflow-hidden"
+        className="p-3 sm:p-4 border border-gray-200 rounded-sm overflow-hidden min-h-[220px]"
       >
         {!paymentElementReady && (
           <div className="mb-2 text-xs sm:text-sm text-gray-500 font-light font-inter">

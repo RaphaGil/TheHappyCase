@@ -50,7 +50,7 @@ const DashboardIcon = ({ isMobile = false }) => {
 
   return (
     <Link
-      href="/dashboard"
+      href="/Dashboard"
       className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
       aria-label="Go to dashboard"
     >

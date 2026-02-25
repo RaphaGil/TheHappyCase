@@ -10,7 +10,7 @@ const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/CreateYours", label: "Create Yours" },
+    { href: "/custom-passport-holder", label: "Create Yours" },
     { href: "/PassportCases", label: "Passport Cases" },
     { href: "/Charms", label: "Charms" },
   ];

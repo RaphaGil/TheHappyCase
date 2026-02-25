@@ -130,18 +130,10 @@ const fetchInventoryFromSupabase = async () => {
                   return quantities;
                 }
               } else {
-                // eslint-disable-next-line no-console
-                console.error('[INVENTORY] ❌ Fallback URL also returned:', directResponse.status);
-                // eslint-disable-next-line no-console
-                console.error('[INVENTORY] ❌ Original URL:', apiUrl);
-                // eslint-disable-next-line no-console
-                console.error('[INVENTORY] ❌ Fallback URL:', functionUrl);
-                // eslint-disable-next-line no-console
-                console.error('[INVENTORY] ❌ Status:', directResponse.status, directResponse.statusText);
-                // eslint-disable-next-line no-console
-                console.error('[INVENTORY] 💡 Troubleshooting: Both API endpoint and Netlify function returned 404.');
-                // eslint-disable-next-line no-console
-                console.error('[INVENTORY] 💡 Check: 1) Function is deployed 2) Redirect rules in netlify.toml 3) Environment variables set');
+                // Fallback also 404 – use default stock (unlimited). Log once at warn level.
+                console.warn(
+                  '[INVENTORY] ⚠️ Inventory API unavailable (404). Using default stock. If you need live inventory, deploy the Netlify function or run the Express server in dev.'
+                );
               }
             } catch (directError) {
               // eslint-disable-next-line no-console
