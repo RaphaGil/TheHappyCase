@@ -12,7 +12,7 @@ export const metadata = {
     template: '%s | The Happy Case',
   },
   description: 'Create custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flagsand custom text. RFID-protected, water-resistant passport covers perfect for travelers.',
-  keywords: ['passport case', 'custom passport holder', 'travel gifts', 'personalized passport cover', 'charm passport case', 'country flags', 'bronze pins', 'colorful pins', 'hand made gifts', 'travel gifts', 'personalized gifts', 'custom gifts', 'custom passport cases', 'custom passport holders', 'custom passport cases with charms', 'custom passport holders with charms', 'custom passport cases with charms and pins', 'custom passport holders with charms and pins'],
+  keywords: ['custom passport holder', 'custom passport cover', 'custom passport case', 'custom passport wallet', 'custom passport stamp', 'passport case', 'travel gifts', 'personalized passport cover', 'charm passport case', 'country flags', 'bronze pins', 'colorful pins', 'hand made gifts', 'personalized gifts', 'custom gifts', 'custom passport cases', 'custom passport holders', 'custom passport cases with charms', 'custom passport holders with charms', 'custom passport cases with charms and pins','custom passport case with name','personalized passport case', 'custom passport holders with charms and pins', 'customized wallet'],
   authors: [{ name: 'The Happy Case' }],
   openGraph: {
     type: 'website',
