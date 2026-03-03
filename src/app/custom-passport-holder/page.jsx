@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import CreateYours from '../CreateYours/CreateYoursPage';
+import CreateYours from '../CreateYours/CreateYoursPageNew';
 import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 export const metadata = {

@@ -4,10 +4,10 @@ const ViewMoreImagesButton = ({ caseImages, onOpenModal }) => {
   if (!caseImages || caseImages.length === 0) return null;
 
   return (
-    <div className="flex-1 min-w-0 mt-12">
+    <div className="flex-1 min-w-0">
       <button
         onClick={onOpenModal}
-        className="w-full px-3 md:px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md" 
+        className="w-full px-3 md:px-4 py-2.5 text-xs xs:text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 active:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow" 
         style={{fontFamily: "'Poppins', sans-serif"}}
       >
         <svg className="w-4 h-4 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

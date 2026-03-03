@@ -795,7 +795,7 @@ const Canvas = ({
       <div className="w-full h-full relative flex item-top justify-center  ">
         <canvas 
           ref={canvasRef} 
-          className="w-full h-screen "
+          className="w-full h-full"
           style={{ 
             background: 'transparent',
             width: '100%',

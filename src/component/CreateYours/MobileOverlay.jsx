@@ -41,7 +41,7 @@ const MobileOverlay = ({
   const selectedFilterLabel = filterTabs.find(tab => tab.key === mobileSubCategory)?.label || 'ALL';
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 md:p-6">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
       <div className={`bg-white rounded-sm p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 w-full overflow-y-auto border border-gray-200 ${
         mobileCurrentStep === 'charms' 
           ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg h-fit' 
@@ -282,7 +282,7 @@ const MobileOverlay = ({
                 
                   <div className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
                     <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
-                      {filteredPinsForMobile.map((pin) => {
+                      {filteredPinsForMobile.map((pin, index) => {
                         const isSelected = selectedPins.some((p) => p.pin === pin);
                         // Get size label based on pin.size from products.json
                         const getSizeLabel = (size) => {
@@ -366,7 +366,7 @@ const MobileOverlay = ({
                         
                         return (
                           <button
-                            key={pin.name}
+                            key={pin.id ?? `${pin.src}-${index}`}
                             onClick={() => !isSoldOut && handlePinSelection(pin)}
                             disabled={isSoldOut}
                             className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center ${

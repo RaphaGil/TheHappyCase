@@ -82,8 +82,8 @@ const CustomTextSection = ({
               setCustomTextAdded(false);
             }}
             onFocus={handleInputFocus}
-            placeholder="e.g. Your name"
-            className="w-full px-3 py-2 border border-gray-200  focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
+            placeholder="e.g. Your name or initials"
+            className="w-full px-3 py-2.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light text-sm font-inter transition-colors"
             maxLength={40}
           />
           <p className="mt-1 text-sm text-gray-500 font-inter">
@@ -105,14 +105,14 @@ const CustomTextSection = ({
           <button
             onClick={handleAddText}
             disabled={!customText.trim()}
-            className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed active:scale-95 disabled:scale-100 font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border hover:border-btn-light-blue-hover transition-all duration-200"
+            className="flex-1 px-4 py-2 text-xs font-medium uppercase tracking-wider rounded-md disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border hover:border-btn-light-blue-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
           >
            Add Text
           </button>
           <button
             onClick={handleClear}
             disabled={!customText.trim()}
-            className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
+            className="px-4 py-2 text-xs font-medium uppercase tracking-wider rounded-md disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
           >
            Clear
           </button>

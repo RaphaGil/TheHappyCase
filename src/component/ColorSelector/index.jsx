@@ -90,7 +90,7 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
 
   return (
     <div className="overflow-visible">
-      <div className="flex flex-wrap gap-3 overflow-visible justify-center">
+      <div className="flex flex-wrap gap-2 sm:gap-3 overflow-visible justify-center">
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;

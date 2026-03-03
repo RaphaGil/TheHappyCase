@@ -70,7 +70,7 @@ const CategorySelector = ({
   onDropdownToggle,
   getPreviewImage,
 }) => (
-  <div className="grid grid-cols-3 gap-2 mb-4">
+  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3 sm:mb-4">
     {CATEGORY_OPTIONS.map((opt) => {
       const previewImage = getPreviewImage(opt.value);
       const isActive = selectedCategory === opt.value;
@@ -307,7 +307,7 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
   };
 
   return (
-    <div className="max-h-80 sm:max-h-96 overflow-y-auto p-2">
+    <div className="max-h-64 sm:max-h-72 overflow-y-auto hide-scrollbar p-2">
       <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2 justify-items-center md:max-w-3xl mx-auto">
         {filteredPins.map((pin, index) => {
           const selectedPinEntry = selectedPins.find((p) => p.pin === pin);

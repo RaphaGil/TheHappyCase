@@ -29,20 +29,20 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-      <div className={`${isMobile ? 'pt-0 mt-0 bg-gray-100' : 'pt-14'} flex-shrink-0 relative z-0  ${isMobile ? '' : 'mt-auto flex flex-col justify-between'}`}>
+      <div className={`${isMobile ? 'pt-0 px-0 py-0 rounded-none w-full' : 'pt-3 md:pt-4 md:sticky md:bottom-0 md:bg-white md:pb-3 '} flex-shrink-0 relative z-0  ${isMobile ? '' : 'flex flex-col justify-between'}`}>
         {/* Mobile: Price + Quantity + Add to Cart in same row, then Terms below */}
         {isMobile ? (
           <>
-            {/* Subtotal Price, Quantity Selector, and Add to Cart Button - All in same row */}
-            <div className="flex flex-row items-start justify-between mt-2 ">
+            {/* Subtotal Price, Quantity Selector, and Add to Cart Button - Stack on xs, row on sm+ */}
+            <div className="flex flex-col xs:flex-row xs:items-start xs:justify-between gap-3 xs:gap-0 mt-2 min-w-0 w-full">
               {/* Subtotal Price and Terms - Left */}
-              <div className="flex flex-col gap-1.5">
-                {/* Total Price */}
+              <div className="flex flex-col gap-1.5 min-w-0">
+                {/* Total Price - font matches Add to Cart (font-inter, font-light) */}
                 <div className="flex flex-row items-center gap-1.5 mb-1">
-                  <h3 className="text-[14px] xs:text-sm text-gray-400 font-light font-inter">
+                  <h3 className="text-[14px] xs:text-sm text-gray-900 font-light font-inter">
                     Total:
                   </h3>
-                  <h3 className={`text-md font-bold xs:text-base sm:text-lg text-gray-900  font-inter leading-none mb-1`}>
+                  <h3 className="text-md xs:text-base sm:text-lg text-gray-900 font-light font-inter leading-none mb-1">
                     {formatPrice(totalPrice)}
                   </h3>
                 </div>
@@ -99,8 +99,8 @@ const PriceSummary = ({
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="flex-1 min-w-0 ">
-                  <AddToCartBtn 
+                <div className="flex-1 min-w-0 min-h-[44px]">
+                  <AddToCartBtn
                     product={{
                       id: `custom-${Date.now()}`,
                       name: `${selectedCase?.name || 'Custom Case'} with ${selectedPins.length} charms`,
@@ -120,7 +120,7 @@ const PriceSummary = ({
                       quantity: quantity
                     }}
                     onAdd={onAddToCart}
-                    className="!w-full cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 px-8 text-sm font-light whitespace-nowrap"
+                    className="!w-full cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 px-4 xs:px-6 sm:px-8 text-xs xs:text-sm font-light whitespace-nowrap rounded-sm"
                     disabled={false}
                   />
                 </div>
@@ -138,18 +138,18 @@ const PriceSummary = ({
           </>
         ) : (
           <>
-            {/* Desktop: Price on top */}
-            <div className={`flex items-end flex-row mb-4 gap-2`}>
-              <h3 className={`text-sm text-gray-400 font-light  `}>
-                Total: 
+            {/* Desktop: Price on top - font matches Add to Cart (font-inter, font-light) */}
+            <div className="flex items-baseline flex-row mb-3 gap-2 ">
+              <h3 className="text-sm text-gray-600 font-light font-inter">
+                Total
               </h3>
-              <h3 className={`text-md font-bold text-gray-900 font-inter `}>
+              <h3 className="text-xl font-semibold text-gray-900 font-inter">
                 {formatPrice(totalPrice)}
               </h3>
             </div>
 
             {/* Desktop: Terms Agreement Checkbox - Before Add to Cart */}
-            <div className="mb-4 ">
+            <div className="mb-3">
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -178,7 +178,7 @@ const PriceSummary = ({
             </div>
 
             {/* Desktop: Quantity selector and Add to Cart side by side - Pushed to bottom */}
-            <div className={`mt-auto flex flex-row gap-1.5 xs:gap-2 items-center`}>
+            <div className={`mt-auto flex flex-row gap-1.5 xs:gap-2 items-center justify-center`}>
               <div className={`flex items-center border border-gray-200 rounded-sm py-2.5 px-1`}>
                 <button
                   onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
@@ -199,7 +199,7 @@ const PriceSummary = ({
                 </button>
               </div>
              
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <AddToCartBtn 
                   product={{
                     id: `custom-${Date.now()}`,

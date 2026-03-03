@@ -65,7 +65,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
 
   return (
     <div className="w-full">
-      <div className="flex flex-nowrap gap-2 xs:gap-2.5 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 justify-center items-start">
+      <div className="flex flex-nowrap gap-1.5 xs:gap-2 sm:gap-2.5 md:gap-3 lg:gap-4 justify-center items-start">
         {CASE_OPTIONS.map((opt) => {
           const caseImage = getCaseImage(opt.value);
           const soldOut = isCaseTypeSoldOut(opt.value);
@@ -74,7 +74,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
           return (
             <div
               key={opt.value}
-              className={`transition-all duration-200 md:duration-300 lg:duration-500 flex flex-col items-center p-1.5 xs:p-2 sm:p-2.5 md:p-3 rounded-lg flex-1 max-w-[120px] xs:max-w-[140px] sm:max-w-[160px] md:max-w-[180px] lg:max-w-[200px] xl:max-w-[220px] ${isSelected ? 'bg-gray-50' : ''} ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              className={`transition-all duration-200 md:duration-300 lg:duration-500 flex flex-col items-center p-1.5 xs:p-2 sm:p-2 md:p-2.5 rounded-lg flex-1 max-w-[100px] xs:max-w-[120px] sm:max-w-[140px] md:max-w-[150px] lg:max-w-[170px] xl:max-w-[190px] ${isSelected ? 'bg-gray-50' : ''} ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               onClick={() => {
                 if (!soldOut) {
                   onSelect(opt.value);
@@ -97,7 +97,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                     <img
                       src={normalizeImagePath(caseImage)}
                       alt={opt.label}
-                      className="w-full h-full object-contain p-1 xs:p-1.5 sm:p-2 md:p-2.5 lg:p-3 xl:p-4"
+                      className="w-full h-full object-contain p-1 xs:p-1.5 sm:p-2 md:p-2 lg:p-2.5"
                       loading="lazy"
                       onError={(e) => {
                         e.target.style.display = 'none';
@@ -113,7 +113,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                   </div>
                 )}
               </div>
-              <div className="flex flex-col items-center mt-2 md:mt-3 lg:mt-4 text-center">
+              <div className="flex flex-col items-center mt-1.5 md:mt-2 text-center">
                 <span className={`text-xs md:text-sm font-medium tracking-wider ${isSelected ? 'text-gray-700' : 'text-gray-500'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
                   {opt.label.split(' - ')[0]}
                 </span>
