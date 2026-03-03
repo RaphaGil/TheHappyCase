@@ -129,7 +129,7 @@ const AddTextModal = ({
               placeholder="e.g. Your name"
               className="w-full px-3 py-2 border border-gray-200 focus:outline-none focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-thin text-sm font-inter"
               style={{ fontSize: '16px' }}
-              maxLength={40}
+              maxLength={MAX_TEXT_LENGTH}
             />
             <p className="mt-1 text-sm text-gray-500 font-inter">
               Up to {MAX_TEXT_LENGTH} characters. Double-click the text on the case to edit or move it.

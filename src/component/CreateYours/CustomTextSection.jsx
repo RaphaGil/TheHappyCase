@@ -84,7 +84,7 @@ const CustomTextSection = ({
             onFocus={handleInputFocus}
             placeholder="e.g. Your name or initials"
             className="w-full px-3 py-2.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light text-sm font-inter transition-colors"
-            maxLength={40}
+            maxLength={MAX_TEXT_LENGTH}
           />
           <p className="mt-1 text-sm text-gray-500 font-inter">
             Up to {MAX_TEXT_LENGTH} characters. Double-click the text on the case to edit or move it.

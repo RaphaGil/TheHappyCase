@@ -1,18 +1,18 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { useCart } from '../../../context/CartContext';
 
 const CartIcon = ({ isMobile = false }) => {
-  const { getTotalQuantity } = useCart();
+  const { getTotalQuantity, openCartDrawer } = useCart();
   const totalQuantity = getTotalQuantity();
 
   return (
-    <Link
-      href="/cart"
+    <button
+      type="button"
+      onClick={openCartDrawer}
       className={`${isMobile ? 'flex md:hidden' : 'hidden md:flex'} items-center p-2 text-gray-900 hover:text-gray-700 relative transition-colors z-10`}
-      aria-label="Go to cart"
+      aria-label="Open cart"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@ const CartIcon = ({ isMobile = false }) => {
           {totalQuantity}
         </span>
       )}
-    </Link>
+    </button>
   );
 };
 
