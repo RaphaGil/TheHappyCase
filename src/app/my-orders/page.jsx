@@ -1,4 +1,4 @@
-import MyOrders from './MyOrdersPage';
+import MyOrders from '@/component/MyOrders';
 
 export const metadata = {
   title: 'My Orders',
