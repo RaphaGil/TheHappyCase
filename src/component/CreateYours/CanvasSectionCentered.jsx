@@ -23,8 +23,8 @@ const CanvasSectionCentered = ({
 }) => {
   return (
     <div
-      className={`flex flex-col  w-full h-full md:items-center ${
-        isMobile ? 'flex-1 min-h-0 py-4 justify-center' : 'md:py-0 md:justify-center'
+      className={`flex flex-col w-full h-full md:items-center ${
+        isMobile ? 'flex-1 min-h-0 py-4 justify-center -mt-14 md:mt-0' : 'md:py-0 md:justify-center'
       }`}
     >
       {/* Canvas - centered on mobile, buttons pushed to bottom */}

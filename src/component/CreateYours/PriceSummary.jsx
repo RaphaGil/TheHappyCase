@@ -99,7 +99,7 @@ const PriceSummary = ({
                 </div>
 
                 {/* Add to Cart Button */}
-                <div className="flex-1 min-w-0 min-h-[44px]">
+                <div className="flex-1 min-w-0 min-h-[52px]">
                   <AddToCartBtn
                     product={{
                       id: `custom-${Date.now()}`,
@@ -120,7 +120,7 @@ const PriceSummary = ({
                       quantity: quantity
                     }}
                     onAdd={onAddToCart}
-                    className="!w-full cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 px-4 xs:px-6 sm:px-8 text-xs xs:text-sm font-light whitespace-nowrap rounded-sm"
+                    className="!w-full cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-3 px-4 xs:py-3.5 xs:px-6 sm:px-8 text-sm xs:text-sm font-light whitespace-nowrap rounded-sm min-h-[52px]"
                     disabled={false}
                   />
                 </div>
