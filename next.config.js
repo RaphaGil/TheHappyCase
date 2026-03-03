@@ -6,6 +6,13 @@ const __dirname = dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Explicitly pass Stripe key so it's available at build time (for static export)
+  env: {
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+      process.env.VITE_STRIPE_PUBLISHABLE_KEY ||
+      '',
+  },
   // Set the workspace root to silence the lockfile warning
   // This tells Next.js/Turbopack where the project root is
   // Using absolute path as required by Turbopack
