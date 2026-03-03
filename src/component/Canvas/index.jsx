@@ -83,9 +83,9 @@ const Canvas = ({
           scaleX,
           scaleY,
           selectable: !isCase,
-          hasControls: isCase,
-          lockScalingX: isCase,
-          lockScalingY: isCase,
+          hasControls: false,
+          lockScalingX: true,
+          lockScalingY: true,
           borderColor: "transparent",
           cornerColor: isCase ? "transparent" : "blue",
           cornerSize: isCase ? 0 : 8,
@@ -337,10 +337,13 @@ const Canvas = ({
             cornerSize: 0,
             transparentCorners: true,
           });
-        } else if (obj.type === 'image') {
+        } else if (obj.type === 'image' && !obj.isCase) {
           obj.set({
             hasBorders: false,
             borderColor: 'transparent',
+            lockScalingX: true,
+            lockScalingY: true,
+            hasControls: false,
           });
         }
         
@@ -383,10 +386,13 @@ const Canvas = ({
             cornerSize: 0,
             transparentCorners: true,
           });
-        } else if (obj.type === 'image') {
+        } else if (obj.type === 'image' && !obj.isCase) {
           obj.set({
             hasBorders: false,
             borderColor: 'transparent',
+            lockScalingX: true,
+            lockScalingY: true,
+            hasControls: false,
           });
         }
         // Create custom border rectangle
@@ -423,10 +429,13 @@ const Canvas = ({
             cornerSize: 0,
             transparentCorners: true,
           });
-        } else if (obj.type === 'image') {
+        } else if (obj.type === 'image' && !obj.isCase) {
           obj.set({
             hasBorders: false,
             borderColor: 'transparent',
+            lockScalingX: true,
+            lockScalingY: true,
+            hasControls: false,
           });
         }
         // Update custom border rectangle
