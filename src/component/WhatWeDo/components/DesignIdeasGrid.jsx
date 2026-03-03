@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
+import { getNetlifyImageUrl, getNetlifyImageSrcSet } from '../../../utils/netlifyImage';
 
 const DesignIdeasGrid = ({ images }) => {
   const [visibleImages, setVisibleImages] = useState(new Set());
@@ -54,7 +55,18 @@ const DesignIdeasGrid = ({ images }) => {
                 aria-label={`Go to ${imageTexts[index] || 'charms'} page`}
               >
                 <img
-                  src={normalizeImagePath(image)}
+                  src={getNetlifyImageUrl(normalizeImagePath(image), {
+                    w: 400,
+                    h: 400,
+                    fit: 'cover',
+                    q: 75,
+                  })}
+                  srcSet={getNetlifyImageSrcSet(normalizeImagePath(image), [400, 800], {
+                    h: 400,
+                    fit: 'cover',
+                    q: 75,
+                  })}
+                  sizes="(max-width: 768px) 50vw, 25vw"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   alt={`Design Idea ${index + 1} - ${imageTexts[index] || ''}`}
                   loading={index < 2 ? "eager" : "lazy"}
