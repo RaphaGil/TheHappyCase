@@ -24,59 +24,59 @@ const PAGE_META = {
     title: 'The Happy Case - Custom Passport Cases with Personalized Charms',
     description: 'Create custom passport cases with personalized charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, and custom text. RFID-protected, water-resistant passport covers perfect for travelers. Free shipping available.',
   },
-  '/CreateYours': {
-    title: 'Custom Passport Holder | Design Your Own | The Happy Case',
-    description: 'Design your custom passport holder online. Choose from Economy, First Class, or Business Class styles. Add personalized charms, flags, and text. Create a unique passport case that reflects your travel style.',
-  },
   '/custom-passport-holder': {
     title: 'Custom Passport Holder | Design Your Own | The Happy Case',
     description: 'Design your custom passport holder online. Choose from Economy, First Class, or Business Class styles. Add personalized charms, flags, and text. Create a unique passport case that reflects your travel style.',
   },
-  '/DesignIdeas': {
+  '/design-ideas': {
     title: 'Passport Case Design Ideas | The Happy Case',
     description: 'Browse 40+ passport case design ideas and inspiration. Explore our gallery of custom passport holders featuring personalized charms, bronze pins, colorful designs, and unique travel-themed patterns. Get inspired to create your own custom passport cover.',
   },
-  '/PassportCases': {
+  '/passport-cases': {
     title: 'Passport Cases | Economy, First Class & Business Class | The Happy Case',
     description: 'Shop premium passport cases in 3 styles: Economy, First Class, and Business Class. Choose from multiple colors, RFID protection, and personalize with charms and custom text. Water-resistant passport holders with card slots and boarding pass pockets. Perfect travel accessories.',
   },
-  '/PassportCases/Economy': {
+  '/passport-cases/economy': {
     title: 'Economy Passport Case | The Happy Case',
     description: 'Economy passport case - slim, lightweight passport holder with RFID protection. Available in 11 colors including pink, red, blue, brown, and black. Customize with travel charms and personalized text. Features card slots, boarding pass pocket, and magnetic closure. Perfect budget-friendly travel accessory.',
   },
-  '/PassportCases/FirstClass': {
+  '/passport-cases/first-class': {
     title: 'First Class Passport Case | The Happy Case',
     description: 'First Class passport case - premium passport holder with extra space for stamps, visas, and travel documents. RFID-protected design available in multiple colors. Customize with charms and personalized text. Features multiple card slots, boarding pass pocket, and premium materials. Ideal for frequent travelers.',
   },
-  '/PassportCases/BusinessClass': {
+  '/passport-cases/business-class': {
     title: 'Business Class Passport Case | The Happy Case',
     description: 'Business Class passport case - luxury passport holder with premium materials and elegant design. RFID-protected, water-resistant passport cover with spacious interior for documents, cards, and boarding passes. Customize with charms and personalized text. Perfect for business travelers and luxury travel enthusiasts.',
   },
-  '/Charms': {
+  '/charms': {
     title: 'Passport Charms & Pins | Bronze & Colorful | The Happy Case',
     description: 'Browse 40+ passport charms and decorative pins for your custom passport case. Choose from bronze metallic charms or colorful designs featuring airplanes, landmarks, flags, and travel-themed icons. Personalize your passport holder with unique charm combinations. Easy to attach, perfect for travel enthusiasts.',
   },
-  '/Charms/Colorful': {
+  '/charms/colorful': {
     title: 'Colorful Passport Charms | The Happy Case',
     description: 'Colorful passport charms and decorative pins for custom passport cases. Vibrant travel-themed designs including airplanes, landmarks, flags, and fun travel icons. Add personality to your passport holder with these eye-catching accessories. Perfect for travelers who love bold, colorful designs.',
   },
-  '/Charms/Bronze': {
+  '/charms/bronze': {
     title: 'Bronze Passport Charms | The Happy Case',
     description: 'Bronze passport charms and pins with classic metallic finishes. Elegant travel-themed designs including airplanes, landmarks, and sophisticated travel icons. Perfect for travelers who prefer timeless, elegant passport case accessories. Easy to attach and durable metallic construction.',
   },
-  '/Flags': {
+  '/charms/flags': {
+    title: 'Flag Charms for Passport Cases | The Happy Case',
+    description: 'Add flag charms to your passport case to show your heritage or commemorate your travels. Choose from country flags and national symbols.',
+  },
+  '/flags': {
     title: 'Flag Charms for Passport Cases | The Happy Case',
     description: 'Add flag charms to your passport case to show your heritage or commemorate your travels. Choose from country flags and national symbols. Personalize your passport holder with flags representing your home country or destinations you\'ve visited. Perfect for travelers celebrating their cultural identity and travel memories.',
   },
-  '/ColorfulCharms': {
+  '/colorful-charms': {
     title: 'Colorful Passport Charms | The Happy Case',
     description: 'Colorful passport charms and decorative pins for custom passport cases. Vibrant travel-themed designs including airplanes, landmarks, flags, and fun travel icons. Add personality to your passport holder with these eye-catching accessories. Perfect for travelers who love bold, colorful designs.',
   },
-  '/BronzeCharms': {
+  '/bronze-charms': {
     title: 'Bronze Passport Charms | The Happy Case',
     description: 'Bronze passport charms and pins with classic metallic finishes. Elegant travel-themed designs including airplanes, landmarks, and sophisticated travel icons. Perfect for travelers who prefer timeless, elegant passport case accessories. Easy to attach and durable metallic construction.',
   },
-  '/Cart': {
+  '/cart': {
     title: 'Shopping Cart | The Happy Case',
     description: 'Review your custom passport cases and charms in your shopping cart. Check your personalized passport holder design, selected charms, and quantities. Complete your secure checkout at The Happy Case. Free shipping available on orders.',
   },
@@ -96,7 +96,7 @@ const PAGE_META = {
     title: 'Shipping Information | The Happy Case',
     description: 'Shipping options and delivery times for The Happy Case custom passport cases. Free shipping available. Learn about our domestic and international shipping rates, estimated delivery times, and tracking information. Fast and secure delivery for your personalized passport holder.',
   },
-  '/Privacy-policy': {
+  '/privacy-policy': {
     title: 'Privacy Policy | The Happy Case',
     description: 'The Happy Case privacy policy. How we collect, use, and protect your personal information when you shop for custom passport cases and charms.',
   },
@@ -104,23 +104,23 @@ const PAGE_META = {
     title: 'FAQ | The Happy Case',
     description: 'Frequently asked questions about The Happy Case custom passport cases. Learn about customization, shipping, returns, payment, sizing, and care.',
   },
-  '/Checkout': {
+  '/checkout': {
     title: 'Checkout | The Happy Case',
     description: 'Complete your order with secure checkout for your custom passport case. Safe payment processing with Stripe. Review your personalized passport holder, charms, and shipping details before finalizing your purchase. Multiple payment options available.',
   },
-  '/Payment-success': {
+  '/payment-success': {
     title: 'Order Confirmed | The Happy Case',
     description: 'Thank you for your order! Your custom passport case is being prepared and will be on its way soon. You\'ll receive a confirmation email with order details and tracking information. We\'re excited to send you your personalized passport holder.',
   },
-  '/Dashboard': {
+  '/dashboard': {
     title: 'Dashboard | The Happy Case',
     description: 'Admin dashboard for The Happy Case.',
   },
-  '/My-orders': {
+  '/my-orders': {
     title: 'My Orders | The Happy Case',
     description: 'View your order history and track your custom passport cases.',
   },
-  '/Login': {
+  '/login': {
     title: 'Login | The Happy Case',
     description: 'Sign in to your account.',
   },

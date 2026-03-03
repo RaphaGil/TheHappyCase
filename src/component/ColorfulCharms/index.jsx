@@ -28,8 +28,8 @@ const ColorfulCharms = () => {
       searchPlaceholder="Search charms..."
       callToActionLinks={[
         { path: '/custom-passport-holder', label: 'Start Creating' },
-        { path: '/BronzeCharms', label: 'Bronze Charms' },
-        { path: '/Flags', label: 'Flags' }
+        { path: '/bronze-charms', label: 'Bronze Charms' },
+        { path: '/flags', label: 'Flags' }
       ]}
     />
   );

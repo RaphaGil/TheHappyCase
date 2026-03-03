@@ -28,19 +28,22 @@ import {
   ITEMS_PER_PAGE
 } from '../../utils/charms/constants';
 
-// Map URL path parameter to internal charm type
+// Map URL path parameter (kebab-case) to internal charm type
 const PATH_TO_TYPE = {
-  'Bronze': 'bronze',
-  'Colorful': 'colorful',
+  'colorful': 'colorful',
+  'bronze': 'bronze',
   'flags': 'flags',
-  'Flags': 'flags'
+  // Legacy support
+  'Colorful': 'colorful',
+  'Bronze': 'bronze',
+  'Flags': 'flags',
 };
 
-// Map internal charm type to URL path parameter
+// Map internal charm type to URL path parameter (kebab-case)
 const TYPE_TO_PATH = {
-  'bronze': 'Bronze',
-  'colorful': 'Colorful',
-  'flags': 'flags'
+  'colorful': 'colorful',
+  'bronze': 'bronze',
+  'flags': 'flags',
 };
 
 const Charms = () => {
@@ -148,7 +151,7 @@ const Charms = () => {
     setFlagsCurrentPage(1);
     // Navigate to the new path based on the charm type
     const pathType = TYPE_TO_PATH[type] || 'Colorful';
-    router.replace(`/Charms/${pathType}`);
+    router.replace(`/charms/${pathType}`);
   }, [router]);
 
   const handleAddToCart = useCallback((charm) => {

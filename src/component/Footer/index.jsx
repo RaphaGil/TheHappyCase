@@ -111,7 +111,7 @@ function Footer() {
                   </Link>
                 </li>
                 {/* <li>
-                  <Link href="/DesignIdeas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
+                  <Link href="/design-ideas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                     Design Ideas
                   </Link>
                 </li> */}
@@ -135,7 +135,7 @@ function Footer() {
                 </Link>
               </li>
               {/* <li>
-                <Link href="/DesignIdeas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
+                <Link href="/design-ideas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
                   Design Ideas
                 </Link>
               </li> */}
@@ -178,7 +178,7 @@ function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/Privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Privacy Policy
                   </Link>
                 </li>
@@ -202,7 +202,7 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/Privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/privacy-policy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Privacy Policy
                 </Link>
               </li>

@@ -10,7 +10,7 @@ const DesignIdeasGrid = ({ images }) => {
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
   
   const imageTexts = ['Colorful Charms', 'Bronze Charms', 'Mixed Charms', 'Flags'];
-  const imageLinks = ['/Charms/Colorful', '/Charms/Bronze', '/Charms/Colorful', '/Charms/flags'];
+  const imageLinks = ['/charms/colorful', '/charms/bronze', '/charms/colorful', '/charms/flags'];
 
   useEffect(() => {
     if (!sectionVisible) return;
@@ -49,7 +49,7 @@ const DesignIdeasGrid = ({ images }) => {
               }`}
             >
               <Link
-                href={imageLinks[index] || '/Charms/Colorful'}
+                href={imageLinks[index] || '/charms/colorful'}
                 className="block relative w-full aspect-square overflow-hidden sm:min-h-[300px] cursor-pointer"
                 aria-label={`Go to ${imageTexts[index] || 'charms'} page`}
               >

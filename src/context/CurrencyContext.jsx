@@ -41,7 +41,7 @@ export const CurrencyProvider = ({ children }) => {
   useEffect(() => {
     // Helper function to fetch rates directly from external API
     const fetchDirectRates = async () => {
-      const directResponse = await fetch('https://api.exchangerate-api.com/v4/latest/GBP');
+      const directResponse = await fetch('https://api.exchangerate-api.com/v4/latest/GBP', { signal: AbortSignal.timeout(8000) });
       if (directResponse.ok) {
         const contentType = directResponse.headers.get('content-type');
         const isJson = contentType && contentType.includes('application/json');
@@ -80,7 +80,7 @@ export const CurrencyProvider = ({ children }) => {
           const endpoint = `${baseUrl}/api/exchange-rates`;
           
           try {
-            const response = await fetch(endpoint);
+            const response = await fetch(endpoint, { signal: AbortSignal.timeout(5000) });
             
             // Check if response is JSON before parsing
             const contentType = response.headers.get('content-type');
@@ -122,8 +122,14 @@ export const CurrencyProvider = ({ children }) => {
         // Fallback to direct API (either backend not available or backend failed)
         await fetchDirectRates();
       } catch (error) {
-        console.error('❌ Error fetching exchange rates:', error);
-        console.log('⚠️ Using default exchange rates:', defaultExchangeRates);
+        // Failed to fetch is expected when backend isn't running or network is unavailable
+        if (error?.name === 'AbortError' || error?.message?.includes('fetch')) {
+          if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
+            console.debug('ℹ️ Exchange rates unavailable (backend may not be running). Using defaults.');
+          }
+        } else {
+          console.warn('Exchange rates fetch failed:', error?.message || error);
+        }
         setExchangeRates(defaultExchangeRates);
       } finally {
         setRatesLoading(false);

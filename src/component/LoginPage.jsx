@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getSupabaseClient } from '../utils/supabaseClient';
 import { getApiUrl } from '../utils/apiConfig';
 import OrderItem from './PaymentSucess/OrderItem';
+import AirplaneLoading from './Shared/AirplaneLoading';
 import { getOrderDisplayId } from '../utils/paymentsucess/helpers';
 
 // Get shared Supabase client instance
@@ -200,7 +201,7 @@ const Login = () => {
     setCode('');
     setError('');
     setSuccess(false);
-    router.push('/Login');
+    router.push('/login');
   };
 
   const handleLogout = () => {
@@ -293,8 +294,10 @@ const Login = () => {
           <div className="mt-8">
             {ordersLoading ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-                <p className="mt-4 text-gray-600 font-inter">Loading your orders...</p>
+                <div className="flex justify-center mb-4">
+                  <AirplaneLoading size="sm" />
+                </div>
+                <p className="text-gray-600 font-inter">Loading your orders...</p>
               </div>
             ) : ordersError ? (
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">

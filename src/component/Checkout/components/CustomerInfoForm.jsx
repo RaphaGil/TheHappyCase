@@ -32,7 +32,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
   const handleConfirmLogin = () => {
     setShowLoginDropdown(false);
     // Navigate to login page with return URL to come back to checkout
-    router.push('/Login?redirect=/Checkout');
+    router.push('/login?redirect=/checkout');
   };
 
   const handleCancelLogin = () => {

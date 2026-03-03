@@ -27,8 +27,8 @@ const BronzeCharms = () => {
       inlineTabs={true}
       callToActionLinks={[
         { path: '/custom-passport-holder', label: 'Start Creating' },
-        { path: '/ColorfulCharms', label: 'Colorful Charms' },
-        { path: '/Flags', label: 'Flags' }
+        { path: '/colorful-charms', label: 'Colorful Charms' },
+        { path: '/flags', label: 'Flags' }
       ]}
     />
   );

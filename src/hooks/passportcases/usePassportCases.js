@@ -16,21 +16,22 @@ import {
   isCaseTypeSoldOut as checkCaseTypeSoldOut
 } from '../../utils/passportcases/helpers';
 
-// Map URL path parameter to internal case type
+// Map URL path parameter (kebab-case) to internal case type
 const PATH_TO_TYPE = {
-  'Economy': 'economy',
-  'Business': 'business',
-  'FirstClass': 'firstclass',
   'economy': 'economy',
-  'business': 'business',
-  'firstclass': 'firstclass'
+  'first-class': 'firstclass',
+  'business-class': 'business',
+  // Legacy support
+  'Economy': 'economy',
+  'FirstClass': 'firstclass',
+  'BusinessClass': 'business',
 };
 
-// Map internal case type to URL path parameter
+// Map internal case type to URL path parameter (kebab-case)
 const TYPE_TO_PATH = {
-  'economy': 'Economy',
-  'business': 'Business',
-  'firstclass': 'FirstClass'
+  'economy': 'economy',
+  'firstclass': 'first-class',
+  'business': 'business-class',
 };
 
 export const usePassportCases = () => {
@@ -128,7 +129,7 @@ export const usePassportCases = () => {
     setQuantity(1); // Reset quantity when case type changes
     // Navigate to the new path based on the case type
     const pathType = TYPE_TO_PATH[type] || 'Economy';
-    router.push(`/PassportCases/${pathType}`);
+    router.push(`/passport-cases/${pathType}`);
     // Set first available color as default (prefer non-sold-out colors)
     const productsWithQuantities = getProductsWithQuantities();
     const caseData = productsWithQuantities.cases.find(c => c.type === type);

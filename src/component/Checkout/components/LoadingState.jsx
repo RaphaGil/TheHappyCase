@@ -1,4 +1,5 @@
 import React from 'react';
+import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 const LoadingState = () => {
   return (
@@ -6,7 +7,9 @@ const LoadingState = () => {
       <div className="max-w-2xl mx-auto p-6 bg-white border border-gray-200">
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-300 mx-auto mb-4"></div>
+            <div className="mb-4 flex justify-center">
+              <AirplaneLoading size="md" />
+            </div>
             <p className="text-gray-500 font-light font-inter">
               Loading checkout...
             </p>

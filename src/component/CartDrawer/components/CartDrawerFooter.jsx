@@ -20,7 +20,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
 
   const handleCheckout = () => {
     onClose();
-    router.push('/Checkout');
+    router.push('/checkout');
   };
 
   return (

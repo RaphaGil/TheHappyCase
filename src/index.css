@@ -79,17 +79,10 @@ code {
     monospace;
 }
 
-/* PerfectGiftSection background styles */
+/* PerfectGiftSection background styles - contained to left div only */
 .perfect-gift-bg {
   background-position: center;
   background-size: cover;
-}
-
-/* Fixed background attachment for medium screens and above */
-@media (min-width: 768px) {
-  .perfect-gift-bg {
-    background-attachment: fixed;
-  }
 }
 
 /* Custom Font Classes */
@@ -484,4 +477,24 @@ select option,
 select optgroup {
   background-color: #ffffff !important;
   color: #1f2937 !important; /* gray-800 */
+}
+
+/* Airplane flying loading animation */
+@keyframes airplaneFly {
+  0%, 100% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  25% {
+    transform: translateY(-6px) translateX(4px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-10px) translateX(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-4px) translateX(-3px) rotate(3deg);
+  }
+}
+
+.animate-airplane-fly {
+  animation: airplaneFly 1.8s ease-in-out infinite;
 }

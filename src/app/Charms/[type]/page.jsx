@@ -1,10 +1,9 @@
 import Charms from '../CharmsPage';
 
 export async function generateStaticParams() {
-  // Generate static pages for all charm types
   return [
-    { type: 'Colorful' },
-    { type: 'Bronze' },
+    { type: 'colorful' },
+    { type: 'bronze' },
     { type: 'flags' },
   ];
 }
@@ -12,13 +11,17 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { type } = await params;
   const typeMap = {
-    Colorful: {
+    'colorful': {
       title: 'Colorful Passport Charms',
       description: 'Colorful passport charms and pins for your custom passport case.',
     },
-    Bronze: {
+    'bronze': {
       title: 'Bronze Passport Charms',
-      description: 'Bronze passport charms and pins. Classic bronze finishes.',
+      description: 'Bronze passport charms and pins with classic metallic finishes.',
+    },
+    'flags': {
+      title: 'Flag Charms for Passport Cases',
+      description: 'Add flag charms to your passport case to show your heritage or commemorate your travels.',
     },
   };
   

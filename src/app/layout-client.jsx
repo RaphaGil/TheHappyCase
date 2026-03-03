@@ -11,9 +11,9 @@ import EnvDebug from '@/component/EnvDebug';
 export default function LayoutClient({ children }) {
   const pathname = usePathname();
   const isHomePage = pathname === '/';
-  const hideNavBar = pathname === '/Checkout';
+  const hideNavBar = pathname === '/checkout';
   const hideNavBarOnMobile = pathname === '/custom-passport-holder' || pathname === '/AddText';
-  const hideFooter = pathname === '/Checkout' || pathname === '/AddText';
+  const hideFooter = pathname === '/checkout' || pathname === '/AddText';
   const hideFooterOnMobile = pathname === '/custom-passport-holder';
 
   return (

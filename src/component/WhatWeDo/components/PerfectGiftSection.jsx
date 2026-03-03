@@ -38,12 +38,13 @@ const PerfectGiftSection = ({ image }) => {
   }, [sectionVisible]);
 
   return (
-    <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch">
-      {/* Image - Full width on mobile, left side on larger screens */}
-      <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:h-[650px] lg:h-[700px] xl:h-[750px] overflow-hidden bg-gray-100">
+    <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch md:min-h-screen">
+      {/* Image - Full width on mobile, sticky fixed left on md+ */}
+      <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:sticky md:top-0 md:h-screen md:min-h-[650px] md:self-start overflow-hidden bg-gray-100">
+        {/* Mobile: use img for better performance */}
         <img
           src={normalizedImage}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
           alt="Perfect Gift"
           loading="lazy"
           fetchPriority="low"
@@ -53,6 +54,13 @@ const PerfectGiftSection = ({ image }) => {
           onError={(e) => {
             e.target.style.display = 'none';
           }}
+        />
+        {/* md+: fixed background for parallax effect */}
+        <div
+          className="hidden md:block absolute inset-0 perfect-gift-bg"
+          style={{ backgroundImage: `url(${normalizedImage})`, backgroundPosition: 'center' }}
+          role="img"
+          aria-label="Perfect Gift"
         />
         
         {/* Mobile overlay with text */}
@@ -100,8 +108,8 @@ const PerfectGiftSection = ({ image }) => {
         </div>
       </div>
 
-      {/* Desktop text content */}
-      <div className="hidden md:flex md:w-1/2 items-center justify-center bg-white">
+      {/* Desktop text content - relative z-10 ensures it stays above left div */}
+      <div className="hidden md:flex md:w-1/2 md:relative md:z-10 items-center justify-center bg-white">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16 space-y-6 lg:space-y-8">
           <h2 className="text-subtitle-lg md:text-title font-light text-gray-900 mb-6 font-inter tracking-title">
             {title}

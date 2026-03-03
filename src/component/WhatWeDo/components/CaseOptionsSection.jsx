@@ -7,11 +7,11 @@ import { normalizeImagePath } from '../../../utils/imagePath';
 import { getCaseDisplayName, getColorName } from '../../../utils/passportcases/helpers';
 import Products from '../../../data/products.json';
 
-// Map internal case type to URL path (matches PassportCases [type] routes)
+// Map internal case type to URL path (kebab-case)
 const CASE_TYPE_TO_PATH = {
-  economy: 'Economy',
-  business: 'BusinessClass',
-  firstclass: 'FirstClass',
+  economy: 'economy',
+  business: 'business-class',
+  firstclass: 'first-class',
 };
 
 const CaseOptionsSection = () => {
@@ -37,7 +37,7 @@ const CaseOptionsSection = () => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 w-full max-w-6xl mx-auto px-2 sm:px-0">
         {cases.map((caseItem) => {
-          const path = `/PassportCases/${CASE_TYPE_TO_PATH[caseItem.type] || caseItem.type}`;
+          const path = `/passport-cases/${CASE_TYPE_TO_PATH[caseItem.type] || caseItem.type}`;
           const displayName = getCaseDisplayName(caseItem.type);
           const colors = caseItem.colors ?? [];
           const selectedIndex = selectedColorByCase[caseItem.type] ?? 0;

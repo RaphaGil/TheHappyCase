@@ -278,7 +278,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
   // Redirect if cart is empty
   useEffect(() => {
     if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
-      router.push('/Cart');
+      router.push('/cart');
     }
   }, [cart, router]);
 
@@ -344,7 +344,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
   useEffect(() => {
     // Don't redirect if we're navigating to success page
     if (cart.length === 0 && !isNavigatingToSuccessRef.current) {
-      router.push('/Cart');
+      router.push('/cart');
     }
   }, [cart, router]);
 
@@ -476,7 +476,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/Payment-success`,
+          return_url: `${window.location.origin}/payment-success`,
           payment_method_data: {
             billing_details: {
               name: customerInfo.name,
@@ -521,7 +521,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
             subtotal,
           }));
         }
-        router.push('/Payment-success');
+        router.push('/payment-success');
       } else if (paymentIntent && paymentIntent.status === 'requires_action') {
         // Payment requires additional action (e.g., 3D Secure)
         // Stripe will handle redirect automatically to return_url
@@ -545,7 +545,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
             subtotal,
           }));
         }
-        router.push('/Payment-success');
+        router.push('/payment-success');
       }
       } catch (err) {
         setError('An error occurred while processing your payment.');
@@ -704,8 +704,8 @@ const Checkout = () => {
     // Don't redirect to cart if we're already on a different page or navigating to payment success
     if (typeof window !== 'undefined') {
       const currentPath = window.location.pathname;
-      if (cart.length === 0 && (currentPath === '/Checkout' || currentPath.includes('/Checkout')) && !isNavigatingToSuccessRef.current) {
-        router.push('/Cart');
+      if (cart.length === 0 && (currentPath === '/checkout' || currentPath.includes('/checkout')) && !isNavigatingToSuccessRef.current) {
+        router.push('/cart');
         return;
       }
     }

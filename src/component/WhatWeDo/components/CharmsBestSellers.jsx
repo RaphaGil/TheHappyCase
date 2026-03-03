@@ -44,7 +44,7 @@ const CharmsBestSellers = () => {
       </div>
       <div className="text-center mt-6">
         <Link
-          href="/Charms/Colorful"
+          href="/charms/colorful"
           className="inline-flex items-center justify-center px-6 py-2.5 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
         >
           Shop All Charms

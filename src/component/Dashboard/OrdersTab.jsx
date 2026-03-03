@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { getApiUrl } from '../../utils/apiConfig';
 import { getOrderDisplayId } from '../../utils/paymentsucess/helpers';
+import AirplaneLoading from '../Shared/AirplaneLoading';
 
 const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   const [expandedOrder, setExpandedOrder] = useState(null);
@@ -219,8 +220,10 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   if (loadingOrders) {
     return (
       <div className="bg-white border rounded-lg p-8 text-center">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        <p className="mt-4 text-gray-600">Loading orders...</p>
+        <div className="flex justify-center mb-4">
+          <AirplaneLoading size="sm" />
+        </div>
+        <p className="text-gray-600">Loading orders...</p>
       </div>
     );
   }

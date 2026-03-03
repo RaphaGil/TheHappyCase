@@ -51,13 +51,13 @@ export const carouselImages = [
 
 // Charms best sellers (name, image path, link to category)
 export const charmsBestSellers = [
-  { name: 'Airplane', src: '/images/ColorfulPins/airplane.webp', href: '/Charms/Colorful' },
-  { name: 'Heart Globe', src: '/images/ColorfulPins/heartglobe.webp', href: '/Charms/Colorful' },
-  { name: 'Passport', src: '/images/ColorfulPins/passport.webp', href: '/Charms/Colorful' },
+  { name: 'Airplane', src: '/images/ColorfulPins/airplane.webp', href: '/charms/colorful' },
+  { name: 'Heart Globe', src: '/images/ColorfulPins/heartglobe.webp', href: '/charms/colorful' },
+  { name: 'Passport', src: '/images/ColorfulPins/passport.webp', href: '/charms/colorful' },
   { name: "Airplane",
-        "src": "/images/BronzePins/airplane.webp", href: '/Charms/Bronze' },
+        "src": "/images/BronzePins/airplane.webp", href: '/charms/bronze' },
   {"name": "Ticket to Happiness",
-        "src": "/images/ColorfulPins/tickettohappiness.webp", href: '/Charms/Colorful' },
-  { name: 'Bronze Globe', src: '/images/BronzePins/globe.webp', href: '/Charms/Bronze' },
+        "src": "/images/ColorfulPins/tickettohappiness.webp", href: '/charms/colorful' },
+  { name: 'Bronze Globe', src: '/images/BronzePins/globe.webp', href: '/charms/bronze' },
 ];
 

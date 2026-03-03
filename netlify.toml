@@ -17,7 +17,7 @@ to = "/sitemap.xml"
 status = 200
 force = true
 
-# SEO-friendly URL redirects (301 = permanent)
+# SEO-friendly URL redirects (301 = permanent) - standardize to kebab-case
 [[redirects]]
 from = "/CreateYours"
 to = "/custom-passport-holder"
@@ -27,6 +27,144 @@ force = true
 [[redirects]]
 from = "/CreateYours/"
 to = "/custom-passport-holder"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Login"
+to = "/login"
+status = 301
+force = true
+
+[[redirects]]
+from = "/My-orders"
+to = "/my-orders"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Dashboard"
+to = "/dashboard"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Checkout"
+to = "/checkout"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Cart"
+to = "/cart"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Payment-success"
+to = "/payment-success"
+status = 301
+force = true
+
+[[redirects]]
+from = "/PassportCases"
+to = "/passport-cases"
+status = 301
+force = true
+
+[[redirects]]
+from = "/PassportCases/Economy"
+to = "/passport-cases/economy"
+status = 301
+force = true
+
+[[redirects]]
+from = "/PassportCases/FirstClass"
+to = "/passport-cases/first-class"
+status = 301
+force = true
+
+[[redirects]]
+from = "/PassportCases/BusinessClass"
+to = "/passport-cases/business-class"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Charms"
+to = "/charms"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Charms/Colorful"
+to = "/charms/colorful"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Charms/Bronze"
+to = "/charms/bronze"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Charms/flags"
+to = "/charms/flags"
+status = 301
+force = true
+
+[[redirects]]
+from = "/DesignIdeas"
+to = "/design-ideas"
+status = 301
+force = true
+
+[[redirects]]
+from = "/ColorfulCharms"
+to = "/colorful-charms"
+status = 301
+force = true
+
+[[redirects]]
+from = "/BronzeCharms"
+to = "/bronze-charms"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Flags"
+to = "/flags"
+status = 301
+force = true
+
+[[redirects]]
+from = "/About"
+to = "/about"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Privacy-policy"
+to = "/privacy-policy"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Refund-policy"
+to = "/refund-policy"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Shipping"
+to = "/shipping"
+status = 301
+force = true
+
+[[redirects]]
+from = "/Returns"
+to = "/returns"
 status = 301
 force = true
 

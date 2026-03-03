@@ -10,9 +10,7 @@
         "/images/SmartCase/economycasejeansblue.webp",
         "/images/SmartCase/economycasebrown.webp",
         "/images/SmartCase/economycaselightblue.webp",
-        "/images/SmartCase/economycasedarkbrown.webp",
-        "/images/SmartCase/economycaseblack.webp",
-        "/images/SmartCase/economycaselightbrown.webp"
+        "/images/SmartCase/economycaseblack.webp"
       ],
       "colors": [
         {
@@ -31,22 +29,13 @@
           "color": "#627386",
           "image": "/images/SmartCase/economycasejeansblue.webp"
         },
-        {
-          "color": "#3a4763",
-          "image": "/images/SmartCase/economycasedarkblue.webp"
-        },
-        {
-          "color": "#c96e50",
-          "image": "/images/SmartCase/economycaselightbrown.webp"
-        },
+     
+        
         {
           "color": "#b0582c",
           "image": "/images/SmartCase/economycasebrown.webp"
         },
-        {
-          "color": "#59332e",
-          "image": "/images/SmartCase/economycasedarkbrown.webp"
-        },
+        
         {
           "color": "#506258",
           "image": "/images/SmartCase/economycasegreen.webp"
@@ -137,8 +126,8 @@
         "/images/FirstClassCase/firstclasscaseblue.webp",
         "/images/FirstClassCase/firstclasscasegray.webp",
         "/images/FirstClassCase/firstclasscasepurple.webp",
-        "/images/FirstClassCase/firstclasscasegreen.webp",
-         "/images/FirstClassCase/firstclasscasedarkpink.webp"
+        "/images/FirstClassCase/firstclasscasegreen.webp"
+
       ],
       "colors": [
         {
@@ -153,10 +142,7 @@
           "color": "#adcfa8",
           "image": "/images/FirstClassCase/firstclasscasegreen.webp"
         },
-        {
-          "color": "#ab8b72",
-          "image": "/images/FirstClassCase/firstclasscasedarkpink.webp"
-        },
+       
         {
           "color": "#bfa29c",
           "image": "/images/FirstClassCase/firstclasscasepink.webp"
@@ -177,10 +163,7 @@
           "color": "#768695",
           "image": "/images/FirstClassCase/firstclasscaseblue.webp"
         },
-        {
-          "color": "#cea55c",
-          "image": "/images/FirstClassCase/firstclasscaselightbrown.webp"
-        },
+      
         {
           "color": "#272a34",
           "image": "/images/FirstClassCase/firstclasscaseblack.webp"
@@ -196,7 +179,7 @@
         "features": "Coin Pouch, RFID Protection, Water Resistant"
 
       },
-      "basePrice": 12
+      "basePrice": 15
     }
   ],
   "pins": {
