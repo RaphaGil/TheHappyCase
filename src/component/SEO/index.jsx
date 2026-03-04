@@ -19,10 +19,13 @@ const getSiteUrl = () => {
 const SITE_URL = getSiteUrl();
 const DEFAULT_IMAGE = `${SITE_URL}/assets/logo.webp`;
 
+// Pages that should not be indexed by search engines (transactional, user-specific)
+const NOINDEX_PATHS = ['/cart', '/checkout', '/login', '/payment-success', '/my-orders', '/authentication/code'];
+
 const PAGE_META = {
   '/': {
-    title: 'The Happy Case - Custom Passport Cases with Personalized Charms',
-    description: 'Create custom passport cases with personalized charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, and custom text. RFID-protected, water-resistant passport covers perfect for travelers. Free shipping available.',
+    title: 'The Happy Case - Custom Passport Cases with Charms',
+    description: 'Custom passport holder with 40+ travel-themed charms, country flags & text. PU or genuine leather. RFID-protected travel essential.,
   },
   '/custom-passport-holder': {
     title: 'Custom Passport Holder | Design Your Own | The Happy Case',
@@ -140,19 +143,28 @@ export default function SEO() {
   const normalizedPath = pathname.replace(/\/+$/, '') || '/';
   const meta = getMetaForPath(normalizedPath);
   const canonicalUrl = `${SITE_URL}${normalizedPath === '/' ? '' : normalizedPath}`;
+  const isNoIndex = NOINDEX_PATHS.some((p) => normalizedPath === p || normalizedPath.startsWith(p + '/'));
 
   return (
     <Helmet>
       <title>{meta.title}</title>
       <meta name="description" content={meta.description} />
+      {isNoIndex && <meta name="robots" content="noindex, follow" />}
       <link rel="canonical" href={canonicalUrl} />
       <meta property="og:title" content={meta.title} />
       <meta property="og:description" content={meta.description} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={DEFAULT_IMAGE} />
+      <meta property="og:image:width" content="512" />
+      <meta property="og:image:height" content="512" />
+      <meta property="og:image:alt" content={meta.title} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="The Happy Case" />
+      <meta property="og:locale" content="en_GB" />
       <meta name="twitter:title" content={meta.title} />
       <meta name="twitter:description" content={meta.description} />
       <meta name="twitter:image" content={DEFAULT_IMAGE} />
+      <meta name="twitter:card" content="summary_large_image" />
     </Helmet>
   );
 }
