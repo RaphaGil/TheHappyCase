@@ -37,6 +37,8 @@ const SUBCATEGORY_TABS = {
     { key: "travel", label: "TRAVEL" },
     { key: "disney", label: "DISNEY" },
     { key: "drinks", label: "DRINKS" },
+    { key: "food", label: "FOOD" },
+    { key: "animal", label: "ANIMAL" },
     { key: "inspiration", label: "INSPIRATION" },
     { key: "hearts", label: "HEARTS" },
     { key: "nature", label: "NATURE" },

@@ -16,6 +16,7 @@ import { useCurrency } from '../../context/CurrencyContext';
 // Utils
 import { createPaymentIntent } from '../../utils/mockPaymentAPI';
 import { getMaxAvailableQuantity, refreshInventoryFromSupabase } from '../../utils/inventory';
+import { isCharmUsedInCreateYoursItem } from '../../utils/cartHelpers';
 import { getOrderNumberFromPaymentIntentId } from '../../utils/paymentsucess/helpers';
 
 // Components
@@ -245,7 +246,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
     };
   }, []); // Run once on mount
   
-  // Auto-clear error messages after 3 seconds
+  // Auto-clear error messages after 6 seconds
   useEffect(() => {
     const timeouts = errorTimeoutsRef.current;
     
@@ -265,7 +266,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
           return newErrors;
         });
         delete timeouts[itemKey];
-      }, 3000);
+      }, 6000);
     });
 
     return () => {
@@ -326,6 +327,19 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         incrementItemQty(itemId);
       }
     }
+  };
+
+  const handleRemoveWithCheck = (index) => {
+    const item = cart[index];
+    if (item?.type === 'charm' && isCharmUsedInCreateYoursItem(item, cart, index)) {
+      const errorKey = item.id ?? index;
+      setItemErrors(prev => ({
+        ...prev,
+        [errorKey]: 'Remove the custom design first. OBS: Removing the design will delete the whole design including all its charms.'
+      }));
+      return;
+    }
+    removeFromCart(index);
   };
 
   // Handle decrement with error clearing
@@ -570,7 +584,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         onShowShippingInfo={() => setShowShippingInfo(true)}
         onIncrement={handleIncrementWithCheck}
         onDecrement={handleDecrementWithCheck}
-        onRemove={removeFromCart}
+        onRemove={handleRemoveWithCheck}
         itemErrors={itemErrors}
       />
  
@@ -640,7 +654,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
               onShowShippingInfo={() => setShowShippingInfo(true)}
               onIncrement={handleIncrementWithCheck}
               onDecrement={handleDecrementWithCheck}
-              onRemove={removeFromCart}
+              onRemove={handleRemoveWithCheck}
               itemErrors={itemErrors}
             />
           </div>

@@ -30,6 +30,7 @@ export const COLORFUL_CATEGORIES = [
   { key: 'disney', label: 'DISNEY' },
   { key: 'drinks', label: 'DRINKS' },
   { key: 'food', label: 'FOOD' },
+  { key: 'animal', label: 'ANIMAL' },
   { key: 'inspiration', label: 'INSPIRATION' },
   { key: 'flags', label: 'FLAGS' },
   { key: 'hearts', label: 'HEARTS' },

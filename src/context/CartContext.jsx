@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { getMaxAvailableQuantity } from '../utils/inventory';
-import { areItemsIdentical } from '../utils/cartHelpers';
+import { areItemsIdentical, getIndicesToRemoveWithDesign } from '../utils/cartHelpers';
 
 const CART_STORAGE_KEY = 'happycase_cart';
 
@@ -104,9 +104,11 @@ const cartReducer = (state, action) => {
         };
       }
     case 'REMOVE_FROM_CART':
+      const indicesToRemove = getIndicesToRemoveWithDesign(state.items, action.payload);
+      const indicesSet = new Set(indicesToRemove);
       return {
         ...state,
-        items: state.items.filter((item, index) => index !== action.payload),
+        items: state.items.filter((_, index) => !indicesSet.has(index)),
       };
     case 'LOAD_CART':
       // Load cart items from action payload (used for hydration from localStorage)

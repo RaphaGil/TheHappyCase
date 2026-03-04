@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useCurrency } from '../../context/CurrencyContext';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
-import { areItemsIdentical } from '../../utils/cartHelpers';
+import { areItemsIdentical, isCharmUsedInCreateYoursItem } from '../../utils/cartHelpers';
 import { getColorName } from '../../utils/createyours/helpers';
 import CartDrawerHeader from './components/CartDrawerHeader';
 import EmptyCart from './components/EmptyCart';
@@ -19,7 +19,7 @@ const CartDrawer = () => {
   const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
   const errorTimeoutsRef = useRef({}); // Track timeouts for each error
 
-  // Auto-clear error messages after 3 seconds
+  // Auto-clear error messages after 6 seconds
   useEffect(() => {
     const timeouts = errorTimeoutsRef.current;
     
@@ -29,7 +29,7 @@ const CartDrawer = () => {
         clearTimeout(timeouts[itemKey]);
       }
       
-      // Set new timeout to clear error after 3 seconds
+      // Set new timeout to clear error after 6 seconds
       timeouts[itemKey] = setTimeout(() => {
         setItemErrors(prev => {
           const newErrors = { ...prev };
@@ -43,7 +43,7 @@ const CartDrawer = () => {
           return newErrors;
         });
         delete timeouts[itemKey];
-      }, 3000); // 3 seconds
+      }, 9000); // 6 seconds
     });
 
     // Cleanup function to clear timeouts when component unmounts
@@ -408,6 +408,19 @@ const CartDrawer = () => {
     }
   };
 
+  const handleRemoveWithCheck = (index) => {
+    const item = cart[index];
+    if (item?.type === 'charm' && isCharmUsedInCreateYoursItem(item, cart, index)) {
+      const errorKey = item.id ?? index;
+      setItemErrors(prev => ({
+        ...prev,
+        [errorKey]: 'Remove the custom design first. Removing the design will delete the whole design including all its charms.'
+      }));
+      return;
+    }
+    removeFromCart(index);
+  };
+
   const handleDecrementWithCheck = (itemId) => {
     // Find item by id or by index if id is undefined
     const item = cart.find(i => i.id === itemId) || cart[itemId];
@@ -451,7 +464,7 @@ const CartDrawer = () => {
                 item={item}
                 index={index}
                 formatPrice={formatPrice}
-                onRemove={removeFromCart}
+                onRemove={handleRemoveWithCheck}
                 onIncrement={handleIncrementWithCheck}
                 onDecrement={handleDecrementWithCheck}
                 openNoteIndex={openNoteIndex}

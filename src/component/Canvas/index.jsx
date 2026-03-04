@@ -86,6 +86,7 @@ const Canvas = ({
           hasControls: false,
           lockScalingX: true,
           lockScalingY: true,
+          lockUniScaling: true,
           borderColor: "transparent",
           cornerColor: isCase ? "transparent" : "blue",
           cornerSize: isCase ? 0 : 8,
@@ -448,7 +449,7 @@ const Canvas = ({
       }
     });
 
-    // Prevent text scaling during scaling events
+    // Prevent text and charm scaling during scaling events
     fabricCanvas.current.on('object:scaling', (e) => {
       const obj = e.target;
       if (obj && (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text')) {
@@ -465,6 +466,18 @@ const Canvas = ({
           cornerColor: 'transparent',
           cornerSize: 0,
           transparentCorners: true,
+        });
+        fabricCanvas.current.renderAll();
+      } else if (obj && obj.type === 'image' && obj.pinData) {
+        // Charms/pins: reset to original scale if user tries to resize
+        const origScaleX = obj.__originalScaleX ?? obj.scaleX;
+        const origScaleY = obj.__originalScaleY ?? obj.scaleY;
+        obj.set({
+          scaleX: origScaleX,
+          scaleY: origScaleY,
+          lockScalingX: true,
+          lockScalingY: true,
+          lockUniScaling: true,
         });
         fabricCanvas.current.renderAll();
       }
@@ -701,13 +714,18 @@ const Canvas = ({
         top: randomY
       });
 
-      // Store pin data
+      // Store pin data and original scale (for reset if user tries to resize)
       imgInstance.pinData = pin;
-      
-      // Remove default borders
+      imgInstance.__originalScaleX = imgInstance.scaleX;
+      imgInstance.__originalScaleY = imgInstance.scaleY;
+
+      // Remove default borders and lock scaling
       imgInstance.set({
         hasBorders: false,
         borderColor: 'transparent',
+        lockScalingX: true,
+        lockScalingY: true,
+        lockUniScaling: true,
       });
       
       fabricCanvas.current.setActiveObject(imgInstance);

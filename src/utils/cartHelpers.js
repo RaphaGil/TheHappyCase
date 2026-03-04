@@ -50,4 +50,53 @@ export const areItemsIdentical = (item1, item2) => {
   return getItemGroupKey(item1) === getItemGroupKey(item2);
 };
 
+/**
+ * Check if a charm is used in a Create Yours custom design (case with pins)
+ * Create Yours adds case + charms with shared timestamp in IDs: case-{ts}-..., charm-{ts}-...
+ * @param {Object} charmItem - The charm item to check
+ * @param {Array} cart - The full cart
+ * @param {number} charmIndex - Index of the charm in the cart
+ * @returns {boolean} - True if the charm is used in a custom design
+ */
+export const isCharmUsedInCreateYoursItem = (charmItem, cart, charmIndex) => {
+  // Match by shared timestamp: charm-{timestamp}-... links to case-{timestamp}-...
+  const charmIdMatch = charmItem.id?.match(/^charm-(\d+)-/);
+  if (!charmIdMatch) return false;
 
+  const sharedTimestamp = charmIdMatch[1];
+  return cart.some((cartItem, idx) => {
+    if (idx === charmIndex) return false;
+    if (!cartItem.customDesign && !cartItem.designImage) return false;
+    if (!cartItem.id?.startsWith('case-')) return false;
+    return cartItem.id.startsWith(`case-${sharedTimestamp}-`);
+  });
+};
+
+/**
+ * Get all indices to remove when deleting a Create Yours design (case + its charms)
+ * @param {Array} cart - The full cart
+ * @param {number} index - Index of the item being removed
+ * @returns {number[]} - Indices to remove (case + associated charms), sorted descending
+ */
+export const getIndicesToRemoveWithDesign = (cart, index) => {
+  const item = cart[index];
+  if (!item) return [index];
+
+  const isCreateYoursCase = (item.customDesign || item.designImage) && item.id?.startsWith('case-');
+  if (!isCreateYoursCase) return [index];
+
+  const caseIdMatch = item.id?.match(/^case-(\d+)-/);
+  if (!caseIdMatch) return [index];
+
+  const sharedTimestamp = caseIdMatch[1];
+  const indicesToRemove = [index];
+
+  cart.forEach((cartItem, idx) => {
+    if (idx === index) return;
+    if (cartItem.type === 'charm' && cartItem.id?.startsWith(`charm-${sharedTimestamp}-`)) {
+      indicesToRemove.push(idx);
+    }
+  });
+
+  return indicesToRemove.sort((a, b) => b - a);
+};

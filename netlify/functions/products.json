@@ -29,13 +29,10 @@
           "color": "#627386",
           "image": "/images/SmartCase/economycasejeansblue.webp"
         },
-     
-        
         {
           "color": "#b0582c",
           "image": "/images/SmartCase/economycasebrown.webp"
         },
-        
         {
           "color": "#506258",
           "image": "/images/SmartCase/economycasegreen.webp"
@@ -127,7 +124,6 @@
         "/images/FirstClassCase/firstclasscasegray.webp",
         "/images/FirstClassCase/firstclasscasepurple.webp",
         "/images/FirstClassCase/firstclasscasegreen.webp"
-
       ],
       "colors": [
         {
@@ -142,7 +138,6 @@
           "color": "#adcfa8",
           "image": "/images/FirstClassCase/firstclasscasegreen.webp"
         },
-       
         {
           "color": "#bfa29c",
           "image": "/images/FirstClassCase/firstclasscasepink.webp"
@@ -163,7 +158,6 @@
           "color": "#768695",
           "image": "/images/FirstClassCase/firstclasscaseblue.webp"
         },
-      
         {
           "color": "#272a34",
           "image": "/images/FirstClassCase/firstclasscaseblack.webp"
@@ -177,7 +171,6 @@
         "cardSlots": "3",
         "interior": " Document Pocket, Boarding Pass Slot, SIM Card Slot",
         "features": "Coin Pouch, RFID Protection, Water Resistant"
-
       },
       "basePrice": 15
     }
@@ -186,7 +179,7 @@
     "flags": [
       {
         "id": 1,
-        "name": "Albania Flag",
+        "name": "Albania",
         "src": "/images/Flags/albania.webp",
         "price": 2,
         "size": 0.5,
@@ -194,264 +187,256 @@
       },
       {
         "id": 2,
-        "name": "Armenia Flag",
+        "name": "Argentina",
+        "src": "/images/Flags/argentina.webp",
+        "price": 2,
+        "size": 0.55,
+        "continent": "americas"
+      },
+      {
+        "id": 3,
+        "name": "Armenia",
         "src": "/images/Flags/armenia.webp",
         "price": 2,
         "size": 0.5,
         "continent": "europe"
       },
       {
-        "id": 3,
-        "name": "Belgium Flag",
+        "id": 4,
+        "name": "Belgium",
         "src": "/images/Flags/belgium.webp",
         "price": 2,
         "size": 0.5,
         "continent": "europe"
       },
       {
-        "id": 4,
-        "name": "Bosnia  Flag",
+        "id": 5,
+        "name": "Bosnia",
         "src": "/images/Flags/bosnia.webp",
         "price": 2,
         "size": 0.5,
         "continent": "europe"
       },
       {
-        "id": 5,
-        "name": "Brazil Flag",
+        "id": 6,
+        "name": "Brazil",
         "src": "/images/Flags/brazil.webp",
         "price": 2,
         "size": 0.5,
         "continent": "americas"
       },
       {
-        "id": 6,
-        "name": "British Virgin Islands Flag",
+        "id": 7,
+        "name": "British Virgin Islands",
         "src": "/images/Flags/britishvirginislands.webp",
         "price": 2,
         "size": 0.5,
         "continent": "americas"
       },
       {
-        "id": 7,
-        "name": "Croatia Flag",
-        "src": "/images/Flags/croatia.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
         "id": 8,
-        "name": "Dublin Flag",
-        "src": "/images/Flags/dublin.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 9,
-        "name": "Egypt Flag",
-        "src": "/images/Flags/egypt.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "africa"
-      },
-      {
-        "id": 10,
-        "name": "France Flag",
-        "src": "/images/Flags/france.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 11,
-        "name": "Germany Flag",
-        "src": "/images/Flags/germany.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 12,
-        "name": "India Flag",
-        "src": "/images/Flags/india.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "asia"
-      },
-      {
-        "id": 13,
-        "name": "Italy Flag",
-        "src": "/images/Flags/italy.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 14,
-        "name": "Jamaica  Flag",
-        "src": "/images/Flags/jamaica.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "americas"
-      },
-      {
-        "id": 15,
-        "name": "Japan  Flag",
-        "src": "/images/Flags/japan.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "americas"
-      },
-      {
-        "id": 16,
-        "name": "Hungary Flag",
-        "src": "/images/Flags/hungary.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "americas"
-      },
-      {
-        "id": 17,
-        "name": "LGBTQIA+ Flag",
-        "src": "/images/Flags/lgbtqia.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "special"
-      },
-      {
-        "id": 18,
-        "name": "Netherlands Flag",
-        "src": "/images/Flags/netherlands.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 19,
-        "name": "Norway Flag",
-        "src": "/images/Flags/norway.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 20,
-        "name": "Portugal Flag",
-        "src": "/images/Flags/portugal.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 21,
-        "name": "Puerto Rico  Flag",
-        "src": "/images/Flags/puertorico.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "americas"
-      },
-      {
-        "id": 22,
-        "name": "Scotland Flag",
-        "src": "/images/Flags/scotland.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 23,
-        "name": "South Africa Flag",
-        "src": "/images/Flags/southafrica.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "africa"
-      },
-      {
-        "id": 24,
-        "name": "Spain Flag",
-        "src": "/images/Flags/spain.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 25,
-        "name": "Sweden Flag",
-        "src": "/images/Flags/sweden.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 26,
-        "name": "Switzerland Flag",
-        "src": "/images/Flags/switzerland.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 27,
-        "name": "United Kingdon Flag",
-        "src": "/images/Flags/uk.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 28,
-        "name": "United States Flag",
-        "src": "/images/Flags/eua.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "americas"
-      },
-      {
-        "id": 29,
-        "name": "France Flag",
-        "src": "/images/Flags/france.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 30,
-        "name": "Iceland Flag",
-        "src": "/images/Flags/iceland.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 31,
-        "name": "Romania Flag",
-        "src": "/images/Flags/romania.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "europe"
-      },
-      {
-        "id": 32,
-        "name": "Ecuador Flag",
-        "src": "/images/Flags/ecuador.webp",
-        "price": 2,
-        "size": 0.5,
-        "continent": "americas"
-      },
-      {
-        "id": 33,
-        "name": "Chile Flag",
+        "name": "Chile",
         "src": "/images/Flags/chile.webp",
         "price": 2,
         "size": 0.5,
         "continent": "americas"
       },
       {
-        "id": 34,
-        "name": "Argentina Flag",
-        "src": "/images/Flags/argentina.webp",
+        "id": 9,
+        "name": "Croatia",
+        "src": "/images/Flags/croatia.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 10,
+        "name": "Dublin",
+        "src": "/images/Flags/dublin.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 11,
+        "name": "Ecuador",
+        "src": "/images/Flags/ecuador.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 12,
+        "name": "Egypt",
+        "src": "/images/Flags/egypt.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "africa"
+      },
+      {
+        "id": 13,
+        "name": "France",
+        "src": "/images/Flags/france.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 14,
+        "name": "Germany",
+        "src": "/images/Flags/germany.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 15,
+        "name": "Hungary",
+        "src": "/images/Flags/hungary.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 16,
+        "name": "Iceland",
+        "src": "/images/Flags/iceland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 17,
+        "name": "India",
+        "src": "/images/Flags/india.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "asia"
+      },
+      {
+        "id": 18,
+        "name": "Italy",
+        "src": "/images/Flags/italy.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 19,
+        "name": "Jamaica",
+        "src": "/images/Flags/jamaica.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 20,
+        "name": "Japan",
+        "src": "/images/Flags/japan.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 21,
+        "name": "LGBTQIA+",
+        "src": "/images/Flags/lgbtqia.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "special"
+      },
+      {
+        "id": 22,
+        "name": "Netherlands",
+        "src": "/images/Flags/netherlands.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 23,
+        "name": "Norway",
+        "src": "/images/Flags/norway.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 24,
+        "name": "Portugal",
+        "src": "/images/Flags/portugal.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 25,
+        "name": "Puerto Rico",
+        "src": "/images/Flags/puertorico.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 26,
+        "name": "Romania",
+        "src": "/images/Flags/romania.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 27,
+        "name": "Scotland",
+        "src": "/images/Flags/scotland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 28,
+        "name": "South Africa",
+        "src": "/images/Flags/southafrica.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "africa"
+      },
+      {
+        "id": 29,
+        "name": "Spain",
+        "src": "/images/Flags/spain.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 30,
+        "name": "Sweden",
+        "src": "/images/Flags/sweden.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 31,
+        "name": "Switzerland",
+        "src": "/images/Flags/switzerland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 32,
+        "name": "United Kingdon",
+        "src": "/images/Flags/uk.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 33,
+        "name": "United States",
+        "src": "/images/Flags/eua.webp",
         "price": 2,
         "size": 0.5,
         "continent": "americas"
@@ -479,7 +464,8 @@
         "name": "Heart Globe",
         "src": "/images/ColorfulPins/heartglobe.webp",
         "price": 2,
-        "size": 0.70
+        "size": 0.7,
+        "subCategory": "travel"
       },
       {
         "id": 4,
@@ -524,7 +510,7 @@
         "name": "Ticket to Happiness",
         "src": "/images/ColorfulPins/tickettohappiness.webp",
         "price": 2,
-        "size": 0.70,
+        "size": 0.7,
         "subCategory": "inspiration"
       },
       {
@@ -615,7 +601,6 @@
         "size": 0.85,
         "subCategory": "disney"
       },
-     
       {
         "id": 21,
         "name": "Guufy",
@@ -653,7 +638,7 @@
         "name": "Passport",
         "src": "/images/ColorfulPins/passport.webp",
         "price": 2,
-        "size": 0.70,
+        "size": 0.7,
         "subCategory": "travel"
       },
       {
@@ -677,7 +662,7 @@
         "name": "Wave",
         "src": "/images/ColorfulPins/wave.webp",
         "price": 3.5,
-        "size": 0.6, 
+        "size": 0.6,
         "subCategory": "nature"
       },
       {
@@ -814,7 +799,7 @@
         "src": "/images/ColorfulPins/happy.webp",
         "price": 1,
         "size": 0.6,
-        "subCategory": "travel"
+        "subCategory": "inspiration"
       },
       {
         "id": 46,
@@ -823,6 +808,22 @@
         "price": 1,
         "size": 0.6,
         "subCategory": "travel"
+      },
+      {
+        "id": 47,
+        "name": "Dog",
+        "src": "/images/ColorfulPins/dog.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "animal"
+      },
+      {
+        "id": 48,
+        "name": "Rainbow",
+        "src": "/images/ColorfulPins/rainbow.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "nature"
       }
     ],
     "bronze": [
@@ -1019,7 +1020,7 @@
         "name": "Enjoy the Journey",
         "src": "/images/BronzePins/enjoythejourney.webp",
         "price": 1,
-        "size": 1.0,
+        "size": 1,
         "subCategory": "symbols"
       },
       {
@@ -1108,7 +1109,6 @@
         "size": 0.5,
         "subCategory": "animals"
       }
-    
     ]
   }
 }
