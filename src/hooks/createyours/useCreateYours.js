@@ -38,7 +38,7 @@ export const useCreateYours = () => {
   const [selectedCaseImage, setSelectedCaseImage] = useState(defaultValues.image);
   const [selectedPins, setSelectedPins] = useState([]);
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false);
-  const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(false);
+  const [isCaseDropdownOpen, setIsCaseDropdownOpen] = useState(true);
   const [isCharmsDropdownOpen, setIsCharmsDropdownOpen] = useState(false);
   const [isAddTextDropdownOpen, setIsAddTextDropdownOpen] = useState(false);
   // Initialize with safe default for SSR (assume desktop, will be updated on mount)
