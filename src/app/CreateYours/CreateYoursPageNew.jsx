@@ -98,13 +98,13 @@ export default function CreateYoursPageNew() {
   }, [selectedCategory, setSelectedCategory]);
 
   return (
-    <div className="h-[calc(100vh-10rem)] md:h-[calc(90vh-10rem)] bg-white flex flex-col overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
+    <div className="h-screen bg-white flex flex-col overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
       <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
 
       {/* Main content - canvas centered within its div, options scroll when dropdowns open. Mobile: scrollable to see case selection */}
-      <div className="flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-visible">
+      <div className="flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden">
         {/* Canvas - centered within this div (left column), not the page */}
-        <div className="flex flex-col  flex-1 justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 min-h-0">
+        <div className="flex flex-col flex-1 justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 min-h-0 md:overflow-hidden">
           <CanvasSectionCentered
             selectedCaseType={selectedCaseType}
             selectedColor={selectedColor}
@@ -120,60 +120,62 @@ export default function CreateYoursPageNew() {
           />
         </div>
 
-        {/* Options column - scrolls when dropdowns open, scrollbar hidden */}
-        <div className={`flex  p-4 lg:p-0 flex-col md:w-1/2 md:pl-6 lg:pl-8 md:border-l mt-20 md:border-gray-100 md:min-h-0 md:overflow-y-auto md:overflow-x-hidden hide-scrollbar ${isMobile ? 'hidden' : 'flex-shrink-0 md:flex-none'}`}>
+        {/* Options column - options scroll, price summary always visible. overflow-hidden keeps canvas from moving. */}
+        <div className={`flex flex-col md:w-1/2 md:pl-6 lg:pl-8 md:border-l mt-4 md:mt-6 md:border-gray-100 md:min-h-0 md:overflow-hidden ${isMobile ? 'hidden' : 'flex-shrink-0 md:flex-none p-4 lg:p-0'}`}>
           {!isMobile && (
             <>
-              <CaseSelectionSection
-                isOpen={isCaseDropdownOpen}
-                onToggle={() => {
-                  setIsCharmsDropdownOpen(false);
-                  setIsAddTextDropdownOpen(false);
-                  setIsCaseDropdownOpen((prev) => !prev);
-                }}
-                selectedCaseType={selectedCaseType}
-                selectedColor={selectedColor}
-                selectedCase={selectedCase}
-                onCaseSelect={handleCaseTypeSelection}
-                onColorSelect={handleColorSelection}
-                setIsCaseDropdownOpen={setIsCaseDropdownOpen}
-                Products={productsWithQuantities}
-                cart={cart}
-              />
-              <CharmsSelectionSection
-                isOpen={isCharmsDropdownOpen}
-                onToggle={() => {
-                  setIsCaseDropdownOpen(false);
-                  setIsAddTextDropdownOpen(false);
-                  setIsCharmsDropdownOpen((prev) => !prev);
-                }}
-                pins={pins}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                selectedPins={selectedPins}
-                onPinSelect={handlePinSelection}
-                Products={productsWithQuantities}
-                cart={cart}
-              />
-              <AddTextSection
-                isOpen={isAddTextDropdownOpen}
-                onToggle={() => {
-                  setIsCaseDropdownOpen(false);
-                  setIsCharmsDropdownOpen(false);
-                  setIsAddTextDropdownOpen((prev) => !prev);
-                }}
-                customText={customText}
-                setCustomText={setCustomText}
-                customTextError={customTextError}
-                setCustomTextError={setCustomTextError}
-                customTextAdded={customTextAdded}
-                setCustomTextAdded={setCustomTextAdded}
-              />
-            </>
-          )}
+              {/* Scrollable options - dropdowns expand here without moving price summary */}
+              <div className="flex-1 min-h-0 mt-10 overflow-y-auto overflow-x-hidden hide-scrollbar">
+                <CaseSelectionSection
+                  isOpen={isCaseDropdownOpen}
+                  onToggle={() => {
+                    setIsCharmsDropdownOpen(false);
+                    setIsAddTextDropdownOpen(false);
+                    setIsCaseDropdownOpen((prev) => !prev);
+                  }}
+                  selectedCaseType={selectedCaseType}
+                  selectedColor={selectedColor}
+                  selectedCase={selectedCase}
+                  onCaseSelect={handleCaseTypeSelection}
+                  onColorSelect={handleColorSelection}
+                  setIsCaseDropdownOpen={setIsCaseDropdownOpen}
+                  Products={productsWithQuantities}
+                  cart={cart}
+                />
+                <CharmsSelectionSection
+                  isOpen={isCharmsDropdownOpen}
+                  onToggle={() => {
+                    setIsCaseDropdownOpen(false);
+                    setIsAddTextDropdownOpen(false);
+                    setIsCharmsDropdownOpen((prev) => !prev);
+                  }}
+                  pins={pins}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  selectedPins={selectedPins}
+                  onPinSelect={handlePinSelection}
+                  Products={productsWithQuantities}
+                  cart={cart}
+                />
+                <AddTextSection
+                  isOpen={isAddTextDropdownOpen}
+                  onToggle={() => {
+                    setIsCaseDropdownOpen(false);
+                    setIsCharmsDropdownOpen(false);
+                    setIsAddTextDropdownOpen((prev) => !prev);
+                  }}
+                  customText={customText}
+                  setCustomText={setCustomText}
+                  customTextError={customTextError}
+                  setCustomTextError={setCustomTextError}
+                  customTextAdded={customTextAdded}
+                  setCustomTextAdded={setCustomTextAdded}
+                />
+              </div>
 
-          <div className="mt-auto pt-6">
-          <PriceSummary
+              {/* Price summary - always visible at bottom, never scrolls */}
+              <div className="flex-shrink-0 pt-6 border-t border-gray-100 bg-white">
+                <PriceSummary
             totalPrice={totalPrice}
             caseBasePrice={caseBasePrice}
             groupedPinsList={groupedPinsList}
@@ -197,7 +199,9 @@ export default function CreateYoursPageNew() {
             inventoryType={inventoryType}
             isMobile={isMobile}
           />
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

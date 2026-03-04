@@ -106,14 +106,32 @@ exports.handler = async (event) => {
       automatic_payment_methods: { enabled: true },
     };
 
+    // Stripe metadata: max 500 chars per value. Cart items include designImage (base64) which can be huge.
+    // Sanitize to strip images and keep only essential fields for Stripe dashboard.
+    const STRIPE_META_MAX = 500;
+    const sanitizeForMetadata = (obj, maxLen = STRIPE_META_MAX) => {
+      const str = typeof obj === "string" ? obj : JSON.stringify(obj);
+      return str.length > maxLen ? str.substring(0, maxLen - 3) + "…" : str;
+    };
+    const sanitizeItems = (arr) => {
+      if (!arr || !Array.isArray(arr)) return [];
+      return arr.map((item) => ({
+        name: item.name || item.caseName || "Item",
+        type: item.type,
+        quantity: item.quantity || 1,
+        price: item.price ?? item.totalPrice ?? 0,
+      }));
+    };
+
     // Add metadata if items or customerInfo are provided
     if (items || customerInfo) {
       paymentIntentParams.metadata = {};
       if (items) {
-        paymentIntentParams.metadata.items = JSON.stringify(items);
+        const slimItems = sanitizeItems(items);
+        paymentIntentParams.metadata.items = sanitizeForMetadata(slimItems);
       }
       if (customerInfo) {
-        paymentIntentParams.metadata.customerInfo = JSON.stringify(customerInfo);
+        paymentIntentParams.metadata.customerInfo = sanitizeForMetadata(customerInfo);
         if (customerInfo.email) {
           paymentIntentParams.receipt_email = customerInfo.email;
         }

@@ -509,7 +509,7 @@
         "name": "Be Kind",
         "src": "/images/ColorfulPins/bekind.webp",
         "price": 2,
-        "size": 0.75,
+        "size": 0.65,
         "subCategory": "inspiration"
       },
       {
@@ -524,7 +524,7 @@
         "name": "Ticket to Happiness",
         "src": "/images/ColorfulPins/tickettohappiness.webp",
         "price": 2,
-        "size": 0.80,
+        "size": 0.70,
         "subCategory": "inspiration"
       },
       {
@@ -548,7 +548,7 @@
         "name": "Beer",
         "src": "/images/ColorfulPins/beer.webp",
         "price": 2,
-        "size": 0.65,
+        "size": 0.55,
         "subCategory": "drinks"
       },
       {
@@ -588,7 +588,7 @@
         "name": "Disney",
         "src": "/images/ColorfulPins/disney.webp",
         "price": 2,
-        "size": 0.75,
+        "size": 0.6,
         "subCategory": "disney"
       },
       {
@@ -645,7 +645,7 @@
         "name": "Adventure Awaits Ticket",
         "src": "/images/ColorfulPins/adventureawaits.webp",
         "price": 2,
-        "size": 0.85,
+        "size": 0.75,
         "subCategory": "travel"
       },
       {
@@ -653,7 +653,7 @@
         "name": "Passport",
         "src": "/images/ColorfulPins/passport.webp",
         "price": 2,
-        "size": 0.75,
+        "size": 0.70,
         "subCategory": "travel"
       },
       {
@@ -661,7 +661,7 @@
         "name": "Coffee",
         "src": "/images/ColorfulPins/coffee.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.4,
         "subCategory": "drinks"
       },
       {
@@ -685,7 +685,7 @@
         "name": "Suitcase",
         "src": "/images/ColorfulPins/orangeluggage.webp",
         "price": 2,
-        "size": 0.7,
+        "size": 0.6,
         "subCategory": "travel"
       },
       {
@@ -765,7 +765,7 @@
         "name": "Love",
         "src": "/images/ColorfulPins/love.webp",
         "price": 2,
-        "size": 0.7,
+        "size": 0.6,
         "subCategory": "travel"
       },
       {
