@@ -39,7 +39,7 @@ const NoteSection = ({
             </button>
             <button
               onClick={() => onSaveNote(index)}
-              className="px-3 py-1 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
+              className="px-3 py-1 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
             >
               Save
             </button>
@@ -63,7 +63,7 @@ const NoteSection = ({
       <div className="mt-3 pt-3 border-t border-gray-100">
         <button 
           onClick={() => onToggleNote(index)} 
-          className="text-xs text-gray-500 hover:text-gray-900 uppercase tracking-wider font-light transition-colors flex items-center gap-1 font-inter"
+          className="text-xs text-btn-primary-blue hover:text-btn-primary-blue-hover uppercase tracking-wider font-light transition-colors flex items-center gap-1 font-inter"
         >
           {item.note ? 'Edit Note' : 'Add Note'}
           <FontAwesomeIcon 

@@ -47,16 +47,16 @@ const CharmsBestSellers = () => {
           </Link>
         ))}
       </div>
-      <div className="flex flex-wrap justify-center gap-4 mt-6">
+      <div className="flex flex-col md:flex-row flex-wrap justify-center p-6 gap-4 mt-6">
         <Link
           href="/charms/colorful"
-          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+          className="w-full  md:w-auto inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
         >
           Shop All Charms
         </Link>
         <Link
           href="/custom-passport-holder"
-          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+          className="w-full md:w-auto inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
         >
           Design Yours
         </Link>

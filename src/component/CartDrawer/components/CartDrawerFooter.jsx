@@ -42,13 +42,13 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
       
       <div className="flex flex-col gap-3">
         <button
-          className="w-full py-2.5 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-light font-inter"
+          className="w-full py-2.5 text-xs uppercase tracking-wider text-btn-primary-blue hover:text-btn-primary-blue-hover border border-btn-primary-blue/50 hover:border-btn-primary-blue transition-all duration-200 font-light font-inter"
           onClick={handleContinueShopping}
         >
           Continue Shopping
         </button>
         <button
-          className="w-full py-2.5 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-green-600 hover:bg-green-700 text-white border border-green-600 hover:border-green-700 transition-all duration-200"
+          className="w-full py-2.5 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
           disabled={cartLength === 0}
           onClick={handleCheckout}
         >

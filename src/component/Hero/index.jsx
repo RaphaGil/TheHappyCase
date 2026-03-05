@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { normalizeImagePath } from '../../utils/imagePath';
 // Defer slick carousel CSS - load asynchronously if needed
@@ -178,18 +179,37 @@ function Hero() {
           >
             Passport Case
           </h1>
-          <button 
-            onClick={handleStartDesigning}
-            className={`px-8 py-3 text-sm uppercase tracking-wider shadow-lg w-fit font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out ${
-              buttonVisible 
-                ? 'opacity-100' 
-                : 'opacity-0'
-            }`}
-          >
-           CREATE NOW
-          </button>
-          <p className="mt-4 text-sm text-white/90 font-light font-inter max-w-md" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
-            We only sell to the UK.
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <button 
+              onClick={handleStartDesigning}
+              className={`px-8 py-3 text-sm uppercase tracking-wider shadow-lg w-fit font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out ${
+                buttonVisible 
+                  ? 'opacity-100' 
+                  : 'opacity-0'
+              }`}
+            >
+              CREATE NOW
+            </button>
+            <Link
+              href="/custom-passport-holder"
+              className={`text-sm uppercase tracking-wider font-inter text-white/95 hover:text-white border-b border-white/70 hover:border-white transition-colors ${
+                buttonVisible ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              Create yours
+            </Link>
+          </div>
+          <p className="mt-4 text-sm text-white/90 font-light font-inter max-w-lg" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
+            We only sell to the UK. To purchase from other countries, visit our{' '}
+            <a
+              href="https://www.etsy.com/shop/TheHappyCaseShop"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-white transition-colors"
+            >
+              Etsy shop
+            </a>
+            .
           </p>
         </div>
       </div>

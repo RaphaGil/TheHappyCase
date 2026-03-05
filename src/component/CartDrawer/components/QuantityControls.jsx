@@ -2,10 +2,10 @@ import React from 'react';
 
 const QuantityControls = ({ quantity, onDecrement, onIncrement }) => {
   return (
-    <div className="flex items-center gap-1 border border-gray-200 rounded-sm p-1">
+    <div className="flex items-center gap-1 border border-btn-primary-blue/30 rounded-sm p-1">
       <button 
         onClick={onDecrement} 
-        className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+        className="w-6 h-6 flex items-center justify-center text-btn-primary-blue hover:bg-btn-primary-blue/10 rounded transition-colors"
       >
         −
       </button>
@@ -14,7 +14,7 @@ const QuantityControls = ({ quantity, onDecrement, onIncrement }) => {
       </div>
       <button 
         onClick={onIncrement} 
-        className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+        className="w-6 h-6 flex items-center justify-center text-btn-primary-blue hover:bg-btn-primary-blue/10 rounded transition-colors"
       >
         +
       </button>

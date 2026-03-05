@@ -26,7 +26,7 @@ const OrderSummary = ({ totalPrice, onCheckout }) => (
         </p>
         <button
           onClick={onCheckout}
-          className="w-full py-3 text-xs uppercase tracking-wider font-light font-inter bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200"
+          className="w-full py-3 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
         >
           Checkout
         </button>

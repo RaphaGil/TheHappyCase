@@ -319,10 +319,10 @@ const QuantityControls = ({
       Quantity:
     </div>
     <div className="flex flex-col gap-2">
-      <div className="flex items-center border border-gray-200 rounded-sm p-1 w-fit">
+      <div className="flex items-center border border-btn-primary-blue/30 rounded-sm p-1 w-fit">
         <button
           onClick={() => decrementItemQty(item.id !== undefined ? item.id : index)}
-          className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+          className="w-6 h-6 flex items-center justify-center text-btn-primary-blue hover:bg-btn-primary-blue/10 rounded transition-colors"
           title="Decrease"
         >
           −
@@ -332,7 +332,7 @@ const QuantityControls = ({
         </div>
         <button
           onClick={() => incrementItemQty(item.id !== undefined ? item.id : index)}
-          className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+          className="w-6 h-6 flex items-center justify-center text-btn-primary-blue hover:bg-btn-primary-blue/10 rounded transition-colors"
           title="Add one more"
         >
           +
@@ -388,7 +388,7 @@ const NoteEditor = ({
             </button>
             <button
               onClick={() => handleSaveNote(index)}
-              className="px-4 py-1.5 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
+              className="px-4 py-1.5 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
             >
               Save Note
             </button>
@@ -441,7 +441,7 @@ const CartItem = ({
   errorMessage,
   charmErrors = {},
 }) => (
-  <div className="border border-gray-200 p-6 bg-white" data-item-id={item.id || index}>
+  <div className="border border-btn-primary-blue/20 p-6 bg-white" data-item-id={item.id || index}>
     <div className="flex items-start justify-between">
       <div className="flex-1">
         {item.type === "charm" ? (
@@ -462,7 +462,7 @@ const CartItem = ({
           <div className="flex items-center justify-end">
             <button
               onClick={() => removeFromCart(index)}
-              className="flex items-center text-gray-500 hover:text-gray-900 px-4 py-2 text-xs uppercase tracking-wider font-light transition-colors font-inter"
+              className="flex items-center text-btn-primary-blue hover:text-btn-primary-blue-hover px-4 py-2 text-xs uppercase tracking-wider font-light transition-colors font-inter"
             >
               <FontAwesomeIcon icon={faTrash} className="mr-2 text-xs" />
               Remove

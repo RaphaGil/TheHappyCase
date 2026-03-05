@@ -29,7 +29,7 @@ const CartIcon = ({ isMobile = false }) => {
         <path d="M16 10a4 4 0 01-8 0" />
       </svg>
       {totalQuantity > 0 && (
-        <span className={`absolute top-0 right-0 bg-gray-900 text-white ${isMobile ? 'text-sm' : 'text-xs'} rounded-full ${isMobile ? 'h-6 w-6' : 'h-5 w-5'} flex items-center justify-center font-light`}>
+        <span className={`absolute top-0 right-0 bg-btn-primary-blue text-btn-primary-blue-text ${isMobile ? 'text-sm' : 'text-xs'} rounded-full ${isMobile ? 'h-6 w-6' : 'h-5 w-5'} flex items-center justify-center font-light`}>
           {totalQuantity}
         </span>
       )}
