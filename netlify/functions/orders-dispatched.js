@@ -161,6 +161,18 @@ exports.handler = async (event) => {
     const trackingData = { order_id: orderId, tracking_number: processedTrackingNumber, tracking_link: processedTrackingLink };
     await supabase.from("tracking").upsert(trackingData, { onConflict: "order_id", ignoreDuplicates: false });
 
+    // Update customer profile when marking as dispatched (profiles table)
+    const userId = orderData[0]?.user_id;
+    if (dispatched === true && userId) {
+      await supabase
+        .from("profiles")
+        .update({
+          last_order_dispatched_at: new Date().toISOString(),
+          last_order_dispatched_id: orderId,
+        })
+        .eq("id", userId);
+    }
+
     const trackingWithCarrier = { ...trackingData, carrier: processedCarrier || updatedMetadata.carrier || null };
     const responseOrder = { ...orderData[0], tracking: trackingWithCarrier };
 

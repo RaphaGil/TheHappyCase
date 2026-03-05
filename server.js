@@ -2926,6 +2926,23 @@ async function handleDispatchedUpdate(req, res) {
       console.log('✅ Tracking information saved:', trackingResult);
     }
 
+    // Update customer profile when marking as dispatched (profiles table)
+    const userId = orderData[0]?.user_id;
+    if (dispatched === true && userId) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          last_order_dispatched_at: new Date().toISOString(),
+          last_order_dispatched_id: orderId,
+        })
+        .eq('id', userId);
+      if (profileError) {
+        console.warn('⚠️ Could not update customer profile (profiles table may not exist):', profileError.message);
+      } else {
+        console.log('✅ Customer profile updated with dispatched order');
+      }
+    }
+
     // Combine order and tracking data for response (include carrier from metadata for display)
     const trackingWithCarrier = {
       ...(trackingResult || {}),
