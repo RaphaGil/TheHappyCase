@@ -6,11 +6,19 @@ const __dirname = dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Explicitly pass Stripe key so it's available at build time (for static export)
+  // Explicitly pass env vars so they're available at build time (for static export)
   env: {
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
       process.env.VITE_STRIPE_PUBLISHABLE_KEY ||
+      '',
+    NEXT_PUBLIC_SUPABASE_URL:
+      process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      process.env.VITE_SUPABASE_URL ||
+      '',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY:
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      process.env.VITE_SUPABASE_ANON_KEY ||
       '',
   },
   // Set the workspace root to silence the lockfile warning
