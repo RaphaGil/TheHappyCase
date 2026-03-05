@@ -833,7 +833,7 @@
         "name": "Airplane",
         "src": "/images/BronzePins/airplane.webp",
         "price": 1,
-        "size": 0.65,
+        "size": 0.7,
         "subCategory": "travel"
       },
       {
@@ -841,7 +841,7 @@
         "name": "Cardinal Points",
         "src": "/images/BronzePins/cardinalpoints.webp",
         "price": 1,
-        "size": 0.65,
+        "size": 0.7,
         "subCategory": "symbols"
       },
       {
@@ -905,7 +905,7 @@
         "name": "Lucky Leaf",
         "src": "/images/BronzePins/luckyleaf.webp",
         "price": 1,
-        "size": 0.45,
+        "size": 0.35,
         "subCategory": "nature"
       },
       {
@@ -944,7 +944,7 @@
         "name": "Hamsa Hand",
         "src": "/images/BronzePins/hamsahand.webp",
         "price": 1,
-        "size": 0.9,
+        "size": 0.5,
         "subCategory": "symbols"
       },
       {
@@ -1021,7 +1021,7 @@
         "name": "Enjoy the Journey",
         "src": "/images/BronzePins/enjoythejourney.webp",
         "price": 1,
-        "size": 1,
+        "size": 1.2,
         "subCategory": "symbols"
       },
       {
@@ -1045,7 +1045,7 @@
         "name": "Butterfly",
         "src": "/images/BronzePins/butterfly.webp",
         "price": 1,
-        "size": 0.7,
+        "size": 0.6,
         "subCategory": "nature"
       },
       {

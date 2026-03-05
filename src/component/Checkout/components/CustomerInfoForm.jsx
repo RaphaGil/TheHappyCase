@@ -139,6 +139,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.name ?? ''}
             onChange={onInputChange}
             required
+            maxLength={15}
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
             style={{ fontSize: '16px' }}
           />
@@ -153,6 +154,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.surname ?? ''}
             onChange={onInputChange}
             required
+            maxLength={15}
             className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
             style={{ fontSize: '16px' }}
           />

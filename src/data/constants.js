@@ -1,7 +1,7 @@
 // Constants for CreateYours page
 export const CUSTOM_TEXT_COLOR = '#675a3a'; // Old bronze color
 export const CUSTOM_TEXT_SIZE = 28; // Smaller font size for bronze text
-export const MAX_TEXT_LENGTH = 15;
+export const MAX_TEXT_LENGTH = 10;
 
 // Case options
 export const CASE_OPTIONS = [

@@ -464,7 +464,7 @@
         "name": "Heart Globe",
         "src": "/images/ColorfulPins/heartglobe.webp",
         "price": 2,
-        "size": 0.7,
+        "size": 0.65,
         "subCategory": "travel"
       },
       {
@@ -542,7 +542,7 @@
         "name": "Bottle of Wine",
         "src": "/images/ColorfulPins/bottleofwine.webp",
         "price": 2,
-        "size": 0.8,
+        "size": 0.7,
         "subCategory": "drinks"
       },
       {
@@ -726,7 +726,7 @@
         "name": "Combi",
         "src": "/images/ColorfulPins/combi.webp",
         "price": 2,
-        "size": 0.7,
+        "size": 0.65,
         "subCategory": "travel"
       },
       {
@@ -758,7 +758,7 @@
         "name": "Pizza",
         "src": "/images/ColorfulPins/pizza.webp",
         "price": 1,
-        "size": 0.6,
+        "size": 0.55,
         "subCategory": "food"
       },
       {
@@ -798,7 +798,7 @@
         "name": "Happy",
         "src": "/images/ColorfulPins/happy.webp",
         "price": 1,
-        "size": 0.6,
+        "size": 0.7,
         "subCategory": "inspiration",
         "badge": "New"
       },
