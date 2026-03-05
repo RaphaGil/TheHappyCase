@@ -19,7 +19,7 @@ const ImageGallery = ({
           <img
             src={normalizeImagePath(currentImage)}
             alt={`${selectedCase.name} - View`}
-            className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'opacity-50 pointer-events-none cursor-not-allowed' : ''}`}
+            className={`w-full h-[300px] lg:h-[400px] xl:h-[500px] object-contain transition-opacity duration-200 ${isSelectedColorSoldOut() ? 'pointer-events-none cursor-not-allowed' : ''}`}
             loading="eager"
             fetchPriority="high"
             decoding="async"
@@ -32,7 +32,7 @@ const ImageGallery = ({
               }
             }}
           />
-          <div className="hidden w-full h-[300px] lg:h-[400px] xl:h-[500px] items-center justify-center text-gray-400 bg-gray-50">
+          <div className="hidden w-full h-[300px] lg:h-[400px] xl:h-[500px] items-center justify-center text-gray-500 bg-white">
             <div className="text-center">
               <p className="text-gray-500 font-inter">Image not available</p>
             </div>
@@ -58,11 +58,11 @@ const ImageGallery = ({
               key={index}
               onClick={() => onDetailImageClick(image)}
               disabled={isSelectedColorSoldOut()}
-              className={`relative aspect-square overflow-hidden bg-gray-50 border transition-all duration-200 max-w-[80px] mx-auto ${
+              className={`relative aspect-square overflow-hidden bg-white border transition-all duration-200 max-w-[80px] mx-auto ${
                 selectedDetailImage === image || (!selectedDetailImage && index === 0 && currentImage === image)
                   ? 'border-gray-900 ring-2 ring-gray-300'
                   : 'border-gray-200 hover:border-gray-400'
-              } ${isSelectedColorSoldOut() ? 'opacity-50 cursor-not-allowed' : ''}`}
+              } ${isSelectedColorSoldOut() ? 'cursor-not-allowed' : ''}`}
             >
               <img
                 src={normalizeImagePath(image)}
@@ -80,7 +80,7 @@ const ImageGallery = ({
                   }
                 }}
               />
-              <div className="hidden w-full h-full items-center justify-center text-gray-300">
+              <div className="hidden w-full h-full items-center justify-center text-gray-500 bg-white">
                 <span className="text-2xl">📷</span>
               </div>
             </button>

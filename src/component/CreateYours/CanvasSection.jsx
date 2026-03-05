@@ -1,6 +1,16 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { normalizeImagePath } from '../../utils/imagePath';
-import Canvas from '../Canvas';
+
+// Lazy-load Canvas (and Fabric.js)
+const Canvas = dynamic(() => import('../Canvas'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[320px] flex items-center justify-center bg-gray-50 rounded-sm">
+      <span className="text-gray-400 text-sm font-inter">Loading designer...</span>
+    </div>
+  ),
+});
 import ViewMoreImagesButton from './ViewMoreImagesButton';
 import ItemDescriptionDropdown from './ItemDescriptionDropdown';
 

@@ -1,8 +1,19 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { normalizeImagePath } from '../../utils/imagePath';
-import Canvas from '../Canvas';
 import ViewMoreImagesButton from './ViewMoreImagesButton';
 import ItemDescriptionDropdown from './ItemDescriptionDropdown';
+
+// Lazy-load Canvas (and Fabric.js) - only when Custom Passport Holder page is opened
+const Canvas = dynamic(() => import('../Canvas'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full min-h-[350px] flex items-center justify-center bg-gray-50 rounded-sm">
+      <span className="text-gray-400 text-sm font-inter">Loading designer...</span>
+    </div>
+  ),
+});
+
 
 /**
  * Canvas section with canvas and action buttons centered within its parent div.

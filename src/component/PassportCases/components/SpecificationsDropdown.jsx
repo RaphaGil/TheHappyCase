@@ -1,6 +1,17 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+
+// Inline SVG chevron - avoids FontAwesome flash (big black tick) on page load
+const ChevronIcon = ({ isOpen }) => (
+  <svg
+    className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+  </svg>
+);
 
 const SpecificationsDropdown = ({ 
   specifications, 
@@ -13,13 +24,10 @@ const SpecificationsDropdown = ({
     <div className="border-b border-gray-100 pb-8">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors font-inter"
+        className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-600 font-normal hover:text-gray-900 transition-colors font-inter"
       >
         <span>Specifications</span>
-        <FontAwesomeIcon 
-          icon={isOpen ? faChevronUp : faChevronDown} 
-          className="text-xs transition-transform duration-200"
-        />
+        <ChevronIcon isOpen={isOpen} />
       </button>
       {isOpen && (
         <div className="flex flex-col gap-3 mt-4">

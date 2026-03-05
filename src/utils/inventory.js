@@ -3,6 +3,9 @@ import Products from '../data/products.json';
 import { areItemsIdentical } from './cartHelpers';
 import { getApiUrl } from './apiConfig';
 
+// Timeout for inventory API (shorter = faster fallback to cache/unlimited stock)
+const INVENTORY_TIMEOUT_MS = 5000;
+
 // In-memory cache for inventory data (always fetched from Supabase)
 let inventoryCache = null;
 let inventoryCacheTimestamp = null;
@@ -36,9 +39,9 @@ const fetchInventoryFromSupabase = async () => {
       // Try to fetch from API (server endpoint) with timeout
       const apiUrl = getApiUrl('/api/inventory');
       
-      // Create an AbortController for timeout
+      // Create an AbortController for timeout (fallback to cache/unlimited if slow)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), INVENTORY_TIMEOUT_MS);
       
       const safeParseJSON = async (response) => {
         const contentType = response.headers.get('content-type');
@@ -279,7 +282,17 @@ const fetchInventoryFromSupabase = async () => {
       } catch (fetchError) {
         clearTimeout(timeoutId);
         isInitializing = false; // Mark initialization as complete even on error
-        
+
+        // Timeout or slow API - fallback to cached data or unlimited stock
+        if (fetchError.name === 'AbortError') {
+          if (inventoryCache) {
+            console.warn('[INVENTORY] ⚠️ Request timed out, using cached data');
+            return inventoryCache;
+          }
+          console.warn('[INVENTORY] ⚠️ Request timed out, no cache (showing unlimited stock)');
+          return null;
+        }
+
         console.error('[INVENTORY] ❌ Error fetching inventory:', {
           message: fetchError.message,
           name: fetchError.name,
@@ -307,7 +320,7 @@ const fetchInventoryFromSupabase = async () => {
           const functionUrl = apiUrl.replace('/api/inventory', '/.netlify/functions/inventory');
           try {
             const directController = new AbortController();
-            const directTimeoutId = setTimeout(() => directController.abort(), 10000);
+            const directTimeoutId = setTimeout(() => directController.abort(), INVENTORY_TIMEOUT_MS);
             
             const directResponse = await fetch(functionUrl, {
               signal: directController.signal,
@@ -366,7 +379,7 @@ export const getItemQuantityFromSupabase = async (itemId) => {
     
     // Create an AbortController for timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), INVENTORY_TIMEOUT_MS);
     
     try {
       const response = await fetch(apiUrl, {

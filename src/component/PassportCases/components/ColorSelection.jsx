@@ -27,7 +27,7 @@ const ColorSelection = ({
                   selectedColor === colorOption.color
                     ? 'border-gray-900 ring-2 ring-gray-300 scale-110'
                     : 'border-gray-200 hover:border-gray-400'
-                } ${colorSoldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+                } ${colorSoldOut ? 'cursor-not-allowed' : ''}`}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorSoldOut ? 'Sold Out' : colorName || `Color ${index + 1}`}
               />

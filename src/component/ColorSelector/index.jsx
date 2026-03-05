@@ -112,13 +112,6 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
                   } ${isSoldOut ? 'opacity-50' : ''}`}
                   style={{ backgroundColor: color }}
                 />
-                {isSelected && !isSoldOut && (
-                  <div className="absolute top-0 right-0 w-4 h-4 bg-gray-900 rounded-full flex items-center justify-center z-10">
-                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                )}
               </div>
               {colorName && (
                 <span className={`text-xs font-medium mt-2 text-center font-inter ${
