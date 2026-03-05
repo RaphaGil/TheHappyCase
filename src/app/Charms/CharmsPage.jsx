@@ -285,7 +285,6 @@ const Charms = () => {
                   key={index}
                   charm={charm}
                   index={index}
-                  onAddToCart={handleAddToCart}
                   charmType={selectedCharmType}
                   cart={cart}
                   charmPrice={getCharmPrice(charm, selectedCharmType)}

@@ -3,6 +3,8 @@
 import React, { useState, useMemo } from 'react';
 import { getApiUrl } from '../../utils/apiConfig';
 import { getOrderDisplayId } from '../../utils/paymentsucess/helpers';
+import { getColorName } from '../../utils/createyours/helpers';
+import { normalizeImagePath } from '../../utils/imagePath';
 import AirplaneLoading from '../Shared/AirplaneLoading';
 
 const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
@@ -471,7 +473,41 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                     </div>
                   )}
                   <div className="mt-2 text-sm text-gray-500">
-                    {items.length} item(s) • {order.customer_email}
+                    {items.length} item{items.length !== 1 ? 's' : ''} • {order.currency?.toUpperCase() || 'GBP'} • {order.customer_email}
+                  </div>
+                  {/* Address & Images - Visible in Header */}
+                  <div className="mt-3 pt-3 border-t border-gray-200 flex flex-wrap items-center gap-4">
+                    {(shippingAddress.line1 || shippingAddress.city) && (
+                      <div className="text-sm text-gray-600">
+                        <span className="font-medium text-gray-700">Ship to:</span>{' '}
+                        {[shippingAddress.line1, shippingAddress.city, shippingAddress.postal_code].filter(Boolean).join(', ')}
+                      </div>
+                    )}
+                    {items.length > 0 && (
+                      <div className="flex gap-2 flex-wrap">
+                        {items.slice(0, 4).map((item, idx) => {
+                          const imgSrc = item.design_image || item.designImage || item.case_image || item.caseImage || item.image;
+                          return imgSrc ? (
+                            <img
+                              key={idx}
+                              src={normalizeImagePath(imgSrc)}
+                              alt={item.caseName || item.name || 'Item'}
+                              className="w-12 h-12 object-contain rounded border bg-white flex-shrink-0"
+                              onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                          ) : (
+                            <div key={idx} className="w-12 h-12 bg-gray-100 rounded border flex items-center justify-center flex-shrink-0">
+                              <span className="text-xs text-gray-400">—</span>
+                            </div>
+                          );
+                        })}
+                        {items.length > 4 && (
+                          <div className="w-12 h-12 bg-gray-100 rounded border flex items-center justify-center flex-shrink-0 text-xs text-gray-500 font-medium">
+                            +{items.length - 4}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="ml-4 flex items-center gap-3">
@@ -525,7 +561,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             {isExpanded && (
               <div className="border-t bg-gray-50 p-6">
                 {/* Dispatch Information - Prominent Section */}
-                {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.tracking?.carrier || order.metadata?.carrier || order.metadata?.dispatched_at) && (
+                {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.tracking?.carrier || order.metadata?.carrier || order.metadata?.dispatched_at) ? (
                   <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <h4 className="font-semibold mb-3 text-gray-900 flex items-center gap-2">
                       <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -585,6 +621,10 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                         </button>
                       </div>
                     </div>
+                  </div>
+                ) : (
+                  <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-sm text-amber-800 font-medium">Order has not been dispatched yet. No tracking information.</p>
                   </div>
                 )}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -651,25 +691,25 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                       >
                         {/* Item Image */}
                         <div className="flex-shrink-0">
-                          {item.design_image ? (
+                          {(item.design_image || item.designImage) ? (
                             <img
-                              src={item.design_image}
-                              alt={item.name || 'Custom design'}
-                              className="w-24 h-24 object-cover rounded border"
+                              src={normalizeImagePath(item.design_image || item.designImage)}
+                              alt={item.caseName || item.name || 'Custom design'}
+                              className="w-28 h-28 md:w-32 md:h-32 object-contain rounded border bg-white"
                               onError={(e) => {
-                                // Fallback to case image if design image fails
-                                if (item.case_image && e.target.src !== item.case_image) {
-                                  e.target.src = item.case_image;
+                                const fallback = item.case_image || item.caseImage || item.image;
+                                if (fallback && e.target.src !== normalizeImagePath(fallback)) {
+                                  e.target.src = normalizeImagePath(fallback);
                                 } else {
                                   e.target.style.display = 'none';
                                 }
                               }}
                             />
-                          ) : item.case_image ? (
+                          ) : (item.case_image || item.caseImage || item.image) ? (
                             <img
-                              src={item.case_image}
-                              alt={item.name || 'Case'}
-                              className="w-24 h-24 object-cover rounded border"
+                              src={normalizeImagePath(item.case_image || item.caseImage || item.image)}
+                              alt={item.caseName || item.name || 'Case'}
+                              className="w-28 h-28 md:w-32 md:h-32 object-contain rounded border bg-white"
                               onError={(e) => {
                                 e.target.style.display = 'none';
                               }}
@@ -684,7 +724,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                         {/* Item Details */}
                         <div className="flex-1">
                           <h5 className="font-medium text-gray-900">
-                            {item.name || 'Custom Case'}
+                            {item.caseName || item.name || 'Custom Case'}
                           </h5>
                           <div className="mt-1 space-y-1 text-sm text-gray-600">
                             {item.case_type && (
@@ -692,23 +732,29 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                                 <span className="font-medium">Type:</span> {item.case_type}
                               </div>
                             )}
-                            {item.color && (
+                            {(item.color || item.case_image || item.caseImage || item.image) && (
                               <div>
-                                <span className="font-medium">Color:</span> {item.color}
+                                <span className="font-medium">Color:</span>{' '}
+                                {getColorName(item.color, item.case_image || item.caseImage || item.image) || item.color || '—'}
                               </div>
                             )}
                             <div>
                               <span className="font-medium">Quantity:</span> {item.quantity || 1}
                             </div>
-                            {item.pins && item.pins.length > 0 && (
+                            {((item.pinsDetails && item.pinsDetails.length > 0) || (item.pins && item.pins.length > 0)) && (
                               <div>
-                                <span className="font-medium">Pins:</span>{' '}
-                                {item.pins.map((pin, i) => (
+                                <span className="font-medium">Charms:</span>{' '}
+                                {(item.pinsDetails || item.pins || []).map((pin, i) => (
                                   <span key={i}>
-                                    {pin.name || pin}
-                                    {i < item.pins.length - 1 ? ', ' : ''}
+                                    {typeof pin === 'object' ? (pin.name || pin.src || 'Charm') : pin}
+                                    {i < (item.pinsDetails || item.pins).length - 1 ? ', ' : ''}
                                   </span>
                                 ))}
+                              </div>
+                            )}
+                            {(item.customText || item.custom_text) && (
+                              <div>
+                                <span className="font-medium">Custom text:</span> &quot;{item.customText || item.custom_text}&quot;
                               </div>
                             )}
                             {item.custom_design && (
@@ -722,11 +768,14 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                         {/* Item Price */}
                         <div className="text-right">
                           <div className="font-semibold text-gray-900">
-                            {formatCurrency(item.total_price || item.unit_price || 0, order.currency)}
+                            {formatCurrency(
+                              item.total_price ?? (item.totalPrice ?? ((item.unit_price ?? item.price ?? 0) * (item.quantity || 1))),
+                              order.currency
+                            )}
                           </div>
-                          {item.quantity > 1 && (
+                          {item.quantity > 1 && (item.unit_price ?? item.price) != null && (
                             <div className="text-sm text-gray-500 mt-1">
-                              {formatCurrency(item.unit_price || 0, order.currency)} each
+                              {formatCurrency(item.unit_price ?? item.price ?? 0, order.currency)} each
                             </div>
                           )}
                         </div>
@@ -735,27 +784,51 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   </div>
                 </div>
 
-                {/* Order Summary */}
+                {/* Order Summary - All Order Information */}
                 <div className="mt-6 pt-4 border-t">
-                  <div className="flex justify-between items-center">
-                    <div className="text-sm text-gray-600">
-                      <div>
-                        <span className="font-medium">Payment Intent:</span>{' '}
-                        <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-                          {order.payment_intent_id || 'N/A'}
-                        </code>
-                      </div>
-                      <div className="mt-1">
-                        <span className="font-medium">Order ID:</span>{' '}
-                        <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-                          {order.order_id}
-                        </code>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-3 text-sm">
+                      <h4 className="font-semibold text-gray-900">Order Details</h4>
+                      <div className="space-y-2 text-gray-600">
+                        <div>
+                          <span className="font-medium">Order #:</span>{' '}
+                          <span className="font-mono">{order.order_number || getOrderDisplayId(order)}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium">Order ID:</span>{' '}
+                          <code className="text-xs bg-gray-100 px-2 py-1 rounded break-all">{order.order_id}</code>
+                        </div>
+                        <div>
+                          <span className="font-medium">Payment Intent:</span>{' '}
+                          <code className="text-xs bg-gray-100 px-2 py-1 rounded break-all">{order.payment_intent_id || 'N/A'}</code>
+                        </div>
+                        <div>
+                          <span className="font-medium">Date:</span> {formatDate(order.order_date)}
+                        </div>
+                        <div>
+                          <span className="font-medium">Status:</span>{' '}
+                          <span className="capitalize">{order.status || 'N/A'}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium">Currency:</span> {order.currency?.toUpperCase() || 'GBP'}
+                        </div>
+                        {order.user_id && (
+                          <div>
+                            <span className="font-medium">User ID:</span>{' '}
+                            <code className="text-xs bg-gray-100 px-2 py-1 rounded break-all">{order.user_id}</code>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-sm text-gray-600">Total Amount</div>
-                      <div className="text-2xl font-bold text-gray-900">
-                        {formatCurrency(order.total_amount, order.currency)}
+                    <div className="flex flex-col justify-between">
+                      <div className="text-sm text-gray-600 mb-2">
+                        <span className="font-medium">Items:</span> {items.length} item{items.length !== 1 ? 's' : ''}
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-gray-600">Total Amount</div>
+                        <div className="text-2xl font-bold text-gray-900">
+                          {formatCurrency(order.total_amount, order.currency)}
+                        </div>
                       </div>
                     </div>
                   </div>

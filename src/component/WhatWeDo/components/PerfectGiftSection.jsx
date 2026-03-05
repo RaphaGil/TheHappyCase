@@ -84,24 +84,9 @@ const PerfectGiftSection = ({ image }) => {
                     Happy Customers
                   </span>
                 </div>
-                <a 
-                  href="https://www.etsy.com/shop/TheHappyCaseShop?ref=dashboard-header"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                  <span className="text-sm font-light font-inter">
-                    Reviews on Etsy
-                  </span>
-                  <svg 
-                    className="w-4 h-4" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
+                <span className="flex items-center gap-2 text-sm font-light font-inter">
+                  Reviews on Etsy
+                </span>
               </div>
             )}
           </div>
@@ -130,24 +115,9 @@ const PerfectGiftSection = ({ image }) => {
                 </span>
               </div>
               <div className="w-px h-6 bg-gray-300"></div>
-              <a 
-                href="https://www.etsy.com/shop/TheHappyCaseShop?ref=dashboard-header"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity text-gray-700 hover:text-gray-900"
-              >
-                <span className="text-base font-light font-inter">
-                  Reviews on Etsy
-                </span>
-                <svg 
-                  className="w-4 h-4" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </a>
+              <span className="flex items-center gap-2 text-base font-light font-inter text-gray-700">
+                Reviews on Etsy
+              </span>
             </div>
           )}
         </div>

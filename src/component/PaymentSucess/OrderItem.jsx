@@ -26,14 +26,18 @@ const OrderItem = ({ item }) => {
   return (
     <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
       <div className="flex items-start gap-4">
-        {itemImage && (
+        {(itemImage ? (
           <img 
             src={normalizeImagePath(itemImage)} 
             alt={itemName}
-            className="w-16 h-16 md:w-20 md:h-20 object-contain rounded"
+            className="w-20 h-20 md:w-24 md:h-24 object-contain rounded border bg-white"
             loading="lazy"
           />
-        )}
+        ) : (
+          <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 rounded border flex items-center justify-center flex-shrink-0">
+            <span className="text-xs text-gray-400">No image</span>
+          </div>
+        ))}
         <div className="flex-1">
           <p className="font-semibold text-gray-900 mb-1 font-inter">
             {itemName}
@@ -45,7 +49,12 @@ const OrderItem = ({ item }) => {
           )}
           {((item.pinsDetails && item.pinsDetails.length > 0) || (item.pins && Array.isArray(item.pins) && item.pins.length > 0)) && (
             <p className="text-sm text-gray-600 mb-1 font-inter">
-              Charms: <span className="font-medium">{(item.pinsDetails || item.pins || []).length}</span>
+              Charms: <span className="font-medium">{(item.pinsDetails || item.pins || []).map(p => p.name || p.src || 'Charm').join(', ')}</span>
+            </p>
+          )}
+          {(item.customText || item.custom_text) && (
+            <p className="text-sm text-gray-600 mb-1 font-inter">
+              Text: <span className="font-medium">&quot;{item.customText || item.custom_text}&quot;</span>
             </p>
           )}
           {item.quantity > 1 && (

@@ -189,16 +189,7 @@ function Hero() {
            CREATE NOW
           </button>
           <p className="mt-4 text-sm text-white/90 font-light font-inter max-w-md" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
-            We only sell to the UK. To purchase from a different country, visit our{' '}
-            <a
-              href="https://www.etsy.com/shop/TheHappyCaseShop?ref=dashboard-header"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-white transition-colors"
-            >
-              shop on Etsy
-            </a>
-            .
+            We only sell to the UK.
           </p>
         </div>
       </div>

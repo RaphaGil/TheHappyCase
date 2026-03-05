@@ -231,19 +231,19 @@ const Login = () => {
           )}
         </div>
 
-        {success && step === 'code' && (
+        {!isLoggedIn && success && step === 'code' && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-green-800 font-light font-inter">Verification code sent to <strong>{email}</strong></p>
           </div>
         )}
 
-        {error && (
+        {!isLoggedIn && error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-sm text-red-800 font-light font-inter">{error}</p>
           </div>
         )}
 
-        {step === 'email' && (
+        {!isLoggedIn && step === 'email' && (
           <form onSubmit={handleSendCode} className="space-y-6">
             <div>
               <label className="block text-sm text-gray-700 mb-2 font-light font-inter">Email Address *</label>
@@ -264,7 +264,7 @@ const Login = () => {
           </form>
         )}
 
-        {step === 'code' && (
+        {!isLoggedIn && step === 'code' && (
           <form onSubmit={handleVerifyCode} className="space-y-6">
             <div>
               <p className="text-sm text-gray-600 font-light font-inter mb-4 text-center">We've sent a 6-digit verification code to <strong>{email}</strong>. Please enter it below.</p>
@@ -324,6 +324,9 @@ const Login = () => {
                         <div>
                           <h3 className="text-lg font-semibold text-gray-900 mb-1 font-inter">Order #{getOrderDisplayId(order)}</h3>
                           <p className="text-sm text-gray-600 font-inter">Placed on {formatOrderDate(order.order_date)}</p>
+                          <p className="text-sm text-gray-500 font-inter mt-0.5">
+                            {order.items?.length || 0} item{(order.items?.length || 0) !== 1 ? 's' : ''} • {order.currency?.toUpperCase() || 'GBP'}
+                          </p>
                         </div>
                         <div className="flex flex-col sm:items-end gap-2">
                           <span className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${order.status === 'succeeded' || order.status === 'complete' ? 'bg-green-100 text-green-800' : order.status === 'processing' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`}>
@@ -334,6 +337,59 @@ const Login = () => {
                       </div>
                     </div>
                     <div className="p-6">
+                      <div className="flex flex-wrap justify-end gap-3 mb-4">
+                        {(order.tracking?.tracking_link || order.tracking?.tracking_number || order.tracking?.carrier || order.metadata?.tracking_link || order.metadata?.carrier) && (
+                          <a
+                            href={order.tracking?.tracking_link || order.metadata?.tracking_link || 'https://www.evri.com/track-a-parcel'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-md transition-colors font-inter"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            Track Parcel
+                          </a>
+                        )}
+                        <a
+                          href={`mailto:thehappycase.shop@gmail.com?subject=Return - Order #${getOrderDisplayId(order)}`}
+                          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors font-inter"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          Return
+                        </a>
+                      </div>
+                      {((order.tracking?.carrier || order.metadata?.carrier) || order.tracking?.tracking_number) ? (
+                        <div className="mb-4 p-3 bg-gray-50 rounded-md border border-gray-200 text-sm font-inter">
+                          {(order.tracking?.carrier || order.metadata?.carrier) && (
+                            <div><span className="text-gray-600">Carrier:</span> <span className="text-gray-900 font-medium">{order.tracking?.carrier || order.metadata?.carrier}</span></div>
+                          )}
+                          {order.tracking?.tracking_number && (
+                            <div className="mt-1"><span className="text-gray-600">Tracking #:</span> <span className="text-gray-900 font-mono text-xs bg-white px-2 py-0.5 rounded border border-gray-200">{order.tracking.tracking_number}</span></div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="mb-4 p-3 bg-amber-50 rounded-md border border-amber-200 text-sm text-amber-800 font-inter">
+                          Your order hasn&apos;t been dispatched yet. You&apos;ll receive tracking information once it ships.
+                        </div>
+                      )}
+                      {(order.shipping_address?.line1 || order.shipping_address?.city) && (
+                        <div className="mb-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-2 font-inter">Shipping address</h4>
+                          <div className="text-sm text-gray-700 font-inter space-y-0.5">
+                            {order.shipping_address.line1 && <div>{order.shipping_address.line1}</div>}
+                            {order.shipping_address.line2 && <div>{order.shipping_address.line2}</div>}
+                            <div>
+                              {[order.shipping_address.city, order.shipping_address.state].filter(Boolean).join(', ')}
+                              {order.shipping_address.postal_code && ` ${order.shipping_address.postal_code}`}
+                            </div>
+                            {order.shipping_address.country && <div>{order.shipping_address.country}</div>}
+                          </div>
+                        </div>
+                      )}
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3 font-inter">Items</h4>
                       <div className="space-y-4">
                         {order.items && Array.isArray(order.items) && order.items.length > 0 ? (
                           order.items.map((item, index) => <OrderItem key={index} item={item} />)
