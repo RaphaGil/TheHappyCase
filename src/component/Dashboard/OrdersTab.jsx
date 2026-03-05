@@ -98,7 +98,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
       // Check if response is HTML (404 page from dev server) instead of JSON
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.includes('text/html')) {
-        throw new Error('Backend server returned HTML (likely 404). Is the server running on port 3001?');
+        throw new Error('Orders API unavailable. Please try again later.');
       }
 
       if (!response.ok) {

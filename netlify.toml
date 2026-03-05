@@ -184,5 +184,20 @@ from = "/api/save-order"
 to = "/.netlify/functions/save-order"
 status = 200
 
+[[redirects]]
+from = "/api/orders"
+to = "/.netlify/functions/api-orders"
+status = 200
+
+[[redirects]]
+from = "/get-orders"
+to = "/.netlify/functions/get-orders"
+status = 200
+
+[[redirects]]
+from = "/api/orders/*/dispatched"
+to = "/.netlify/functions/orders-dispatched?orderId=:splat"
+status = 200
+
 # Next.js static export generates HTML files for each route,
 # so we don't need a SPA fallback redirect

@@ -78,7 +78,7 @@ const Login = () => {
       const response = await fetch(url);
       const contentType = response.headers.get('content-type') || '';
       if (contentType.includes('text/html')) {
-        throw new Error('Backend server returned HTML (likely 404). Is the server running on port 3001?');
+        throw new Error('Orders API unavailable. Please try again later.');
       }
       const responseText = await response.text();
       if (!responseText || responseText.trim() === '') {
