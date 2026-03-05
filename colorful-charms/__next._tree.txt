@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/3a79497b18855369.css","style"]
-:HL["/_next/static/chunks/a447442442f59b67.css","style"]
+:HL["/_next/static/chunks/5f38bb3c50797801.css","style"]
+:HL["/_next/static/chunks/435bc2004d1198e1.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap","style"]
-0:{"buildId":"1fBu_srFnnNCFyeOCFqFs","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"colorful-charms","paramType":null,"paramKey":"colorful-charms","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"cvkZrJIZcYRM82IHMC30Y","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"colorful-charms","paramType":null,"paramKey":"colorful-charms","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
