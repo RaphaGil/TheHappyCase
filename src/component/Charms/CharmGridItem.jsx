@@ -8,11 +8,9 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
   const pastelBorders = ['border-pink-100', 'border-blue-100', 'border-purple-100', 'border-green-100', 'border-yellow-100', 'border-orange-100'];
   const colorIndex = index % pastelColors.length;
 
-  // Optimize loading for above-the-fold images (first 6 visible items)
-  // These should load with high priority to improve LCP (Largest Contentful Paint)
-  const isAboveTheFold = index < 6;
-  const loadingStrategy = isAboveTheFold ? 'eager' : 'lazy';
-  const fetchPriority = isAboveTheFold ? 'high' : 'low';
+  // Lazy loading: all charm images use lazy to defer off-screen loading
+  const loadingStrategy = 'lazy';
+  const fetchPriority = index < 4 ? 'high' : 'low';
 
   // Calculate scale to prevent layout shift
   const scale = charm.size !== undefined ? charm.size * 0.9 : 0.9;
@@ -33,7 +31,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
           height="200"
           style={{
             transform: `scale(${scale})`,
-            willChange: isAboveTheFold ? 'transform' : 'auto'
+            willChange: index < 4 ? 'transform' : 'auto'
           }}
           onError={(e) => {
             if (e.target) {

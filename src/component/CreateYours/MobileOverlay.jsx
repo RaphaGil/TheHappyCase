@@ -135,10 +135,10 @@ const MobileOverlay = ({
                         }
                       }}
                       disabled={soldOut}
-                      className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 ${
-                        selectedCaseType === opt.value
-                          ? ' text-gray-900'
-                          : ' hover:border-gray-300'
+                      className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 rounded-lg ${
+                        isSelected
+                          ? 'ring-2 ring-gray-900 ring-offset-2 bg-gray-50 text-gray-900'
+                          : 'hover:border-gray-300'
                       } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
@@ -153,13 +153,6 @@ const MobileOverlay = ({
                               e.target.style.display = 'none';
                             }}
                           />
-                          {isSelected && !soldOut && (
-                            <div className="absolute top-0.5 right-0.5 xs:top-1 xs:right-1 sm:top-1.5 sm:right-1.5 md:top-2 md:right-2 lg:top-3 lg:right-3 xl:top-4 xl:right-4 w-3 h-3 xs:w-4 xs:h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10 bg-gray-900 rounded-full flex items-center justify-center shadow-md">
-                              <svg className="w-2 h-2 xs:w-2.5 xs:h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          )}
                         </div>
                       )}
                       <span className={`text-xs xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2 ${soldOut ? 'text-gray-500' : ''}`}>
@@ -196,7 +189,9 @@ const MobileOverlay = ({
                     <button
                       key={cat.value || 'all'}
                       onClick={() => setSelectedCategory(cat.value)}
-                      className={`p-1.5 xs:p-2 text-[10px] xs:text-xs text-center transition-all duration-200 flex flex-col items-center gap-1.5 xs:gap-2 relative`}
+                      className={`p-1.5 xs:p-2 text-[10px] xs:text-xs text-center transition-all duration-200 flex flex-col items-center gap-1.5 xs:gap-2 relative rounded-lg ${
+                        selectedCategory === cat.value ? 'border-2 border-gray-900' : 'border-2 border-transparent'
+                      }`}
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
                       {cat.image && (
@@ -208,13 +203,6 @@ const MobileOverlay = ({
                             alt={cat.label}
                             className="w-full h-full object-contain"
                           />
-                          {selectedCategory === cat.value && (
-                            <div className="absolute top-0 right-0 bg-gray-900 text-white w-4 h-4 xs:w-5 xs:h-5 flex items-center justify-center rounded-full shadow-md">
-                              <svg className="w-2.5 h-2.5 xs:w-3 xs:h-3" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          )}
                         </div>
                       )}
                       <span className="font-medium text-xs xs:text-sm">{cat.label}</span>
@@ -362,19 +350,12 @@ const MobileOverlay = ({
                               isSoldOut ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                           >
-                            <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible ${isSelected ? 'rounded' : ''}`}>
+                            <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible rounded-lg p-0.5 ${isSelected && !isSoldOut ? 'border-2 border-gray-900' : 'border-2 border-transparent'}`}>
                               <img
                                 src={normalizeImagePath(pin.src)}
                                 alt={pin.name}
                                 className={`max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`}
                               />
-                              {isSelected && !isSoldOut && (
-                                <div className="absolute top-0 right-0 bg-gray-900 text-white w-5 h-5 xs:w-6 xs:h-6 flex items-center justify-center text-[10px] xs:text-xs rounded-full shadow-md z-10">
-                                  <svg className="w-3 h-3 xs:w-4 xs:h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                              )}
                               {pin.badge && !isSoldOut && !isSelected && (
                                 <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded z-10 font-inter">
                                   {pin.badge}

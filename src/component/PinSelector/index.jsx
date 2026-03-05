@@ -83,8 +83,8 @@ const CategorySelector = ({
           type="button"
           role="option"
           aria-selected={isActive}
-          className={`font-inter flex flex-col items-center p-2.5 rounded-lg transition-colors ${
-            isActive ? "bg-gray-50" : "hover:bg-gray-50"
+          className={`font-inter flex flex-col items-center p-2.5 rounded-lg transition-all duration-200 ${
+            isActive ? "bg-gray-50 border-2 border-gray-900" : "hover:bg-gray-50 border-2 border-transparent"
           }`}
           onClick={() => {
             setSelectedCategory(opt.value);
@@ -107,21 +107,6 @@ const CategorySelector = ({
                   decoding="async"
                 />
               </div>
-              {isActive && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gray-900 rounded-full flex items-center justify-center z-20 shadow-sm ">
-                  <svg
-                    className="w-3 h-3 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-              )}
             </div>
           )}
           <span
@@ -195,7 +180,7 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
       }`}
       onClick={onClick}
     >
-      <div className="relative" style={{ overflow: "visible" }}>
+      <div className={`relative rounded-lg transition-all duration-200 ${isSelected && !isSoldOut ? "border-2 border-gray-900 p-0.5" : "border-2 border-transparent p-0.5"}`} style={{ overflow: "visible" }}>
         <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
           <img
             src={normalizeImagePath(pin.src)}
@@ -206,11 +191,6 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
             loading="lazy"
           />
         </div>
-        {isSelected && !isSoldOut && (
-          <div className="absolute -top-1 -right-1 bg-black text-white w-6 h-6 flex items-center justify-center text-xs rounded-full z-10 shadow-md">
-            ✓
-          </div>
-        )}
         {/* New badge - top right */}
         {pin.badge && !isSoldOut && !isSelected && (
           <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[8px] font-medium px-1.5 py-0.5 rounded z-10 font-inter">
