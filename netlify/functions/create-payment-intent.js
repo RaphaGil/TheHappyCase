@@ -191,7 +191,9 @@ exports.handler = async (event) => {
     let errorMessage = err.message;
     
     // Check for common Stripe API key errors
-    if (err.message && err.message.includes("Invalid API Key")) {
+    if (err.message && err.message.includes("publishable API key")) {
+      errorMessage = "Wrong Stripe key: STRIPE_SECRET_KEY must be your secret key (sk_test_... or sk_live_...), NOT the publishable key (pk_...). Get the correct key from https://dashboard.stripe.com/apikeys";
+    } else if (err.message && err.message.includes("Invalid API Key")) {
       errorMessage = "Invalid Stripe API key. Please check your STRIPE_SECRET_KEY in Netlify environment variables. Make sure it starts with 'sk_test_' (test mode) or 'sk_live_' (live mode) and has no extra spaces or characters.";
     } else if (err.message && err.message.includes("No API key provided")) {
       errorMessage = "Stripe API key is missing. Please set STRIPE_SECRET_KEY in Netlify environment variables.";

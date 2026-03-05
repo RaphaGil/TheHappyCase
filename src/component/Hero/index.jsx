@@ -190,14 +190,7 @@ function Hero() {
             >
               CREATE NOW
             </button>
-            <Link
-              href="/custom-passport-holder"
-              className={`text-sm uppercase tracking-wider font-inter text-white/95 hover:text-white border-b border-white/70 hover:border-white transition-colors ${
-                buttonVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              Create yours
-            </Link>
+           
           </div>
           <p className="mt-4 text-sm text-white/90 font-light font-inter max-w-lg" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
             We only sell to the UK. To purchase from other countries, visit our{' '}

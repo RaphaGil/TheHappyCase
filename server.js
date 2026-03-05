@@ -378,7 +378,9 @@ app.post("/api/create-payment-intent", async (req, res) => {
     // Provide more helpful error messages
     let errorMessage = error.message || "Failed to create payment intent";
     
-    if (error.type === 'StripeInvalidRequestError') {
+    if (error.message && error.message.includes("publishable API key")) {
+      errorMessage = "Wrong Stripe key: STRIPE_SECRET_KEY must be your secret key (sk_test_... or sk_live_...), NOT the publishable key (pk_...). Get the correct key from https://dashboard.stripe.com/apikeys";
+    } else if (error.type === 'StripeInvalidRequestError') {
       console.error("   ⚠️ Stripe invalid request error detected");
       // Stripe-specific errors
       if (error.message.includes('minimum')) {

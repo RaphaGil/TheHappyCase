@@ -146,8 +146,13 @@ export const createPaymentIntent = async (paymentData) => {
     };
   } catch (error) {
     // Don't fall back to mock - throw the error so the user knows something is wrong
+    const hint = error.message.includes('publishable API key')
+      ? ' Fix: Use your Stripe SECRET key (sk_...) in STRIPE_SECRET_KEY, not the publishable key (pk_...).'
+      : (typeof window !== 'undefined' && (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1'))
+        ? ' For local dev, ensure the backend server is running: npm run server (port 3001).'
+        : '';
     throw new Error(
-      `Failed to create payment intent: ${error.message}. Please ensure your backend server is running on port 3001.`
+      `Failed to create payment intent: ${error.message}.${hint}`
     );
   }
 
