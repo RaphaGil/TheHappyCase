@@ -61,6 +61,12 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
             </span>
           </div>
         )}
+        {/* New badge */}
+        {charm.badge && !isSoldOut && (
+          <div className="absolute top-2 right-2 bg-btn-primary-blue text-white text-xs font-medium px-2 py-1 rounded z-10 font-inter">
+            {charm.badge}
+          </div>
+        )}
         {/* Low stock badge - show available quantity when 1-2 units */}
         {isLowStock && !isSoldOut && maxAvailable != null && (
           <div className="absolute top-2 left-2 bg-amber-500 text-white text-xs font-medium px-2 py-1 rounded z-10 font-inter">

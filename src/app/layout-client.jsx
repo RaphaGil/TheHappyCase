@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { CartProvider } from '@/context/CartContext';
 import { CurrencyProvider } from '@/context/CurrencyContext';
@@ -7,8 +8,12 @@ import NavBar from '@/component/NavBar';
 import Footer from '@/component/Footer';
 import CartDrawer from '@/component/CartDrawer';
 import EnvDebug from '@/component/EnvDebug';
+import { initializeQuantities } from '@/utils/inventory';
 
 export default function LayoutClient({ children }) {
+  useEffect(() => {
+    initializeQuantities();
+  }, []);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
   const hideNavBar = pathname === '/checkout';

@@ -26,6 +26,11 @@ const CharmsBestSellers = () => {
             aria-label={`Shop ${charm.name} charm`}
           >
             <div className="relative w-full aspect-square max-w-[140px] mx-auto rounded-sm overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center p-3 md:p-4 group-hover:border-btn-primary-blue/30 transition-colors">
+              {charm.badge && (
+                <div className="absolute top-1 right-1 bg-btn-primary-blue text-white text-[10px] font-medium px-1.5 py-0.5 rounded z-10 font-inter">
+                  {charm.badge}
+                </div>
+              )}
               <img
                 src={normalizeImagePath(charm.src)}
                 alt={charm.name}

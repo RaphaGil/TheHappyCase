@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '../../context/CartContext';
+import { useInventoryReady } from '../../hooks/useInventoryReady';
 import InventoryAlertModal from '../../component/InventoryAlertModal';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { filterPinsByCategory } from '../../data/filterHelpers';
@@ -17,6 +18,7 @@ import ResultsCount from '../../component/Charms/ResultsCount';
 import CharmGridItemWithInventory from '../../component/Charms/CharmGridItemWithInventory';
 import SimplePagination from '../../component/Charms/SimplePagination';
 import EmptyState from '../../component/Charms/EmptyState';
+import AirplaneLoading from '../../component/Shared/AirplaneLoading';
 
 // Utils
 import { getProductsWithQuantities, getCharmPrice, getCharmCategory, getCharmName } from '../../utils/charms/helpers';

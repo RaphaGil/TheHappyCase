@@ -799,7 +799,8 @@
         "src": "/images/ColorfulPins/happy.webp",
         "price": 1,
         "size": 0.6,
-        "subCategory": "inspiration"
+        "subCategory": "inspiration",
+        "badge": "New"
       },
       {
         "id": 46,
