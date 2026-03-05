@@ -284,85 +284,74 @@ const MobileOverlay = ({
                     <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
                       {filteredPinsForMobile.map((pin, index) => {
                         const isSelected = selectedPins.some((p) => p.pin === pin);
-                        // Get size label based on pin.size from products.json
-                        const getSizeLabel = (size) => {
-                          if (!size) return '';
-                          if (size <= 0.3) return 'XS';
-                          if (size <= 0.45) return 'S';
-                          if (size <= 0.6) return 'M';
-                          if (size <= 0.75) return 'L';
-                          return 'XL';
-                        };
-                        const sizeLabel = getSizeLabel(pin.size);
-                        
-                        // Check if charm is sold out
-                        const checkCharmSoldOut = () => {
+
+                        // Check if charm is sold out and get inventory info for badges
+                        const getCharmInventoryInfo = () => {
                           const charmCategory = pin.category || selectedCategory || 'colorful';
                           const charmName = pin.name || pin.src || '';
-                          
+
                           const product = {
                             type: 'charm',
                             category: charmCategory,
                             pin: pin,
                             name: charmName
                           };
-                          
+
                           const maxAvailable = getMaxAvailableQuantity(product, cart || []);
-                          
-                          // If no inventory limit, not sold out
+
                           if (maxAvailable === null) {
-                            return false;
+                            return { isSoldOut: false, remainingAvailable: null, isLowStock: false };
                           }
-                          
-                          // Count standalone charms already in cart
-                          let standaloneCharmsInCart = 0;
-                          (cart || []).forEach(cartItem => {
-                            if (cartItem.type === 'charm') {
-                              const cartPin = cartItem.pin || cartItem;
-                              const cartPinName = cartPin.name || cartPin.src;
-                              const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-                              if ((cartPinName === charmName || cartPinName === pin.src) && 
-                                  cartPinCategory === charmCategory) {
-                                standaloneCharmsInCart += (cartItem.quantity || 1);
-                              }
-                            }
-                          });
-                          
-                          // Count how many of this charm are in custom designs already in cart
-                          let charmCountInCustomDesigns = 0;
-                          (cart || []).forEach(cartItem => {
-                            if (cartItem.pins && Array.isArray(cartItem.pins)) {
-                              cartItem.pins.forEach(cartPin => {
-                                const cartPinName = cartPin.name || cartPin.src;
-                                const cartPinCategory = cartPin.category || charmCategory;
-                                if ((cartPinName === charmName || cartPinName === pin.src) && 
-                                    cartPinCategory === charmCategory) {
-                                  charmCountInCustomDesigns += (cartItem.quantity || 1);
-                                }
-                              });
-                            }
-                          });
-                          
-                          // Count how many of this charm are already selected in the current design
+
                           const charmCountInDesign = selectedPins.filter(p => {
                             const pPin = p.pin || p;
                             const pPinName = pPin.name || pPin.src;
                             const pPinCategory = pPin.category || charmCategory;
-                            return (pPinName === charmName || pPinName === pin.src) && 
-                                   pPinCategory === charmCategory;
+                            return (pPinName === charmName || pPinName === pin.src) &&
+                              pPinCategory === charmCategory;
                           }).length;
-                          
-                          // Calculate total inventory: maxAvailable + standalone charms in cart
-                          const totalInventory = maxAvailable + standaloneCharmsInCart;
-                          
-                          // Calculate total usage: standalone + in custom designs + in current design
-                          const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign;
-                          
-                          // Sold out if maxAvailable is 0 or total usage equals or exceeds total inventory
-                          return maxAvailable === 0 || totalUsage >= totalInventory;
+
+                          const remainingAvailable = Math.max(0, maxAvailable - charmCountInDesign);
+                          let isSoldOut = maxAvailable === 0 || remainingAvailable === 0;
+
+                          if (!isSoldOut) {
+                            let standaloneCharmsInCart = 0;
+                            (cart || []).forEach(cartItem => {
+                              if (cartItem.type === 'charm') {
+                                const cartPin = cartItem.pin || cartItem;
+                                const cartPinName = cartPin.name || cartPin.src;
+                                const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
+                                if ((cartPinName === charmName || cartPinName === pin.src) &&
+                                  cartPinCategory === charmCategory) {
+                                  standaloneCharmsInCart += (cartItem.quantity || 1);
+                                }
+                              }
+                            });
+
+                            let charmCountInCustomDesigns = 0;
+                            (cart || []).forEach(cartItem => {
+                              if (cartItem.pins && Array.isArray(cartItem.pins)) {
+                                cartItem.pins.forEach(cartPin => {
+                                  const cartPinName = cartPin.name || cartPin.src;
+                                  const cartPinCategory = cartPin.category || charmCategory;
+                                  if ((cartPinName === charmName || cartPinName === pin.src) &&
+                                    cartPinCategory === charmCategory) {
+                                    charmCountInCustomDesigns += (cartItem.quantity || 1);
+                                  }
+                                });
+                              }
+                            });
+
+                            const totalInventory = maxAvailable + standaloneCharmsInCart;
+                            const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign;
+                            isSoldOut = maxAvailable === 0 || totalUsage >= totalInventory;
+                          }
+
+                          const isLowStock = remainingAvailable > 0 && remainingAvailable < 3;
+                          return { isSoldOut, remainingAvailable, isLowStock };
                         };
-                        
-                        const isSoldOut = checkCharmSoldOut();
+
+                        const { isSoldOut, remainingAvailable, isLowStock } = getCharmInventoryInfo();
                         
                         return (
                           <button
@@ -386,9 +375,14 @@ const MobileOverlay = ({
                                   </svg>
                                 </div>
                               )}
-                              {sizeLabel && (
-                                <div className="absolute top-0 left-0 bg-gray-100 text-gray-700 text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded-full z-10 border border-gray-300">
-                                  {sizeLabel}
+                              {pin.badge && !isSoldOut && !isSelected && (
+                                <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded z-10 font-inter">
+                                  {pin.badge}
+                                </div>
+                              )}
+                              {isLowStock && !isSoldOut && remainingAvailable != null && (
+                                <div className={`absolute right-0 bg-amber-500 text-white text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded z-10 font-inter ${pin.badge && !isSelected ? 'top-5' : 'top-0'}`}>
+                                  {remainingAvailable === 1 ? 'Only 1 left' : `${remainingAvailable} available`}
                                 </div>
                               )}
                             </div>

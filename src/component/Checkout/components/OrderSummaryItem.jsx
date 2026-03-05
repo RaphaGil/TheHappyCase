@@ -71,7 +71,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
             ) : (
               <div className="w-full h-full rounded-sm bg-gray-100" />
             )}
-            <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
+            <span className="absolute -top-1.5 -right-1.5 bg-btn-primary-blue text-btn-primary-blue-text text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
               {qty}
             </span>
           </div>
@@ -238,7 +238,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
               style={{ background: item.color }} 
             />
           )}
-          <span className="absolute -top-1.5 -right-1.5 bg-gray-900 text-white text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
+          <span className="absolute -top-1.5 -right-1.5 bg-btn-primary-blue text-btn-primary-blue-text text-[10px] font-medium rounded-full h-5 w-5 flex items-center justify-center font-inter">
             {qty}
           </span>
         </div>
@@ -374,7 +374,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
                             className="w-full h-full object-contain p-1" 
                             loading="lazy" 
                           />
-                          <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-[10px] font-medium rounded-full h-4 w-4 flex items-center justify-center font-inter">
+                          <span className="absolute -top-1 -right-1 bg-btn-primary-blue text-btn-primary-blue-text text-[10px] font-medium rounded-full h-4 w-4 flex items-center justify-center font-inter">
                             {groupedPin.quantity}
                           </span>
                         </div>
