@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/10cb083b31ce8425.css","style"]
-:HL["/_next/static/chunks/a4a47b1c2503461f.css","style"]
+:HL["/_next/static/chunks/60cb3486b1cc5646.css","style"]
+:HL["/_next/static/chunks/110ef2a34a897b7a.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap","style"]
-0:{"buildId":"sLKXrbRMBujfNWepyhdF0","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"65D1dGopbabSTtRosxpN2","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
