@@ -42,12 +42,18 @@ const CharmsBestSellers = () => {
           </Link>
         ))}
       </div>
-      <div className="text-center mt-6">
+      <div className="flex flex-wrap justify-center gap-4 mt-6">
         <Link
           href="/charms/colorful"
-          className="inline-flex items-center justify-center px-6 py-2.5 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
         >
           Shop All Charms
+        </Link>
+        <Link
+          href="/custom-passport-holder"
+          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+        >
+          Design Yours
         </Link>
       </div>
     </div>

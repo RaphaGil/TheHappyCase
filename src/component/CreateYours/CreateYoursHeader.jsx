@@ -1,8 +1,12 @@
+'use client';
+
 import React from 'react';
+import Link from 'next/link';
 
 const CreateYoursHeader = ({ isMobile = false, onClose }) => {
   return (
     <div className="relative text-center flex-shrink-0 mt-1 xs:mt-2 md:mt-2 md:mb-0 px-2 xs:px-0">
+  
       {isMobile && onClose && (
         <button
           onClick={onClose}

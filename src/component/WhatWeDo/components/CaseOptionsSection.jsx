@@ -37,7 +37,8 @@ const CaseOptionsSection = () => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 w-full max-w-6xl mx-auto px-2 sm:px-0">
         {cases.map((caseItem) => {
-          const path = `/passport-cases/${CASE_TYPE_TO_PATH[caseItem.type] || caseItem.type}`;
+          const casePath = `/passport-cases/${CASE_TYPE_TO_PATH[caseItem.type] || caseItem.type}`;
+          const createPath = `/custom-passport-holder?case=${caseItem.type}`;
           const displayName = getCaseDisplayName(caseItem.type);
           const colors = caseItem.colors ?? [];
           const selectedIndex = selectedColorByCase[caseItem.type] ?? 0;
@@ -48,7 +49,7 @@ const CaseOptionsSection = () => {
               className="group bg-white transition-all duration-700 ease-out overflow-hidden"
             >
               <Link
-                href={path}
+                href={casePath}
                 className="relative flex w-full aspect-square overflow-hidden rounded-sm cursor-pointer border border-gray-100 bg-gray-50 items-center justify-center p-4 md:p-6 lg:p-8"
                 aria-label={`Go to ${displayName} passport case page`}
               >
@@ -94,10 +95,26 @@ const CaseOptionsSection = () => {
                     })}
                   </div>
                 )}
+                <div className="flex justify-center mt-4">
+                  <Link
+                    href={createPath}
+                    className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+                  >
+                    Customize
+                  </Link>
+                </div>
               </div>
             </div>
           );
         })}
+      </div>
+      <div className="flex justify-center mt-8">
+        <Link
+          href="/passport-cases"
+          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+        >
+          Shop Passport Cases
+        </Link>
       </div>
     </div>
   );

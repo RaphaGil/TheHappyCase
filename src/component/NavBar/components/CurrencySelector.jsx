@@ -42,10 +42,16 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
   }, [isCurrencyDropdownOpen]);
 
   const isMobile = variant === 'mobile';
+  const isUKOnly = mainCurrencies.length === 1;
 
   if (isMobile) {
     return (
       <div className="relative" ref={currencyDropdownRef}>
+        {isUKOnly ? (
+          <div className="w-full text-left text-sm uppercase tracking-wider font-inter" style={{color: '#6b7280'}}>
+            {getCurrencyDisplayWithFlag()}
+          </div>
+        ) : (
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -57,7 +63,8 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
           <span>{getCurrencyDisplayWithFlag()}</span>
           <FontAwesomeIcon icon={faChevronDown} className={`ml-2 text-base transition-transform duration-200 ${isCurrencyDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
-        {isCurrencyDropdownOpen && (
+        )}
+        {!isUKOnly && isCurrencyDropdownOpen && (
           <div className="bg-gray-50 border-t border-gray-100 transition-all duration-200 max-h-[70vh] overflow-y-auto w-full mt-1" onClick={(e) => e.stopPropagation()}>
             {mainCurrencies.map((curr) => (
               <button
@@ -85,6 +92,13 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
   }
 
   // Desktop variant
+  if (isUKOnly) {
+    return (
+      <div className="px-2 md:px-3 py-1 text-gray-700 text-[12px] md:text-xs font-inter">
+        <span className="whitespace-nowrap">{getCurrencyDisplayWithFlag()}</span>
+      </div>
+    );
+  }
   return (
     <div className="relative" ref={currencyDropdownRef}>
       <button

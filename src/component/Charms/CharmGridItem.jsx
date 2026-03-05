@@ -2,7 +2,7 @@ import React from 'react';
 import { useCurrency } from '../../context/CurrencyContext';
 import { normalizeImagePath } from '../../utils/imagePath';
 
-const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false, charmPrice }) => {
+const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false, maxAvailable = null, isLowStock = false, charmPrice }) => {
   const { formatPrice } = useCurrency();
   const pastelColors = ['bg-pink-50', 'bg-blue-50', 'bg-purple-50', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50'];
   const pastelBorders = ['border-pink-100', 'border-blue-100', 'border-purple-100', 'border-green-100', 'border-yellow-100', 'border-orange-100'];
@@ -59,6 +59,12 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
             <span className="text-white text-xl font-medium uppercase tracking-wider font-inter">
               Sold Out
             </span>
+          </div>
+        )}
+        {/* Low stock badge - show available quantity when 1-2 units */}
+        {isLowStock && !isSoldOut && maxAvailable != null && (
+          <div className="absolute top-2 left-2 bg-amber-500 text-white text-xs font-medium px-2 py-1 rounded z-10 font-inter">
+            {maxAvailable === 1 ? 'Only 1 left' : `${maxAvailable} available`}
           </div>
         )}
         {isSelected && !isSoldOut && (

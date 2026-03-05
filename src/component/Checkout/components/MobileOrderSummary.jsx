@@ -11,7 +11,6 @@ const MobileOrderSummary = ({
   subtotal,
   shippingCost,
   shippingLabel,
-  showInternationalNote,
   onShowShippingInfo,
   onIncrement,
   onDecrement,
@@ -55,7 +54,6 @@ const MobileOrderSummary = ({
               shippingCost={shippingCost}
               shippingLabel={shippingLabel}
               totalWithShipping={totalWithShipping}
-              showInternationalNote={showInternationalNote}
               onShowShippingInfo={onShowShippingInfo}
               onIncrement={onIncrement}
               onDecrement={onDecrement}

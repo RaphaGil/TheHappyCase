@@ -20,7 +20,6 @@ import { isCharmUsedInCreateYoursItem } from '../../utils/cartHelpers';
 import { getOrderNumberFromPaymentIntentId } from '../../utils/paymentsucess/helpers';
 
 // Components
-import InternationalNote from '../InternationalNote';
 import CheckoutHeader from './components/CheckoutHeader';
 import LoadingState from './components/LoadingState';
 import CustomerInfoForm from './components/CustomerInfoForm';
@@ -80,31 +79,9 @@ const stripePromise = loadStripe(
   'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
 );
 
-// European countries list
-const EUROPEAN_COUNTRIES = new Set([
-  'AL', 'AD', 'AT', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 
-  'LV', 'LI', 'LT', 'LU', 'MT', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL', 'PT', 'RO', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH'
-]);
-
-const SHIPPING_RATES = {
-  GB: 3,
-  // All European countries use the same rate
-  ...Object.fromEntries(Array.from(EUROPEAN_COUNTRIES).map(code => [code, 10])),
-};
-
-const SHIPPING_LABELS = {
-  GB: 'England',
-  // European countries will use their country name
-  AL: 'Albania', AD: 'Andorra', AT: 'Austria', BE: 'Belgium', BA: 'Bosnia and Herzegovina', BG: 'Bulgaria',
-  HR: 'Croatia', CY: 'Cyprus', CZ: 'Czech Republic', DK: 'Denmark', EE: 'Estonia', FI: 'Finland',
-  FR: 'France', DE: 'Germany', GR: 'Greece', HU: 'Hungary', IS: 'Iceland', IE: 'Ireland', IT: 'Italy',
-  LV: 'Latvia', LI: 'Liechtenstein', LT: 'Lithuania', LU: 'Luxembourg', MT: 'Malta', MC: 'Monaco',
-  ME: 'Montenegro', NL: 'Netherlands', MK: 'North Macedonia', NO: 'Norway', PL: 'Poland', PT: 'Portugal',
-  RO: 'Romania', SM: 'San Marino', RS: 'Serbia', SK: 'Slovakia', SI: 'Slovenia', ES: 'Spain',
-  SE: 'Sweden', CH: 'Switzerland',
-};
-
-const DEFAULT_SHIPPING_RATE = 12;
+// UK only - we ship to the United Kingdom exclusively
+const SHIPPING_RATES = { GB: 3 };
+const SHIPPING_LABELS = { GB: 'United Kingdom' };
 
 const CURRENCY_MULTIPLIERS = {
   'jpy': 1,  // Japanese Yen doesn't use decimals
@@ -153,12 +130,8 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
   
   // Calculate shipping cost
   // Use fixed rates from SHIPPING_RATES
-  const shippingCost = cart.length === 0
-    ? 0
-    : SHIPPING_RATES[selectedCountry] ?? DEFAULT_SHIPPING_RATE;
-  
-  const shippingLabel = SHIPPING_LABELS[selectedCountry] || 'International';
-  const showInternationalNote = selectedCountry && selectedCountry.toUpperCase() !== 'GB' && cart.length > 0;
+  const shippingCost = cart.length === 0 ? 0 : (SHIPPING_RATES[selectedCountry] ?? 3);
+  const shippingLabel = SHIPPING_LABELS[selectedCountry] || 'United Kingdom';
   const totalWithShipping = subtotal + shippingCost;
 
   // --- Effects ---
@@ -185,18 +158,10 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
     };
   }, []);
 
-  // Automatically change currency based on selected country
+  // Ensure GBP for UK-only sales
   useEffect(() => {
-    if (selectedCountry) {
-      if (EUROPEAN_COUNTRIES.has(selectedCountry)) {
-        // Set currency to EUR for European countries
-        setCurrency('EUR');
-      } else if (selectedCountry === 'GB') {
-        // Set currency to GBP for UK
-        setCurrency('GBP');
-      }
-    }
-  }, [selectedCountry, setCurrency]);
+    setCurrency('GBP');
+  }, [setCurrency]);
 
   // Check authentication status on mount and when returning from login
   useEffect(() => {
@@ -365,6 +330,8 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    // UK only - always keep country as GB
+    if (name === 'address.country') return;
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setCustomerInfo(prev => ({
@@ -580,7 +547,6 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         subtotal={subtotal}
         shippingCost={shippingCost}
         shippingLabel={shippingLabel}
-        showInternationalNote={showInternationalNote}
         onShowShippingInfo={() => setShowShippingInfo(true)}
         onIncrement={handleIncrementWithCheck}
         onDecrement={handleDecrementWithCheck}
@@ -628,16 +594,6 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         >
           {loading ? 'Processing...' : 'Complete Payment'}
 </button>
-        {showInternationalNote && (
-          <InternationalNote
-            className="mt-4"
-            showOnDesktop={false}
-            showOnMobile={true}
-            title="Custom Duties & Taxes Included"
-            message="The total amount you pay includes all applicable customs duties & taxes. We guarantee no additional charges on delivery."
-            variant="gray"
-          />
-        )}
         </form>
 
         {/* Order Summary */}

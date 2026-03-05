@@ -13,6 +13,7 @@ const NavigationLinks = ({ isMobile = false, onLinkClick }) => {
     { href: "/custom-passport-holder", label: "Create Yours" },
     { href: "/passport-cases", label: "Passport Cases" },
     { href: "/charms", label: "Charms" },
+    { href: "/design-ideas", label: "Design Ideas" },
   ];
 
   if (isMobile) {

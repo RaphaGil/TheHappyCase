@@ -186,7 +186,7 @@ app.post("/create-checkout-session", async (req, res) => {
       }/TheHappyCase/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       payment_method_types: ["card"], // Apple Pay/Google Pay auto-added
       shipping_address_collection: {
-        allowed_countries: ["GB", "US", "CA", "AU", "DE", "FR", "ES", "IT"],
+        allowed_countries: ["GB"],
       },
     });
 
@@ -217,11 +217,8 @@ app.get("/api/exchange-rates", async (req, res) => {
     
     const data = await response.json();
     
-    // Extract rates for supported currencies
-    const rates = {
-      GBP: 1.0,
-      EUR: data.rates?.EUR || 1.17, // Fallback to default if not available
-    };
+    // UK only - GBP is the only supported currency
+    const rates = { GBP: 1.0 };
     
     console.log('📊 Exchange rates fetched:', rates);
     
@@ -238,10 +235,7 @@ app.get("/api/exchange-rates", async (req, res) => {
     res.json({
       success: false,
       base: 'GBP',
-      rates: {
-        GBP: 1.0,
-        EUR: 1.17, // Default fallback rate
-      },
+      rates: { GBP: 1.0 },
       error: error.message,
     });
   }
@@ -288,7 +282,14 @@ app.post("/api/create-payment-intent", async (req, res) => {
       return sendErrorResponse(400, "Amount must be greater than 0");
     }
 
-    const resolvedCurrency = (currency || "gbp").toLowerCase();
+    // UK only - validate shipping address if provided
+    const country = (customerInfo?.address?.country || "").toUpperCase();
+    if (country && country !== "GB" && country !== "UK") {
+      console.error("❌ Non-UK address rejected:", country);
+      return sendErrorResponse(400, "We currently only ship to the United Kingdom. Please use a UK delivery address.");
+    }
+
+    const resolvedCurrency = "gbp";
     const roundedAmount = Math.round(amount);
     
     console.log('   Processed values:', {
@@ -299,12 +300,8 @@ app.post("/api/create-payment-intent", async (req, res) => {
     });
 
     // Stripe minimum amounts by currency (in smallest currency unit)
-    const minimumAmounts = {
-      'gbp': 30,      // 30 pence = £0.30
-      'eur': 50,      // 50 cents = €0.50
-    };
-
-    const minimumAmount = minimumAmounts[resolvedCurrency] || 30; // Default to 30
+    const minimumAmounts = { 'gbp': 30 };
+    const minimumAmount = minimumAmounts[resolvedCurrency] || 30;
     
     console.log('   Amount validation:', {
       roundedAmount,
@@ -314,11 +311,7 @@ app.post("/api/create-payment-intent", async (req, res) => {
     });
 
     if (roundedAmount < minimumAmount) {
-      const currencySymbols = {
-        'gbp': '£',
-        'eur': '€',
-      };
-      const symbol = currencySymbols[resolvedCurrency] || resolvedCurrency.toUpperCase();
+      const symbol = '£';
       const minDisplay = (minimumAmount / 100).toFixed(2);
       const currentDisplay = (roundedAmount / 100).toFixed(2);
       
@@ -475,26 +468,18 @@ app.post("/api/send-order-confirmation", async (req, res) => {
     // Calculate amounts - use passed values or calculate from items and customer info
     const calculatedSubtotal = subtotal !== undefined ? subtotal : (items?.reduce((sum, item) => sum + (item.totalPrice || item.price || 0) * (item.quantity || 1), 0) || 0);
     
-    // Calculate shipping if not provided (fallback for Stripe redirects or old requests)
+    // UK only - reject non-UK orders
+    const country = (customerInfo?.address?.country || '').toUpperCase();
+    if (country && country !== 'GB' && country !== 'UK') {
+      console.log(`❌ Order rejected: We only ship to the UK. Country: ${country}`);
+      return sendErrorResponse(400, 'We currently only ship to the United Kingdom. Please use a UK delivery address.');
+    }
+
+    // Calculate shipping - UK only, £3
     let calculatedShipping = shippingCost || 0;
-    if (!shippingCost && customerInfo?.address?.country && items?.length > 0) {
-      // European countries list
-      const EUROPEAN_COUNTRIES_LIST = [
-        'AL', 'AD', 'AT', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 
-        'LV', 'LI', 'LT', 'LU', 'MT', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL', 'PT', 'RO', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH'
-      ];
-      
-      const SHIPPING_RATES = {
-        GB: 3,
-        // All European countries use £10
-        ...Object.fromEntries(EUROPEAN_COUNTRIES_LIST.map(code => [code, 10])),
-      };
-      const DEFAULT_SHIPPING_RATE = 12;
-      const country = customerInfo.address.country.toUpperCase();
-      
-      calculatedShipping = SHIPPING_RATES[country] ?? DEFAULT_SHIPPING_RATE;
-      
-      console.log(`   Calculated shipping from country ${country}: £${calculatedShipping.toFixed(2)}`);
+    if (!shippingCost && items?.length > 0) {
+      calculatedShipping = 3;
+      console.log(`   Calculated shipping (UK only): £${calculatedShipping.toFixed(2)}`);
     }
     
     // Calculate total

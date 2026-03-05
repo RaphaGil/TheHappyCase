@@ -66,8 +66,8 @@ exports.handler = async (event) => {
       };
     }
 
-    // Use currency from request or default to GBP
-    const resolvedCurrency = (currency || "gbp").toLowerCase();
+    // UK only - force GBP
+    const resolvedCurrency = "gbp";
     const roundedAmount = Math.round(amount);
 
     // Stripe minimum amounts by currency (in smallest currency unit)
@@ -144,8 +144,21 @@ exports.handler = async (event) => {
       paymentIntentParams.description = `Order for ${items.length} item(s)`;
     }
 
-    // Add shipping address if provided
+    // UK only - validate shipping address
     if (customerInfo?.address) {
+      const country = (customerInfo.address.country || "").toUpperCase();
+      if (country && country !== "GB" && country !== "UK") {
+        return {
+          statusCode: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            error: "We currently only ship to the United Kingdom. Please use a UK delivery address.",
+          }),
+        };
+      }
       paymentIntentParams.shipping = {
         name: customerInfo.name || "Customer",
         address: {

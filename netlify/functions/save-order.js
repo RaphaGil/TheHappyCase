@@ -97,6 +97,15 @@ exports.handler = async (event) => {
   if (!paymentIntent || !paymentIntent.id) {
     return jsonResponse(400, { success: false, error: "Payment Intent ID is required" });
   }
+  // UK only - validate shipping address
+  const country = (customerInfo?.address?.country || "").toUpperCase();
+  if (country && country !== "GB" && country !== "UK") {
+    return jsonResponse(400, {
+      success: false,
+      error: "We currently only ship to the United Kingdom. Please use a UK delivery address.",
+    });
+  }
+
   if (!customerInfo || !customerInfo.email) {
     return jsonResponse(400, { success: false, error: "Customer email is required" });
   }

@@ -296,6 +296,15 @@ const Charms = () => {
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
+
+            <div className="flex justify-center mt-12">
+              <Link
+                href="/custom-passport-holder"
+                className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+              >
+                Create Yours
+              </Link>
+            </div>
           </>
         ) : (
           <EmptyState

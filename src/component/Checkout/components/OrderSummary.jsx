@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import OrderSummaryItem from './OrderSummaryItem';
-import InternationalNote from '../../InternationalNote';
 
 const OrderSummary = ({ 
   cart, 
@@ -12,7 +11,6 @@ const OrderSummary = ({
   shippingCost, 
   shippingLabel, 
   totalWithShipping, 
-  showInternationalNote,
   onShowShippingInfo,
   onIncrement,
   onDecrement,
@@ -88,18 +86,6 @@ const OrderSummary = ({
             </Link>
           </p>
         </div>
-        
-        {showInternationalNote && (
-          <div className="mt-4">
-            <InternationalNote
-              showOnDesktop={true}
-              showOnMobile={false}
-              title="Custom Duties & Taxes Included"
-              message="The total amount you pay includes all applicable customs duties & taxes. We guarantee no additional charges on delivery."
-              variant="gray"
-            />
-          </div>
-        )}
       </div>
     </div>
   );

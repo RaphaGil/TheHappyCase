@@ -17,6 +17,7 @@ const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart
   // Check inventory availability
   const maxAvailable = getMaxAvailableQuantity(product, cart);
   const isSoldOut = maxAvailable !== null && maxAvailable === 0;
+  const isLowStock = maxAvailable !== null && maxAvailable > 0 && maxAvailable < 3;
 
   return (
     <CharmGridItem
@@ -24,6 +25,8 @@ const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart
       index={index}
       onAddToCart={onAddToCart}
       isSoldOut={isSoldOut}
+      maxAvailable={maxAvailable}
+      isLowStock={isLowStock}
       charmPrice={charmPrice}
     />
   );

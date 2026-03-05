@@ -12,16 +12,9 @@ export const useCurrency = () => {
   return context;
 };
 
-// Default exchange rates (fallback if API fails)
-const defaultExchangeRates = {
-  GBP: 1.0,
-  EUR: 1.17,
-};
-
-const currencySymbols = {
-  GBP: '£',
-  EUR: '€',
-};
+// UK only - GBP is the only supported currency
+const defaultExchangeRates = { GBP: 1.0 };
+const currencySymbols = { GBP: '£' };
 
 export const CurrencyProvider = ({ children }) => {
   const [currency, setCurrency] = useState(() => {
@@ -49,10 +42,7 @@ export const CurrencyProvider = ({ children }) => {
         if (isJson) {
           try {
             const directData = await directResponse.json();
-            const rates = {
-              GBP: 1.0,
-              EUR: directData.rates?.EUR || defaultExchangeRates.EUR,
-            };
+            const rates = { GBP: 1.0 };
             setExchangeRates(rates);
             console.log('✅ Exchange rates fetched from direct API:', rates);
           } catch (jsonError) {
