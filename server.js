@@ -1630,6 +1630,7 @@ app.post("/api/save-order", async (req, res) => {
               total_price: (item.totalPrice || item.price || 0) * (item.quantity || 1),
               pins: item.pins || item.pinsDetails || null,
               custom_design: item.customDesign || false,
+              custom_text: item.customText || item.custom_text || null,
               case_image: caseImageUrl, // Now contains Supabase Storage URL or original URL
               design_image: designImageUrl, // Now contains Supabase Storage URL or null
             };
@@ -1646,6 +1647,7 @@ app.post("/api/save-order", async (req, res) => {
               total_price: (item.totalPrice || item.price || 0) * (item.quantity || 1),
               pins: item.pins || item.pinsDetails || null,
               custom_design: item.customDesign || false,
+              custom_text: item.customText || item.custom_text || null,
               case_image: null,
               design_image: null,
             };
@@ -1668,6 +1670,7 @@ app.post("/api/save-order", async (req, res) => {
         total_price: (item.totalPrice || item.price || 0) * (item.quantity || 1),
         pins: item.pins || item.pinsDetails || null,
         custom_design: item.customDesign || false,
+        custom_text: item.customText || item.custom_text || null,
         case_image: null,
         design_image: null,
       }));

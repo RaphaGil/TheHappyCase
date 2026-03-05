@@ -34,13 +34,11 @@ const PassportCases = () => {
     isSelectedColorSoldOut,
     isColorSoldOut,
     isCaseTypeSoldOut,
-    inventoryLoaded,
   } = usePassportCases();
 
-  // Show loading state until inventory is loaded and case data is ready
-  if (!inventoryLoaded || !selectedCase || !selectedCase.images || selectedCase.images.length === 0) {
+  // Show loading state only until case data is ready (inventory loads in background)
+  if (!selectedCase || !selectedCase.images || selectedCase.images.length === 0) {
     return <LoadingState />;
-    
   }
 
 

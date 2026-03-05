@@ -594,17 +594,21 @@ export const getCachedInventory = () => {
 };
 
 /**
- * Force refresh inventory from Supabase inventory_items table
- * Always fetches fresh data from Supabase API
+ * Force refresh inventory from Supabase (clears cache first).
+ * Use ONLY when you need to explicitly invalidate the cache (e.g. admin bulk update).
+ * For normal use (page load, before checkout, after checkout), use initializeQuantities
+ * instead - it fetches fresh data without clearing, so the UI keeps showing cached
+ * data until the fetch completes.
  * @returns {Promise<Object|null>} - Updated quantities object or null if failed
  */
 export const refreshInventoryFromSupabase = async () => {
-  // Clear in-memory cache to force fresh fetch
+  // Clear in-memory cache and in-flight promise to force a brand new fetch
   inventoryCache = null;
   inventoryCacheTimestamp = null;
-  
+  inventoryFetchPromise = null;
+
   // Fetch fresh data from Supabase
   const quantities = await fetchInventoryFromSupabase();
-  
+
   return quantities;
 };

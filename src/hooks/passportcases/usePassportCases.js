@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../../context/CartContext';
-import { getMaxAvailableQuantity, getCachedInventory, refreshInventoryFromSupabase } from '../../utils/inventory';
+import { getMaxAvailableQuantity, initializeQuantities } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
 import Products from '../../data/products.json';
 import { 
@@ -56,27 +56,12 @@ export const usePassportCases = () => {
   const productsWithQuantities = getProductsWithQuantities();
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
   
-  // Initialize inventory on mount (like charms page does)
+  // Fetch inventory in background (non-blocking). When complete, setInventoryLoaded
+  // triggers re-render so sold-out status updates. Page renders immediately.
   useEffect(() => {
-    const initializeInventory = async () => {
-      try {
-        await refreshInventoryFromSupabase();
-        
-        // Verify cache is populated
-        const cached = getCachedInventory();
-        if (cached) {
-          setInventoryLoaded(true);
-        } else {
-          // Still mark as loaded to allow page to render
-          setInventoryLoaded(true);
-        }
-      } catch (error) {
-        // Mark as loaded even on error to allow page to render
-        setInventoryLoaded(true);
-      }
-    };
-    
-    initializeInventory();
+    initializeQuantities()
+      .then(() => setInventoryLoaded(true))
+      .catch(() => setInventoryLoaded(true));
   }, []);
   
   // Helper functions for inventory checks (like charms page)
@@ -302,7 +287,6 @@ export const usePassportCases = () => {
     currentImage,
     detailImages,
     cart,
-    inventoryLoaded,
     
     // Setters
     setIsSpecificationsOpen,

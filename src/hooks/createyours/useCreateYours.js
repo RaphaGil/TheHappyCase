@@ -364,7 +364,8 @@ export const useCreateYours = () => {
       designImage,
       normalizedCaseImage,
       pinsDetails,
-      selectedCategory
+      selectedCategory,
+      customText
     });
     
     // Add to cart

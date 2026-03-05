@@ -15,7 +15,7 @@ import { useCurrency } from '../../context/CurrencyContext';
 
 // Utils
 import { createPaymentIntent } from '../../utils/mockPaymentAPI';
-import { getMaxAvailableQuantity, refreshInventoryFromSupabase } from '../../utils/inventory';
+import { getMaxAvailableQuantity, initializeQuantities } from '../../utils/inventory';
 import { isCharmUsedInCreateYoursItem } from '../../utils/cartHelpers';
 import { getOrderNumberFromPaymentIntentId } from '../../utils/paymentsucess/helpers';
 
@@ -376,7 +376,8 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
     try {
       // Double-check inventory from Supabase before processing payment
       // This prevents race conditions where another customer bought the last item
-      await refreshInventoryFromSupabase();
+      // Uses initializeQuantities (no cache clear) - fetch updates cache with fresh data
+      await initializeQuantities();
       
       // Check each item in cart against current Supabase inventory
       // Allow purchase if user has the item in their cart (even if it shows as sold out)

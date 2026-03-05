@@ -146,7 +146,8 @@ export const createCartProducts = ({
   designImage,
   normalizedCaseImage,
   pinsDetails,
-  selectedCategory
+  selectedCategory,
+  customText
 }) => {
   const effectiveQuantity = Math.max(quantity, 1);
   const uniqueTimestamp = Date.now();
@@ -167,7 +168,8 @@ export const createCartProducts = ({
     designImage: designImage,
     caseImage: normalizedCaseImage,
     customDesign: true,
-    quantity: effectiveQuantity
+    quantity: effectiveQuantity,
+    ...(customText && customText.trim() && { customText: customText.trim() })
   };
   
   // Create charm products

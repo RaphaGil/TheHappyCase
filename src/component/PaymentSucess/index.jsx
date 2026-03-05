@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SuccessHeader from './SuccessHeader';
+import { initializeQuantities } from '../../utils/inventory';
 import OrderDetails from './OrderDetails';
 import ShippingInfo from './ShippingInfo';
 import ContactInfo from './ContactInfo';
@@ -17,6 +18,11 @@ const PaymentSuccess = () => {
 
   const [data, setData] = useState(null);
   const [recoveryAttempted, setRecoveryAttempted] = useState(false);
+
+  // Refresh inventory after purchase (no cache clear - fetch updates cache)
+  useEffect(() => {
+    initializeQuantities().catch(() => {});
+  }, []);
 
   // Recover data from sessionStorage (set by Checkout before redirect)
   useEffect(() => {
