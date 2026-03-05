@@ -120,7 +120,7 @@ const PriceSummary = ({
                       quantity: quantity
                     }}
                     onAdd={onAddToCart}
-                    className="!w-full cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-3 px-4 xs:py-3.5 xs:px-6 sm:px-8 text-sm xs:text-sm font-light whitespace-nowrap rounded-sm min-h-[52px]"
+                    className="!w-full cursor-pointer bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 py-3 px-4 xs:py-3.5 xs:px-6 sm:px-8 text-sm xs:text-sm font-light whitespace-nowrap rounded-sm min-h-[52px]"
                     disabled={false}
                   />
                 </div>

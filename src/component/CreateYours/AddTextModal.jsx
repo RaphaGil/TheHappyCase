@@ -151,7 +151,7 @@ const AddTextModal = ({
             <button
               onClick={handleAddText}
               disabled={!customText.trim()}
-              className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed  active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200"
+              className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed  active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
             >
               Add Text
             </button>

@@ -34,7 +34,7 @@ const MobileAddTextSection = ({
         <button
           onClick={onAddText}
           disabled={!customText.trim()}
-          className="min-h-[44px] px-4 py-2 text-xs font-medium uppercase tracking-wider disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-100 rounded-sm active:scale-95 disabled:scale-100 focus:outline-none font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border border-btn-light-blue-border hover:border-btn-light-blue-hover transition-all duration-200 flex-shrink-0"
+          className="min-h-[44px] px-4 py-2 text-xs font-medium uppercase tracking-wider disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-100 rounded-sm active:scale-95 disabled:scale-100 focus:outline-none font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 flex-shrink-0"
         >
           Add
         </button>

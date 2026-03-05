@@ -24,11 +24,11 @@ const CanvasSectionCentered = ({
   return (
     <div
       className={`flex flex-col w-full h-full md:items-center ${
-        isMobile ? 'flex-1 min-h-0 py-4 justify-center -mt-14 md:mt-0' : 'md:py-0 md:justify-center'
+        isMobile ? 'flex-1 min-h-0 pt-2 pb-4 justify-start md:mt-0' : 'md:py-0 md:justify-center'
       }`}
     >
-      {/* Canvas - centered on mobile, buttons pushed to bottom */}
-      <div className={`flex p-6 w-full flex-col items-center ${isMobile ? 'flex-1 justify-center min-h-0' : 'justify-center'}`}>
+      {/* Canvas - aligned to top on mobile, centered on desktop */}
+      <div className={`flex p-6 w-full flex-col items-center ${isMobile ? 'flex-1 justify-start min-h-0' : 'justify-center'}`}>
         <div
           className="w-full max-w-[270px] aspect-[270/350] sm:w-[270px] sm:h-[350px] sm:aspect-auto flex-shrink-0 relative mx-auto overflow-visible"
           style={{ isolation: 'isolate' }}

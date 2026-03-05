@@ -103,8 +103,8 @@ export default function CreateYoursPageNew() {
 
       {/* Main content - canvas centered within its div, options scroll when dropdowns open. Mobile: scrollable to see case selection */}
       <div className="flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden">
-        {/* Canvas - centered within this div (left column), not the page */}
-        <div className="flex flex-col flex-1 justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 min-h-0 md:overflow-hidden">
+        {/* Canvas - aligned to top on mobile, centered on desktop */}
+        <div className="flex flex-col flex-1 justify-start md:justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 min-h-0 md:overflow-hidden">
           <CanvasSectionCentered
             selectedCaseType={selectedCaseType}
             selectedColor={selectedColor}

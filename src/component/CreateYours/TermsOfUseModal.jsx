@@ -77,7 +77,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
                 onClose();
               }
             }}
-            className="px-6 py-2 text-sm uppercase tracking-wider font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
+            className="px-6 py-2 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
           >
             I Agree
           </button>

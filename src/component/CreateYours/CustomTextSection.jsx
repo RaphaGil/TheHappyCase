@@ -105,7 +105,7 @@ const CustomTextSection = ({
           <button
             onClick={handleAddText}
             disabled={!customText.trim()}
-            className="flex-1 px-4 py-2 text-xs font-medium uppercase tracking-wider rounded-md disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed font-inter bg-btn-light-blue hover:bg-btn-light-blue-hover text-btn-light-blue-text border hover:border-btn-light-blue-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+            className="flex-1 px-4 py-2 text-xs font-medium uppercase tracking-wider rounded-md disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border hover:border-btn-primary-blue-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
           >
            Add Text
           </button>

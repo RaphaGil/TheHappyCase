@@ -14,7 +14,7 @@ const CreateYoursHeader = ({ isMobile = false, onClose }) => {
           </svg>
         </button>
       )}
-      <h1 className="text-2xl sm:text-3xl md:text-4xl mt-1 text-gray-900 tracking-tight" style={{fontFamily: "'Poppins', sans-serif"}}>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl mt-4 md:mt-1 text-gray-900 tracking-tight" style={{fontFamily: "'Poppins', sans-serif"}}>
         CREATE YOURS
       </h1>
       <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-1 md:mb-2 mt-4"></div>

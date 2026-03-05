@@ -24,10 +24,10 @@ export default {
         'btn-primary-text': '#ffffff',          // white - Primary text
         'btn-primary-border': '#111827',       // gray-900 - Primary border
         
-        'btn-primary-blue': '#2563eb',          // blue-600 - Primary blue button
-        'btn-primary-blue-hover': '#1d4ed8',   // blue-700 - Primary blue hover
+        'btn-primary-blue': '#30279F',          // Logo blue - Primary blue button
+        'btn-primary-blue-hover': '#281f8a',   // Logo blue darker - Primary blue hover
         'btn-primary-blue-text': '#ffffff',     // white - Primary blue text
-        'btn-primary-blue-border': '#2563eb',   // blue-600 - Primary blue border
+        'btn-primary-blue-border': '#30279F',   // Logo blue - Primary blue border
         
         'btn-primary-blue-dark': '#1e40af',     // blue-800 - Primary blue dark
         'btn-primary-blue-dark-hover': '#1d4ed8', // blue-700 - Primary blue dark hover
