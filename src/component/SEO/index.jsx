@@ -25,7 +25,7 @@ const NOINDEX_PATHS = ['/cart', '/checkout', '/login', '/payment-success', '/my-
 const PAGE_META = {
   '/': {
     title: 'The Happy Case - Custom Passport Cases with Charms',
-    description: 'Custom passport holder with 40+ travel-themed charms, country flags & text. PU or genuine leather. RFID-protected travel essential.,
+    description: 'Custom passport holder with 40+ travel-themed charms, country flags & text. PU or genuine leather. RFID-protected travel essential.',
   },
   '/custom-passport-holder': {
     title: 'Custom Passport Holder | Design Your Own | The Happy Case',

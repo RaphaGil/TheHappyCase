@@ -20,8 +20,8 @@ const CharmTypeTabs = ({ charmTypes, selectedType, onTypeChange }) => {
             onClick={() => onTypeChange(value)}
             className={`px-6 py-3 text-xs uppercase tracking-wider transition-all duration-200 font-inter ${
               selectedType === value
-                ? 'border-b-2 border-blue-700 text-white bg-blue-600 font-medium'
-                : 'border-b-2 border-transparent text-white hover:text-white hover:border-blue-300 hover:bg-blue-500 bg-blue-400'
+                ? 'border-b-2 border-blue-800 text-white bg-blue-700 font-medium'
+                : 'border-b-2 border-transparent text-white hover:text-white hover:border-blue-400 hover:bg-blue-600 bg-blue-600'
             }`}
           >
             <span className="md:hidden">{getShortLabel(value)}</span>

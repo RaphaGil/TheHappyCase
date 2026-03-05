@@ -94,9 +94,9 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
           </button>
         )}
       </div>
-      <h3 className={`text-sm text-center mb-1 font-light font-inter ${isSoldOut ? 'text-gray-500' : 'text-gray-700'}`}>
+      <p className={`text-sm text-center mb-1 font-light font-inter ${isSoldOut ? 'text-gray-500' : 'text-gray-700'}`}>
         {charm.name}
-      </h3>
+      </p>
       <div className="text-center">
         <span className={`text-sm font-medium font-inter ${isSoldOut ? 'text-gray-500' : 'text-gray-900'}`}>
           {formatPrice(charmPrice)}

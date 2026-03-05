@@ -9,7 +9,7 @@ const EmptyState = ({ message = "No items found", onClearFilters }) => {
       {onClearFilters && (
         <button
           onClick={onClearFilters}
-          className="text-xs uppercase tracking-wider text-gray-500 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter"
+          className="text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter"
         >
           Clear Filters
         </button>
