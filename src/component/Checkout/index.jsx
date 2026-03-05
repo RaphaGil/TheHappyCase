@@ -127,6 +127,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
   // --- Computed Values ---
   const subtotal = getTotalPrice();
   const selectedCountry = customerInfo.address.country;
+  const showInternationalNote = selectedCountry !== 'GB';
   
   // Calculate shipping cost
   // Use fixed rates from SHIPPING_RATES
