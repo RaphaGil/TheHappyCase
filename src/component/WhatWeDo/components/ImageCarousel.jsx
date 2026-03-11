@@ -9,6 +9,9 @@ import { carouselImages } from '../../../data/data';
 const SLIDE_WIDTH = 300;
 const DURATION = 50;
 
+// TEMP: hide main-page images for speed testing
+const HIDE_HOME_IMAGES_FOR_TEST = true;
+
 const ImageCarousel = () => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
   const router = useRouter();
@@ -39,33 +42,35 @@ const ImageCarousel = () => {
         }
       `}</style>
       <div className="relative">
-        <div
-          className="whatwedo-carousel-track flex"
-          style={{
-            width: duplicatedImages.length * SLIDE_WIDTH,
-          }}
-        >
-          {duplicatedImages.map((src, index) => (
-            <div
-              key={`${src}-${index}`}
-              className="relative flex-shrink-0 overflow-hidden bg-gray-100"
-              style={{ width: SLIDE_WIDTH, height: 380 }}
-            >
-              <img
-                src={normalizeImagePath(src)}
-                className="absolute inset-0 w-full h-full object-cover"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                width="300"
-                height="380"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            </div>
-          ))}
-        </div>
+        {!HIDE_HOME_IMAGES_FOR_TEST && (
+          <div
+            className="whatwedo-carousel-track flex"
+            style={{
+              width: duplicatedImages.length * SLIDE_WIDTH,
+            }}
+          >
+            {duplicatedImages.map((src, index) => (
+              <div
+                key={`${src}-${index}`}
+                className="relative flex-shrink-0 overflow-hidden bg-gray-100"
+                style={{ width: SLIDE_WIDTH, height: 380 }}
+              >
+                <img
+                  src={normalizeImagePath(src)}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width="300"
+                  height="380"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
         {/* PERSONALISE overlay - fixed at bottom center of visible area */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center z-10 pointer-events-none">
           <div className="pointer-events-auto">

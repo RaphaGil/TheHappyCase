@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 
+// TEMP: hide main-page images for speed testing
+const HIDE_HOME_IMAGES_FOR_TEST = true;
+
 const DesignIdeasGrid = ({ images }) => {
   const [visibleImages, setVisibleImages] = useState(new Set());
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
@@ -53,15 +56,17 @@ const DesignIdeasGrid = ({ images }) => {
                 className="block relative w-full aspect-square overflow-hidden sm:min-h-[300px] cursor-pointer"
                 aria-label={`Go to ${imageTexts[index] || 'charms'} page`}
               >
-                <img
-                  src={normalizeImagePath(image)}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  alt={`Design Idea ${index + 1} - ${imageTexts[index] || ''}`}
-                  loading="lazy"
-                  decoding="async"
-                  width="400"
-                  height="400"
-                />
+                {!HIDE_HOME_IMAGES_FOR_TEST && (
+                  <img
+                    src={normalizeImagePath(image)}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    alt={`Design Idea ${index + 1} - ${imageTexts[index] || ''}`}
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="400"
+                  />
+                )}
               </Link>
               <div className="bg-white py-3 md:py-4">
                 <p className="text-gray-900 text-center text-md md:text-base font-light leading-tight font-inter">

@@ -8,6 +8,9 @@ import { normalizeImagePath } from '../../../utils/imagePath';
 
 const ETSY_SHOP_URL = 'https://www.etsy.com/shop/TheHappyCaseShop';
 
+// TEMP: hide main-page images for speed testing
+const HIDE_HOME_IMAGES_FOR_TEST = true;
+
 const PerfectGiftSection = ({ image }) => {
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
   const [customerCount, setCustomerCount] = useState(0);
@@ -45,31 +48,35 @@ const PerfectGiftSection = ({ image }) => {
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch md:min-h-screen">
       {/* Image - Full width on mobile, sticky fixed left on md+ */}
       <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:sticky md:top-0 md:h-screen md:min-h-[650px] md:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
-        {/* Mobile: use img for better performance */}
-        <img
-          src={normalizedImage}
-          className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
-          alt="Perfect Gift"
-          loading="lazy"
-          fetchPriority="low"
-          decoding="async"
-          width="1200"
-          height="800"
-          onError={(e) => {
-            e.target.style.display = 'none';
-          }}
-        />
-        {/* md+: lazy-loaded image (loads when section near viewport) */}
-        <img
-          src={normalizedImage}
-          alt=""
-          aria-hidden
-          className="hidden md:block absolute inset-0 w-full h-full object-cover object-center"
-          loading="lazy"
-          decoding="async"
-          width="1200"
-          height="800"
-        />
+        {!HIDE_HOME_IMAGES_FOR_TEST && (
+          <>
+            {/* Mobile: use img for better performance */}
+            <img
+              src={normalizedImage}
+              className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
+              alt="Perfect Gift"
+              loading="lazy"
+              fetchPriority="low"
+              decoding="async"
+              width="1200"
+              height="800"
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+            {/* md+: lazy-loaded image (loads when section near viewport) */}
+            <img
+              src={normalizedImage}
+              alt=""
+              aria-hidden
+              className="hidden md:block absolute inset-0 w-full h-full object-cover object-center"
+              loading="lazy"
+              decoding="async"
+              width="1200"
+              height="800"
+            />
+          </>
+        )}
         
         {/* Mobile overlay with text */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 md:hidden flex items-center justify-center z-10">

@@ -14,6 +14,9 @@ const CASE_TYPE_TO_PATH = {
   firstclass: 'first-class',
 };
 
+// TEMP: hide main-page images for speed testing
+const HIDE_HOME_IMAGES_FOR_TEST = true;
+
 const CaseOptionsSection = () => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
   const cases = Products?.cases ?? [];
@@ -53,7 +56,7 @@ const CaseOptionsSection = () => {
                 className="relative flex w-full aspect-square overflow-hidden rounded-sm cursor-pointer border border-gray-100 bg-gray-50 items-center justify-center p-4 md:p-6 lg:p-8"
                 aria-label={`Go to ${displayName} passport case page`}
               >
-                {displayImage && (
+                {!HIDE_HOME_IMAGES_FOR_TEST && displayImage && (
                   <img
                     key={displayImage}
                     src={normalizeImagePath(displayImage)}

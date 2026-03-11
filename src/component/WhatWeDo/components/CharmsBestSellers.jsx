@@ -6,6 +6,9 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 import { charmsBestSellers } from '../../../data/data';
 
+// TEMP: hide main-page images for speed testing
+const HIDE_HOME_IMAGES_FOR_TEST = true;
+
 const CharmsBestSellers = () => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
 
@@ -31,16 +34,18 @@ const CharmsBestSellers = () => {
                   {charm.badge}
                 </div>
               )}
-              <img
-                src={normalizeImagePath(charm.src)}
-                alt={charm.name}
-                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
-                loading="lazy"
-                decoding="async"
-                width="120"
-                height="120"
-                fetchPriority="low"
-              />
+              {!HIDE_HOME_IMAGES_FOR_TEST && (
+                <img
+                  src={normalizeImagePath(charm.src)}
+                  alt={charm.name}
+                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                  width="120"
+                  height="120"
+                  fetchPriority="low"
+                />
+              )}
             </div>
             <p className="mt-2 text-gray-700 text-sm font-light font-inter line-clamp-2">
               {charm.name}
