@@ -34,33 +34,40 @@ function Hero() {
   }, []);
 
   return (
-    <section className="w-full min-h-[70vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
+    <section className="w-full min-h-[50vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
       {/* Video Banner Background (with image fallback) */}
       <div className="absolute inset-0 w-full h-full">
-        {!videoError ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            className="w-full h-full object-cover object-center"
-            onError={() => setVideoError(true)}
-          >
-            {/* MP4 first so Safari prefers H.264 */}
-            <source src={videoMp4Src} type="video/mp4" />
-            {/* WebM as an alternative for browsers that support it */}
-            <source src={videoWebmSrc} type="video/webm" />
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <img
-            src={heroFallbackImage}
-            alt="Custom passport cases with charms from The Happy Case"
-            className="w-full h-full object-cover object-center"
-          />
-        )}
+        {/* Static hero image on small mobile only (saves data, faster load) */}
+        <img
+          src={heroFallbackImage}
+          alt="Custom passport cases with charms from The Happy Case"
+          className="md:hidden absolute inset-0 w-full h-full object-cover object-center"
+        />
+        {/* Video on md and up; fallback image if video errors */}
+        <div className="hidden md:block absolute inset-0 w-full h-full">
+          {!videoError ? (
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              loop
+              preload="auto"
+              className="w-full h-full object-cover object-center"
+              onError={() => setVideoError(true)}
+            >
+              <source src={videoMp4Src} type="video/mp4" />
+              <source src={videoWebmSrc} type="video/webm" />
+              Your browser does not support the video tag.
+            </video>
+          ) : (
+            <img
+              src={heroFallbackImage}
+              alt="Custom passport cases with charms from The Happy Case"
+              className="w-full h-full object-cover object-center"
+            />
+          )}
+        </div>
         {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50 z-10"></div>
       </div>
