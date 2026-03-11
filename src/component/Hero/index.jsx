@@ -12,6 +12,7 @@ import { normalizeImagePath } from '../../utils/imagePath';
 const videoMp4Src = normalizeImagePath('/assets/videos/hero.mp4');
 const videoWebmSrc = normalizeImagePath('/assets/videos/hero.webm');
 const heroFallbackImage = normalizeImagePath('/images/heroimage.png');
+const heroImageWebP = normalizeImagePath('/images/heroimage.webp');
 
 function Hero() {
   const videoRef = useRef(null);
@@ -37,12 +38,22 @@ function Hero() {
     <section className="w-full min-h-[50vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
       {/* Video Banner Background (with image fallback) */}
       <div className="absolute inset-0 w-full h-full">
-        {/* Static hero image on small mobile only (saves data, faster load) */}
-        <img
-          src={heroFallbackImage}
-          alt="Custom passport cases with charms from The Happy Case"
-          className="md:hidden absolute inset-0 w-full h-full object-cover object-center"
-        />
+        {/* Static hero image on small mobile only (WebP with PNG fallback, responsive size) */}
+        <picture className="md:hidden absolute inset-0 block w-full h-full">
+          <source
+            type="image/webp"
+            srcSet={heroImageWebP}
+            sizes="(max-width: 768px) 100vw"
+          />
+          <img
+            src={heroFallbackImage}
+            alt="Custom passport cases with charms from The Happy Case"
+            className="w-full h-full object-cover object-center"
+            width={1600}
+            height={900}
+            fetchPriority="high"
+          />
+        </picture>
         {/* Video on md and up; fallback image if video errors */}
         <div className="hidden md:block absolute inset-0 w-full h-full">
           {!videoError ? (
@@ -61,11 +72,16 @@ function Hero() {
               Your browser does not support the video tag.
             </video>
           ) : (
-            <img
-              src={heroFallbackImage}
-              alt="Custom passport cases with charms from The Happy Case"
-              className="w-full h-full object-cover object-center"
-            />
+            <picture className="absolute inset-0 block w-full h-full">
+              <source type="image/webp" srcSet={heroImageWebP} sizes="100vw" />
+              <img
+                src={heroFallbackImage}
+                alt="Custom passport cases with charms from The Happy Case"
+                className="w-full h-full object-cover object-center"
+                width={1600}
+                height={900}
+              />
+            </picture>
           )}
         </div>
         {/* Dark overlay for better text readability */}
