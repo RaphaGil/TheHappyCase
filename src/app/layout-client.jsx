@@ -29,7 +29,7 @@ export default function LayoutClient({ children }) {
       <CurrencyProvider>
         <CartProvider>
           <div className="App bg-white min-h-screen">
-            <EnvDebug />
+            {process.env.NODE_ENV !== 'production' && <EnvDebug />}
           {!hideNavBar && (
             <header className={`App-header ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{ background: 'white' }}>
               <NavBar isHomePage={isHomePage} />

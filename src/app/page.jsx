@@ -1,5 +1,10 @@
 import Hero from '@/component/Hero';
-import WhatWeDo from '@/component/WhatWeDo';
+import dynamic from 'next/dynamic';
+
+const WhatWeDoLazy = dynamic(() => import('@/component/WhatWeDo'), {
+  ssr: true,
+  loading: () => null,
+});
 
 export const metadata = {
   title: 'The Happy Case - Custom Passport Cases with Charms',
@@ -10,7 +15,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <WhatWeDo />
+      <WhatWeDoLazy />
     </>
   );
 }

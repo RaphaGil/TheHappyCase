@@ -63,7 +63,7 @@ function Hero() {
               muted
               playsInline
               loop
-              preload="auto"
+              preload="metadata"
               className="w-full h-full object-cover object-center"
               onError={() => setVideoError(true)}
             >
