@@ -46,7 +46,7 @@ const About = () => {
                 Ready to create your custom passport case?
               </p>
               <Link
-                href="/custom-passport-holder"
+                href="/custom-passport"
                 className="inline-block px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors font-inter"
               >
                 Create Yours

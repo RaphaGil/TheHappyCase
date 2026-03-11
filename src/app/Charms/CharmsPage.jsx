@@ -242,7 +242,7 @@ const Charms = () => {
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-3 sm:mb-4"></div>
           <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light px-4 font-inter">
-            <Link href="/custom-passport-holder" className="text-gray-900 hover:text-gray-700 underline transition-colors">Create</Link> your custom case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself.
+            <Link href="/custom-passport" className="text-gray-900 hover:text-gray-700 underline transition-colors">Create</Link> your custom case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself.
           </p>
         </div>
 
@@ -300,7 +300,7 @@ const Charms = () => {
 
             <div className="flex justify-center mt-12">
               <Link
-                href="/custom-passport-holder"
+                href="/custom-passport"
                 className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
               >
                 Create Yours

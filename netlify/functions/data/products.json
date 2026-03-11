@@ -823,7 +823,47 @@
         "name": "Rainbow",
         "src": "/images/ColorfulPins/rainbow.webp",
         "price": 1,
+        "size": 0.8,
+        "subCategory": "nature"
+      },
+      {
+        "id": 49,
+        "name": "Sun",
+        "src": "/images/ColorfulPins/sun.webp",
+        "price": 1,
         "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 50,
+        "name": "Minnie with Heart",
+        "src": "/images/ColorfulPins/minnie3.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 51,
+        "name": "Adventure Awaits Ticket",
+        "src": "/images/ColorfulPins/orangeticket.webp",
+        "price": 1,
+        "size": 0.9,
+        "subCategory": "travel"
+      },
+      {
+        "id": 52,
+        "name": "Take to the Beach",
+        "src": "/images/ColorfulPins/gotothebeach.webp",
+        "price": 1,
+        "size": 0.8,
+        "subCategory": "nature"
+      },
+      {
+        "id": 53,
+        "name": "Beach",
+        "src": "/images/ColorfulPins/beach.webp",
+        "price": 1,
+        "size": 0.5,
         "subCategory": "nature"
       }
     ],

@@ -47,16 +47,18 @@ const CharmsBestSellers = () => {
           </Link>
         ))}
       </div>
-      <div className="flex flex-col md:flex-row flex-wrap justify-center p-6 gap-4 mt-6">
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-3 sm:gap-4 px-4 py-6 mt-8 md:mt-10">
         <Link
           href="/charms/colorful"
-          className="w-full  md:w-auto inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+          className="w-full sm:w-auto min-w-[180px] sm:min-w-0 inline-flex items-center justify-center px-5 py-3 text-sm font-light uppercase tracking-wider font-inter text-gray-500 bg-transparent border border-gray-300 hover:text-gray-700 hover:border-gray-400 transition-colors duration-200 rounded-sm"
+          aria-label="Shop all charms"
         >
           Shop All Charms
         </Link>
         <Link
-          href="/custom-passport-holder"
-          className="w-full md:w-auto inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+          href="/custom-passport"
+          className="w-full sm:w-auto min-w-[180px] sm:min-w-0 inline-flex items-center justify-center px-5 py-3 text-sm font-light uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue hover:border-btn-primary-blue-hover transition-colors duration-200 rounded-sm"
+          aria-label="Design your custom passport case"
         >
           Design Yours
         </Link>

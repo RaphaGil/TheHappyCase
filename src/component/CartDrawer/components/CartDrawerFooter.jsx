@@ -11,7 +11,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
   const handleContinueShopping = () => {
     onClose();
     // If on Create Yours page, refresh it
-    if (pathname === '/custom-passport-holder') {
+    if (pathname === '/custom-passport-holder' || pathname === '/custom-passport') {
       setTimeout(() => {
         window.location.reload();
       }, 100);

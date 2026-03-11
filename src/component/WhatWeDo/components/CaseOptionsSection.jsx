@@ -38,7 +38,7 @@ const CaseOptionsSection = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 w-full max-w-6xl mx-auto px-2 sm:px-0">
         {cases.map((caseItem) => {
           const casePath = `/passport-cases/${CASE_TYPE_TO_PATH[caseItem.type] || caseItem.type}`;
-          const createPath = `/custom-passport-holder?case=${caseItem.type}`;
+          const createPath = `/custom-passport?case=${caseItem.type}`;
           const displayName = getCaseDisplayName(caseItem.type);
           const colors = caseItem.colors ?? [];
           const selectedIndex = selectedColorByCase[caseItem.type] ?? 0;

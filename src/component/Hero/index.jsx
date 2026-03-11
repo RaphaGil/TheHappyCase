@@ -34,7 +34,7 @@ function Hero() {
   }, []);
 
   return (
-    <section className="w-full h-[80vh] md:h-[80vh] relative overflow-hidden">
+    <section className="w-full min-h-[70vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
       {/* Video Banner Background (with image fallback) */}
       <div className="absolute inset-0 w-full h-full">
         {!videoError ? (
@@ -45,7 +45,7 @@ function Hero() {
             playsInline
             loop
             preload="auto"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
             onError={() => setVideoError(true)}
           >
             {/* MP4 first so Safari prefers H.264 */}
@@ -58,7 +58,7 @@ function Hero() {
           <img
             src={heroFallbackImage}
             alt="Custom passport cases with charms from The Happy Case"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
         )}
         {/* Dark overlay for better text readability */}

@@ -75,7 +75,7 @@ const DesignIdeasGrid = ({ images }) => {
       </div>
       <div className="flex justify-center mt-8">
         <Link
-          href="/custom-passport-holder"
+          href="/custom-passport"
           className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
         >
           Start Designing
