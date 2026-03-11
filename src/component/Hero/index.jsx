@@ -10,7 +10,6 @@ import { normalizeImagePath } from '../../utils/imagePath';
 
 // Use normalizeImagePath utility for proper path resolution in both dev and production
 const videoMp4Src = normalizeImagePath('/assets/videos/hero.mp4');
-const videoSrc = normalizeImagePath('/assets/videos/hero.webm');
 // Lightweight poster image shown immediately while video loads
 const posterSrc = normalizeImagePath('/images/Designideas/designidea.webp');
 
@@ -154,9 +153,8 @@ function Hero() {
             transition: 'opacity 0.5s ease-in'
           }}
         >
-          {/* Safari-friendly MP4 source first, WebM as secondary for browsers that support it */}
+          {/* MP4 source for broad browser support */}
           <source src={videoMp4Src} type="video/mp4" />
-          <source src={videoSrc} type="video/webm" />
           Your browser does not support the video tag.
         </video>
 
