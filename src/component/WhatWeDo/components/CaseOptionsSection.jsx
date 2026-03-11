@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
@@ -15,12 +15,17 @@ const CASE_TYPE_TO_PATH = {
 };
 
 // TEMP: hide main-page images for speed testing
-const HIDE_HOME_IMAGES_FOR_TEST = true;
+const HIDE_HOME_IMAGES_FOR_TEST = false;
 
 const CaseOptionsSection = () => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
   const cases = Products?.cases ?? [];
   const [selectedColorByCase, setSelectedColorByCase] = useState({});
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleColorDotClick = useCallback((caseType, index, e) => {
     e.preventDefault();
@@ -56,7 +61,7 @@ const CaseOptionsSection = () => {
                 className="relative flex w-full aspect-square overflow-hidden rounded-sm cursor-pointer border border-gray-100 bg-gray-50 items-center justify-center p-4 md:p-6 lg:p-8"
                 aria-label={`Go to ${displayName} passport case page`}
               >
-                {!HIDE_HOME_IMAGES_FOR_TEST && displayImage && (
+                {!HIDE_HOME_IMAGES_FOR_TEST && mounted && displayImage && (
                   <img
                     key={displayImage}
                     src={normalizeImagePath(displayImage)}

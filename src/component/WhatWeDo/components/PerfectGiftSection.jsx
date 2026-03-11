@@ -9,15 +9,20 @@ import { normalizeImagePath } from '../../../utils/imagePath';
 const ETSY_SHOP_URL = 'https://www.etsy.com/shop/TheHappyCaseShop';
 
 // TEMP: hide main-page images for speed testing
-const HIDE_HOME_IMAGES_FOR_TEST = true;
+const HIDE_HOME_IMAGES_FOR_TEST = false;
 
 const PerfectGiftSection = ({ image }) => {
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
   const [customerCount, setCustomerCount] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const normalizedImage = normalizeImagePath(image);
   
   const title = "The Perfect Gift for Every Moment";
   const description = "Created with love for all the travelers who carry their stories around the world.";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Animated counter for happy customers - starts when section is visible
   useEffect(() => {
@@ -48,7 +53,7 @@ const PerfectGiftSection = ({ image }) => {
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch md:min-h-screen">
       {/* Image - Full width on mobile, sticky fixed left on md+ */}
       <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:sticky md:top-0 md:h-screen md:min-h-[650px] md:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
-        {!HIDE_HOME_IMAGES_FOR_TEST && (
+        {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
           <>
             {/* Mobile: use img for better performance */}
             <img
@@ -100,7 +105,8 @@ const PerfectGiftSection = ({ image }) => {
                   </span>
                 </div>
                 <span className="flex items-center gap-2 text-sm font-light font-inter">
-                  <a
+               
+                  Reviews on Etsy    <a
                     href={ETSY_SHOP_URL}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -109,7 +115,6 @@ const PerfectGiftSection = ({ image }) => {
                   >
                     <FontAwesomeIcon icon={faEtsy} className="text-lg" style={{ color: '#F16521' }} />
                   </a>
-                  Reviews on Etsy
                 </span>
               </div>
             )}

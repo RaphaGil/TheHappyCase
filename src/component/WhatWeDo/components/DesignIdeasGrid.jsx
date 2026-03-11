@@ -6,14 +6,19 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 
 // TEMP: hide main-page images for speed testing
-const HIDE_HOME_IMAGES_FOR_TEST = true;
+const HIDE_HOME_IMAGES_FOR_TEST = false;
 
 const DesignIdeasGrid = ({ images }) => {
   const [visibleImages, setVisibleImages] = useState(new Set());
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
+  const [mounted, setMounted] = useState(false);
   
   const imageTexts = ['Colorful Charms', 'Bronze Charms', 'Mixed Charms', 'Flags'];
   const imageLinks = ['/charms/colorful', '/charms/bronze', '/charms/colorful', '/charms/flags'];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!sectionVisible) return;
@@ -56,7 +61,7 @@ const DesignIdeasGrid = ({ images }) => {
                 className="block relative w-full aspect-square overflow-hidden sm:min-h-[300px] cursor-pointer"
                 aria-label={`Go to ${imageTexts[index] || 'charms'} page`}
               >
-                {!HIDE_HOME_IMAGES_FOR_TEST && (
+                {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
                   <img
                     src={normalizeImagePath(image)}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"

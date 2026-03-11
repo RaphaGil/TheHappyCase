@@ -1,16 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 import { charmsBestSellers } from '../../../data/data';
 
 // TEMP: hide main-page images for speed testing
-const HIDE_HOME_IMAGES_FOR_TEST = true;
+const HIDE_HOME_IMAGES_FOR_TEST = false;
 
 const CharmsBestSellers = () => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div ref={sectionRef} className="w-full mt-12 md:mt-16 mb-12 md:mb-16">
@@ -34,7 +39,7 @@ const CharmsBestSellers = () => {
                   {charm.badge}
                 </div>
               )}
-              {!HIDE_HOME_IMAGES_FOR_TEST && (
+              {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
                 <img
                   src={normalizeImagePath(charm.src)}
                   alt={charm.name}

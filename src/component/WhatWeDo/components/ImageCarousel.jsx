@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
@@ -10,11 +10,16 @@ const SLIDE_WIDTH = 300;
 const DURATION = 50;
 
 // TEMP: hide main-page images for speed testing
-const HIDE_HOME_IMAGES_FOR_TEST = true;
+const HIDE_HOME_IMAGES_FOR_TEST = false;
 
 const ImageCarousel = () => {
   const [sectionRef] = useScrollAnimation({ threshold: 0.1 });
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Duplicate images for seamless infinite loop (2 full sets)
   const duplicatedImages = useMemo(
@@ -42,7 +47,7 @@ const ImageCarousel = () => {
         }
       `}</style>
       <div className="relative">
-        {!HIDE_HOME_IMAGES_FOR_TEST && (
+        {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
           <div
             className="whatwedo-carousel-track flex"
             style={{

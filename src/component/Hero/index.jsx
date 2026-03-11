@@ -15,19 +15,24 @@ const heroFallbackImage = normalizeImagePath('/images/heroimage.png');
 const heroImageWebP = normalizeImagePath('/images/heroimage.webp');
 
 // TEMP: hide hero media for speed testing
-const HIDE_HOME_IMAGES_FOR_TEST = true;
+const HIDE_HOME_IMAGES_FOR_TEST = false;
 
 function Hero() {
   const videoRef = useRef(null);
   const router = useRouter();
   const [buttonVisible, setButtonVisible] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  
+  const [mounted, setMounted] = useState(false);
+
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     router.push('/custom-passport');
   };
   
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     // Start fade-in after title animations complete
     // Last title delay (300ms) + animation duration (1200ms) + small buffer (200ms) = 1700ms
@@ -41,7 +46,7 @@ function Hero() {
     <section className="w-full min-h-[50vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
       {/* Video / image background (temporarily hidden for speed testing) */}
       <div className="absolute inset-0 w-full h-full">
-        {!HIDE_HOME_IMAGES_FOR_TEST && (
+        {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
           <>
             {/* Static hero image on small screens; video only on md+ */}
             <picture className="md:hidden absolute inset-0 block w-full h-full">
