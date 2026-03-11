@@ -10,14 +10,12 @@ import { normalizeImagePath } from '../../utils/imagePath';
 
 // Use normalizeImagePath utility for proper path resolution in both dev and production
 const videoMp4Src = normalizeImagePath('/assets/videos/hero.mp4');
-// Lightweight poster image shown immediately while video loads
-const posterSrc = normalizeImagePath('/images/Designideas/designidea.webp');
+const videoWebmSrc = normalizeImagePath('/assets/videos/hero.webm');
 
 function Hero() {
   const videoRef = useRef(null);
   const router = useRouter();
   const [buttonVisible, setButtonVisible] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -33,110 +31,23 @@ function Hero() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Optimized video loading
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let loadTimeout;
-    let isMounted = true;
-    let hasLoaded = false;
-
-    // Set a timeout to prevent infinite loading
-    loadTimeout = setTimeout(() => {
-      if (isMounted && !hasLoaded) {
-        console.warn('Video loading timeout - continuing without video');
-        setVideoLoaded(true);
-      }
-    }, 15000); // 15 second timeout (Safari can be slower)
-
-    // Safari-specific: Set playback rate after video is loaded
-    const setPlaybackRate = () => {
-      if (video.readyState >= 2) {
-        video.playbackRate = 0.5;
-      }
-    };
-
-    const markLoaded = () => {
-      if (!isMounted) return;
-      hasLoaded = true;
-      setVideoLoaded(true);
-      clearTimeout(loadTimeout);
-    };
-    
-    // Try to play once - if it fails, browser autoplay policy is blocking it
-    const playVideo = async () => {
-      if (!isMounted) return;
-      try {
-        setPlaybackRate();
-        await video.play();
-        markLoaded();
-      } catch (error) {
-        // Silently handle autoplay blocking - this is expected behavior
-        markLoaded();
-      }
-    };
-
-    // Handle video loaded successfully
-    const handleCanPlay = () => {
-      markLoaded();
-      playVideo();
-    };
-
-    // Safari: Wait for video to be ready before setting playback rate
-    video.addEventListener('loadedmetadata', setPlaybackRate, { once: true });
-    video.addEventListener('loadedmetadata', markLoaded, { once: true });
-    video.addEventListener('loadeddata', markLoaded, { once: true });
-    video.addEventListener('canplay', handleCanPlay, { once: true });
-    video.addEventListener('canplaythrough', handleCanPlay, { once: true });
-    // We don't listen for error events anymore, we just rely on the poster
-    
-    // Start loading the video (lazy load)
-    if (video.readyState === 0) {
-      video.load();
-    } else if (video.readyState >= 2) {
-      handleCanPlay();
-    }
-    
-    return () => {
-      isMounted = false;
-      clearTimeout(loadTimeout);
-      video.removeEventListener('loadedmetadata', setPlaybackRate);
-      video.removeEventListener('loadedmetadata', markLoaded);
-      video.removeEventListener('loadeddata', markLoaded);
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('canplaythrough', handleCanPlay);
-    };
-  }, []);
-
-
-
   return (
     <section className="w-full h-[80vh] md:h-[80vh] relative overflow-hidden">
       {/* Video Banner Background */}
       <div className="absolute inset-0 w-full h-full">
         <video
-          ref={videoRef}
+          controls
           autoPlay
           muted
           playsInline
           loop
           preload="auto"
-          poster={posterSrc}
           className="w-full h-full object-cover"
-          onLoadedData={() => {
-            setVideoLoaded(true);
-          }}
-          style={{ 
-            zIndex: 1,
-            minHeight: '100vh',
-            minWidth: '100vw',
-            opacity: videoLoaded ? 1 : 0,
-            transition: 'opacity 0.5s ease-in'
-          }}
         >
-          {/* Single MP4 source for all browsers (ensure H.264/AAC encoding for Safari) */}
+          {/* MP4 first so Safari prefers H.264 */}
           <source src={videoMp4Src} type="video/mp4" />
+          {/* WebM as an alternative for browsers that support it */}
+          <source src={videoWebmSrc} type="video/webm" />
           Your browser does not support the video tag.
         </video>
         {/* Dark overlay for better text readability */}
