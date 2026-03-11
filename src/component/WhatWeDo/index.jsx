@@ -10,7 +10,8 @@ import ImageCarousel from './components/ImageCarousel';
 const WhatWeDo = () => {
   // Exclude designidea4 from the grid, it will only be shown in PerfectGiftSection
   const gridImages = designIdeasImages.filter((_, index) => index !== 4);
-  const hideBestSellingCharms = true;
+  const hideBestSellingCharms = false;
+  const hideDiscoverOurCases = true;
 
   return (
     <section className="relative pt-8 md:pt-12 pb-20 md:pb-32 overflow-hidden bg-white ">
@@ -20,7 +21,7 @@ const WhatWeDo = () => {
 
       <DesignIdeasGrid images={gridImages} />
 
-      <CaseOptionsSection />
+      {!hideDiscoverOurCases && <CaseOptionsSection />}
 
       <PerfectGiftSection image={designIdeasImages[4]} />
 
