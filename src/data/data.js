@@ -53,11 +53,18 @@ export const carouselImages = [
 export const charmsBestSellers = [
   { name: 'Airplane', src: '/images/ColorfulPins/airplane.webp', href: '/charms/colorful' },
   { name: 'Heart Globe', src: '/images/ColorfulPins/heartglobe.webp', href: '/charms/colorful' },
-  { name: 'Passport', src: '/images/ColorfulPins/passport.webp', href: '/charms/colorful' },
-  { name: "Airplane",
-        "src": "/images/BronzePins/airplane.webp", href: '/charms/bronze' },
-  {"name": "Ticket to Happiness",
-        "src": "/images/ColorfulPins/tickettohappiness.webp", href: '/charms/colorful' },
+  // Use a pre-compressed, smaller passport asset to reduce download size
+  { name: 'Passport', src: '/images/ColorfulPins/passport-300.webp', href: '/charms/colorful' },
+  {
+    name: 'Airplane',
+    src: '/images/BronzePins/airplane.webp',
+    href: '/charms/bronze',
+  },
+  {
+    name: 'Ticket to Happiness',
+    src: '/images/ColorfulPins/tickettohappiness.webp',
+    href: '/charms/colorful',
+  },
   { name: 'Bronze Globe', src: '/images/BronzePins/globe.webp', href: '/charms/bronze' },
 ];
 
