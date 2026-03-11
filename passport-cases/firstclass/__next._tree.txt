@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/e70a8fc2c56751ae.css","style"]
-:HL["/_next/static/chunks/15a23c3bd734ebf9.css","style"]
+:HL["/_next/static/chunks/414ef1c9b3611f74.css","style"]
+:HL["/_next/static/chunks/ff3908d3a9d5366f.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap","style"]
-0:{"buildId":"RQMAiec5_pgAIpT-sc_Fc","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"passport-cases","paramType":null,"paramKey":"passport-cases","hasRuntimePrefetch":false,"slots":{"children":{"name":"type","paramType":"d","paramKey":"firstclass","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"8qnuzS1YM6RqAwL0yFtkO","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"passport-cases","paramType":null,"paramKey":"passport-cases","hasRuntimePrefetch":false,"slots":{"children":{"name":"type","paramType":"d","paramKey":"firstclass","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
