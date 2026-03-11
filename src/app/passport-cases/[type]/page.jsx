@@ -3,8 +3,8 @@ import PassportCases from '../PassportCases';
 export async function generateStaticParams() {
   return [
     { type: 'economy' },
-    { type: 'first-class' },
-    { type: 'business-class' },
+    { type: 'firstclass' },
+    { type: 'businessclass' },
   ];
 }
 
@@ -15,11 +15,11 @@ export async function generateMetadata({ params }) {
       title: 'Economy Passport Case',
       description: 'Economy passport case - slim and lightweight. Customise with colours and charms.',
     },
-    'first-class': {
+    'firstclass': {
       title: 'First Class Passport Case',
       description: 'First Class passport case - premium style with more space for stamps and charms.',
     },
-    'business-class': {
+    'businessclass': {
       title: 'Business Class Passport Case',
       description: 'Business Class passport case - luxury design with premium materials.',
     },

@@ -24,9 +24,9 @@ const Flags = () => {
       categoryName="flags"
       searchPlaceholder="Search flags..."
       callToActionLinks={[
-        { path: '/custom-passport-holder', label: 'Start Creating' },
-        { path: '/colorful-charms', label: 'Colorful Charms' },
-        { path: '/bronze-charms', label: 'Bronze Charms' }
+        { path: '/custompassport', label: 'Start Creating' },
+        { path: '/colorfulcharms', label: 'Colorful Charms' },
+        { path: '/bronzecharms', label: 'Bronze Charms' }
       ]}
     />
   );
