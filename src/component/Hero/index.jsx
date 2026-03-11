@@ -45,7 +45,6 @@ function Hero() {
             playsInline
             loop
             preload="auto"
-            poster={heroFallbackImage}
             className="w-full h-full object-cover"
             onError={() => setVideoError(true)}
           >
