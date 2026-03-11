@@ -1,17 +1,22 @@
 import React from 'react';
 
 const ShippingInfo = ({ customerInfo }) => {
+  const hasName = customerInfo && (customerInfo.name || customerInfo.surname);
+  const fullName = hasName
+    ? [customerInfo.name, customerInfo.surname].filter(Boolean).join(' ')
+    : '';
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 md:p-8">
       <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-900" style={{fontFamily: "'Poppins', sans-serif"}}>
         Shipping Information
       </h2>
       
-      {customerInfo && customerInfo.name && (
+      {hasName && (
         <div className="space-y-4 mb-6">
           <div className="py-2 border-b border-gray-100">
             <span className="text-gray-600 font-medium font-inter block mb-1">Name:</span>
-            <p className="text-gray-900 font-inter">{customerInfo.name}</p>
+            <p className="text-gray-900 font-inter">{fullName}</p>
           </div>
           {customerInfo.email && (
             <div className="py-2 border-b border-gray-100">
