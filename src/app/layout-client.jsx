@@ -10,11 +10,14 @@ import Footer from '@/component/Footer';
 import CartDrawer from '@/component/CartDrawer';
 import EnvDebug from '@/component/EnvDebug';
 import SEO from '@/component/SEO';
-import { initializeQuantities } from '@/utils/inventory';
 
 export default function LayoutClient({ children }) {
+  // Defer inventory load so it's not in the critical path (saves loading products.json + API call until after first paint)
   useEffect(() => {
-    initializeQuantities();
+    const id = setTimeout(() => {
+      import('@/utils/inventory').then(({ initializeQuantities }) => initializeQuantities());
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
   const pathname = usePathname();
   const isHomePage = pathname === '/';

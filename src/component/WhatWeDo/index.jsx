@@ -11,7 +11,7 @@ const WhatWeDo = () => {
   // Exclude designidea4 from the grid, it will only be shown in PerfectGiftSection
   const gridImages = designIdeasImages.filter((_, index) => index !== 4);
   const hideBestSellingCharms = false;
-  const hideDiscoverOurCases = true;
+  const hideDiscoverOurCases = false;
 
   return (
     <section className="relative pt-8 md:pt-12 pb-20 md:pb-32 overflow-hidden bg-white ">
