@@ -54,7 +54,7 @@ export const charmsBestSellers = [
   { name: 'Airplane', src: '/images/ColorfulPins/airplane.webp', href: '/charms/colorful' },
   { name: 'Heart Globe', src: '/images/ColorfulPins/heartglobe.webp', href: '/charms/colorful' },
   // Use a pre-compressed, smaller passport asset to reduce download size
-  { name: 'Passport', src: '/images/ColorfulPins/passport-300.webp', href: '/charms/colorful' },
+  { name: 'Passport', src: '/images/ColorfulPins/passport.webp', href: '/charms/colorful' },
   {
     name: 'Airplane',
     src: '/images/BronzePins/airplane.webp',

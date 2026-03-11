@@ -125,18 +125,48 @@ function Hero() {
 
   return (
     <section className="w-full h-[80vh] md:h-[80vh] relative overflow-hidden">
-      {/* Static background image instead of video (for performance testing) */}
-      <div
-        className="absolute inset-0 w-full h-full bg-center bg-cover"
-        style={{
-          backgroundImage: `url(${posterSrc})`,
-        }}
-      >
+      {/* Video Banner Background */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          loop
+          preload="metadata"
+          poster={posterSrc}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            console.error('❌ Video error:', e);
+            console.error('❌ Video src:', e.target.src);
+            console.error('❌ Video error details:', e.target.error);
+            setVideoError(true);
+          }}
+          onLoadedData={() => {
+            setVideoLoaded(true);
+          }}
+          style={{ 
+            zIndex: 1,
+            minHeight: '100vh',
+            minWidth: '100vw',
+            opacity: videoLoaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in'
+          }}
+        >
+          <source src={videoSrc} type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Fallback background if video fails to load */}
+        {videoError && (
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 to-blue-700 z-0" />
+        )}
+
         {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50 z-10" />
+        <div className="absolute inset-0 bg-black/50 z-10"></div>
       </div>
 
-      {/* Text and Shop Now Button - Overlay on background */}
+      {/* Text and Shop Now Button - Overlay on Video */}
       <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
           <h1 
