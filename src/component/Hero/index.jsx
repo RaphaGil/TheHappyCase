@@ -19,7 +19,6 @@ function Hero() {
   const [buttonVisible, setButtonVisible] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -35,35 +34,8 @@ function Hero() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Start loading the video only when the hero is near the viewport
+  // Optimized video loading
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          setShouldLoadVideo(true);
-          observer.disconnect();
-        }
-      },
-      {
-        root: null,
-        rootMargin: '200px',
-        threshold: 0.1,
-      }
-    );
-
-    observer.observe(video);
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Optimized video loading - only load when needed and when in view
-  useEffect(() => {
-    if (!shouldLoadVideo) return;
-
     const video = videoRef.current;
     if (!video) return;
 
@@ -147,7 +119,7 @@ function Hero() {
       video.removeEventListener('canplaythrough', handleCanPlay);
       video.removeEventListener('error', handleError);
     };
-  }, [shouldLoadVideo]);
+  }, []);
 
 
 
