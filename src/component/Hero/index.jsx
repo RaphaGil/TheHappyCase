@@ -11,11 +11,13 @@ import { normalizeImagePath } from '../../utils/imagePath';
 // Use normalizeImagePath utility for proper path resolution in both dev and production
 const videoMp4Src = normalizeImagePath('/assets/videos/hero.mp4');
 const videoWebmSrc = normalizeImagePath('/assets/videos/hero.webm');
+const heroFallbackImage = normalizeImagePath('/images/heroimage.png');
 
 function Hero() {
   const videoRef = useRef(null);
   const router = useRouter();
   const [buttonVisible, setButtonVisible] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -33,23 +35,33 @@ function Hero() {
 
   return (
     <section className="w-full h-[80vh] md:h-[80vh] relative overflow-hidden">
-      {/* Video Banner Background */}
+      {/* Video Banner Background (with image fallback) */}
       <div className="absolute inset-0 w-full h-full">
-        <video
-          controls
-          autoPlay
-          muted
-          playsInline
-          loop
-          preload="auto"
-          className="w-full h-full object-cover"
-        >
-          {/* MP4 first so Safari prefers H.264 */}
-          <source src={videoMp4Src} type="video/mp4" />
-          {/* WebM as an alternative for browsers that support it */}
-          <source src={videoWebmSrc} type="video/webm" />
-          Your browser does not support the video tag.
-        </video>
+        {!videoError ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            playsInline
+            loop
+            preload="auto"
+            poster={heroFallbackImage}
+            className="w-full h-full object-cover"
+            onError={() => setVideoError(true)}
+          >
+            {/* MP4 first so Safari prefers H.264 */}
+            <source src={videoMp4Src} type="video/mp4" />
+            {/* WebM as an alternative for browsers that support it */}
+            <source src={videoWebmSrc} type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+        ) : (
+          <img
+            src={heroFallbackImage}
+            alt="Custom passport cases with charms from The Happy Case"
+            className="w-full h-full object-cover"
+          />
+        )}
         {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50 z-10"></div>
       </div>
