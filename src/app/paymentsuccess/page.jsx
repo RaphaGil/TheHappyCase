@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import PaymentSuccess from '@/component/PaymentSucess';
+import PaymentSuccess from '@/component/Payment-Sucess';
 import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 export const metadata = {

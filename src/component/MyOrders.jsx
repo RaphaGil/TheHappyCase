@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '../utils/supabaseClient';
 import { getApiUrl } from '../utils/apiConfig';
-import OrderItem from './PaymentSucess/OrderItem';
+import OrderItem from './Payment-Sucess/OrderItem';
 import AirplaneLoading from './Shared/AirplaneLoading';
 import { getOrderDisplayId } from '../utils/paymentsucess/helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
