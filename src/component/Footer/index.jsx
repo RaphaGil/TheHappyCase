@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
+import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faEtsy, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
@@ -40,6 +40,15 @@ function Footer() {
             <div className="flex flex-col gap-3 pt-2">
             <p className="text-body-sm text-gray-900 font-light font-inter">Follow us!</p>
             <div className="flex gap-4">
+              <a
+                href="https://www.etsy.com/shop/TheHappyCaseShop"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-80"
+                aria-label="Visit our Etsy shop"
+              >
+                <FontAwesomeIcon icon={faEtsy} className="text-lg" style={{color: '#F16521'}} />
+              </a>
               <a 
                 href="https://instagram.com/thehappycase.store" 
                 target="_blank" 

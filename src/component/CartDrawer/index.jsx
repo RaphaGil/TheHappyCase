@@ -414,7 +414,7 @@ const CartDrawer = () => {
       const errorKey = item.id ?? index;
       setItemErrors(prev => ({
         ...prev,
-        [errorKey]: 'Remove the custom design first. Removing the design will delete the whole design including all its charms.'
+        [errorKey]: 'Remove the custom design first. This will delete the entire design, including all attached charms.'
       }));
       return;
     }

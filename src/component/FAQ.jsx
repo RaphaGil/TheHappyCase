@@ -9,11 +9,11 @@ const FAQ_ITEMS = [
     question: 'What products does The Happy Case offer?',
     answer: 'We offer custom passport cases in three styles: Economy (slim and lightweight), First Class (extra space for stamps and visas), and Business Class (premium luxury design). Firts and Business class cases are RFID-protected, water-resistant. All cases can be personalized with charms, flags and custom text. We also sell travel-themed charms in bronze and colorful designs.',
   },
-  {
-    id: 'separately',
-    question: 'Is it possible to get a passport case or charms separately?',
-    answer: 'Yes! You can order a passport case on its own, or charms alone. Use Create Yours to design a case with or without charms, or browse our Charms pages to add charms to an existing case. Charms can be purchased separately if you already have a case and want to refresh your look.',
-  },
+  // {
+  //   id: 'separately',
+  //   question: 'Is it possible to get a passport case or charms separately?',
+  //   answer: 'Yes! You can order a passport case on its own, or charms alone. Use Create Yours to design a case with or without charms, or browse our Charms pages to add charms to an existing case. Charms can be purchased separately if you already have a case and want to refresh your look.',
+  // },
   {
     id: 'customization',
     question: 'How does customization work?',
@@ -22,7 +22,7 @@ const FAQ_ITEMS = [
   {
     id: 'shipping',
     question: 'How long does shipping take?',
-    answer: 'Processing time is typically 3–5 business days. Delivery times vary by destination: UK orders usually arrive within 5–7 business days; international orders can take 7–14 business days depending on location. You\'ll receive tracking information once your order ships. See our Shipping page for full details.',
+    answer: 'Processing time is typically 3–5 business days. Delivery times vary by destination: UK orders usually arrive within 5–7 business days. You\'ll receive tracking information once your order ships. See our Shipping page for full details.',
   },
   {
     id: 'returns',

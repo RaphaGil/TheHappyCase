@@ -11,11 +11,14 @@ const PromotionalBanner = () => {
 
   // Promotional banner messages - reactive to currency changes
   const bannerMessages = useMemo(() => [
-    "🌍 SHIP TO EUROPE, USA, AND UK",
+    "🌍 SHIP WITHIN THE UK.",
+    "✈️ VISIT OUR ETSY SHOP FOR WORLDWIDE SHIPPING",
     // "🚚 FREE DELIVERY WHEN YOU SPEND " + formatPrice(50),
     "🔒 WEBSITE 100% SAFE",
     "❤️ MADE WITH LOVE ",
-  ], [formatPrice]); // eslint-disable-line react-hooks/exhaustive-deps
+  ], [formatPrice]); // eslint-disable-line react-hooks-exhaustive-deps
+
+
 
   // Cycle through banner messages
   useEffect(() => {
@@ -36,7 +39,7 @@ const PromotionalBanner = () => {
         
         {/* Center - Banner message */}
         <div className="flex-1 flex items-center justify-center">
-          <div 
+          <div
             key={currentBannerIndex}
             className="text-xs font-light font-inter"
           >

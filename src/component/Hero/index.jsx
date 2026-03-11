@@ -21,7 +21,7 @@ function Hero() {
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    router.push('/custom-passport-holder');
+    router.push('/custom-passport');
   };
   
   useEffect(() => {
@@ -29,7 +29,7 @@ function Hero() {
     // Last title delay (300ms) + animation duration (1200ms) + small buffer (200ms) = 1700ms
     const timer = setTimeout(() => {
       setButtonVisible(true);
-    }, 1700);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 

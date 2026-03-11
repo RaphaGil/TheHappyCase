@@ -1,8 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEtsy } from '@fortawesome/free-brands-svg-icons';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
+
+const ETSY_SHOP_URL = 'https://www.etsy.com/shop/TheHappyCaseShop';
 
 const PerfectGiftSection = ({ image }) => {
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
@@ -16,7 +20,7 @@ const PerfectGiftSection = ({ image }) => {
   useEffect(() => {
     if (!sectionVisible) return;
 
-    const targetCount = 39;
+    const targetCount = 50;
     const duration = 2000; // 2 seconds
     const steps = 60;
     const increment = targetCount / steps;
@@ -85,6 +89,15 @@ const PerfectGiftSection = ({ image }) => {
                   </span>
                 </div>
                 <span className="flex items-center gap-2 text-sm font-light font-inter">
+                  <a
+                    href={ETSY_SHOP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center transition-opacity hover:opacity-80"
+                    aria-label="Visit our Etsy shop"
+                  >
+                    <FontAwesomeIcon icon={faEtsy} className="text-lg" style={{ color: '#F16521' }} />
+                  </a>
                   Reviews on Etsy
                 </span>
               </div>
@@ -116,7 +129,16 @@ const PerfectGiftSection = ({ image }) => {
               </div>
               <div className="w-px h-6 bg-gray-300"></div>
               <span className="flex items-center gap-2 text-base font-light font-inter text-gray-700">
-                Reviews on Etsy
+              
+                Reviews on   <a
+                  href={ETSY_SHOP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center transition-opacity hover:opacity-80"
+                  aria-label="Visit our Etsy shop"
+                >
+                  <FontAwesomeIcon icon={faEtsy} className="text-xl" style={{ color: '#F16521' }} />
+                </a>
               </span>
             </div>
           )}

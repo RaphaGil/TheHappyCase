@@ -23,6 +23,12 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
     router.push('/checkout');
   };
 
+  const handleShippingClick = (event) => {
+    event.preventDefault();
+    onClose();
+    router.push('/shipping');
+  };
+
   return (
     <div className="p-4 border-t border-gray-100 bg-white flex-shrink-0">
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
@@ -35,7 +41,11 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
       </div>
      
       <p className="text-xs text-gray-500 text-center mb-4 font-light font-inter">
-        <Link href="/shipping" className="text-gray-500 hover:text-gray-900 underline transition-colors">
+        <Link
+          href="/shipping"
+          className="text-gray-500 hover:text-gray-900 underline transition-colors"
+          onClick={handleShippingClick}
+        >
           Shipping
         </Link> calculated at checkout.
       </p>

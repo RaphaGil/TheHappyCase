@@ -19,8 +19,18 @@ const ShippingPolicy = () => {
           </h1>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-4"></div>
           <p className="text-gray-600 max-w-3xl mx-auto mt-4 font-inter">
-            We ship to the United Kingdom only. Here&apos;s what you need to know about delivery times and shipping costs.
+            We ship to the United Kingdom only.     If you&apos;d like to purchase from another country, please visit our{' '}
+            <a
+              href="https://www.etsy.com/shop/TheHappyCaseShop"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-gray-900 transition-colors"
+            >
+              Etsy shop.
+            </a> Here&apos;s what you need to know about delivery times and shipping costs.
           </p>
+         
+         
         </div>
 
         <div className="max-w-4xl mx-auto md:px-6 py-16">
@@ -28,7 +38,7 @@ const ShippingPolicy = () => {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Dispatch</h2>
               <p className="text-gray-600 font-light">
-                We dispatch orders within 2–3 business days. We ship to the UK only with a flat £3 shipping rate.
+                We dispatch orders within 2–3 business days.
               </p>
             </section>
 
@@ -42,10 +52,14 @@ const ShippingPolicy = () => {
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Cost</h2>
               <p className="text-gray-600 font-light">
-                Standard UK delivery is £3 per order. Shipping is calculated at checkout.
+                Standard UK delivery is £3 per order. 
               </p>
+
+              
             </section>
+            
           </div>
+          
         </div>
       </div>
     </div>

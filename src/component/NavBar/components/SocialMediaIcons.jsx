@@ -1,6 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram, faTiktok, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { faInstagram, faTiktok, faFacebook, faEtsy } from '@fortawesome/free-brands-svg-icons';
+
+const ETSY_SHOP_URL = 'https://www.etsy.com/shop/TheHappyCaseShop';
 
 const SocialMediaIcons = ({ isMobile = false }) => {
   const iconSize = isMobile ? 'text-xl' : 'text-md';
@@ -10,6 +12,15 @@ const SocialMediaIcons = ({ isMobile = false }) => {
 
   return (
     <div className={containerClass}>
+      <a
+        href={ETSY_SHOP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
+        aria-label="Visit our Etsy shop"
+      >
+        <FontAwesomeIcon icon={faEtsy} className={iconSize} style={{ color: '#F16521' }} />
+      </a>
       <a
         href="https://instagram.com/thehappycase.store"
         target="_blank"
