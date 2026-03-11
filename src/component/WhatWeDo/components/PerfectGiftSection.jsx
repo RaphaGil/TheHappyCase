@@ -44,7 +44,7 @@ const PerfectGiftSection = ({ image }) => {
   return (
     <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch md:min-h-screen">
       {/* Image - Full width on mobile, sticky fixed left on md+ */}
-      <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:sticky md:top-0 md:h-screen md:min-h-[650px] md:self-start overflow-hidden bg-gray-100">
+      <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:sticky md:top-0 md:h-screen md:min-h-[650px] md:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
         {/* Mobile: use img for better performance */}
         <img
           src={normalizedImage}
@@ -59,12 +59,16 @@ const PerfectGiftSection = ({ image }) => {
             e.target.style.display = 'none';
           }}
         />
-        {/* md+: fixed background for parallax effect */}
-        <div
-          className="hidden md:block absolute inset-0 perfect-gift-bg"
-          style={{ backgroundImage: `url(${normalizedImage})`, backgroundPosition: 'center' }}
-          role="img"
-          aria-label="Perfect Gift"
+        {/* md+: lazy-loaded image (loads when section near viewport) */}
+        <img
+          src={normalizedImage}
+          alt=""
+          aria-hidden
+          className="hidden md:block absolute inset-0 w-full h-full object-cover object-center"
+          loading="lazy"
+          decoding="async"
+          width="1200"
+          height="800"
         />
         
         {/* Mobile overlay with text */}

@@ -63,6 +63,7 @@ const CaseOptionsSection = () => {
                     decoding="async"
                     width="400"
                     height="400"
+                    fetchPriority="low"
                   />
                 )}
               </Link>

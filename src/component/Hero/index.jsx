@@ -38,8 +38,8 @@ function Hero() {
     <section className="w-full min-h-[50vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
       {/* Video Banner Background (with image fallback) */}
       <div className="absolute inset-0 w-full h-full">
-        {/* Static hero image on small mobile only - hidden */}
-        <picture className="hidden md:hidden absolute inset-0 block w-full h-full" aria-hidden>
+        {/* Static hero image on small screens; video only on md+ */}
+        <picture className="md:hidden absolute inset-0 block w-full h-full">
           <source
             type="image/webp"
             srcSet={heroImageWebP}

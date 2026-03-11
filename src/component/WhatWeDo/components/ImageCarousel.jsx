@@ -57,6 +57,8 @@ const ImageCarousel = () => {
                 alt=""
                 loading="lazy"
                 decoding="async"
+                width="300"
+                height="380"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}

@@ -39,6 +39,7 @@ const CharmsBestSellers = () => {
                 decoding="async"
                 width="120"
                 height="120"
+                fetchPriority="low"
               />
             </div>
             <p className="mt-2 text-gray-700 text-sm font-light font-inter line-clamp-2">
