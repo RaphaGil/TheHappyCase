@@ -71,38 +71,59 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                '@context': 'https://schema.org',
-                '@type': 'Organization',
-                name: 'The Happy Case',
-                url: SITE_URL,
-                logo: DEFAULT_IMAGE,
-                image: DEFAULT_IMAGE,
-                description: 'Custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flags and custom text. RFID-protected, water-resistant passport covers perfect for travelers.',
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'WebSite',
-                name: 'The Happy Case',
-                url: SITE_URL,
-                image: DEFAULT_IMAGE,
-                description: 'Custom passport cases with charms. Design your own passport holder with Economy, First Class, or Business Class styles. Add personalized charms, flags, and text.',
-              },
-              {
-                '@context': 'https://schema.org',
-                '@type': 'ItemList',
-                name: 'Custom Passport Cases',
-                description: 'Economy, First Class, and Business Class passport holders with personalized charms.',
-                url: `${SITE_URL}/passport-cases`,
-                numberOfItems: 3,
-                itemListElement: [
-                  { '@type': 'ListItem', position: 1, name: 'Economy Passport Case', url: `${SITE_URL}/passport-cases/economy`, image: `${SITE_URL}/images/SmartCase/economycaselightpink.webp` },
-                  { '@type': 'ListItem', position: 2, name: 'First Class Passport Case', url: `${SITE_URL}/passport-cases/first-class`, image: `${SITE_URL}/images/FirstClassCase/firstclasscasebrown.webp` },
-                  { '@type': 'ListItem', position: 3, name: 'Business Class Passport Case', url: `${SITE_URL}/passport-cases/business-class`, image: `${SITE_URL}/images/BusinessClassCase/businessclasscasegray.webp` },
-                ],
-              },
-            ]),
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  name: 'The Happy Case',
+                  url: SITE_URL,
+                  logo: DEFAULT_IMAGE,
+                  image: DEFAULT_IMAGE,
+                  description:
+                    'Custom passport cases with charms at The Happy Case. Choose from Economy, First Class, and Business Class passport holders. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, country flags and custom text. RFID-protected, water-resistant passport covers perfect for travelers.',
+                },
+                {
+                  '@type': 'WebSite',
+                  name: 'The Happy Case',
+                  url: SITE_URL,
+                  image: DEFAULT_IMAGE,
+                  description:
+                    'Custom passport cases with charms. Design your own passport holder with Economy, First Class, or Business Class styles. Add personalized charms, flags, and text.',
+                },
+                {
+                  '@type': 'ItemList',
+                  name: 'Custom Passport Cases',
+                  description:
+                    'Economy, First Class, and Business Class passport holders with personalized charms.',
+                  url: `${SITE_URL}/passport-cases`,
+                  numberOfItems: 3,
+                  itemListElement: [
+                    {
+                      '@type': 'ListItem',
+                      position: 1,
+                      name: 'Economy Passport Case',
+                      url: `${SITE_URL}/passport-cases/economy`,
+                      image: `${SITE_URL}/images/SmartCase/economycaselightpink.webp`,
+                    },
+                    {
+                      '@type': 'ListItem',
+                      position: 2,
+                      name: 'First Class Passport Case',
+                      url: `${SITE_URL}/passport-cases/first-class`,
+                      image: `${SITE_URL}/images/FirstClassCase/firstclasscasebrown.webp`,
+                    },
+                    {
+                      '@type': 'ListItem',
+                      position: 3,
+                      name: 'Business Class Passport Case',
+                      url: `${SITE_URL}/passport-cases/business-class`,
+                      image: `${SITE_URL}/images/BusinessClassCase/businessclasscasegray.webp`,
+                    },
+                  ],
+                },
+              ],
+            }),
           }}
         />
       </head>

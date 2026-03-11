@@ -18,7 +18,6 @@ function Hero() {
   const router = useRouter();
   const [buttonVisible, setButtonVisible] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
   
   const handleStartDesigning = () => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -42,22 +41,27 @@ function Hero() {
     let loadTimeout;
     let isMounted = true;
     let hasLoaded = false;
-    let hasError = false;
 
     // Set a timeout to prevent infinite loading
     loadTimeout = setTimeout(() => {
-      if (isMounted && !hasLoaded && !hasError) {
+      if (isMounted && !hasLoaded) {
         console.warn('Video loading timeout - continuing without video');
-        hasError = true;
-        setVideoError(true);
+        setVideoLoaded(true);
       }
-    }, 5000); // 5 second timeout
+    }, 15000); // 15 second timeout (Safari can be slower)
 
     // Safari-specific: Set playback rate after video is loaded
     const setPlaybackRate = () => {
       if (video.readyState >= 2) {
         video.playbackRate = 0.5;
       }
+    };
+
+    const markLoaded = () => {
+      if (!isMounted) return;
+      hasLoaded = true;
+      setVideoLoaded(true);
+      clearTimeout(loadTimeout);
     };
     
     // Try to play once - if it fails, browser autoplay policy is blocking it
@@ -66,43 +70,26 @@ function Hero() {
       try {
         setPlaybackRate();
         await video.play();
-        if (isMounted) {
-          hasLoaded = true;
-          setVideoLoaded(true);
-        }
-        clearTimeout(loadTimeout);
+        markLoaded();
       } catch (error) {
         // Silently handle autoplay blocking - this is expected behavior
-        if (isMounted) {
-          hasLoaded = true;
-          setVideoLoaded(true);
-        }
-        clearTimeout(loadTimeout);
+        markLoaded();
       }
     };
 
     // Handle video loaded successfully
     const handleCanPlay = () => {
-      if (!isMounted) return;
-      hasLoaded = true;
-      setVideoLoaded(true);
-      clearTimeout(loadTimeout);
+      markLoaded();
       playVideo();
-    };
-
-    // Handle video errors
-    const handleError = () => {
-      if (!isMounted) return;
-      hasError = true;
-      setVideoError(true);
-      clearTimeout(loadTimeout);
     };
 
     // Safari: Wait for video to be ready before setting playback rate
     video.addEventListener('loadedmetadata', setPlaybackRate, { once: true });
+    video.addEventListener('loadedmetadata', markLoaded, { once: true });
+    video.addEventListener('loadeddata', markLoaded, { once: true });
     video.addEventListener('canplay', handleCanPlay, { once: true });
     video.addEventListener('canplaythrough', handleCanPlay, { once: true });
-    video.addEventListener('error', handleError, { once: true });
+    // We don't listen for error events anymore, we just rely on the poster
     
     // Start loading the video (lazy load)
     if (video.readyState === 0) {
@@ -115,9 +102,10 @@ function Hero() {
       isMounted = false;
       clearTimeout(loadTimeout);
       video.removeEventListener('loadedmetadata', setPlaybackRate);
+      video.removeEventListener('loadedmetadata', markLoaded);
+      video.removeEventListener('loadeddata', markLoaded);
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('canplaythrough', handleCanPlay);
-      video.removeEventListener('error', handleError);
     };
   }, []);
 
@@ -133,15 +121,9 @@ function Hero() {
           muted
           playsInline
           loop
-          preload="metadata"
+          preload="auto"
           poster={posterSrc}
           className="w-full h-full object-cover"
-          onError={(e) => {
-            console.error('❌ Video error:', e);
-            console.error('❌ Video src:', e.target.src);
-            console.error('❌ Video error details:', e.target.error);
-            setVideoError(true);
-          }}
           onLoadedData={() => {
             setVideoLoaded(true);
           }}
@@ -153,16 +135,10 @@ function Hero() {
             transition: 'opacity 0.5s ease-in'
           }}
         >
-          {/* MP4 source for broad browser support */}
+          {/* Single MP4 source for all browsers (ensure H.264/AAC encoding for Safari) */}
           <source src={videoMp4Src} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-
-        {/* Fallback background if video fails to load */}
-        {videoError && (
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-blue-900 to-blue-700 z-0" />
-        )}
-
         {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50 z-10"></div>
       </div>
