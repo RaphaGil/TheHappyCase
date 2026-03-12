@@ -86,6 +86,17 @@ exports.handler = async (event) => {
       ? totalWithShipping
       : computedSubtotal + computedShipping;
 
+  const customerName =
+    [customerInfo.name, customerInfo.surname].filter(Boolean).join(" ") || "Customer";
+
+  // Prefer short, customer-facing order number (e.g. 12FRBPXG), not full pi_...
+  let displayOrderNumber =
+    paymentIntent?.metadata?.order_number ||
+    paymentIntent?.metadata?.order_id ||
+    (paymentIntent?.id
+      ? String(paymentIntent.id).slice(-8).toUpperCase()
+      : "N/A");
+
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const FROM_EMAIL = process.env.FROM_EMAIL || "onboarding@resend.dev";
 
@@ -98,6 +109,7 @@ exports.handler = async (event) => {
       email: {
         to: email,
         from: FROM_EMAIL,
+        orderNumber: displayOrderNumber,
         subtotal: computedSubtotal,
         shipping: computedShipping,
         total: computedTotal,
@@ -107,23 +119,19 @@ exports.handler = async (event) => {
 
   const resend = new Resend(RESEND_API_KEY);
 
-  const customerName =
-    [customerInfo.name, customerInfo.surname].filter(Boolean).join(" ") || "Customer";
-
-  const orderId =
-    paymentIntent?.id ||
-    paymentIntent?.metadata?.order_id ||
-    paymentIntent?.metadata?.order_number ||
-    "N/A";
-
-  const subject = `Your order${orderId !== "N/A" ? ` ${orderId}` : ""} – The Happy Case`;
+  const subject =
+    displayOrderNumber && displayOrderNumber !== "N/A"
+      ? `Your order ${displayOrderNumber} – The Happy Case`
+      : "Your order – The Happy Case";
 
   const lines = [
     `Hi ${customerName},`,
     "",
     "Thank you for your order from The Happy Case.",
     "",
-    `Order ID: ${orderId}`,
+    displayOrderNumber && displayOrderNumber !== "N/A"
+      ? `Order number: ${displayOrderNumber}`
+      : null,
     "",
     `Subtotal: £${computedSubtotal.toFixed(2)}`,
     `Shipping: £${computedShipping.toFixed(2)}`,
@@ -133,7 +141,7 @@ exports.handler = async (event) => {
     "",
     "Best wishes,",
     "The Happy Case",
-  ];
+  ].filter(Boolean);
 
   try {
     const { data, error } = await resend.emails.send({

@@ -10,6 +10,22 @@
 
 const { createClient } = require("@supabase/supabase-js");
 
+// Load products catalog (used to map purchased items to inventory_items.item_id)
+// The build script copies src/data/products.json into these locations.
+function loadProducts() {
+  try {
+    // eslint-disable-next-line global-require
+    return require("./products.json");
+  } catch (e1) {
+    try {
+      // eslint-disable-next-line global-require
+      return require("./data/products.json");
+    } catch (e2) {
+      return null;
+    }
+  }
+}
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "Content-Type",
@@ -195,6 +211,8 @@ exports.handler = async (event) => {
     },
   };
 
+  const Products = loadProducts();
+
   try {
     // Idempotency: check by payment_intent_id (Stripe id), not order_id (display number)
     const { data: existing } = await supabase
@@ -236,11 +254,158 @@ exports.handler = async (event) => {
       });
     }
 
+    // After a successful insert, decrement inventory_items.qty_in_stock for purchased items (if not unlimited/null).
+    // This keeps Supabase + Dashboard stock in sync after sales on Netlify.
+    const inventoryUpdate = {
+      totalItems: 0,
+      successful: 0,
+      failed: 0,
+      failedItems: [],
+      note: null,
+    };
+
+    try {
+      if (!Products) {
+        inventoryUpdate.note =
+          "Products catalog not found in Netlify function. Inventory decrement skipped.";
+      } else {
+        const CASE_TYPE_TO_PATH = {
+          economy: "economy",
+          business: "business-class",
+          firstclass: "first-class",
+        };
+
+        const updates = [];
+        const safeQty = (it) => parseInt(it?.quantity ?? 1, 10) || 1;
+
+        const findPinId = (category, pinName, pinSrc, pinObj, itemObj) => {
+          // Prefer explicit IDs if provided
+          const direct = pinObj?.id ?? itemObj?.pin?.id;
+          if (direct != null) return direct;
+
+          const pins = Products?.pins?.[category] || [];
+          const found = pins.find(
+            (p) =>
+              (pinObj?.id != null && p.id === pinObj.id) ||
+              (itemObj?.id != null && p.id === itemObj.id) ||
+              (pinName && p.name === pinName) ||
+              (pinSrc && p.src === pinSrc)
+          );
+          return found?.id ?? null;
+        };
+
+        items.forEach((item) => {
+          const quantityToDecrement = safeQty(item);
+
+          // Standalone charm items
+          if (item?.type === "charm") {
+            const category = item.category || item.pin?.category || "colorful";
+            const pinName = item.pin?.name || item.name;
+            const pinSrc = item.pin?.src || item.src;
+            const pinId = findPinId(category, pinName, pinSrc, item.pin, item);
+            if (pinId != null) {
+              updates.push({
+                item_id: `pin-${category}-${pinId}`,
+                quantity: quantityToDecrement,
+              });
+            }
+          }
+
+          // Case inventory (caseType + color)
+          if (item?.caseType && item?.color) {
+            const caseData = (Products?.cases || []).find((c) => c.type === item.caseType);
+            if (caseData && Array.isArray(caseData.colors)) {
+              const colorExists = caseData.colors.some((c) => c.color === item.color);
+              if (colorExists && caseData.id != null) {
+                updates.push({
+                  item_id: `case-${caseData.id}-color-${item.color}`,
+                  quantity: quantityToDecrement,
+                });
+              }
+            }
+          }
+
+          // Pins attached to cases (pinsDetails or pins)
+          const pinsAttached = item?.pinsDetails || item?.pins || [];
+          if (Array.isArray(pinsAttached) && pinsAttached.length) {
+            pinsAttached.forEach((pin) => {
+              if (!pin) return;
+              const category = pin.category || "colorful";
+              const pinName = pin.name;
+              const pinSrc = pin.src;
+              const pinId = findPinId(category, pinName, pinSrc, pin, item);
+              if (pinId != null) {
+                updates.push({
+                  item_id: `pin-${category}-${pinId}`,
+                  quantity: quantityToDecrement,
+                });
+              }
+            });
+          }
+        });
+
+        // Group by item_id and sum
+        const grouped = {};
+        updates.forEach((u) => {
+          if (!u?.item_id) return;
+          grouped[u.item_id] = (grouped[u.item_id] || 0) + (u.quantity || 0);
+        });
+
+        const entries = Object.entries(grouped).filter(([, q]) => q > 0);
+        inventoryUpdate.totalItems = entries.length;
+
+        const results = await Promise.all(
+          entries.map(async ([itemId, decBy]) => {
+            try {
+              const { data: currentItem, error: fetchError } = await supabase
+                .from("inventory_items")
+                .select("qty_in_stock")
+                .eq("item_id", itemId)
+                .single();
+
+              if (fetchError) {
+                return { success: false, item_id: itemId, error: fetchError.message };
+              }
+
+              const currentQty = currentItem?.qty_in_stock;
+              // null => unlimited stock, skip
+              if (currentQty === null || currentQty === undefined) {
+                return { success: true, item_id: itemId, skipped: true };
+              }
+
+              const newQty = Math.max(0, Number(currentQty) - Number(decBy));
+
+              const { error: updateError } = await supabase
+                .from("inventory_items")
+                .update({ qty_in_stock: newQty, updated_at: new Date().toISOString() })
+                .eq("item_id", itemId);
+
+              if (updateError) {
+                return { success: false, item_id: itemId, error: updateError.message };
+              }
+
+              return { success: true, item_id: itemId, old_qty: currentQty, new_qty: newQty };
+            } catch (e) {
+              return { success: false, item_id: itemId, error: e.message };
+            }
+          })
+        );
+
+        inventoryUpdate.successful = results.filter((r) => r.success).length;
+        const failed = results.filter((r) => !r.success);
+        inventoryUpdate.failed = failed.length;
+        inventoryUpdate.failedItems = failed.map((f) => f.item_id);
+      }
+    } catch (e) {
+      inventoryUpdate.note = `Inventory decrement failed: ${e.message}`;
+    }
+
     return jsonResponse(200, {
       success: true,
       message: "Order saved successfully",
       order_id: orderNumber,
       data: inserted,
+      inventoryUpdate,
     });
   } catch (err) {
     console.error("save-order error:", err);
