@@ -220,9 +220,7 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
             Your order has been dispatched. <strong>Expected delivery:</strong> ${deliveryEstimate}.
           </p>
           ${trackButton}
-          <div style="margin-top:8px;color:#64748b;font-size:12px;text-align:center;">
-            If the button doesn’t work, copy and paste: ${trackButtonUrl}
-          </div>
+       
         </div>
 
         <div style="padding:22px;">
