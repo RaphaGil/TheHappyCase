@@ -343,88 +343,6 @@ const QuantityControls = ({
   </div>
 );
 
-const NoteEditor = ({
-  index,
-  item,
-  openNoteIndex,
-  noteTexts,
-  setOpenNoteIndex,
-  setNoteTexts,
-  handleNoteChange,
-  handleSaveNote,
-}) => {
-  const isOpen = openNoteIndex === index;
-
-  return (
-    <>
-      {isOpen && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <div className="text-xs text-gray-500 mb-2 font-light font-inter">
-            Add a note for this item:
-          </div>
-          <textarea
-            value={
-              noteTexts[index] !== undefined
-                ? noteTexts[index]
-                : item.note || ""
-            }
-            onChange={(e) => handleNoteChange(index, e.target.value)}
-            placeholder="Add any special instructions or notes..."
-            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 font-light resize-none font-inter"
-            rows="3"
-          />
-          <div className="flex justify-end gap-2 mt-2">
-            <button
-              onClick={() => {
-                setOpenNoteIndex(null);
-                setNoteTexts({
-                  ...noteTexts,
-                  [index]: item.note || "",
-                });
-              }}
-              className="px-4 py-1.5 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 font-light transition-colors font-inter"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => handleSaveNote(index)}
-              className="px-4 py-1.5 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
-            >
-              Save Note
-            </button>
-          </div>
-        </div>
-      )}
-
-      {item.note && openNoteIndex !== index && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <div className="text-xs text-gray-500 mb-1 font-light font-inter">
-            Note:
-          </div>
-          <div className="text-sm text-gray-700 font-light whitespace-pre-wrap font-inter">
-            {item.note}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <button
-          onClick={() =>
-            setOpenNoteIndex(openNoteIndex === index ? null : index)
-          }
-          className="flex items-center text-gray-500 hover:text-gray-900 px-4 py-2 text-xs uppercase tracking-wider font-light transition-colors font-inter"
-        >
-          {item.note ? "Edit Note" : "Add Note"}
-          <FontAwesomeIcon
-            icon={openNoteIndex === index ? faChevronUp : faChevronDown}
-            className="ml-2 text-xs"
-          />
-        </button>
-      </div>
-    </>
-  );
-};
-
 const CartItem = ({
   item,
   index,
@@ -469,17 +387,6 @@ const CartItem = ({
             </button>
           </div>
         </div>
-
-        <NoteEditor
-          index={index}
-          item={item}
-          openNoteIndex={openNoteIndex}
-          noteTexts={noteTexts}
-          setOpenNoteIndex={setOpenNoteIndex}
-          setNoteTexts={setNoteTexts}
-          handleNoteChange={handleNoteChange}
-          handleSaveNote={handleSaveNote}
-        />
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex justify-between items-center">

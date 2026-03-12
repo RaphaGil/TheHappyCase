@@ -74,37 +74,13 @@ const CharmItem = ({
             )}
           </div>
         </div>
-        
-      </div>
-
-      {/* Qty and price for charm */}
-      <div className="mt-3 flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <QuantityControls
-            quantity={item.quantity || 1}
-            item={item}
-            onDecrement={() => onDecrement(item.id !== undefined ? item.id : index)}
-            onIncrement={() => onIncrement(item.id !== undefined ? item.id : index)}
-          />
-          <div className="text-right">
-            <div className="text-sm font-medium text-gray-900 font-inter">
-              {formatPrice((item.price || item.totalPrice || 0) * (item.quantity || 1))}
-            </div>
+        <div className="text-right">
+          <div className="text-sm font-medium text-gray-900 font-inter">
+            {formatPrice((item.price || item.totalPrice || 0) * (item.quantity || 1))}
           </div>
         </div>
       </div>
 
-      {/* Note Section */}
-      <NoteSection
-        item={item}
-        index={index}
-        openNoteIndex={openNoteIndex}
-        noteTexts={noteTexts}
-        onToggleNote={onToggleNote}
-        onNoteChange={onNoteChange}
-        onSaveNote={onSaveNote}
-        onCancelNote={onCancelNote}
-      />
     </div>
   );
 };

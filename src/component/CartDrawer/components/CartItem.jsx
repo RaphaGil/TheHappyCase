@@ -19,16 +19,18 @@ const CartItem = ({
   charmErrors
 }) => {
   return (
-    <div className="pb-4 flex items-start gap-3 border-b border-btn-primary-blue/10 last:border-b-0">
+    <div className="pb-4 flex items-start gap-3">
       <div className="flex-1">
-        <div className="flex justify-end items-end mb-2">
-          <button 
-            onClick={() => onRemove(index)} 
-            className="text-xs text-btn-primary-blue hover:text-btn-primary-blue-hover uppercase tracking-wider font-light transition-colors font-inter"
-          >
-            Remove
-          </button>
-        </div>
+        {item.type !== 'charm' && (
+          <div className="flex justify-end items-end mb-2">
+            <button 
+              onClick={() => onRemove(index)} 
+              className="text-xs text-btn-primary-blue hover:text-btn-primary-blue-hover uppercase tracking-wider font-light transition-colors font-inter"
+            >
+              Remove
+            </button>
+          </div>
+        )}
 
         {item.type === 'charm' ? (
           <CharmItem
