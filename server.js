@@ -2736,7 +2736,7 @@ async function sendDispatchNotificationEmail({ to, customerName, orderNumber, tr
     const { data, error } = await resend.emails.send({
       from: `The Happy Case <${fromEmail}>`,
       to: toEmail,
-      subject: `Your order <${orderNumber} is on its way`,
+      subject: `Your order ${orderNumber} is on its way`,
       html: emailHtml,
     });
 

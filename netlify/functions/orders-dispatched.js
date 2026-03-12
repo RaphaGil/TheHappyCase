@@ -52,24 +52,181 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
   const formatOrderDate = (d) => (d ? new Date(d).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "");
   const formatPrice = (amt, curr = "gbp") => new Intl.NumberFormat("en-GB", { style: "currency", currency: (curr || "gbp").toUpperCase() }).format(amt || 0);
   const itemsToDisplay = Array.isArray(items) ? items : [];
-  const orderItemsHtml = itemsToDisplay.map((item) => {
-    const name = item.caseName || item.name || "Custom Case";
-    const qty = item.quantity || 1;
-    let price = 0;
-    if (item.total_price != null) price = parseFloat(item.total_price) || 0;
-    else if (item.unit_price != null) price = (parseFloat(item.unit_price) || 0) * qty;
-    else if (item.totalPrice != null) price = parseFloat(item.totalPrice) || 0;
-    else if (item.price != null) price = (parseFloat(item.price) || 0) * qty;
-    return `<tr><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">${name} × ${qty}</td><td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:right;font-weight:500;">${formatPrice(price, currency)}</td></tr>`;
-  }).join("");
+  const toTitleCase = (value) =>
+    String(value || "")
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .replace(/\b\w/g, (m) => m.toUpperCase());
+
+  const normalizePins = (pins) => {
+    if (!pins) return [];
+    if (Array.isArray(pins)) return pins.filter(Boolean);
+    if (typeof pins === "string") return pins.split(",").map((s) => s.trim()).filter(Boolean);
+    return [];
+  };
+
+  const getItemName = (item) => item?.caseName || item?.name || item?.title || "Custom Case";
+  const getQty = (item) => Number(item?.quantity ?? 1) || 1;
+  const getUnitPrice = (item) => {
+    if (item?.unit_price != null) return parseFloat(item.unit_price) || 0;
+    if (item?.unitPrice != null) return parseFloat(item.unitPrice) || 0;
+    if (item?.price != null) return parseFloat(item.price) || 0;
+    if (item?.basePrice != null) return parseFloat(item.basePrice) || 0;
+    const qty = getQty(item);
+    const total = item?.total_price ?? item?.totalPrice;
+    if (total != null) return (parseFloat(total) || 0) / Math.max(1, qty);
+    return 0;
+  };
+  const getTotalPrice = (item) => {
+    const qty = getQty(item);
+    if (item?.total_price != null) return parseFloat(item.total_price) || 0;
+    if (item?.totalPrice != null) return parseFloat(item.totalPrice) || 0;
+    return getUnitPrice(item) * qty;
+  };
+
+  const orderItemsHtml =
+    itemsToDisplay.length > 0
+      ? itemsToDisplay
+          .map((item) => {
+            const name = getItemName(item);
+            const qty = getQty(item);
+            const unit = getUnitPrice(item);
+            const total = getTotalPrice(item);
+            const caseType = item?.case_type || item?.caseType;
+            const color = item?.color;
+            const pins = normalizePins(item?.pins || item?.pinsDetails);
+            const hasPins = pins.length > 0;
+            const customDesign = item?.custom_design === true || item?.customDesign === true;
+
+            const details = [
+              caseType ? `Case: ${toTitleCase(caseType)}` : null,
+              color ? `Color: ${toTitleCase(color)}` : null,
+              customDesign ? "Custom design: Yes" : null,
+              hasPins ? `Pins: ${pins.map((p) => (typeof p === "string" ? p : p?.name || "")).filter(Boolean).join(", ")}` : null,
+              `Qty: ${qty} • Unit: ${formatPrice(unit, currency)}`,
+            ].filter(Boolean);
+
+            const detailsHtml = details.length
+              ? `<div style="color:#475569;font-size:12.5px;margin-top:4px;line-height:1.35;">${details
+                  .map((d) => `<div>${String(d)}</div>`)
+                  .join("")}</div>`
+              : "";
+
+            return `<tr>
+              <td style="padding:12px 14px;border-bottom:1px solid #dbeafe;">
+                <div style="font-weight:600;color:#0f172a;">${String(name)}</div>
+                ${detailsHtml}
+              </td>
+              <td style="padding:12px 14px;border-bottom:1px solid #dbeafe;text-align:right;white-space:nowrap;font-weight:700;color:#0f172a;">
+                ${formatPrice(total, currency)}
+              </td>
+            </tr>`;
+          })
+          .join("")
+      : `<tr><td style="padding:12px 14px;color:#475569;">(No items provided)</td><td></td></tr>`;
   const displayName = customerName && typeof customerName === "string" && customerName.trim() ? customerName.trim() : null;
   const greeting = displayName ? `Hi ${displayName},` : "Hi there,";
   const trackButtonUrl = trackingLink || "https://www.evri.com/track-a-parcel";
-  const trackButton = `<div style="text-align:center;margin:28px 0;"><a href="${trackButtonUrl}" style="display:inline-block;padding:14px 32px;background:#111827;color:#fff;font-size:16px;font-weight:600;text-decoration:none;border-radius:8px;">Track your parcel</a></div>`;
+  const trackButton = `<div style="text-align:center;margin:18px 0 0;">
+    <a href="${trackButtonUrl}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 18px;border-radius:10px;">
+      Track your parcel
+    </a>
+  </div>`;
   const hasAnyTracking = carrier || trackingNumber || trackingLink;
-  const trackSection = hasAnyTracking ? `<div style="background:#fef9c3;padding:20px;border-radius:8px;margin:20px 0;border:1px solid #e5e7eb;"><h2 style="margin:0 0 16px;font-size:18px;">Tracking details</h2><table style="width:100%;">${carrier ? `<tr><td style="padding:8px 0;color:#4b5563;">Carrier:</td><td style="padding:8px 0;text-align:right;">${carrier}</td></tr>` : ""}${trackingNumber ? `<tr><td style="padding:8px 0;color:#4b5563;">Tracking number:</td><td style="padding:8px 0;text-align:right;">${trackingNumber}</td></tr>` : ""}</table></div>` : "";
-  const orderSection = (itemsToDisplay.length > 0 || totalAmount || orderNumber || orderDate) ? `<div style="background:#f9fafb;padding:20px;border-radius:8px;margin:20px 0;border:1px solid #e5e7eb;"><h2 style="margin:0 0 16px;font-size:18px;">Order information</h2>${orderNumber ? `<p style="margin:0 0 12px;color:#4b5563;"><strong>Order #:</strong> ${orderNumber}</p>` : ""}${orderDate ? `<p style="margin:0 0 12px;color:#4b5563;"><strong>Date:</strong> ${formatOrderDate(orderDate)}</p>` : ""}${itemsToDisplay.length > 0 ? `<table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#fef9c3;"><th style="padding:10px 12px;text-align:left;">Item</th><th style="padding:10px 12px;text-align:right;">Price</th></tr></thead><tbody>${orderItemsHtml}</tbody>${totalAmount ? `<tfoot><tr><td style="padding:12px;font-weight:600;">Total</td><td style="padding:12px;text-align:right;font-weight:600;">${formatPrice(totalAmount, currency)}</td></tr></tfoot>` : ""}</table>` : ""}${shippingAddress && (shippingAddress.line1 || shippingAddress.city) ? `<p style="margin:16px 0 0;color:#4b5563;"><strong>Shipping to:</strong><br/>${[shippingAddress.line1, shippingAddress.line2, shippingAddress.city, shippingAddress.state, shippingAddress.postal_code, shippingAddress.country].filter(Boolean).join(", ")}</p>` : ""}</div>` : "";
-  const emailHtml = `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:Inter,sans-serif;line-height:1.6;color:#111827;max-width:600px;margin:0 auto;padding:20px;"><div style="background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:30px;"><div style="text-align:center;margin-bottom:24px;"><img src="${logoUrl}" alt="The Happy Case" style="max-width:200px;height:auto;" /><h1 style="color:#16a34a;margin:0;font-size:24px;text-transform:uppercase;">Your parcel is on its way</h1></div><p style="margin:0 0 16px;">${greeting}</p><p style="margin:0 0 16px;">Your item has been dispatched. <strong>Expected delivery:</strong> ${deliveryEstimate}.</p>${trackButton}${orderSection}${trackSection}<p style="margin:20px 0 0;color:#64748b;font-size:14px;">Thank you for shopping with The Happy Case.</p></div></body></html>`;
+  const trackSection = hasAnyTracking
+    ? `<h2 style="margin:22px 0 10px;font-size:16px;color:#1e40af;">Tracking details</h2>
+       <div style="border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff;padding:16px;color:#0f172a;font-size:14px;line-height:1.5;">
+         <table style="width:100%;border-collapse:collapse;font-size:14px;">
+           ${carrier ? `<tr><td style="padding:6px 0;color:#475569;">Carrier</td><td style="padding:6px 0;text-align:right;font-weight:700;color:#0f172a;">${carrier}</td></tr>` : ""}
+           ${trackingNumber ? `<tr><td style="padding:6px 0;color:#475569;">Tracking number</td><td style="padding:6px 0;text-align:right;font-weight:700;color:#0f172a;">${trackingNumber}</td></tr>` : ""}
+           ${trackingLink ? `<tr><td style="padding:6px 0;color:#475569;">Tracking link</td><td style="padding:6px 0;text-align:right;"><a href="${trackingLink}" style="color:#1d4ed8;text-decoration:none;font-weight:700;">Open tracking</a></td></tr>` : ""}
+         </table>
+       </div>`
+    : "";
+
+  const shippingAddressLines =
+    shippingAddress && typeof shippingAddress === "object"
+      ? [
+          shippingAddress.name,
+          shippingAddress.line1,
+          shippingAddress.line2,
+          shippingAddress.city,
+          shippingAddress.state,
+          shippingAddress.postal_code || shippingAddress.postcode,
+          shippingAddress.country,
+        ].filter(Boolean)
+      : [];
+  const shippingAddressHtml = shippingAddressLines.length
+    ? shippingAddressLines.map((l) => `${String(l)}`).join("<br/>")
+    : "N/A";
+
+  const emailHtml = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Your parcel is on its way</title>
+  </head>
+  <body style="margin:0;padding:0;background:#eff6ff;">
+    <div style="max-width:640px;margin:0 auto;padding:28px 16px;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;">
+      <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;">
+        <div style="padding:22px 22px 16px;background:#ffffff;border-bottom:1px solid #bfdbfe;">
+          <div style="text-align:center;">
+            <img src="${logoUrl}" alt="The Happy Case" style="max-width:140px;height:auto;" />
+          </div>
+          <h1 style="margin:16px 0 6px;text-align:center;font-size:22px;letter-spacing:0.3px;color:#16a34a;">
+            Your parcel is on its way
+          </h1>
+          <p style="margin:0;text-align:center;color:#334155;font-size:14px;">
+            Your order has been dispatched. <strong>Expected delivery:</strong> ${deliveryEstimate}.
+          </p>
+          ${trackButton}
+          <div style="margin-top:8px;color:#64748b;font-size:12px;text-align:center;">
+            If the button doesn’t work, copy and paste: ${trackButtonUrl}
+          </div>
+        </div>
+
+        <div style="padding:22px;">
+          <p style="margin:0 0 14px;font-size:15px;color:#0f172a;">${greeting}</p>
+
+          <div style="display:block;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:16px;">
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              ${orderNumber ? `<tr><td style="padding:6px 0;color:#475569;">Order ID</td><td style="padding:6px 0;text-align:right;font-weight:700;color:#0f172a;">${orderNumber}</td></tr>` : ""}
+              ${orderDate ? `<tr><td style="padding:6px 0;color:#475569;">Order date</td><td style="padding:6px 0;text-align:right;color:#0f172a;">${formatOrderDate(orderDate)}</td></tr>` : ""}
+              ${totalAmount ? `<tr><td style="padding:6px 0;color:#475569;">Order total</td><td style="padding:6px 0;text-align:right;font-weight:800;color:#1e40af;">${formatPrice(totalAmount, currency)}</td></tr>` : ""}
+            </table>
+          </div>
+
+          <h2 style="margin:22px 0 10px;font-size:16px;color:#1e40af;">Items in your order</h2>
+          <div style="border:1px solid #bfdbfe;border-radius:12px;overflow:hidden;background:#ffffff;">
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              <thead>
+                <tr style="background:#dbeafe;">
+                  <th style="padding:12px 14px;text-align:left;color:#1e40af;font-weight:800;">Item</th>
+                  <th style="padding:12px 14px;text-align:right;color:#1e40af;font-weight:800;">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${orderItemsHtml}
+              </tbody>
+            </table>
+          </div>
+
+          ${trackSection}
+
+          <h2 style="margin:22px 0 10px;font-size:16px;color:#1e40af;">Shipping address</h2>
+          <div style="border:1px solid #bfdbfe;border-radius:12px;background:#eff6ff;padding:16px;color:#0f172a;font-size:14px;line-height:1.5;">
+            ${shippingAddressHtml}
+          </div>
+
+          <p style="margin:22px 0 0;color:#475569;font-size:12px;text-align:center;">
+            If you have any questions, just reply to this email.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>`;
   try {
     const resend = new Resend(resendApiKey);
     const { error } = await resend.emails.send({

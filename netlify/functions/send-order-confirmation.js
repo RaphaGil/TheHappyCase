@@ -190,9 +190,9 @@ exports.handler = async (event) => {
   <body style="margin:0;padding:0;background:#eff6ff;">
     <div style="max-width:640px;margin:0 auto;padding:28px 16px;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;">
       <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:14px;overflow:hidden;">
-        <div style="padding:22px 22px 16px;background:linear-gradient(180deg,#dbeafe 0%,#eff6ff 100%);border-bottom:1px solid #bfdbfe;">
+        <div style="padding:22px 22px 16px;background:#ffffff;border-bottom:1px solid #bfdbfe;">
           <div style="text-align:center;">
-            <img src="${logoUrl}" alt="The Happy Case" style="max-width:190px;height:auto;" />
+            <img src="${logoUrl}" alt="The Happy Case" style="max-width:140px;height:auto;" />
           </div>
           <h1 style="margin:16px 0 6px;text-align:center;font-size:22px;letter-spacing:0.3px;color:#1d4ed8;">
             Thanks for your purchase
