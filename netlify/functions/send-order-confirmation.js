@@ -111,6 +111,10 @@ exports.handler = async (event) => {
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const FROM_EMAIL = process.env.FROM_EMAIL || "onboarding@resend.dev";
+  const fromHeader =
+    typeof FROM_EMAIL === "string" && FROM_EMAIL.includes("<") && FROM_EMAIL.includes(">")
+      ? FROM_EMAIL
+      : `THE HAPPY CASE <${FROM_EMAIL}>`;
 
   // If RESEND_API_KEY is not configured, return a soft warning so frontend logs a warning, not an error
   if (!RESEND_API_KEY) {
@@ -120,7 +124,7 @@ exports.handler = async (event) => {
       warning: "RESEND_API_KEY is not set in Netlify environment variables",
       email: {
         to: email,
-        from: FROM_EMAIL,
+        from: fromHeader,
         orderNumber: displayOrderNumber,
         subtotal: computedSubtotal,
         shipping: computedShipping,
@@ -344,7 +348,7 @@ exports.handler = async (event) => {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: FROM_EMAIL,
+      from: fromHeader,
       to: email,
       subject,
       text: lines.join("\n"),
