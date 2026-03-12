@@ -43,28 +43,26 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
   // Handle standalone charm items
   if (item.type === 'charm') {
     const charm = item.pin || item;
-    // Get unit price (always use item.price as the base unit price)
     const unitPrice = item.price || 0;
     const qty = item.quantity || 1;
-    // Always calculate total based on unit price and current quantity
     const total = unitPrice * qty;
 
     return (
-      <div key={index} className=" pb-4 " ref={itemRef}>
+      <div key={index} className="pb-4" ref={itemRef}>
         <div className="flex items-start gap-4">
           {/* Image with quantity badge */}
           <div className="relative flex-shrink-0 w-20 h-20 bg-gray-50 rounded-sm border border-gray-200 flex items-center justify-center overflow-visible">
             {item.image ? (
               <img
                 src={normalizeImagePath(item.image)}
-                alt={item.name || "Charm"}
+                alt={item.name || 'Charm'}
                 className="w-full h-full object-contain p-2"
                 loading="lazy"
               />
             ) : charm?.src ? (
               <img
                 src={normalizeImagePath(charm.src)}
-                alt={charm.name || "Charm"}
+                alt={charm.name || 'Charm'}
                 className="w-full h-full object-contain p-2"
                 loading="lazy"
               />
@@ -75,18 +73,20 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
               {qty}
             </span>
           </div>
-          
+
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <h4 className="text-sm font-medium text-gray-900 font-inter leading-tight">
-                  {item.name || charm?.name || "Charm"}
+                  {item.name || charm?.name || 'Charm'}
                 </h4>
                 <p className="text-xs text-gray-500 mt-0.5 font-inter">
-                  {item.category === 'bronze' ? 'Bronze Charm' : 
-                   item.category === 'flags' ? 'Flag' : 
-                   'Colorful Charm'}
+                  {item.category === 'bronze'
+                    ? 'Bronze Charm'
+                    : item.category === 'flags'
+                    ? 'Flag'
+                    : 'Colorful Charm'}
                 </p>
               </div>
               <div className="flex-shrink-0 text-right">
@@ -95,92 +95,19 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
                 </span>
               </div>
             </div>
-            
-            {/* Edit Button */}
-            {!isEditing && (
+
+            {/* Remove Button only */}
+            {onRemove && (
               <div className="mt-3">
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsEditing(true);
-                  }}
-                  className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter uppercase tracking-wider transition-colors"
+                  onClick={() => onRemove(index)}
+                  className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
                 >
-                  Edit
+                  Remove
                 </button>
               </div>
             )}
-            
-            {/* Quantity Controls and Remove Button - Shown when editing */}
-            {isEditing && onIncrement && onDecrement && (
-              <div className="mt-3 flex items-center gap-3">
-                <div className="flex items-center gap-1 border border-gray-200 rounded-sm p-1">
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      const identifier = item.id !== undefined ? item.id : index;
-                      console.log('➖ Charm item decrement clicked:', { 
-                        identifier, 
-                        itemId: item.id, 
-                        index, 
-                        currentQty: item.quantity,
-                        itemName: item.name,
-                        itemType: item.type,
-                        hasOnDecrement: !!onDecrement
-                      });
-                      if (onDecrement) {
-                        onDecrement(identifier);
-                      }
-                    }} 
-                    className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                    aria-label="Decrease quantity"
-                    type="button"
-                  >
-                    −
-                  </button>
-                  <div className="px-2 py-0.5 text-xs text-gray-900 font-light font-inter min-w-[1.5rem] text-center">
-                    {qty}
-                  </div>
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const identifier = item.id !== undefined ? item.id : index;
-                    console.log('➕ Charm item increment clicked:', { 
-                      identifier, 
-                      itemId: item.id, 
-                      index, 
-                      currentQty: item.quantity,
-                      itemName: item.name,
-                      itemType: item.type,
-                      hasOnIncrement: !!onIncrement
-                    });
-                    if (onIncrement) {
-                      onIncrement(identifier);
-                    }
-                  }} 
-                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                  aria-label="Increase quantity"
-                  type="button"
-                >
-                  +
-                </button>
-                </div>
-                {onRemove && (
-                  <button
-                    onClick={() => {
-                      onRemove(index);
-                      setIsEditing(false);
-                    }}
-                    className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            )}
-            
+
             {/* Error Message */}
             {errorMessage && (
               <p className="text-xs text-red-600 font-inter mt-2">
@@ -266,90 +193,15 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
             </div>
           </div>
           
-          {/* Edit Button */}
-          {!isEditing && (
+          {/* Remove Button only (no edit / quantity controls for checkout) */}
+          {onRemove && (
             <div className="mt-3">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsEditing(true);
-                }}
-                className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter uppercase tracking-wider transition-colors"
+                onClick={() => onRemove(index)}
+                className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
               >
-                Edit
+                Remove
               </button>
-            </div>
-          )}
-          
-          {/* Quantity Controls and Remove Button - Shown when editing */}
-          {isEditing && onIncrement && onDecrement && (
-            <div className="mt-3 flex items-center gap-3">
-              <div className="flex items-center gap-1 border border-gray-200 rounded-sm p-1">
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const identifier = item.id !== undefined ? item.id : index;
-                    console.log('➖ Case item decrement clicked:', { 
-                      identifier, 
-                      itemId: item.id, 
-                      index, 
-                      currentQty: item.quantity,
-                      itemName: item.caseName || item.name,
-                      hasOnDecrement: !!onDecrement
-                    });
-                    if (onDecrement) {
-                      onDecrement(identifier);
-                    } else {
-                      console.error('❌ onDecrement handler is missing!');
-                    }
-                  }} 
-                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                  aria-label="Decrease quantity"
-                  type="button"
-                >
-                  −
-                </button>
-                <div className="px-2 py-0.5 text-xs text-gray-900 font-light font-inter min-w-[1.5rem] text-center">
-                  {qty}
-                </div>
-                <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const identifier = item.id !== undefined ? item.id : index;
-                    console.log('➕ Case item increment clicked:', { 
-                      identifier, 
-                      itemId: item.id, 
-                      index, 
-                      currentQty: item.quantity,
-                      itemName: item.caseName || item.name,
-                      hasOnIncrement: !!onIncrement
-                    });
-                    if (onIncrement) {
-                      onIncrement(identifier);
-                    } else {
-                      console.error('❌ onIncrement handler is missing!');
-                    }
-                  }} 
-                  className="w-6 h-6 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
-                  aria-label="Increase quantity"
-                  type="button"
-                >
-                  +
-                </button>
-              </div>
-              {onRemove && (
-                <button
-                  onClick={() => {
-                    onRemove(index);
-                    setIsEditing(false);
-                  }}
-                  className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
-                >
-                  Remove
-                </button>
-              )}
             </div>
           )}
           

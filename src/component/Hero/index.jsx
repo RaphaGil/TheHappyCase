@@ -128,7 +128,7 @@ function Hero() {
             </button>
            
           </div>
-          <p className="mt-4 text-sm text-white/90 font-light font-inter max-w-lg" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
+          <p className="mt-4 text-md text-white/90 font-light font-inter max-w-lg" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
             We only sell to the UK. To purchase from other countries, visit our{' '}
             <a
               href="https://www.etsy.com/shop/TheHappyCaseShop"

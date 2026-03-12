@@ -20,8 +20,8 @@ const AirplaneLoading = ({ size = 'md' }) => {
   };
 
   return (
-    <div className="relative inline-flex items-center justify-center overflow-hidden">
-      <div className={`${sizeClasses[size]} text-gray-700 animate-airplane-fly`}>
+    <div className="relative inline-flex items-center justify-center overflow-hidden mt-2">
+      <div className={`${sizeClasses[size]} text-btn-primary-blue animate-airplane-fly`}>
         <AirplaneIcon className="w-full h-full" />
       </div>
     </div>
