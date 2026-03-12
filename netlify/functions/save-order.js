@@ -175,6 +175,12 @@ exports.handler = async (event) => {
       unit_price: up,
       total_price: up * n,
       pins: item.pins ?? item.pinsDetails ?? null,
+      custom_text:
+        item.customText != null && String(item.customText).trim()
+          ? String(item.customText).trim()
+          : item.custom_text != null && String(item.custom_text).trim()
+            ? String(item.custom_text).trim()
+            : null,
       custom_design: item.customDesign ?? false,
       case_image: item.caseImage ?? item.image ?? null,
       design_image: item.designImage ?? null,

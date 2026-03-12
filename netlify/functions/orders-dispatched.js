@@ -65,6 +65,45 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
     return [];
   };
 
+  const normalizeColorName = (raw) => {
+    if (raw == null) return null;
+    const s = String(raw).trim();
+    if (!s) return null;
+
+    const lower = s.toLowerCase();
+    const hex = lower.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (hex) {
+      let h = hex[1].toLowerCase();
+      if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+      const map = {
+        "000000": "black",
+        "ffffff": "white",
+        "ff0000": "red",
+        "00ff00": "green",
+        "0000ff": "blue",
+        "ffff00": "yellow",
+        "ff00ff": "pink",
+        "ffc0cb": "pink",
+        "00ffff": "cyan",
+        "808080": "grey",
+        "c0c0c0": "silver",
+        "a52a2a": "brown",
+        "ffa500": "orange",
+        "800080": "purple",
+        "f5f5f5": "white",
+      };
+      return map[h] || null;
+    }
+
+    // If it looks like a CSS rgb/rgba/hsl string, don't show it.
+    if (/^(rgb|rgba|hsl|hsla)\(/i.test(s)) return null;
+
+    // For normal values like "blue" / "midnight black", keep words only.
+    const cleaned = s.replace(/[^a-zA-Z\s-]/g, " ").replace(/\s+/g, " ").trim();
+    if (!cleaned) return null;
+    return cleaned.toLowerCase();
+  };
+
   const getItemName = (item) => item?.caseName || item?.name || item?.title || "Custom Case";
   const getQty = (item) => Number(item?.quantity ?? 1) || 1;
   const getUnitPrice = (item) => {
@@ -93,14 +132,14 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
             const unit = getUnitPrice(item);
             const total = getTotalPrice(item);
             const caseType = item?.case_type || item?.caseType;
-            const color = item?.color;
+            const colorName = normalizeColorName(item?.color);
             const pins = normalizePins(item?.pins || item?.pinsDetails);
             const hasPins = pins.length > 0;
             const customDesign = item?.custom_design === true || item?.customDesign === true;
 
             const details = [
               caseType ? `Case: ${toTitleCase(caseType)}` : null,
-              color ? `Color: ${toTitleCase(color)}` : null,
+              colorName ? `Color: ${toTitleCase(colorName)}` : null,
               customDesign ? "Custom design: Yes" : null,
               hasPins ? `Pins: ${pins.map((p) => (typeof p === "string" ? p : p?.name || "")).filter(Boolean).join(", ")}` : null,
               `Qty: ${qty} • Unit: ${formatPrice(unit, currency)}`,

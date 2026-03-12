@@ -142,12 +142,55 @@ exports.handler = async (event) => {
 
   const formatGBP = (value) => `£${Number(value || 0).toFixed(2)}`;
   const itemsToDisplay = Array.isArray(items) ? items : [];
+  const normalizeColorName = (raw) => {
+    if (raw == null) return null;
+    const s = String(raw).trim();
+    if (!s) return null;
+
+    const lower = s.toLowerCase();
+    const hex = lower.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (hex) {
+      let h = hex[1].toLowerCase();
+      if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+      const map = {
+        "000000": "black",
+        "ffffff": "white",
+        "ff0000": "red",
+        "00ff00": "green",
+        "0000ff": "blue",
+        "ffff00": "yellow",
+        "ff00ff": "pink",
+        "ffc0cb": "pink",
+        "00ffff": "cyan",
+        "808080": "grey",
+        "c0c0c0": "silver",
+        "a52a2a": "brown",
+        "ffa500": "orange",
+        "800080": "purple",
+        "f5f5f5": "white",
+      };
+      return map[h] || null;
+    }
+
+    if (/^(rgb|rgba|hsl|hsla)\(/i.test(s)) return null;
+    const cleaned = s.replace(/[^a-zA-Z\s-]/g, " ").replace(/\s+/g, " ").trim();
+    if (!cleaned) return null;
+    return cleaned.toLowerCase();
+  };
+  const toTitleCase = (value) =>
+    String(value || "")
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .replace(/\b\w/g, (m) => m.toUpperCase());
+
   const itemsHtml =
     itemsToDisplay.length > 0
       ? itemsToDisplay
           .map((item) => {
             const name = item.caseName || item.name || item.title || "Custom Case";
             const qty = item.quantity ?? 1;
+            const rawColor = item.color || item.caseColor || item.colour || item.case_colour;
+            const colorName = normalizeColorName(rawColor);
             const unit = item.price ?? item.basePrice ?? 0;
             const total =
               item.totalPrice ??
@@ -156,7 +199,9 @@ exports.handler = async (event) => {
             return `<tr>
               <td style="padding:12px 14px;border-bottom:1px solid #dbeafe;">
                 <div style="font-weight:600;color:#0f172a;">${String(name)}</div>
-                <div style="color:#475569;font-size:13px;margin-top:2px;">Qty: ${qty}</div>
+                <div style="color:#475569;font-size:13px;margin-top:2px;">
+                  Qty: ${qty}${colorName ? ` • Color: ${toTitleCase(colorName)}` : ""}
+                </div>
               </td>
               <td style="padding:12px 14px;border-bottom:1px solid #dbeafe;text-align:right;white-space:nowrap;font-weight:600;color:#0f172a;">
                 ${formatGBP(total)}
