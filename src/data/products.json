@@ -107,7 +107,7 @@
         "interior": "Passport Pocket, Document Pocket",
         "care": "Clean with leather conditioner, avoid excessive moisture"
       },
-      "basePrice": 12
+      "basePrice": 15
     },
     {
       "id": 3,
@@ -172,7 +172,7 @@
         "interior": " Document Pocket, Boarding Pass Slot, SIM Card Slot",
         "features": "Coin Pouch, RFID Protection, Water Resistant"
       },
-      "basePrice": 15
+      "basePrice": 20
     }
   ],
   "pins": {

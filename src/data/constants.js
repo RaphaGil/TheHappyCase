@@ -12,12 +12,12 @@ export const CASE_OPTIONS = [
   },
   { 
     value: 'business', 
-    label: 'Business - £12.00',
+    label: 'Business - £15.00',
     image: '/images/BusinessClassCase/businessclasscasegray.webp'
   },
   { 
     value: 'firstclass', 
-    label: 'First Class - £12.00',
+    label: 'First Class - £20.00',
     image: '/images/FirstClassCase/firstclasscasebrown.webp'
   },
 ];
