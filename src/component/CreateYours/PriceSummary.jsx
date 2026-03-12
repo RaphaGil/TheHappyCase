@@ -37,18 +37,16 @@ const PriceSummary = ({
             <div className="flex flex-col xs:flex-row xs:items-start xs:justify-between gap-3 xs:gap-0 mt-2 min-w-0 w-full">
               {/* Subtotal Price and Terms - Left */}
               <div className="flex flex-col gap-1.5 min-w-0">
-                {/* Total Price - font matches Add to Cart (font-inter, font-light) */}
-                <div className="flex flex-row items-center gap-1.5 mb-1">
-                  <h3 className="text-[14px] xs:text-sm text-gray-900 font-light font-inter">
-                    Total:
-                  </h3>
-                  <h3 className="text-md xs:text-base sm:text-lg text-gray-900 font-light font-inter leading-none mb-1">
-                    {formatPrice(totalPrice)}
-                  </h3>
-                </div>
-                
-                {/* Terms Agreement Checkbox - Below Total Price */}
-                <div>
+                {/* Total Price + Terms - inline on mobile */}
+                <div className="flex flex-row items-center justify-between gap-2 mb-1">
+                  <div className="flex flex-row items-center gap-1.5">
+                    <h3 className="text-[14px] xs:text-sm text-gray-900 font-light font-inter">
+                      Total:
+                    </h3>
+                    <h3 className="text-md xs:text-base sm:text-lg text-gray-900 font-light font-inter leading-none mb-1">
+                      {formatPrice(totalPrice)}
+                    </h3>
+                  </div>
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
                       type="checkbox"
@@ -66,13 +64,13 @@ const PriceSummary = ({
                       </button>
                     </span>
                   </label>
-                  {/* Error message when trying to add to cart without accepting terms */}
-                  {showTermsError && (
-                    <div className="mt-1 text-xs xs:text-sm text-red-600 font-light font-inter">
-                      You must accept the terms to add items to cart.
-                    </div>
-                  )}
                 </div>
+                {/* Error message when trying to add to cart without accepting terms */}
+                {showTermsError && (
+                  <div className="mt-1 text-xs xs:text-sm text-red-600 font-light font-inter">
+                    You must accept the terms to add items to cart.
+                  </div>
+                )}
               </div>
 
               {/* Quantity Selector and Add to Cart Button - Right */}

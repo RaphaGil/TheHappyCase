@@ -223,9 +223,9 @@ export const useCreateYours = () => {
   useEffect(() => {
     if (selectedCategory) {
       if (selectedCategory === 'flags') {
-        setPins(Products.pins.flags || []);
+        setPins((Products.pins.flags || []).filter((pin) => !pin.hidden));
       } else {
-        setPins(Products.pins[selectedCategory] || []);
+        setPins((Products.pins[selectedCategory] || []).filter((pin) => !pin.hidden));
       }
     }
     setMobileSubCategory('all');

@@ -207,9 +207,9 @@ export default function CreateYoursPageNew() {
 
       {/* Mobile: Fixed bottom section - Step buttons + Add to Cart */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white flex flex-col w-full">
+        <div className="fixed bottom-0 left-0 right-0 z-40  bg-white flex flex-col w-full">
           {/* Case, Color, Charms, Text buttons - at bottom above Add to Cart */}
-          <div className="w-full px-3 xs:px-4 py-2 border-b border-gray-100 ">
+          <div className="w-full px-3 xs:px-4  ">
             <MobileStepButtons
               selectedCaseType={selectedCaseType}
               selectedColor={selectedColor}

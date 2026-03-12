@@ -9,7 +9,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const { type } = await params;
+  const { type } = params;
   const typeMap = {
     'colorful': {
       title: 'Colorful Passport Charms',

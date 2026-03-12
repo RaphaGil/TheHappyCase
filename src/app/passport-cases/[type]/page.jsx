@@ -1,25 +1,28 @@
 import PassportCases from '../PassportCases';
 
+// This route is fully statically exported for each case type
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return [
     { type: 'economy' },
-    { type: 'firstclass' },
-    { type: 'businessclass' },
+    { type: 'first-class' },
+    { type: 'business-class' },
   ];
 }
 
 export async function generateMetadata({ params }) {
-  const { type } = await params;
+  const { type } = params;
   const typeMap = {
     'economy': {
       title: 'Economy Passport Case',
       description: 'Economy passport case - slim and lightweight. Customise with colours and charms.',
     },
-    'firstclass': {
+    'first-class': {
       title: 'First Class Passport Case',
       description: 'First Class passport case - premium style with more space for stamps and charms.',
     },
-    'businessclass': {
+    'business-class': {
       title: 'Business Class Passport Case',
       description: 'Business Class passport case - luxury design with premium materials.',
     },

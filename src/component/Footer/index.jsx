@@ -116,7 +116,7 @@ function Footer() {
                   </Link>
                 </li> */}
                 <li>
-                  <Link href="/custompassport" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                  <Link href="/custom-passport" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                     Create Yours
                   </Link>
                 </li>
@@ -140,7 +140,7 @@ function Footer() {
                 </Link>
               </li> */}
               <li>
-                <Link href="/custompassport" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
+                <Link href="/custom-passport" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
                   Create Yours
                 </Link>
               </li>

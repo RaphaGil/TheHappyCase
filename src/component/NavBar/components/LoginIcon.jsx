@@ -91,7 +91,7 @@ const LoginIcon = ({ isMobile = false }) => {
       <Link
         href={linkTo}
         className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
-        aria-label={isLoggedIn && userEmail ? 'View my orders' : 'Log in or create an account'}
+        aria-label={isLoggedIn && userEmail ? 'View my orders' : 'Log in'}
       >
         <FontAwesomeIcon 
           icon={faUser} 
@@ -163,7 +163,7 @@ const LoginIcon = ({ isMobile = false }) => {
     <Link
       href="/login"
       className="hidden lg:flex items-center p-1.5 text-gray-800 hover:text-gray-600 transition-colors z-10"
-      aria-label="Log in or create an account"
+      aria-label="Log in"
     >
       <FontAwesomeIcon 
         icon={faUser} 

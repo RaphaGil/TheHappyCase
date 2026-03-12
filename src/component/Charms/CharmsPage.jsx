@@ -57,7 +57,9 @@ const CharmsPage = ({
 
   // Filter pins based on search and category
   const filteredPins = pins.filter(pin => {
-    const matchesSearch = pin.name.toLowerCase().includes(searchTerm.toLowerCase());
+    if (pin.hidden) return false;
+    const name = pin.name || '';
+    const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
     
     if (selectedCategory === 'all') return matchesSearch;
     

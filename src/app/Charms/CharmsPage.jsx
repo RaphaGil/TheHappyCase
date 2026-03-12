@@ -75,11 +75,11 @@ const Charms = () => {
   const getAllCharms = useCallback(() => {
     const productsWithQuantities = getProductsWithQuantities();
     if (selectedCharmType === 'colorful') {
-      return productsWithQuantities.pins.colorful || [];
+      return (productsWithQuantities.pins.colorful || []).filter((charm) => !charm.hidden);
     } else if (selectedCharmType === 'bronze') {
-      return productsWithQuantities.pins.bronze || [];
+      return (productsWithQuantities.pins.bronze || []).filter((charm) => !charm.hidden);
     } else if (selectedCharmType === 'flags') {
-      return productsWithQuantities.pins.flags || [];
+      return (productsWithQuantities.pins.flags || []).filter((charm) => !charm.hidden);
     }
     return [];
   }, [selectedCharmType]);

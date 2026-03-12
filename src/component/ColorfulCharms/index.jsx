@@ -27,7 +27,7 @@ const ColorfulCharms = () => {
       categoryName="colorful"
       searchPlaceholder="Search charms..."
       callToActionLinks={[
-        { path: '/custompassport', label: 'Start Creating' },
+        { path: '/custom-passport', label: 'Start Creating' },
         { path: '/bronzecharms', label: 'Bronze Charms' },
         { path: '/flags', label: 'Flags' }
       ]}

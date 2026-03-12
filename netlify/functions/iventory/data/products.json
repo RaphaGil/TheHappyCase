@@ -433,7 +433,8 @@
         "src": "/images/ColorfulPins/beagoodhuman.webp",
         "price": 2,
         "size": 0.7,
-        "subCategory": "inspiration"
+        "subCategory": "inspiration",
+        "hidden": true
       },
       {
         "id": 2,
@@ -606,7 +607,9 @@
         "name": "London Phone",
         "src": "/images/ColorfulPins/telephone.webp",
         "price": 2,
-        "size": 0.85
+        "size": 0.85,
+        "subCategory": "travel",
+        "hidden": true
       },
       {
         "id": 24,

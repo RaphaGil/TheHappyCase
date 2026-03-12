@@ -52,7 +52,7 @@ const CanvasSectionCentered = ({
               style={{
                 zIndex: 1,
                 objectFit: 'contain',
-                objectPosition: 'center 45%',
+                objectPosition: 'center 40%',
                 width: '100%',
                 height: '100%',
               }}

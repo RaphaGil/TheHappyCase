@@ -295,7 +295,7 @@
         "src": "/images/Flags/hungary.webp",
         "price": 2,
         "size": 0.5,
-        "continent": "americas"
+        "continent": "europe"
       },
       {
         "id": 16,
@@ -335,7 +335,7 @@
         "src": "/images/Flags/japan.webp",
         "price": 2,
         "size": 0.5,
-        "continent": "americas"
+        "continent": "asia"
       },
       {
         "id": 21,
@@ -623,7 +623,8 @@
         "src": "/images/ColorfulPins/telephone.webp",
         "price": 2,
         "size": 0.85,
-        "subCategory": "travel"
+        "subCategory": "travel",
+        "hidden": true
       },
       {
         "id": 24,

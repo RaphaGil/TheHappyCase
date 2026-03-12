@@ -139,7 +139,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
               aria-label="Close menu"
             >
               <svg
-                className="w-6 h-6"
+                className="w-8 h-8"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 20 20"
@@ -198,7 +198,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
               >
                 <FontAwesomeIcon icon={faUser} className="text-sm" />
                 <span className="font-inter">
-                  Log in or create an account
+                  Log in
                 </span>
               </Link>
             )}
