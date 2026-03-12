@@ -8,6 +8,7 @@ import { CurrencyProvider } from '@/context/CurrencyContext';
 import NavBar from '@/component/NavBar';
 import Footer from '@/component/Footer';
 import CartDrawer from '@/component/CartDrawer';
+import ScrollToTopButton from '@/component/ScrollToTopButton';
 import EnvDebug from '@/component/EnvDebug';
 import SEO from '@/component/SEO';
 
@@ -44,6 +45,7 @@ export default function LayoutClient({ children }) {
               <Footer />
             </div>
           )}
+          <ScrollToTopButton />
           <CartDrawer />
         </div>
       </CartProvider>
