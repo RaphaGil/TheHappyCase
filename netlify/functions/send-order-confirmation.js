@@ -114,7 +114,7 @@ exports.handler = async (event) => {
   const fromHeader =
     typeof FROM_EMAIL === "string" && FROM_EMAIL.includes("<") && FROM_EMAIL.includes(">")
       ? FROM_EMAIL
-      : `THE HAPPY CASE <${FROM_EMAIL}>`;
+      : `The Happy Case <${FROM_EMAIL}>`;
 
   // If RESEND_API_KEY is not configured, return a soft warning so frontend logs a warning, not an error
   if (!RESEND_API_KEY) {
