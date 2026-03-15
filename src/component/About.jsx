@@ -25,33 +25,49 @@ const About = () => {
         </div>
 
         <div className="max-w-4xl mx-auto md:px-6 py-16">
-          <div className="space-y-8 font-inter">
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Our Story</h2>
-              <p className="text-gray-600 font-light">
-                The Happy Case was born from a love of travel and a desire to create passport holders that are both practical and personal. We believe every journey deserves a case that reflects your unique style.
-              </p>
-            </section>
+          <div className="flex flex-col-reverse md:flex-row items-center md:items-start gap-10">
+            {/* Text on the left */}
+            <div className="space-y-8 font-inter flex-1">
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Our Story</h2>
+                <p className="text-gray-600 font-light">
+                  The Happy Case was born from a love of travel and a desire to create passport holders that are both practical and personal. We believe every journey deserves a case that reflects your unique style.
+                </p>
+              </section>
 
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">What We Offer</h2>
-              <p className="text-gray-600 font-light">
-                Choose from Economy, First Class, and Business Class passport cases. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, and custom text. All our cases are RFID-protected and water-resistant.
-              </p>
-            </section>
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">What We Offer</h2>
+                <p className="text-gray-600 font-light">
+                  Choose from Economy, First Class, and Business Class passport cases. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, and custom text. All our cases are RFID-protected and water-resistant.
+                </p>
+              </section>
 
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Get Started</h2>
-              <p className="text-gray-600 font-light mb-4">
-                Ready to create your custom passport case?
-              </p>
-              <Link
-                href="/custom-passport"
-                className="inline-block px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors font-inter"
-              >
-                Create Yours
-              </Link>
-            </section>
+              <section>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Get Started</h2>
+                <p className="text-gray-600 font-light mb-4">
+                  Ready to create your custom passport case?
+                </p>
+                <Link
+                  href="/custom-passport"
+                  className="inline-block px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors font-inter"
+                >
+                  Create Yours
+                </Link>
+              </section>
+            </div>
+
+            {/* Photo on the right */}
+            <div className="flex justify-center md:justify-end flex-shrink-0">
+              <div className="w-64 h-80 sm:w-72 sm:h-96 rounded-2xl overflow-hidden border border-gray-200 shadow-md">
+                <img
+                  src="/images/raphaela.webp"
+                  alt="Raphaela, founder of The Happy Case"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

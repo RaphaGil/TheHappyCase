@@ -1,0 +1,1164 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "name": "Economy Case",
+      "type": "economy",
+      "images": [
+        "/images/SmartCase/economycaselightpink.webp",
+        "/images/SmartCase/economycasered.webp",
+        "/images/SmartCase/economycasejeansblue.webp",
+        "/images/SmartCase/economycasebrown.webp",
+        "/images/SmartCase/economycaselightblue.webp",
+        "/images/SmartCase/economycaseblack.webp"
+      ],
+      "colors": [
+        {
+          "color": "#f49f90",
+          "image": "/images/SmartCase/economycaselightpink.webp"
+        },
+        {
+          "color": "#cb0025",
+          "image": "/images/SmartCase/economycasered.webp"
+        },
+        {
+          "color": "#9cb4b8",
+          "image": "/images/SmartCase/economycaselightblue.webp"
+        },
+        {
+          "color": "#627386",
+          "image": "/images/SmartCase/economycasejeansblue.webp"
+        },
+        {
+          "color": "#b0582c",
+          "image": "/images/SmartCase/economycasebrown.webp"
+        },
+        {
+          "color": "#506258",
+          "image": "/images/SmartCase/economycasegreen.webp"
+        },
+        {
+          "color": "#89837e",
+          "image": "/images/SmartCase/economycasegray.webp"
+        },
+        {
+          "color": "#413f44",
+          "image": "/images/SmartCase/economycaseblack.webp"
+        }
+      ],
+      "specifications": {
+        "dimensions": "14.9cm (W) x 10.7cm (H) x 1cm (D)",
+        "rfid": "Yes",
+        "material": "PU Leather",
+        "closure": "Magnetic Snap Closure",
+        "cardSlots": "3",
+        "features": "RFID Protection, Water Resistant, Lightweight Design",
+        "interior": "Document Pocket, Boarding Pass Slot, SIM Card Slot",
+        "care": "Wipe clean with damp cloth"
+      },
+      "basePrice": 8
+    },
+    {
+      "id": 2,
+      "name": "Business Class Case",
+      "type": "business",
+      "images": [
+        "/images/BusinessClassCase/businessclasscasegray.webp",
+        "/images/BusinessClassCase/businessclasscasepink.webp",
+        "/images/BusinessClassCase/businessclasscaselightpink.webp",
+        "/images/BusinessClassCase/businessclasscasebrown.webp",
+        "/images/BusinessClassCase/businessclasscaseblack.webp",
+        "/images/BusinessClassCase/businessclasscaseblack.webp",
+        "/images/BusinessClassCase/businessclassinside.webp",
+        "/images/BusinessClassCase/businessclassinside2.webp"
+      ],
+      "colors": [
+        {
+          "color": "#c8b593",
+          "image": "/images/BusinessClassCase/businessclasscasegray.webp"
+        },
+        {
+          "color": "#da8ca6",
+          "image": "/images/BusinessClassCase/businessclasscaselightpink.webp"
+        },
+        {
+          "color": "#daaf49",
+          "image": "/images/BusinessClassCase/businessclasscaseyellow.webp"
+        },
+        {
+          "color": "#d33d72",
+          "image": "/images/BusinessClassCase/businessclasscasepink.webp"
+        },
+        {
+          "color": "#c49154",
+          "image": "/images/BusinessClassCase/businessclasscasebrown.webp"
+        },
+        {
+          "color": "#36312b",
+          "image": "/images/BusinessClassCase/businessclasscaseblack.webp"
+        }
+      ],
+      "specifications": {
+        "dimensions": "14cm (W) x 9.5cm (H) x 1cm (D)",
+        "rfid": "No",
+        "material": "Genuine Leather",
+        "closure": "No Closure",
+        "cardSlots": "4",
+        "interior": "Passport Pocket, Document Pocket",
+        "care": "Clean with leather conditioner, avoid excessive moisture"
+      },
+      "basePrice": 15
+    },
+    {
+      "id": 3,
+      "name": "First Class Case",
+      "type": "firstclass",
+      "images": [
+        "/images/FirstClassCase/firstclasscasebrown.webp",
+        "/images/FirstClassCase/firstclasscaseblack.webp",
+        "/images/FirstClassCase/firstclasscasenavyblue.webp",
+        "/images/FirstClassCase/firstclasscasebrickred.webp",
+        "/images/FirstClassCase/firstclasscasepink.webp",
+        "/images/FirstClassCase/firstclasscasebrown.webp",
+        "/images/FirstClassCase/firstclasscaseblue.webp",
+        "/images/FirstClassCase/firstclasscasegray.webp",
+        "/images/FirstClassCase/firstclasscasepurple.webp",
+        "/images/FirstClassCase/firstclasscasegreen.webp"
+      ],
+      "colors": [
+        {
+          "color": "#d17956",
+          "image": "/images/FirstClassCase/firstclasscasebrown.webp"
+        },
+        {
+          "color": "#c76f82",
+          "image": "/images/FirstClassCase/firstclasscasebrickred.webp"
+        },
+        {
+          "color": "#adcfa8",
+          "image": "/images/FirstClassCase/firstclasscasegreen.webp"
+        },
+        {
+          "color": "#bfa29c",
+          "image": "/images/FirstClassCase/firstclasscasepink.webp"
+        },
+        {
+          "color": "#a799ab",
+          "image": "/images/FirstClassCase/firstclasscasepurple.webp"
+        },
+        {
+          "color": "#afab9b",
+          "image": "/images/FirstClassCase/firstclasscasegray.webp"
+        },
+        {
+          "color": "#5f6074",
+          "image": "/images/FirstClassCase/firstclasscasenavyblue.webp"
+        },
+        {
+          "color": "#768695",
+          "image": "/images/FirstClassCase/firstclasscaseblue.webp"
+        },
+        {
+          "color": "#272a34",
+          "image": "/images/FirstClassCase/firstclasscaseblack.webp"
+        }
+      ],
+      "specifications": {
+        "dimensions": "14cm (W) x 10.5cm (H) x 1.5cm (D)",
+        "rfid": "Yes",
+        "material": "Genuine Leather",
+        "closure": "Button Snap Closure",
+        "cardSlots": "3",
+        "interior": " Document Pocket, Boarding Pass Slot, SIM Card Slot",
+        "features": "Coin Pouch, RFID Protection, Water Resistant"
+      },
+      "basePrice": 20
+    }
+  ],
+  "pins": {
+    "flags": [
+      {
+        "id": 1,
+        "name": "Albania",
+        "src": "/images/Flags/albania.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 2,
+        "name": "Argentina",
+        "src": "/images/Flags/argentina.webp",
+        "price": 2,
+        "size": 0.55,
+        "continent": "americas"
+      },
+      {
+        "id": 3,
+        "name": "Armenia",
+        "src": "/images/Flags/armenia.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 4,
+        "name": "Belgium",
+        "src": "/images/Flags/belgium.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 5,
+        "name": "Bosnia",
+        "src": "/images/Flags/bosnia.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 6,
+        "name": "Brazil",
+        "src": "/images/Flags/brazil.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 7,
+        "name": "British Virgin Islands",
+        "src": "/images/Flags/britishvirginislands.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 8,
+        "name": "Chile",
+        "src": "/images/Flags/chile.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 9,
+        "name": "Croatia",
+        "src": "/images/Flags/croatia.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 10,
+        "name": "Dublin",
+        "src": "/images/Flags/dublin.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 11,
+        "name": "Ecuador",
+        "src": "/images/Flags/ecuador.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 12,
+        "name": "Egypt",
+        "src": "/images/Flags/egypt.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "africa"
+      },
+      {
+        "id": 13,
+        "name": "France",
+        "src": "/images/Flags/france.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 14,
+        "name": "Germany",
+        "src": "/images/Flags/germany.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 15,
+        "name": "Hungary",
+        "src": "/images/Flags/hungary.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 16,
+        "name": "Iceland",
+        "src": "/images/Flags/iceland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 17,
+        "name": "India",
+        "src": "/images/Flags/india.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "asia"
+      },
+      {
+        "id": 18,
+        "name": "Italy",
+        "src": "/images/Flags/italy.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 19,
+        "name": "Jamaica",
+        "src": "/images/Flags/jamaica.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 20,
+        "name": "Japan",
+        "src": "/images/Flags/japan.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "asia"
+      },
+      {
+        "id": 21,
+        "name": "LGBTQIA+",
+        "src": "/images/Flags/lgbtqia.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "special"
+      },
+      {
+        "id": 22,
+        "name": "Netherlands",
+        "src": "/images/Flags/netherlands.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 23,
+        "name": "Norway",
+        "src": "/images/Flags/norway.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe",
+        "hidden": true
+      },
+      {
+        "id": 24,
+        "name": "Portugal",
+        "src": "/images/Flags/portugal.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 25,
+        "name": "Puerto Rico",
+        "src": "/images/Flags/puertorico.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      },
+      {
+        "id": 26,
+        "name": "Romania",
+        "src": "/images/Flags/romania.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 27,
+        "name": "Scotland",
+        "src": "/images/Flags/scotland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 28,
+        "name": "South Africa",
+        "src": "/images/Flags/southafrica.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "africa"
+      },
+      {
+        "id": 29,
+        "name": "Spain",
+        "src": "/images/Flags/spain.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 30,
+        "name": "Sweden",
+        "src": "/images/Flags/sweden.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 31,
+        "name": "Switzerland",
+        "src": "/images/Flags/switzerland.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 32,
+        "name": "United Kingdon",
+        "src": "/images/Flags/uk.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "europe"
+      },
+      {
+        "id": 33,
+        "name": "United States",
+        "src": "/images/Flags/eua.webp",
+        "price": 2,
+        "size": 0.5,
+        "continent": "americas"
+      }
+    ],
+    "colorful": [
+      {
+        "id": 1,
+        "name": "Be a Good Human",
+        "src": "/images/ColorfulPins/beagoodhuman.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "inspiration",
+        "hidden": true
+      },
+      {
+        "id": 2,
+        "name": "Airplane",
+        "src": "/images/ColorfulPins/airplane.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "travel"
+      },
+      {
+        "id": 3,
+        "name": "Heart Globe",
+        "src": "/images/ColorfulPins/heartglobe.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "travel"
+      },
+      {
+        "id": 4,
+        "name": "Dream Big",
+        "src": "/images/ColorfulPins/dreambig.webp",
+        "price": 2,
+        "size": 0.9,
+        "subCategory": "inspiration",
+        "hidden": true
+      },
+      {
+        "id": 5,
+        "name": "Paw",
+        "src": "/images/ColorfulPins/paw.webp",
+        "price": 2,
+        "size": 0.4
+      },
+      {
+        "id": 6,
+        "name": "Colorful Camera",
+        "src": "/images/ColorfulPins/camera.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "camera"
+      },
+      {
+        "id": 7,
+        "name": "Be Kind",
+        "src": "/images/ColorfulPins/bekind.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "inspiration"
+      },
+      {
+        "id": 8,
+        "name": "Football",
+        "src": "/images/ColorfulPins/football.webp",
+        "price": 2,
+        "size": 0.75
+      },
+      {
+        "id": 9,
+        "name": "Ticket to Happiness",
+        "src": "/images/ColorfulPins/tickettohappiness.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "inspiration"
+      },
+      {
+        "id": 10,
+        "name": "Be Happy",
+        "src": "/images/ColorfulPins/behappy.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "inspiration",
+        "hidden": true
+      },
+      {
+        "id": 11,
+        "name": "Lucky Leaf",
+        "src": "/images/ColorfulPins/luckyleafcharm.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "nature"
+      },
+      {
+        "id": 12,
+        "name": "Beer",
+        "src": "/images/ColorfulPins/beer.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "drinks"
+      },
+      {
+        "id": 13,
+        "name": "Bottle of Wine",
+        "src": "/images/ColorfulPins/bottleofwine.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "drinks"
+      },
+      {
+        "id": 14,
+        "name": "Heart Notification",
+        "src": "/images/ColorfulPins/heartnotification.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "hearts"
+      },
+      {
+        "id": 15,
+        "name": "Small Boarding Pass",
+        "src": "/images/ColorfulPins/smallboardingpass.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "travel",
+        "hidden": true
+      },
+      {
+        "id": 16,
+        "name": "Little Heart",
+        "src": "/images/ColorfulPins/littleheart.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "hearts"
+      },
+      {
+        "id": 17,
+        "name": "Disney",
+        "src": "/images/ColorfulPins/disney.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "disney"
+      },
+      {
+        "id": 18,
+        "name": "Pluto",
+        "src": "/images/ColorfulPins/pluto.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "disney"
+      },
+      {
+        "id": 19,
+        "name": "Round Minnnie",
+        "src": "/images/ColorfulPins/roundminnie.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "disney"
+      },
+      {
+        "id": 20,
+        "name": "Round Mickey",
+        "src": "/images/ColorfulPins/roundmickey.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "disney"
+      },
+      {
+        "id": 21,
+        "name": "Guufy",
+        "src": "/images/ColorfulPins/guufy.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "disney"
+      },
+      {
+        "id": 22,
+        "name": "Map",
+        "src": "/images/ColorfulPins/map.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "travel"
+      },
+      {
+        "id": 23,
+        "name": "London Phone",
+        "src": "/images/ColorfulPins/telephone.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "travel",
+        "hidden": true
+      },
+      {
+        "id": 24,
+        "name": "Adventure Awaits Ticket",
+        "src": "/images/ColorfulPins/adventureawaits.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "travel"
+      },
+      {
+        "id": 25,
+        "name": "Passport",
+        "src": "/images/ColorfulPins/passport.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
+        "id": 26,
+        "name": "Coffee",
+        "src": "/images/ColorfulPins/coffee.webp",
+        "price": 2,
+        "size": 0.4,
+        "subCategory": "drinks"
+      },
+      {
+        "id": 27,
+        "name": "Coconut Tree",
+        "src": "/images/ColorfulPins/coconuttree.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "nature",
+        "hidden": true
+      },
+      {
+        "id": 28,
+        "name": "Wave",
+        "src": "/images/ColorfulPins/wave.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 29,
+        "name": "Suitcase",
+        "src": "/images/ColorfulPins/orangeluggage.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 30,
+        "name": "Black Camera",
+        "src": "/images/ColorfulPins/blackcamera.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "camera",
+        "hidden": true
+      },
+      {
+        "id": 31,
+        "name": "Pink Camera",
+        "src": "/images/ColorfulPins/pinkcamera.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "camera",
+        "hidden": true
+      },
+      {
+        "id": 32,
+        "name": "Daisy Duck",
+        "src": "/images/ColorfulPins/daisyduck.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 33,
+        "name": "Duck",
+        "src": "/images/ColorfulPins/duck.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "disney"
+      },
+      {
+        "id": 34,
+        "name": "Minnie",
+        "src": "/images/ColorfulPins/minnie.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 35,
+        "name": "Mickey Mouse",
+        "src": "/images/ColorfulPins/mickey.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "disney"
+      },
+      {
+        "id": 36,
+        "name": "Combi",
+        "src": "/images/ColorfulPins/combi.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "travel"
+      },
+      {
+        "id": 37,
+        "name": "Wine",
+        "src": "/images/ColorfulPins/wineglass.webp",
+        "price": 2,
+        "size": 0.4,
+        "subCategory": "drinks"
+      },
+      {
+        "id": 38,
+        "name": "Vacation",
+        "src": "/images/ColorfulPins/vacation.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "travel"
+      },
+      {
+        "id": 39,
+        "name": "Love",
+        "src": "/images/ColorfulPins/love.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 40,
+        "name": "Pizza",
+        "src": "/images/ColorfulPins/pizza.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "food"
+      },
+      {
+        "id": 41,
+        "name": "Chocolate",
+        "src": "/images/ColorfulPins/chocolate.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "food"
+      },
+      {
+        "id": 42,
+        "name": "Black Cat",
+        "src": "/images/ColorfulPins/blackcat.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "animal"
+      },
+      {
+        "id": 43,
+        "name": "White Dog",
+        "src": "/images/ColorfulPins/whitedog.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "animal"
+      },
+      {
+        "id": 44,
+        "name": "Black Dog",
+        "src": "/images/ColorfulPins/blackdog.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "animal"
+      },
+      {
+        "id": 45,
+        "name": "Happy",
+        "src": "/images/ColorfulPins/happy.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "inspiration",
+        "badge": "New"
+      },
+      {
+        "id": 46,
+        "name": "Blue Luggage",
+        "src": "/images/ColorfulPins/blueluggage.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 47,
+        "name": "Dog",
+        "src": "/images/ColorfulPins/dog.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "animal"
+      },
+      {
+        "id": 48,
+        "name": "Rainbow",
+        "src": "/images/ColorfulPins/rainbow.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "nature"
+      },
+      {
+        "id": 49,
+        "name": "Sun",
+        "src": "/images/ColorfulPins/sun.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 50,
+        "name": "Minnie with Heart",
+        "src": "/images/ColorfulPins/minnie3.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 51,
+        "name": "Adventure Awaits Ticket",
+        "src": "/images/ColorfulPins/orangeticket.webp",
+        "price": 2,
+        "size": 0.9,
+        "subCategory": "travel"
+      },
+      {
+        "id": 52,
+        "name": "Take to the Beach",
+        "src": "/images/ColorfulPins/gotothebeach.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "nature"
+      },
+      {
+        "id": 53,
+        "name": "Beach",
+        "src": "/images/ColorfulPins/beach.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "nature"
+      }
+    ],
+    "bronze": [
+      {
+        "id": 1,
+        "name": "Airplane",
+        "src": "/images/BronzePins/airplane.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
+        "id": 2,
+        "name": "Cardinal Points",
+        "src": "/images/BronzePins/cardinalpoints.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 3,
+        "name": "Camera",
+        "src": "/images/BronzePins/camera.webp",
+        "price": 1,
+        "size": 0.55,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 4,
+        "name": "Globe",
+        "src": "/images/BronzePins/globe.webp",
+        "price": 1,
+        "size": 0.55,
+        "subCategory": "travel"
+      },
+      {
+        "id": 5,
+        "name": "Passport",
+        "src": "/images/BronzePins/passport.webp",
+        "price": 1,
+        "size": 0.4,
+        "subCategory": "travel"
+      },
+      {
+        "id": 6,
+        "name": "NYC Taxi",
+        "src": "/images/BronzePins/nyctaxi.webp",
+        "price": 1,
+        "size": 0.9,
+        "subCategory": "travel"
+      },
+      {
+        "id": 7,
+        "name": "Liberty Statue",
+        "src": "/images/BronzePins/libertystatue.webp",
+        "price": 1,
+        "size": 1,
+        "subCategory": "travel"
+      },
+      {
+        "id": 8,
+        "name": "Luggage",
+        "src": "/images/BronzePins/luggage.webp",
+        "price": 1,
+        "size": 0.45,
+        "subCategory": "travel"
+      },
+      {
+        "id": 9,
+        "name": "London Bus",
+        "src": "/images/BronzePins/london.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
+        "id": 10,
+        "name": "Lucky Leaf",
+        "src": "/images/BronzePins/luckyleaf.webp",
+        "price": 1,
+        "size": 0.35,
+        "subCategory": "nature"
+      },
+      {
+        "id": 11,
+        "name": "Little Heart",
+        "src": "/images/BronzePins/littleheart.webp",
+        "price": 1,
+        "size": 0.25,
+        "subCategory": "love"
+      },
+      {
+        "id": 12,
+        "name": "Eiffel Towel",
+        "src": "/images/BronzePins/eiffeltowel.webp",
+        "price": 1,
+        "size": 0.8
+      },
+      {
+        "id": 13,
+        "name": "Kangaroo",
+        "src": "/images/BronzePins/kangaroo.webp",
+        "price": 1,
+        "size": 0.9,
+        "subCategory": "animals"
+      },
+      {
+        "id": 14,
+        "name": "Koala",
+        "src": "/images/BronzePins/koala.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "animals"
+      },
+      {
+        "id": 15,
+        "name": "Hamsa Hand",
+        "src": "/images/BronzePins/hamsahand.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 16,
+        "name": "Thailand",
+        "src": "/images/BronzePins/thailand.webp",
+        "price": 1,
+        "size": 0.9,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 17,
+        "name": "Mummy",
+        "src": "/images/BronzePins/mummy.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 18,
+        "name": "Llama",
+        "src": "/images/BronzePins/llama.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "animals"
+      },
+      {
+        "id": 19,
+        "name": "India",
+        "src": "/images/BronzePins/india.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 20,
+        "name": "Pyramid",
+        "src": "/images/BronzePins/pyramid.webp",
+        "price": 1,
+        "size": 0.8
+      },
+      {
+        "id": 21,
+        "name": "Arc The Triomphe",
+        "src": "/images/BronzePins/arcthetriomphe.webp",
+        "price": 1,
+        "size": 0.5
+      },
+      {
+        "id": 22,
+        "name": "Maple Leaf",
+        "src": "/images/BronzePins/mapleleaf.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 23,
+        "name": "Love",
+        "src": "/images/BronzePins/love.webp",
+        "price": 1,
+        "size": 0.8,
+        "subCategory": "love"
+      },
+      {
+        "id": 24,
+        "name": "Airplane War",
+        "src": "/images/BronzePins/airplanewar.webp",
+        "price": 1,
+        "size": 0.8
+      },
+      {
+        "id": 25,
+        "name": "Enjoy the Journey",
+        "src": "/images/BronzePins/enjoythejourney.webp",
+        "price": 1,
+        "size": 1.2,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 26,
+        "name": "Heart",
+        "src": "/images/BronzePins/heart.webp",
+        "price": 1,
+        "size": 0.7,
+        "subCategory": "love"
+      },
+      {
+        "id": 27,
+        "name": "I love Jesus",
+        "src": "/images/BronzePins/ilovejesus.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "love"
+      },
+      {
+        "id": 28,
+        "name": "Butterfly",
+        "src": "/images/BronzePins/butterfly.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 29,
+        "name": "Squirrel",
+        "src": "/images/BronzePins/squirrel.webp",
+        "price": 1,
+        "size": 0.5
+      },
+      {
+        "id": 30,
+        "name": "Canada",
+        "src": "/images/BronzePins/canada.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "symbols"
+      },
+      {
+        "id": 31,
+        "name": "Flipflop",
+        "src": "/images/BronzePins/flipflop.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "nature"
+      },
+      {
+        "id": 32,
+        "name": "Paw",
+        "src": "/images/BronzePins/paw.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "animals"
+      },
+      {
+        "id": 33,
+        "name": "PawDog",
+        "src": "/images/BronzePins/pawheart.webp",
+        "price": 1,
+        "size": 0.45,
+        "subCategory": "animals"
+      },
+      {
+        "id": 34,
+        "name": "I love my dog",
+        "src": "/images/BronzePins/ilovemydog.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "animals"
+      },
+      {
+        "id": 35,
+        "name": "Money",
+        "src": "/images/BronzePins/money.webp",
+        "price": 1,
+        "size": 0.55
+      },
+      {
+        "id": 36,
+        "name": "Dog Bone",
+        "src": "/images/BronzePins/dogbone.webp",
+        "price": 1,
+        "size": 0.5,
+        "subCategory": "animals"
+      }
+    ]
+  }
+}

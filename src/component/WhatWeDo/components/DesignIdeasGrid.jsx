@@ -13,7 +13,7 @@ const DesignIdeasGrid = ({ images }) => {
   const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
   const [mounted, setMounted] = useState(false);
   
-  const imageTexts = ['Colorful Charms', 'Bronze Charms', 'Mixed Charms', 'Flags'];
+  const imageTexts = ['Colorful ', 'Bronze ', 'Mixed ', 'Flags'];
   const imageLinks = ['/charms/colorful', '/charms/bronze', '/charms/colorful', '/charms/flags'];
 
   useEffect(() => {
