@@ -1,5 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { normalizeImagePath } from '../../utils/imagePath';
 import ViewMoreImagesButton from './ViewMoreImagesButton';
 import ItemDescriptionDropdown from './ItemDescriptionDropdown';
@@ -45,22 +46,18 @@ const CanvasSectionCentered = ({
           style={{ isolation: 'isolate' }}
         >
           {selectedCaseImage && (
-            <img
+            <Image
               src={normalizeImagePath(selectedCaseImage)}
               alt=""
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+              fill
+              className="object-contain pointer-events-none"
               style={{
                 zIndex: 1,
                 objectFit: 'contain',
                 objectPosition: 'center 40%',
-                width: '100%',
-                height: '100%',
               }}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              width="270"
-              height="350"
+              priority
+              sizes="(max-width: 768px) 270px, 270px"
               aria-hidden="true"
               key={`case-bg-${selectedCaseType}-${selectedColor}`}
             />

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { normalizeImagePath } from '../../utils/imagePath';
 
 const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selectedModalImage, setSelectedModalImage, onClose }) => {
@@ -33,23 +34,16 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
         <div className="flex-1 flex flex-col overflow-hidden p-4 sm:p-6 min-h-0">
           {/* Main Image - Takes most of the space */}
           <div className="flex-1 flex items-center justify-center min-h-0 mb-4">
-            <div className="relative  p-4 sm:p-6 md:p-8 flex items-center justify-center w-full h-full">
-              <img
-                src={normalizeImagePath(caseImages[selectedModalImage])}
-                alt={`${selectedCase.name} - View ${selectedModalImage + 1}`}
-                className="max-w-full max-h-full object-contain"
-                loading="lazy"
-                fetchPriority="low"
-                decoding="async"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  if (e.target.nextSibling) {
-                    e.target.nextSibling.style.display = 'flex';
-                  }
-                }}
-              />
-              <div className="hidden w-full h-full items-center justify-center text-gray-400">
-                <p className="text-gray-500 font-inter">Image not available</p>
+            <div className="relative p-4 sm:p-6 md:p-8 flex items-center justify-center w-full h-full">
+              <div className="relative w-full h-full max-w-[640px] max-h-[640px] mx-auto">
+                <Image
+                  src={normalizeImagePath(caseImages[selectedModalImage])}
+                  alt={`${selectedCase.name} - View ${selectedModalImage + 1}`}
+                  fill
+                  className="object-contain"
+                  loading="lazy"
+                  sizes="(max-width: 640px) 100vw, 640px"
+                />
               </div>
             </div>
           </div>
@@ -69,25 +63,15 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                         : 'border-gray-200 hover:border-gray-400'
                     }`}
                   >
-                    <img
+                    <Image
                       src={normalizeImagePath(image)}
                       alt={`${selectedCase.name} - Detail ${index + 1}`}
                       className="w-full h-full object-contain p-1"
                       loading="lazy"
-                      fetchPriority="low"
-                      decoding="async"
-                      width="80"
-                      height="80"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        if (e.target.nextSibling) {
-                          e.target.nextSibling.style.display = 'flex';
-                        }
-                      }}
+                      width={80}
+                      height={80}
+                      sizes="80px"
                     />
-                    <div className="hidden w-full h-full items-center justify-center text-gray-300">
-                      <span className="text-sm">📷</span>
-                    </div>
                   </button>
                 ))}
               </div>

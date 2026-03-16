@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from "react";
+import Image from "next/image";
 import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
 import { normalizeImagePath } from "../../utils/imagePath";
@@ -99,12 +100,14 @@ const CategorySelector = ({
               style={{ width: "4rem", height: "4rem" }}
             >
               <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
-                <img
+                <Image
                   src={normalizeImagePath(previewImage)}
                   alt={opt.label}
                   className="max-w-full max-h-full object-contain p-1"
                   loading="lazy"
-                  decoding="async"
+                  width={64}
+                  height={64}
+                  sizes="64px"
                 />
               </div>
             </div>
@@ -182,13 +185,16 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
     >
       <div className={`relative rounded-lg transition-all duration-200 ${isSelected && !isSoldOut ? "border-2 border-gray-900 p-0.5" : "border-2 border-transparent p-0.5"}`} style={{ overflow: "visible" }}>
         <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
-          <img
+          <Image
             src={normalizeImagePath(pin.src)}
             alt={pin.name}
             className={`w-full h-full object-contain transition-all duration-200 rounded ${
               isSoldOut ? "opacity-50" : ""
             }`}
             loading="lazy"
+            width={80}
+            height={80}
+            sizes="(max-width: 640px) 64px, 80px"
           />
         </div>
         {/* New badge - top right */}
