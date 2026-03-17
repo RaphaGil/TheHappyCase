@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Products from '../../data/products.json';
 import { useCreateYours } from '../../hooks/createyours/useCreateYours';
@@ -90,6 +90,7 @@ export default function CreateYoursPageNew() {
     handlePinRemove,
   } = useCreateYours();
   const router = useRouter();
+  const mainContentRef = useRef(null);
 
   useEffect(() => {
     if (selectedCategory === '' && Products?.pins?.colorful?.length) {
@@ -97,12 +98,24 @@ export default function CreateYoursPageNew() {
     }
   }, [selectedCategory, setSelectedCategory]);
 
+  // On mobile, when Text section opens, scroll main content to top so the page (canvas) stays fully visible
+  useEffect(() => {
+    if (isMobile && isAddTextDropdownOpen && mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, [isMobile, isAddTextDropdownOpen]);
+
   return (
     <div className="h-screen bg-white flex flex-col overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
       <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
 
-      {/* Main content - canvas centered within its div, options scroll when dropdowns open. Mobile: scrollable to see case selection */}
-      <div className="flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden">
+      {/* Main content - canvas centered within its div, options scroll when dropdowns open. Mobile: padding-bottom so fixed bar doesn't cover content */}
+      <div
+        ref={mainContentRef}
+        className={`flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden ${
+          isMobile ? (isAddTextDropdownOpen ? 'pb-[380px]' : 'pb-56') : '' 
+        }`}
+      >
         {/* Canvas - aligned to top on mobile, centered on desktop */}
         <div className="flex flex-col flex-1 justify-start md:justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 min-h-0 md:overflow-hidden">
           <CanvasSectionCentered

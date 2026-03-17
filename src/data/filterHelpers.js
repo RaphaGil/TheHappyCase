@@ -8,6 +8,11 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
   }
   
   return pins.filter((pin) => {
+    // Prefer explicit product metadata when available (products.json uses subCategory)
+    if ((selectedCategory === 'colorful' || selectedCategory === 'bronze') && pin.subCategory) {
+      return pin.subCategory === subCategory;
+    }
+
     const n = pin.name.toLowerCase();
     
     if (selectedCategory === 'colorful') {
@@ -40,6 +45,25 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
           n.includes('beer') ||
           n.includes('wine') ||
           n.includes('coffee')
+        );
+      }
+      if (subCategory === 'food') {
+        return (
+          n.includes('pizza') ||
+          n.includes('chocolate') ||
+          n.includes('burger') ||
+          n.includes('ice') ||
+          n.includes('donut') ||
+          n.includes('doughnut') ||
+          n.includes('fries') ||
+          n.includes('chips')
+        );
+      }
+      if (subCategory === 'animal') {
+        return (
+          n.includes('cat') ||
+          n.includes('dog') ||
+          n.includes('paw')
         );
       }
       if (subCategory === 'inspiration') {

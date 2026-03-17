@@ -16,12 +16,12 @@ const MobileStepButtons = ({
   const isColorActive = mobileCurrentStep === 'color';
   const isCharmsActive = mobileCurrentStep === 'charms';
   return (
-    <div className="mb-3 xs:mb-4 flex justify-center overflow-x-auto pb-1 ">
-      <div className="grid grid-cols-4 gap-4 xs:gap-2 sm:gap-2.5 max-w-fit min-w-0 flex-shrink-0">
+    <div className="mb-3  xs:mb-4 flex justify-center overflow-x-auto pb-1 ">
+      <div className="grid grid-cols-4 gap-4  xs:gap-2 sm:gap-2.5 max-w-fit min-w-0 flex-shrink-0">
         {/* Choose Case Button */}
         <button
           onClick={onCaseClick}
-          className={`min-h-[52px] py-3 xs:py-3.5 flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation px-3 xs:px-4 sm:px-4 min-w-0 rounded-sm ${
+          className={`min-h-[52px] py-3 xs:py-3.5 flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation  px-3 xs:px-4 sm:px-4 min-w-0 rounded-sm ${
             isCaseActive ? 'bg-btn-primary-blue text-btn-primary-blue-text border-2 border-btn-primary-blue shadow-sm' : 'bg-btn-primary-blue/80 text-btn-primary-blue-text border border-btn-primary-blue hover:bg-btn-primary-blue'
           }`}
         >
@@ -40,7 +40,7 @@ const MobileStepButtons = ({
           disabled={!selectedCaseType}
           className={`min-h-[52px] py-3 xs:py-3.5 flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation px-3 xs:px-4 sm:px-4 min-w-0 rounded-sm ${
             !selectedCaseType
-              ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
+              ? ' text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : isColorActive
                 ? 'bg-btn-primary-blue text-btn-primary-blue-text border-2 border-btn-primary-blue shadow-sm'
                 : 'bg-btn-primary-blue/80 text-btn-primary-blue-text border border-btn-primary-blue hover:bg-btn-primary-blue'
@@ -65,7 +65,7 @@ const MobileStepButtons = ({
           disabled={!selectedCaseType || !selectedColor}
           className={`min-h-[52px] py-3 xs:py-3.5 flex flex-col items-center justify-center gap-1 xs:gap-1.5 transition-all duration-200 touch-manipulation px-3 xs:px-4 sm:px-4 min-w-0 rounded-sm ${
             !selectedCaseType || !selectedColor
-              ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
+              ? ' text-gray-400 border border-gray-200 cursor-not-allowed opacity-50'
               : isCharmsActive
                 ? 'bg-btn-primary-blue text-btn-primary-blue-text border-2 border-btn-primary-blue shadow-sm'
                 : 'bg-btn-primary-blue/80 text-btn-primary-blue-text border border-btn-primary-blue hover:bg-btn-primary-blue'

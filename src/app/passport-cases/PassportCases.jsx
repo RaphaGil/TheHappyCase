@@ -67,7 +67,7 @@ const PassportCases = () => {
             onDetailImageClick={handleDetailImageClick}
           />
 
-          {/* Right Side - Details and Selection (Color + CTA first, specs below) */}
+          {/* Right Side - Details and Selection (Color + Specs before price summary) */}
           <div className="space-y-4 sm:space-y-6 md:space-y-8 flex flex-col justify-between">
             <ColorSelection
               colors={selectedCase.colors}
@@ -76,6 +76,14 @@ const PassportCases = () => {
               isColorSoldOut={isColorSoldOut}
               getColorName={getColorName}
             />
+
+            <SpecificationsDropdown
+              specifications={selectedCase.specifications}
+              isOpen={isSpecificationsOpen}
+              onToggle={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
+            />
+
+            <ProductInfo specifications={selectedCase.specifications} />
 
             <PriceAndCTA
               selectedCase={selectedCase}
@@ -89,14 +97,6 @@ const PassportCases = () => {
               onDecrementQuantity={handleDecrementQuantity}
               onAddToCart={handleAddToCart}
             />
-
-            <SpecificationsDropdown
-              specifications={selectedCase.specifications}
-              isOpen={isSpecificationsOpen}
-              onToggle={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
-            />
-
-            <ProductInfo specifications={selectedCase.specifications} />
           </div>
         </div>
       </div>
