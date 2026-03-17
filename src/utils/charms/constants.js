@@ -32,10 +32,9 @@ export const COLORFUL_CATEGORIES = [
   { key: 'food', label: 'FOOD' },
   { key: 'animal', label: 'ANIMAL' },
   { key: 'inspiration', label: 'INSPIRATION' },
-  { key: 'flags', label: 'FLAGS' },
   { key: 'hearts', label: 'HEARTS' },
   { key: 'nature', label: 'NATURE' },
-  { key: 'camera', label: 'CAMERA' }
+
 ];
 
 // Map filter query params to charm types

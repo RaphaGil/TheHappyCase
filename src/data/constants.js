@@ -61,7 +61,7 @@ export const COLORFUL_FILTER_TABS = [
   { key: 'inspiration', label: 'INSPIRATION' },
   { key: 'hearts', label: 'HEARTS' },
   { key: 'nature', label: 'NATURE' },
-  { key: 'camera', label: 'CAMERA' }
+
 ];
 
 export const BRONZE_FILTER_TABS = [

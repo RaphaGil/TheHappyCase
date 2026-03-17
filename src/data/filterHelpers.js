@@ -25,7 +25,8 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
           n.includes('boarding') ||
           n.includes('adventure') ||
           n.includes('vacation') ||
-          n.includes('combi')
+          n.includes('combi') ||
+          n.includes('camera')
         );
       }
       if (subCategory === 'disney') {
@@ -85,9 +86,7 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
           n.includes('wave')
         );
       }
-      if (subCategory === 'camera') {
-        return n.includes('camera');
-      }
+    
     }
     
     if (selectedCategory === 'bronze') {
