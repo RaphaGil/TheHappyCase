@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { normalizeImagePath } from '../../../utils/imagePath';
+import { getCaseLinePins } from '../../../utils/cartHelpers';
 
 const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, onRemove, errorMessage }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -128,9 +129,9 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
       ? item.casePrice 
       : (typeof item.price === 'number' ? item.price : 8));
   
-  // Calculate charms total from pinsDetails if available
-  const charms = item.pinsDetails && item.pinsDetails.length
-    ? item.pinsDetails.reduce((s, p) => s + (p.price || 0), 0)
+  const caseLinePins = getCaseLinePins(item);
+  const charms = caseLinePins.length
+    ? caseLinePins.reduce((s, p) => s + (p.price || 0), 0)
     : 0;
   
   // Unit price = base + charms
@@ -206,16 +207,17 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
           )}
           
           {/* Charms list */}
-          {item.pinsDetails && item.pinsDetails.length > 0 && (
+          {caseLinePins.length > 0 && (
             <div className="mt-3 pt-3 ">
               <div className="flex flex-col gap-2">
-                {Object.values(item.pinsDetails.reduce((acc, pin) => {
+                {Object.values(caseLinePins.reduce((acc, pin) => {
                   acc[pin.src] = acc[pin.src] || { ...pin, quantity: 0 };
                   acc[pin.src].quantity++;
                   return acc;
                 }, {})).map((groupedPin, i) => {
                   const pinPrice = groupedPin.price || 0;
-                  const pinTotal = pinPrice * groupedPin.quantity;
+                  const totalPinQty = groupedPin.quantity * qty;
+                  const pinLineTotal = pinPrice * groupedPin.quantity * qty;
                   return (
                     <div key={i} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -226,16 +228,16 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
                             className="w-full h-full object-contain p-1" 
                             loading="lazy" 
                           />
-                          <span className="absolute -top-1 -right-1 bg-btn-primary-blue text-btn-primary-blue-text text-[10px] font-medium rounded-full h-4 w-4 flex items-center justify-center font-inter">
-                            {groupedPin.quantity}
-                          </span>
                         </div>
                         <span className="text-xs font-light text-gray-700 font-inter">
                           {groupedPin.name}
+                          {totalPinQty > 1 && (
+                            <span className="text-gray-500"> (×{totalPinQty} total)</span>
+                          )}
                         </span>
                       </div>
                       <span className="text-xs font-medium text-gray-900 font-inter">
-                        {formatPrice(pinTotal)}
+                        {formatPrice(pinLineTotal)}
                       </span>
                     </div>
                   );

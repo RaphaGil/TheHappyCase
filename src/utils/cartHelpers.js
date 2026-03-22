@@ -1,4 +1,15 @@
 /**
+ * Pins attached to a cart row that is a passport case (not a standalone charm line).
+ * Prefer pinsDetails; fall back to pins.
+ */
+export const getCaseLinePins = (item) => {
+  if (!item || item.type === 'charm') return [];
+  if (item.pinsDetails && item.pinsDetails.length > 0) return item.pinsDetails;
+  if (item.pins && item.pins.length > 0) return item.pins;
+  return [];
+};
+
+/**
  * Generate a unique key for grouping identical items in the cart
  * @param {Object} item - The cart item
  * @returns {string} - Unique key for grouping

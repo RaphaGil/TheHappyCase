@@ -1,4 +1,5 @@
 import { getMaxAvailableQuantity } from '../inventory';
+import { getCaseLinePins } from './cartHelpers';
 
 /**
  * Check if a pin can be added based on inventory
@@ -57,19 +58,20 @@ export const checkPinInventory = (pin, cart, selectedPins, selectedCategory) => 
     }
   });
   
-  // Count how many of this charm are in custom designs already in cart
+  // Count how many of this charm are on case rows already in cart
   let charmCountInCustomDesigns = 0;
   cart.forEach(cartItem => {
-    if (cartItem.pins && Array.isArray(cartItem.pins)) {
-      cartItem.pins.forEach(cartPin => {
-        const cartPinName = cartPin.name || cartPin.src;
-        const cartPinCategory = cartPin.category || charmCategory;
-        if ((cartPinName === charmName || cartPinName === charmSrc) && 
-            cartPinCategory === charmCategory) {
-          charmCountInCustomDesigns += (cartItem.quantity || 1);
-        }
-      });
-    }
+    const linePins = getCaseLinePins(cartItem);
+    linePins.forEach((cartPin) => {
+      const cartPinName = cartPin.name || cartPin.src;
+      const cartPinCategory = cartPin.category || charmCategory;
+      if (
+        (cartPinName === charmName || cartPinName === charmSrc) &&
+        cartPinCategory === charmCategory
+      ) {
+        charmCountInCustomDesigns += cartItem.quantity || 1;
+      }
+    });
   });
   
   // Count how many of this charm are already selected in the current design

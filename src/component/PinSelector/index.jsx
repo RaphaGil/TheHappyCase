@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
 import { normalizeImagePath } from "../../utils/imagePath";
+import { getCaseLinePins } from "../../utils/cartHelpers";
 
 // -----------------------------
 // Helpers
@@ -289,17 +290,17 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
     });
 
     let charmCountInCustomDesigns = 0;
-    (cart || []).forEach(cartItem => {
-      if (cartItem.pins && Array.isArray(cartItem.pins)) {
-        cartItem.pins.forEach(cartPin => {
-          const cartPinName = cartPin.name || cartPin.src;
-          const cartPinCategory = cartPin.category || charmCategory;
-          if ((cartPinName === charmName || cartPinName === pin.src) &&
-            cartPinCategory === charmCategory) {
-            charmCountInCustomDesigns += (cartItem.quantity || 1);
-          }
-        });
-      }
+    (cart || []).forEach((cartItem) => {
+      getCaseLinePins(cartItem).forEach((cartPin) => {
+        const cartPinName = cartPin.name || cartPin.src;
+        const cartPinCategory = cartPin.category || charmCategory;
+        if (
+          (cartPinName === charmName || cartPinName === pin.src) &&
+          cartPinCategory === charmCategory
+        ) {
+          charmCountInCustomDesigns += cartItem.quantity || 1;
+        }
+      });
     });
 
     const charmCountInDesign = selectedPins.filter(p => {

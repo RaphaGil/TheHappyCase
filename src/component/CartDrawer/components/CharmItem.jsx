@@ -1,6 +1,5 @@
 import React from 'react';
-import QuantityControls from './QuantityControls';
-import NoteSection from './NoteSection';
+import CartLineActions from './CartLineActions';
 import { normalizeImagePath } from '../../../utils/imagePath';
 
 // Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
@@ -20,70 +19,63 @@ const CharmItem = ({
   onRemove, 
   onIncrement, 
   onDecrement,
-  openNoteIndex,
-  noteTexts,
-  onToggleNote,
-  onNoteChange,
-  onSaveNote,
-  onCancelNote,
   errorMessage
 }) => {
   const displayName = getBaseCharmName(item.name || item.pin?.name);
   const quantity = item.quantity || 1;
+  const unit = item.price || item.totalPrice || 0;
+  const lineTotal = unit * quantity;
   
   return (
     <div className="mt-2">
-      <div className="flex items-start justify-between px-2 py-1">
-        <div className="flex items-start gap-3 flex-1">
-          <div className="relative flex-shrink-0">
-            {item.image ? (
-              <img
-                src={normalizeImagePath(item.image)}
-                alt={displayName || 'Charm'}
-                className="w-20 h-20 object-contain rounded"
-                loading="lazy"
-                sizes="80px"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded bg-gray-50 border border-gray-200 flex items-center justify-center">
-                <span className="text-gray-400 text-xs">Image</span>
-              </div>
-            )}
-            {/* Quantity Badge */}
-          
-            {/* Error Alert Badge near image */}
-            {errorMessage && (
-              <div className={`absolute ${quantity > 1 ? '-bottom-1 -right-1' : '-top-1 -right-1'} bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center z-10 shadow-lg`}>
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col flex-1 min-w-0">
-            <span className="text-sm font-light text-gray-900 font-inter">
-              {displayName || 'Charm'}
-            </span>
-            {/* Error Message Alert Box next to charm */}
-            {errorMessage && (
-              <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-sm">
-                <p className="text-xs text-red-700 font-inter leading-tight">
-                  {errorMessage}
-                </p>
-              </div>
-            )}
-          </div>
+      <div className="flex items-start gap-3 px-1 py-1">
+        <div className="relative flex-shrink-0">
+          {item.image ? (
+            <img
+              src={normalizeImagePath(item.image)}
+              alt={displayName || 'Charm'}
+              className="h-20 w-20 rounded-md object-contain"
+              loading="lazy"
+              sizes="80px"
+            />
+          ) : (
+            <div className="flex h-20 w-20 items-center justify-center rounded-md border border-gray-200 bg-gray-50">
+              <span className="text-xs text-gray-400">Image</span>
+            </div>
+          )}
+          {errorMessage && (
+            <div className={`absolute ${quantity > 1 ? '-bottom-1 -right-1' : '-top-1 -right-1'} z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white shadow-lg`}>
+              <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+          )}
         </div>
-        <div className="text-right">
-          <div className="text-sm font-medium text-gray-900 font-inter">
-            {formatPrice((item.price || item.totalPrice || 0) * (item.quantity || 1))}
-          </div>
+        <div className="min-w-0 flex-1">
+          <span className="text-sm font-medium text-gray-900 font-inter">
+            {displayName || 'Charm'}
+          </span>
+          {errorMessage && (
+            <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-2">
+              <p className="text-xs leading-tight text-red-700 font-inter">
+                {errorMessage}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
+      <CartLineActions
+        quantity={quantity}
+        onDecrement={() => onDecrement(item.id !== undefined ? item.id : index)}
+        onIncrement={() => onIncrement(item.id !== undefined ? item.id : index)}
+        formatPrice={formatPrice}
+        unitPrice={unit}
+        lineTotal={lineTotal}
+        onRemove={() => onRemove(index)}
+      />
     </div>
   );
 };
 
 export default CharmItem;
-

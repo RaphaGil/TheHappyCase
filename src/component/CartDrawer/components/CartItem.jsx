@@ -9,29 +9,12 @@ const CartItem = ({
   onRemove, 
   onIncrement, 
   onDecrement,
-  openNoteIndex,
-  noteTexts,
-  onToggleNote,
-  onNoteChange,
-  onSaveNote,
-  onCancelNote,
   errorMessage,
   charmErrors
 }) => {
   return (
-    <div className="pb-4 flex items-start gap-3">
+    <div className="border-b border-gray-100 pb-5 last:border-b-0 last:pb-0">
       <div className="flex-1">
-        {item.type !== 'charm' && (
-          <div className="flex justify-end items-end mb-2">
-            <button 
-              onClick={() => onRemove(index)} 
-              className="text-xs text-btn-primary-blue hover:text-btn-primary-blue-hover uppercase tracking-wider font-light transition-colors font-inter"
-            >
-              Remove
-            </button>
-          </div>
-        )}
-
         {item.type === 'charm' ? (
           <CharmItem
             item={item}
@@ -40,12 +23,6 @@ const CartItem = ({
             onRemove={onRemove}
             onIncrement={onIncrement}
             onDecrement={onDecrement}
-            openNoteIndex={openNoteIndex}
-            noteTexts={noteTexts}
-            onToggleNote={onToggleNote}
-            onNoteChange={onNoteChange}
-            onSaveNote={onSaveNote}
-            onCancelNote={onCancelNote}
             errorMessage={errorMessage}
           />
         ) : (
@@ -55,12 +32,7 @@ const CartItem = ({
             formatPrice={formatPrice}
             onIncrement={onIncrement}
             onDecrement={onDecrement}
-            openNoteIndex={openNoteIndex}
-            noteTexts={noteTexts}
-            onToggleNote={onToggleNote}
-            onNoteChange={onNoteChange}
-            onSaveNote={onSaveNote}
-            onCancelNote={onCancelNote}
+            onRemove={onRemove}
             errorMessage={errorMessage}
             charmErrors={charmErrors}
           />

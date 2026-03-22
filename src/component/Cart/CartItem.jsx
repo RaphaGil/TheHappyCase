@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { groupPinsByKey, getItemTotal } from "../../data/helpers";
 import { normalizeImagePath } from "../../utils/imagePath";
+import { getCaseLinePins } from "../../utils/cartHelpers";
 
 // Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
 const getBaseCharmName = (name) => {
@@ -93,7 +94,9 @@ const CharmLineItem = ({ item, formatPrice, errorMessage }) => {
 };
 
 const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {} }) => {
-  const grouped = groupPinsByKey(item.pinsDetails);
+  const caseQty = item.quantity || 1;
+  const linePins = getCaseLinePins(item);
+  const grouped = groupPinsByKey(linePins);
   const groupedList = Object.values(grouped);
   const base = typeof item.basePrice === "number" ? item.basePrice : 8;
 
@@ -178,7 +181,8 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
         const charmKey = `${charmName}-${charmCategory}`;
         const charmError = charmErrors[charmKey];
         const displayName = getBaseCharmName(pin.name);
-        
+        const totalCharmQty = pin.count * caseQty;
+
         return (
           <div
             key={i}
@@ -208,7 +212,10 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
               </div>
               <div className="text-xs font-light text-gray-900 mb-1 font-inter flex-1 min-w-0">
                 <div className="break-words">
-                  {displayName || 'Charm'} {pin.count > 1 ? `(x${pin.count})` : ""}
+                  {displayName || 'Charm'}
+                  {pin.count * caseQty > 1 ? (
+                    <span className="text-gray-500"> (×{pin.count * caseQty} total)</span>
+                  ) : null}
                 </div>
                 {/* Error Message Alert Box next to charm */}
                 {charmError && (
@@ -221,7 +228,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
               </div>
             </div>
             <div className="text-xs font-medium text-gray-900 font-inter flex-shrink-0">
-              {formatPrice(pin.price * pin.count)}
+              {formatPrice(pin.price * pin.count * caseQty)}
             </div>
           </div>
         );
@@ -364,7 +371,7 @@ const CartItem = ({
       <div className="flex-1">
         {item.type === "charm" ? (
           <CharmLineItem item={item} formatPrice={formatPrice} errorMessage={errorMessage} />
-        ) : item.pinsDetails && item.pinsDetails.length > 0 ? (
+        ) : getCaseLinePins(item).length > 0 ? (
           <CustomCaseWithCharms item={item} formatPrice={formatPrice} errorMessage={errorMessage} charmErrors={charmErrors} />
         ) : (
           <StandaloneCase item={item} formatPrice={formatPrice} errorMessage={errorMessage} />

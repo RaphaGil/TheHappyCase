@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { getColorName } from '../../utils/createyours/helpers';
+import { getCaseLinePins } from '../../utils/createyours/cartHelpers';
 
 /**
  * Custom hook for managing inventory checks and messages
@@ -82,19 +83,18 @@ export const useInventoryCheck = ({
           }
         });
         
-        // Count how many of this charm are in custom designs already in cart
         let charmCountInCustomDesigns = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.pins && Array.isArray(cartItem.pins)) {
-            cartItem.pins.forEach(cartPin => {
-              const cartPinName = cartPin.name || cartPin.src;
-              const cartPinCategory = cartPin.category || charmCategory;
-              if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                  cartPinCategory === charmCategory) {
-                charmCountInCustomDesigns += (cartItem.quantity || 1);
-              }
-            });
-          }
+        cart.forEach((cartItem) => {
+          getCaseLinePins(cartItem).forEach((cartPin) => {
+            const cartPinName = cartPin.name || cartPin.src;
+            const cartPinCategory = cartPin.category || charmCategory;
+            if (
+              (cartPinName === charmName || cartPinName === charmSrc) &&
+              cartPinCategory === charmCategory
+            ) {
+              charmCountInCustomDesigns += cartItem.quantity || 1;
+            }
+          });
         });
         
         // Count how many of this charm are already selected in the current design
@@ -211,19 +211,18 @@ export const useInventoryCheck = ({
           }
         });
         
-        // Count how many of this charm are in custom designs already in cart
         let charmCountInCustomDesigns = 0;
-        cart.forEach(cartItem => {
-          if (cartItem.pins && Array.isArray(cartItem.pins)) {
-            cartItem.pins.forEach(cartPin => {
-              const cartPinName = cartPin.name || cartPin.src;
-              const cartPinCategory = cartPin.category || charmCategory;
-              if ((cartPinName === charmName || cartPinName === charmSrc) && 
-                  cartPinCategory === charmCategory) {
-                charmCountInCustomDesigns += (cartItem.quantity || 1);
-              }
-            });
-          }
+        cart.forEach((cartItem) => {
+          getCaseLinePins(cartItem).forEach((cartPin) => {
+            const cartPinName = cartPin.name || cartPin.src;
+            const cartPinCategory = cartPin.category || charmCategory;
+            if (
+              (cartPinName === charmName || cartPinName === charmSrc) &&
+              cartPinCategory === charmCategory
+            ) {
+              charmCountInCustomDesigns += cartItem.quantity || 1;
+            }
+          });
         });
         
         // Count how many of this charm are in the current design (per design)

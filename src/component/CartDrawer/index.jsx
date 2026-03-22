@@ -12,10 +12,8 @@ import CartItem from './components/CartItem';
 import CartDrawerFooter from './components/CartDrawerFooter';
 
 const CartDrawer = () => {
-  const { cart, isDrawerOpen, closeCartDrawer, getTotalPrice, incrementItemQty, decrementItemQty, removeFromCart, updateItemNote } = useCart();
+  const { cart, isDrawerOpen, closeCartDrawer, getTotalPrice, incrementItemQty, decrementItemQty, removeFromCart } = useCart();
   const { formatPrice } = useCurrency();
-  const [openNoteIndex, setOpenNoteIndex] = useState(null);
-  const [noteTexts, setNoteTexts] = useState({});
   const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
   const errorTimeoutsRef = useRef({}); // Track timeouts for each error
 
@@ -53,34 +51,6 @@ const CartDrawer = () => {
       });
     };
   }, [itemErrors]);
-
-  const handleToggleNote = (index) => {
-    if (openNoteIndex === index) {
-      setOpenNoteIndex(null);
-    } else {
-      setOpenNoteIndex(index);
-      // Initialize note text if it doesn't exist
-      if (!noteTexts[index] && cart[index]?.note) {
-        setNoteTexts({ ...noteTexts, [index]: cart[index].note });
-      } else if (!noteTexts[index]) {
-        setNoteTexts({ ...noteTexts, [index]: '' });
-      }
-    }
-  };
-
-  const handleNoteChange = (index, value) => {
-    setNoteTexts({ ...noteTexts, [index]: value });
-  };
-
-  const handleSaveNote = (index) => {
-    updateItemNote(index, noteTexts[index] || '');
-    setOpenNoteIndex(null);
-  };
-
-  const handleCancelNote = (index) => {
-    setOpenNoteIndex(null);
-    setNoteTexts({ ...noteTexts, [index]: cart[index]?.note || '' });
-  };
 
   // Helper function to set error for all identical charms
   const setErrorForAllIdenticalCharms = (item, errorMessage) => {
@@ -467,12 +437,6 @@ const CartDrawer = () => {
                 onRemove={handleRemoveWithCheck}
                 onIncrement={handleIncrementWithCheck}
                 onDecrement={handleDecrementWithCheck}
-                openNoteIndex={openNoteIndex}
-                noteTexts={noteTexts}
-                onToggleNote={handleToggleNote}
-                onNoteChange={handleNoteChange}
-                onSaveNote={handleSaveNote}
-                onCancelNote={handleCancelNote}
                 errorMessage={typeof itemErrors[item.id] === 'string' ? itemErrors[item.id] : itemErrors[item.id]?.case}
                 charmErrors={itemErrors[item.id]?.charms || {}}
               />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { normalizeImagePath } from '../../utils/imagePath';
 import { getColorName } from '../../utils/createyours/helpers';
+import { getCaseLinePins } from '../../utils/cartHelpers';
 
 const OrderItem = ({ item }) => {
   // Handle both saved order format (with unit_price, total_price) and original format (price, totalPrice)
@@ -22,6 +23,20 @@ const OrderItem = ({ item }) => {
   
   // Get readable color name from hex code or image path
   const colorName = item.color ? getColorName(item.color, item.case_image || item.caseImage || item.image) : null;
+
+  const caseQty = item.quantity || 1;
+  const linePins = getCaseLinePins(item);
+  const charmGroups =
+    linePins.length > 0
+      ? Object.values(
+          linePins.reduce((acc, p) => {
+            const key = `${p.src || ''}|${p.name || ''}`;
+            if (!acc[key]) acc[key] = { name: p.name, src: p.src, count: 0 };
+            acc[key].count += 1;
+            return acc;
+          }, {})
+        )
+      : [];
 
   return (
     <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
@@ -47,9 +62,22 @@ const OrderItem = ({ item }) => {
               Color: <span className="font-medium">{colorName}</span>
             </p>
           )}
-          {((item.pinsDetails && item.pinsDetails.length > 0) || (item.pins && Array.isArray(item.pins) && item.pins.length > 0)) && (
+          {charmGroups.length > 0 && (
             <p className="text-sm text-gray-600 mb-1 font-inter">
-              Charms: <span className="font-medium">{(item.pinsDetails || item.pins || []).map(p => p.name || p.src || 'Charm').join(', ')}</span>
+              Charms:{' '}
+              <span className="font-medium">
+                {charmGroups.map((g, i) => {
+                  const label = g.name || g.src || 'Charm';
+                  const n = g.count * caseQty;
+                  const text = n > 1 ? `${label} (×${n})` : label;
+                  return (
+                    <span key={`${g.src}-${i}`}>
+                      {i > 0 ? ', ' : ''}
+                      {text}
+                    </span>
+                  );
+                })}
+              </span>
             </p>
           )}
           {(item.customText || item.custom_text) && (

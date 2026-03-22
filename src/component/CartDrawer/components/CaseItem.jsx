@@ -1,7 +1,7 @@
 import React from 'react';
-import QuantityControls from './QuantityControls';
-import NoteSection from './NoteSection';
+import CartLineActions from './CartLineActions';
 import { normalizeImagePath } from '../../../utils/imagePath';
+import { getCaseLinePins } from '../../../utils/cartHelpers';
 
 // Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
 const getBaseCharmName = (name) => {
@@ -19,17 +19,13 @@ const CaseItem = ({
   formatPrice, 
   onIncrement, 
   onDecrement,
-  openNoteIndex,
-  noteTexts,
-  onToggleNote,
-  onNoteChange,
-  onSaveNote,
-  onCancelNote,
+  onRemove,
   errorMessage,
   charmErrors = {}
 }) => {
+  const linePins = getCaseLinePins(item);
   const groupedPins = Object.values(
-    (item.pinsDetails || []).reduce((acc, pin) => {
+    linePins.reduce((acc, pin) => {
       // Ensure pin has all required properties including category
       const pinWithName = {
         name: pin?.name || 'Charm',
@@ -70,8 +66,8 @@ const CaseItem = ({
   }
 
   const basePrice = typeof item.basePrice === 'number' ? item.basePrice : 8;
-  const charms = item.pinsDetails && item.pinsDetails.length
-    ? item.pinsDetails.reduce((s, p) => s + (p.price || 0), 0)
+  const charms = linePins.length
+    ? linePins.reduce((s, p) => s + (p.price || 0), 0)
     : Math.max(0, (item.totalPrice || 0) - basePrice);
   const unit = basePrice + charms;
   const qty = item.quantity || 1;
@@ -162,7 +158,8 @@ const CaseItem = ({
         const charmCategory = (groupedPin.category && groupedPin.category.trim() !== '') ? groupedPin.category : 'colorful';
         const charmKey = `${charmName}-${charmCategory}`;
         const charmError = charmErrors[charmKey];
-        
+        const totalCharmQty = groupedPin.quantity * qty;
+
         return (
           <div
             key={i}
@@ -192,7 +189,10 @@ const CaseItem = ({
               </div>
               <div className="flex flex-col flex-1 min-w-0">
                 <span className="text-sm font-light text-gray-900 font-inter">
-                  {getBaseCharmName(groupedPin.name) || 'Charm'} {groupedPin.quantity > 1 ? `(x${groupedPin.quantity})` : ''}
+                  {getBaseCharmName(groupedPin.name) || 'Charm'}
+                  {totalCharmQty > 1 ? (
+                    <span className="text-gray-500"> (×{totalCharmQty} total)</span>
+                  ) : null}
                 </span>
                 {/* Error Message Alert Box next to charm */}
                 {charmError && (
@@ -209,33 +209,14 @@ const CaseItem = ({
       })}
       </div>
 
-      {/* Qty and price for case items */}
-      <div className="mt-3 flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <QuantityControls
-            quantity={item.quantity || 1}
-            item={item}
-            onDecrement={() => onDecrement(item.id !== undefined ? item.id : index)}
-            onIncrement={() => onIncrement(item.id !== undefined ? item.id : index)}
-          />
-          <div className="text-right">
-            <div className="text-sm font-medium text-gray-900 font-inter">
-              {formatPrice(unit * qty)}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Note Section */}
-      <NoteSection
-        item={item}
-        index={index}
-        openNoteIndex={openNoteIndex}
-        noteTexts={noteTexts}
-        onToggleNote={onToggleNote}
-        onNoteChange={onNoteChange}
-        onSaveNote={onSaveNote}
-        onCancelNote={onCancelNote}
+      <CartLineActions
+        quantity={qty}
+        onDecrement={() => onDecrement(item.id !== undefined ? item.id : index)}
+        onIncrement={() => onIncrement(item.id !== undefined ? item.id : index)}
+        formatPrice={formatPrice}
+        unitPrice={unit}
+        lineTotal={unit * qty}
+        onRemove={() => onRemove(index)}
       />
     </div>
   );

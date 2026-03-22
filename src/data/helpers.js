@@ -1,3 +1,5 @@
+import { getCaseLinePins } from '../utils/cartHelpers';
+
 // Helper to group charm pins by unique key
 export const groupPinsByKey = (pinsDetails = []) =>
   pinsDetails.reduce((acc, pin) => {
@@ -19,13 +21,10 @@ export const getItemTotal = (item, formatPrice) => {
   const base =
     typeof item.basePrice === "number" ? item.basePrice : item.price || 0;
 
-  const charmsTotal =
-    item.pinsDetails && item.pinsDetails.length
-      ? item.pinsDetails.reduce(
-          (sum, pin) => sum + (pin.price || 0),
-          0
-        )
-      : 0;
+  const linePins = getCaseLinePins(item);
+  const charmsTotal = linePins.length
+    ? linePins.reduce((sum, pin) => sum + (pin.price || 0), 0)
+    : 0;
 
   return formatPrice((base + charmsTotal) * (item.quantity || 1));
 };

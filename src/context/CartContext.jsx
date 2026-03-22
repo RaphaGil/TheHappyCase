@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { getMaxAvailableQuantity } from '../utils/inventory';
-import { areItemsIdentical, getIndicesToRemoveWithDesign } from '../utils/cartHelpers';
+import { areItemsIdentical, getIndicesToRemoveWithDesign, getCaseLinePins } from '../utils/cartHelpers';
 
 const CART_STORAGE_KEY = 'happycase_cart';
 
@@ -357,8 +357,9 @@ export const CartProvider = ({ children }) => {
       } else {
         // For cases: (base price + charms) * quantity
         const base = typeof item.basePrice === "number" ? item.basePrice : item.price || item.totalPrice || 0;
-        const charmsTotal = item.pinsDetails && item.pinsDetails.length
-          ? item.pinsDetails.reduce((sum, pin) => sum + (pin.price || 0), 0)
+        const linePins = getCaseLinePins(item);
+        const charmsTotal = linePins.length
+          ? linePins.reduce((sum, pin) => sum + (pin.price || 0), 0)
           : 0;
         itemTotal = (base + charmsTotal) * (item.quantity || 1);
       }

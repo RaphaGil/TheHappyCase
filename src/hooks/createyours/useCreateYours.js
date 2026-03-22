@@ -17,7 +17,7 @@ import {
   validateCharmInventory, 
   createDesignImage, 
   preparePinsDetails, 
-  createCartProducts 
+  createCartProducts,
 } from '../../utils/createyours/cartHelpers';
 import { CUSTOM_TEXT_COLOR, CUSTOM_TEXT_SIZE, MAX_TEXT_LENGTH } from '../../data/constants';
 
@@ -353,7 +353,7 @@ export const useCreateYours = () => {
     const pinsDetails = preparePinsDetails(selectedPins, selectedCategory);
     
     // Create cart products
-    const { caseProduct, charmProducts } = createCartProducts({
+    const { caseProduct } = createCartProducts({
       selectedCase,
       selectedCaseType,
       selectedColor,
@@ -368,11 +368,8 @@ export const useCreateYours = () => {
       customText
     });
     
-    // Add to cart
+    // Add to cart (charms live on the case row only)
     addToCart(caseProduct);
-    charmProducts.forEach(charmProduct => {
-      addToCart(charmProduct);
-    });
     
     // Clear canvas and reset design state
     if (typeof window !== 'undefined' && window.clearCanvas) {

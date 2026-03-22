@@ -6,6 +6,7 @@ import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS
 import { filterPinsByCategory } from '../../data/filterHelpers.js';
 import { getMaxAvailableQuantity } from '../../utils/inventory.js';
 import { normalizeImagePath } from '../../utils/imagePath.js';
+import { getCaseLinePins } from '../../utils/cartHelpers.js';
 
 const MobileOverlay = ({
   mobileCurrentStep,
@@ -317,17 +318,17 @@ const MobileOverlay = ({
                             });
 
                             let charmCountInCustomDesigns = 0;
-                            (cart || []).forEach(cartItem => {
-                              if (cartItem.pins && Array.isArray(cartItem.pins)) {
-                                cartItem.pins.forEach(cartPin => {
-                                  const cartPinName = cartPin.name || cartPin.src;
-                                  const cartPinCategory = cartPin.category || charmCategory;
-                                  if ((cartPinName === charmName || cartPinName === pin.src) &&
-                                    cartPinCategory === charmCategory) {
-                                    charmCountInCustomDesigns += (cartItem.quantity || 1);
-                                  }
-                                });
-                              }
+                            (cart || []).forEach((cartItem) => {
+                              getCaseLinePins(cartItem).forEach((cartPin) => {
+                                const cartPinName = cartPin.name || cartPin.src;
+                                const cartPinCategory = cartPin.category || charmCategory;
+                                if (
+                                  (cartPinName === charmName || cartPinName === pin.src) &&
+                                  cartPinCategory === charmCategory
+                                ) {
+                                  charmCountInCustomDesigns += cartItem.quantity || 1;
+                                }
+                              });
                             });
 
                             const totalInventory = maxAvailable + standaloneCharmsInCart;

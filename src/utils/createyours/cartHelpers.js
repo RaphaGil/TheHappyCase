@@ -2,6 +2,7 @@ import { getMaxAvailableQuantity } from '../inventory';
 import { normalizeImagePath } from '../imagePath';
 import { createCompositeDesignImage } from '../canvas/imageExport';
 import { getColorName } from './helpers';
+export { getCaseLinePins } from '../cartHelpers';
 
 /**
  * Validate case inventory before adding to cart
@@ -154,6 +155,8 @@ export const createCartProducts = ({
   
   // Create case product
   const caseName = selectedCase?.name || 'Passport Case';
+  const pinsPriceTotal = pinsDetails.reduce((sum, p) => sum + (p.price || 0), 0);
+
   const caseProduct = {
     id: `case-${uniqueTimestamp}-${Math.random().toString(36).substr(2, 9)}`,
     name: caseName,
@@ -162,34 +165,19 @@ export const createCartProducts = ({
     color: selectedColor,
     basePrice: caseBasePrice,
     casePrice: caseBasePrice,
-    totalPrice: caseBasePrice,
-    price: caseBasePrice,
+    pinsPrice: pinsPriceTotal,
+    totalPrice: caseBasePrice + pinsPriceTotal,
+    price: caseBasePrice + pinsPriceTotal,
     image: designImage,
     designImage: designImage,
     caseImage: normalizedCaseImage,
     customDesign: true,
     quantity: effectiveQuantity,
+    pins: pinsDetails,
+    pinsDetails,
     ...(customText && customText.trim() && { customText: customText.trim() })
   };
-  
-  // Create charm products
-  const charmProducts = pinsDetails.map((pin, index) => {
-    const charmCategory = pin.category || selectedCategory || 'colorful';
-    const charmName = pin.name || 'Charm';
-    const charmPrice = pin.price || 2.0;
-    
-    return {
-      id: `charm-${uniqueTimestamp}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-      name: charmName,
-      price: charmPrice,
-      totalPrice: charmPrice,
-      image: pin.src || '',
-      pin: pin,
-      category: charmCategory,
-      type: 'charm',
-      quantity: effectiveQuantity
-    };
-  });
-  
-  return { caseProduct, charmProducts };
+
+  // Charms are stored on the case (pinsDetails); no separate cart rows (avoids duplicates under “previous cases”)
+  return { caseProduct, charmProducts: [] };
 };
