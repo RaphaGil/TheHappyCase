@@ -79,8 +79,9 @@ const stripePromise = loadStripe(
   'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
 );
 
-// UK only - we ship to the United Kingdom exclusively
-const SHIPPING_RATES = { GB: 3 };
+// UK only - we ship to the United Kingdom exclusively (flat rate matches PaymentIntent & save-order)
+const UK_FLAT_SHIPPING_GBP = 3;
+const SHIPPING_RATES = { GB: UK_FLAT_SHIPPING_GBP };
 const SHIPPING_LABELS = { GB: 'United Kingdom' };
 
 const CURRENCY_MULTIPLIERS = {
@@ -131,7 +132,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
   
   // Calculate shipping cost
   // Use fixed rates from SHIPPING_RATES
-  const shippingCost = cart.length === 0 ? 0 : (SHIPPING_RATES[selectedCountry] ?? 3);
+  const shippingCost = cart.length === 0 ? 0 : (SHIPPING_RATES[selectedCountry] ?? UK_FLAT_SHIPPING_GBP);
   const shippingLabel = SHIPPING_LABELS[selectedCountry] || 'United Kingdom';
   const totalWithShipping = subtotal + shippingCost;
 
@@ -693,8 +694,10 @@ const Checkout = () => {
         setLoading(true);
         setPaymentError(null); // Clear any previous errors
         
-        // Get total price in GBP, then convert to selected currency
-        const totalPriceGBP = getTotalPrice();
+        // Charge subtotal + UK flat shipping (same as Order Summary total)
+        const subtotalGBP = getTotalPrice();
+        const shippingGBP = cart.length > 0 ? UK_FLAT_SHIPPING_GBP : 0;
+        const totalPriceGBP = subtotalGBP + shippingGBP;
         const totalPriceInCurrency = convertPrice(totalPriceGBP);
         
         // Convert to smallest currency unit (pence, cents, etc.)

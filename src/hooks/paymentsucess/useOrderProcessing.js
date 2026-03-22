@@ -14,20 +14,34 @@ const supabase = getSupabaseClient();
 /**
  * Hook to handle order processing (saving to Supabase and sending confirmation email)
  */
-export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumberFromPayload) => {
+const UK_FLAT_SHIPPING_GBP = 3;
+
+export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumberFromPayload, shippingCostProp) => {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [orderSaved, setOrderSaved] = useState(false);
   const [recoveredData, setRecoveredData] = useState(null); // Store recovered data from sessionStorage
   const sessionId = searchParams?.get('session_id');
   const processingRef = useRef(false); // Prevent multiple simultaneous calls
-  const orderDataRef = useRef({ paymentIntent, customerInfo, items, orderNumber: orderNumberFromPayload });
+  const orderDataRef = useRef({
+    paymentIntent,
+    customerInfo,
+    items,
+    orderNumber: orderNumberFromPayload,
+    shippingCost: shippingCostProp,
+  });
   const recoveryAttemptedRef = useRef(false);
 
   // Update ref when props change
   useEffect(() => {
     if (paymentIntent && customerInfo && items) {
-      orderDataRef.current = { paymentIntent, customerInfo, items, orderNumber: orderNumberFromPayload };
+      orderDataRef.current = {
+        paymentIntent,
+        customerInfo,
+        items,
+        orderNumber: orderNumberFromPayload,
+        shippingCost: shippingCostProp,
+      };
       // Save to sessionStorage as backup
       try {
         sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
@@ -35,6 +49,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
           customerInfo,
           items,
           orderNumber: orderNumberFromPayload,
+          shippingCost: shippingCostProp,
           timestamp: Date.now()
         }));
       } catch (e) {
@@ -46,7 +61,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
       }
       recoveryAttemptedRef.current = false;
     }
-  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, recoveredData]);
+  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, shippingCostProp, recoveredData]);
 
   // Try to recover from sessionStorage if props are missing (e.g. after redirect or new tab)
   // Check both keys: paymentSuccessData (set by Checkout) and thehappycase_order_data (set by this hook)
@@ -69,6 +84,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
             customerInfo: parsed.customerInfo,
             items: parsed.items,
             orderNumber: parsed.orderNumber ?? orderDataRef.current?.orderNumber,
+            shippingCost: parsed.shippingCost ?? orderDataRef.current?.shippingCost,
           };
           console.log('📦 Recovering order data from sessionStorage:', key);
           setRecoveredData(payload);
@@ -87,6 +103,18 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
     const orderPaymentIntent = paymentIntent || recoveredData?.paymentIntent || orderDataRef.current.paymentIntent;
     const orderCustomerInfo = customerInfo || recoveredData?.customerInfo || orderDataRef.current.customerInfo;
     const orderItems = items || recoveredData?.items || orderDataRef.current.items;
+    const resolveShipping = () => {
+      const candidates = [
+        shippingCostProp,
+        recoveredData?.shippingCost,
+        orderDataRef.current.shippingCost,
+      ];
+      for (const c of candidates) {
+        if (typeof c === 'number' && Number.isFinite(c) && c >= 0) return c;
+      }
+      return orderItems?.length > 0 ? UK_FLAT_SHIPPING_GBP : 0;
+    };
+    const orderShippingCost = resolveShipping();
     // Same order # as payment success: last 8 chars of payment intent id (e.g. 0AHYE3CX)
     const derivedOrderNumber = orderPaymentIntent?.id ? getOrderNumberFromPaymentIntentId(orderPaymentIntent.id) : null;
     const orderNumber = (derivedOrderNumber && derivedOrderNumber !== 'N/A' ? derivedOrderNumber : null)
@@ -157,6 +185,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
             customerInfo: orderCustomerInfo,
             items: itemsPayload,
             userId: userId,
+            shippingCost: orderShippingCost,
           };
 
           const trySave = async (url) => {
@@ -240,6 +269,12 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
           }
 
           // Then, send order confirmation email (always attempt, even if order save failed)
+          const emailSubtotal = orderItems.reduce(
+            (sum, item) =>
+              sum +
+              (item.totalPrice ?? item.price ?? item.basePrice ?? 0) * (item.quantity ?? 1),
+            0
+          );
           console.log('📧 Attempting to send order confirmation email...');
           try {
             const emailResponse = await fetch(getApiUrl('/api/send-order-confirmation'), {
@@ -251,6 +286,9 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
                 paymentIntent: orderPaymentIntent,
                 customerInfo: orderCustomerInfo,
                 items: orderItems,
+                shippingCost: orderShippingCost,
+                subtotal: emailSubtotal,
+                totalWithShipping: emailSubtotal + orderShippingCost,
               }),
             });
 
@@ -304,7 +342,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
 
       saveOrderAndSendEmail();
     }
-  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, orderSaved, sessionId, recoveredData]);
+  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, shippingCostProp, orderSaved, sessionId, recoveredData]);
 
   // Handle Stripe redirect with session_id - try to fetch and process order
   useEffect(() => {

@@ -1269,7 +1269,7 @@ app.post("/api/save-order", async (req, res) => {
       return sendErrorResponse(400, 'Request body is required');
     }
 
-    const { paymentIntent, customerInfo, items, userId, order_number: orderNumberFromBody } = req.body;
+    const { paymentIntent, customerInfo, items, userId, order_number: orderNumberFromBody, shippingCost: shippingFromBody } = req.body;
 
     console.log("\n📦 Received order save request:");
     console.log("  - Payment Intent ID:", paymentIntent?.id || "MISSING");
@@ -1310,23 +1310,31 @@ app.post("/api/save-order", async (req, res) => {
       return sendErrorResponse(400, "Items array cannot be empty");
     }
 
-    // Calculate totals with error handling
-    let totalAmount = 0;
+    // Calculate line items + shipping (flat UK rate matches checkout / PaymentIntent)
+    let itemsSubtotal = 0;
     try {
-      totalAmount = items.reduce((sum, item) => {
+      itemsSubtotal = items.reduce((sum, item) => {
         const price = parseFloat(item.totalPrice || item.price || 0);
         const quantity = parseInt(item.quantity || 1, 10);
         return sum + (price * quantity);
       }, 0);
       
-      if (isNaN(totalAmount) || totalAmount <= 0) {
-        console.error("❌ Invalid total amount calculated:", totalAmount);
-        return sendErrorResponse(400, "Invalid total amount", { calculatedTotal: totalAmount });
+      if (isNaN(itemsSubtotal) || itemsSubtotal <= 0) {
+        console.error("❌ Invalid items subtotal calculated:", itemsSubtotal);
+        return sendErrorResponse(400, "Invalid total amount", { calculatedTotal: itemsSubtotal });
       }
     } catch (calcError) {
       console.error("❌ Error calculating total amount:", calcError);
       return sendErrorResponse(400, "Error calculating total amount", { error: calcError.message });
     }
+
+    const shipping =
+      typeof shippingFromBody === 'number' && Number.isFinite(shippingFromBody) && shippingFromBody >= 0
+        ? shippingFromBody
+        : items.length > 0
+          ? 3
+          : 0;
+    const totalAmount = itemsSubtotal + shipping;
     // Validate and generate order ID
     if (!paymentIntent.id) {
       console.error("❌ Payment Intent ID is missing");

@@ -137,7 +137,7 @@ const MobileOverlay = ({
                       disabled={soldOut}
                       className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 rounded-lg ${
                         isSelected
-                          ? 'ring-2 ring-gray-900 ring-offset-2 bg-gray-50 text-gray-900'
+                          ? 'ring-2 ring-gray-900 ring-offset-2  text-gray-900'
                           : 'hover:border-gray-300'
                       } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                       style={{fontFamily: "'Poppins', sans-serif"}}
@@ -196,7 +196,7 @@ const MobileOverlay = ({
                     >
                       {cat.image && (
                         <div className={`w-16 h-16 xs:w-20 xs:h-20 flex-shrink-0 rounded flex items-center justify-center overflow-hidden relative ${
-                          selectedCategory === cat.value ? 'bg-gray-100' : 'bg-white'
+                          selectedCategory === cat.value ? '' : 'bg-white'
                         }`}>
                           <img
                             src={normalizeImagePath(cat.image)}
@@ -216,7 +216,7 @@ const MobileOverlay = ({
                 <div className="mb-3 xs:mb-4 relative">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="w-full flex items-center justify-between px-3 xs:px-4 py-2 xs:py-2.5 bg-gray-100 border border-gray-300 text-left transition-all duration-200 hover:bg-gray-200 hover:border-gray-400"
+                    className="w-full flex items-center justify-between px-3 xs:px-4 py-2 xs:py-2.5  border border-gray-300 text-left transition-all duration-200 hover:bg-gray-200 hover:border-gray-400"
                     style={{fontFamily: "'Poppins', sans-serif"}}
                   >
                     <span className="text-xs xs:text-sm font-medium text-gray-900 uppercase tracking-wider">
@@ -250,7 +250,7 @@ const MobileOverlay = ({
                             }}
                             className={`w-full text-left px-3 xs:px-4 py-2 xs:py-2.5 text-xs xs:text-sm uppercase tracking-wider transition-all duration-200 ${
                               mobileSubCategory === key
-                                ? 'bg-gray-100 text-gray-900 font-medium'
+                                ? ' text-gray-900 font-medium'
                                 : 'text-gray-700 hover:bg-gray-50'
                             }`}
                             style={{fontFamily: "'Poppins', sans-serif"}}

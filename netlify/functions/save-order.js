@@ -108,7 +108,7 @@ exports.handler = async (event) => {
     return jsonResponse(400, { success: false, error: "Invalid JSON body" });
   }
 
-  const { paymentIntent, customerInfo, items, userId, order_number: orderNumberFromBody } = body;
+  const { paymentIntent, customerInfo, items, userId, order_number: orderNumberFromBody, shippingCost: shippingFromBody } = body;
 
   if (!paymentIntent || !paymentIntent.id) {
     return jsonResponse(400, { success: false, error: "Payment Intent ID is required" });
@@ -149,15 +149,23 @@ exports.handler = async (event) => {
   const unitPrice = (item) => parseFloat(item.totalPrice ?? item.price ?? item.basePrice ?? 0) || 0;
   const qty = (item) => parseInt(item.quantity ?? 1, 10) || 1;
 
-  let totalAmount = 0;
+  let itemsSubtotal = 0;
   try {
-    totalAmount = items.reduce((sum, item) => sum + unitPrice(item) * qty(item), 0);
+    itemsSubtotal = items.reduce((sum, item) => sum + unitPrice(item) * qty(item), 0);
   } catch (e) {
     return jsonResponse(400, { success: false, error: "Invalid item prices" });
   }
-  if (isNaN(totalAmount) || totalAmount <= 0) {
+  if (isNaN(itemsSubtotal) || itemsSubtotal <= 0) {
     return jsonResponse(400, { success: false, error: "Invalid total amount" });
   }
+
+  const shipping =
+    typeof shippingFromBody === "number" && Number.isFinite(shippingFromBody) && shippingFromBody >= 0
+      ? shippingFromBody
+      : items.length > 0
+        ? 3
+        : 0;
+  const totalAmount = itemsSubtotal + shipping;
 
   const orderDate = paymentIntent.created
     ? new Date(paymentIntent.created * 1000).toISOString()

@@ -50,7 +50,7 @@ const PaymentSuccess = () => {
   const totalWithShipping = data?.totalWithShipping ?? 0;
   const subtotal = data?.subtotal ?? 0;
 
-  const { loading } = useOrderProcessing(paymentIntent, customerInfo, items, orderNumber);
+  const { loading } = useOrderProcessing(paymentIntent, customerInfo, items, orderNumber, shippingCost);
 
   // Show loading while processing or recovering
   if (loading && !data) {
