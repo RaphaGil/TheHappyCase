@@ -312,7 +312,7 @@ exports.handler = async (event) => {
 
           <h2 style="margin:22px 0 10px;font-size:16px;color:#1e40af;">What’s next?</h2>
           <div style="border:1px solid #bfdbfe;border-radius:12px;background:#ffffff;padding:16px;color:#0f172a;font-size:14px;line-height:1.6;">
-            <p style="margin:0 0 10px;">Your order will be processed within 1-2 business days. You will receive a shipping confirmation email with tracking details once your items are dispatched.</p>
+            <p style="margin:0 0 10px;">Your order will be processed within 2-3 business days. You will receive a shipping confirmation email with tracking details once your items are dispatched.</p>
             <p style="margin:0;"><strong>Estimated delivery:</strong> 3-5 business days</p>
           </div>
 
