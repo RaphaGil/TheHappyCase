@@ -146,7 +146,12 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
           </div>
           <div className="flex flex-col flex-1 min-w-0">
             <div className="text-xs font-light text-gray-900 mb-1 font-inter">
-              <div className="break-words">{item.caseName || item.name}</div>
+              <div className="break-words">
+                {item.caseName || item.name}
+                {caseQty > 1 ? (
+                  <span className="text-gray-500"> (×{caseQty} total)</span>
+                ) : null}
+              </div>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-gray-500 font-light font-inter">
                   Color:
@@ -283,7 +288,12 @@ const StandaloneCase = ({ item, formatPrice, errorMessage }) => (
           </div>
           <div className="flex flex-col flex-1 min-w-0">
             <div className="text-xs font-light text-gray-900 mb-1 font-inter">
-              <div className="break-words">{item.caseName || item.name || "Passport Case"}</div>
+              <div className="break-words">
+                {item.caseName || item.name || "Passport Case"}
+                {(item.quantity || 1) > 1 ? (
+                  <span className="text-gray-500"> (×{item.quantity || 1} total)</span>
+                ) : null}
+              </div>
               {item.color && (
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-gray-500 font-light font-inter">

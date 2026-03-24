@@ -169,7 +169,7 @@ export const useCreateYours = () => {
       } else {
         scrollToElement('[class*="PriceSummary"]', { block: 'center' });
       }
-      return;
+      return false;
     }
     
     // Add pin to canvas
@@ -188,6 +188,7 @@ export const useCreateYours = () => {
     } else {
       scrollToElement('.happy-card', { block: 'center' });
     }
+    return true;
   }, [isMobile, cart, selectedPins, selectedCategory, setCharmInventoryError, setInventoryMessage, setInventoryType]);
 
   // Handle navigation from other pages
@@ -267,7 +268,7 @@ export const useCreateYours = () => {
   const handleMobileAddText = () => {
     if (!customText.trim()) {
       setCustomTextError('Please enter the text you want to add.');
-      return;
+      return false;
     }
 
     if (typeof window !== 'undefined' && window.addTextToCanvas) {
@@ -280,8 +281,10 @@ export const useCreateYours = () => {
       setTimeout(() => {
         setIsAddTextDropdownOpen(false);
       }, 500);
+      return true;
     } else {
       setCustomTextError('Canvas is still loading. Please try again in a moment.');
+      return false;
     }
   };
 

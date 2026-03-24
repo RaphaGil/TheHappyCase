@@ -130,6 +130,9 @@ const CaseItem = ({
             <div className="flex flex-col flex-1 min-w-0">
               <span className="text-sm font-light text-gray-900 font-inter">
                 {item.caseName || item.name || 'Passport Case'}
+                {qty > 1 ? (
+                  <span className="text-gray-500"> (×{qty} total)</span>
+                ) : null}
               </span>
               {item.color && (
                 <div className="flex items-center gap-1.5 mt-0.5">

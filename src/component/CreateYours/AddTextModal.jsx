@@ -11,7 +11,8 @@ const AddTextModal = ({
   customTextError, 
   setCustomTextError, 
   customTextAdded, 
-  setCustomTextAdded 
+  setCustomTextAdded,
+  onTextAdded
 }) => {
   // Prevent page scroll when modal is open
   useEffect(() => {
@@ -66,6 +67,9 @@ const AddTextModal = ({
         fill: CUSTOM_TEXT_COLOR,
         fontSize: CUSTOM_TEXT_SIZE,
       });
+      if (onTextAdded) {
+        onTextAdded();
+      }
       setCustomTextAdded(true);
       setCustomTextError('');
       // Close modal after adding text

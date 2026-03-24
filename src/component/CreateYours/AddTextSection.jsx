@@ -9,7 +9,8 @@ const AddTextSection = ({
   customTextError,
   setCustomTextError,
   customTextAdded,
-  setCustomTextAdded
+  setCustomTextAdded,
+  onTextAdded
 }) => {
   return (
     <div className="pb-3 sm:pb-4 border-b border-gray-100 pt-2 sm:pt-3 hidden md:block">
@@ -45,6 +46,7 @@ const AddTextSection = ({
           setCustomTextError={setCustomTextError}
           customTextAdded={customTextAdded}
           setCustomTextAdded={setCustomTextAdded}
+          onTextAdded={onTextAdded}
         />
       )}
     </div>
