@@ -3041,6 +3041,145 @@ async function handleDispatchedUpdate(req, res) {
   }
 }
 
+// --- Update Order Refunded Status ---
+// Support both PATCH and PUT for compatibility
+app.patch("/api/orders/:orderId/refunded", async (req, res) => {
+  handleRefundedUpdate(req, res);
+});
+
+app.put("/api/orders/:orderId/refunded", async (req, res) => {
+  handleRefundedUpdate(req, res);
+});
+
+async function handleRefundedUpdate(req, res) {
+  console.log('🔄 Handling refunded status update:', {
+    orderId: req.params.orderId,
+    refunded: req.body?.refunded,
+    method: req.method,
+  });
+
+  try {
+    if (!supabase) {
+      return res.status(503).json({
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable order updates."
+      });
+    }
+
+    const { orderId } = req.params;
+    const { refunded } = req.body;
+
+    if (typeof refunded !== 'boolean') {
+      return res.status(400).json({
+        error: "Invalid request",
+        message: "refunded must be a boolean value"
+      });
+    }
+
+    // Get current order to preserve existing metadata
+    const { data: currentOrder, error: fetchError } = await supabase
+      .from('orders')
+      .select('metadata, user_id, customer_email, status')
+      .eq('order_id', orderId)
+      .single();
+
+    if (fetchError || !currentOrder) {
+      console.error("❌ Order not found:", { orderId, fetchError });
+      return res.status(404).json({
+        error: "Order not found",
+        message: `Order ${orderId} does not exist`,
+        details: fetchError
+      });
+    }
+
+    // Ensure metadata is an object (Supabase JSONB might return as object or string)
+    let existingMetadata = {};
+    if (currentOrder.metadata) {
+      if (typeof currentOrder.metadata === 'string') {
+        try {
+          existingMetadata = JSON.parse(currentOrder.metadata);
+        } catch (e) {
+          console.warn("⚠️ Failed to parse metadata string, using empty object:", e);
+          existingMetadata = {};
+        }
+      } else if (typeof currentOrder.metadata === 'object' && currentOrder.metadata !== null) {
+        existingMetadata = currentOrder.metadata;
+      }
+    }
+
+    const updatedMetadata = {
+      ...existingMetadata,
+      refunded: refunded === true,
+      refunded_at: refunded === true ? new Date().toISOString() : null
+    };
+
+    const resolvedStatus = refunded === true ? 'refunded' : 'succeeded';
+
+    // Update order status + metadata
+    const { data: orderData, error: orderError } = await supabase
+      .from('orders')
+      .update({
+        status: resolvedStatus,
+        metadata: updatedMetadata
+      })
+      .eq('order_id', orderId)
+      .select('*');
+
+    if (orderError) {
+      console.error("❌ Error updating order refunded status:", orderError);
+      console.error("   Error code:", orderError.code);
+      console.error("   Error message:", orderError.message);
+      console.error("   Error details:", JSON.stringify(orderError, null, 2));
+      console.error("   Order ID:", orderId);
+      return res.status(500).json({
+        error: orderError.message || "Failed to update order",
+        code: orderError.code,
+        details: orderError,
+        hint: orderError.hint || "Check server logs for more details"
+      });
+    }
+
+    // Update customer profile when marking as refunded (profiles table)
+    const userId = orderData?.[0]?.user_id || currentOrder.user_id;
+    if (userId) {
+      try {
+        const profileUpdates = refunded === true
+          ? {
+              last_order_refunded_at: new Date().toISOString(),
+              last_order_refunded_id: orderId,
+            }
+          : {
+              last_order_refunded_at: null,
+              last_order_refunded_id: null,
+            };
+
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update(profileUpdates)
+          .eq('id', userId);
+
+        if (profileError) {
+          console.warn('⚠️ Could not update customer profile (profiles table may not exist):', profileError.message);
+        } else {
+          console.log('✅ Customer profile updated with refunded order');
+        }
+      } catch (e) {
+        console.warn('⚠️ Could not update customer profile:', e?.message || e);
+      }
+    }
+
+    res.json({
+      success: true,
+      order: orderData?.[0] || null,
+      refunded,
+      message: refunded ? 'Order marked as refunded' : 'Order marked as not refunded'
+    });
+  } catch (error) {
+    console.error("Error updating refunded status:", error);
+    res.status(500).json({ error: error.message || "Failed to update order" });
+  }
+}
+
 // --- Session Status ---
 app.get("/session-status", async (req, res) => {
   try {

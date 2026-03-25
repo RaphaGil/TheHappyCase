@@ -19,6 +19,10 @@ const formatOrderDate = (dateInput) => {
   return date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 };
 
+const isOrderRefunded = (order) => {
+  return order?.status === 'refunded' || order?.metadata?.refunded === true;
+};
+
 const MyOrders = () => {
   const router = useRouter();
   const [userEmail, setUserEmail] = useState('');
@@ -152,7 +156,15 @@ const MyOrders = () => {
                         </p>
                       </div>
                       <div className="flex flex-col sm:items-end gap-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${order.status === 'succeeded' || order.status === 'complete' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${
+                            isOrderRefunded(order)
+                              ? 'bg-red-100 text-red-800'
+                              : order.status === 'succeeded' || order.status === 'complete'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
                           {order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}
                         </span>
                         <p className="text-lg font-bold text-gray-900 font-inter">£{parseFloat(order.total_amount || 0).toFixed(2)}</p>
@@ -160,6 +172,11 @@ const MyOrders = () => {
                     </div>
                   </div>
                   <div className="p-6">
+                    {isOrderRefunded(order) && (
+                      <div className="mb-4 p-3 bg-red-50 rounded-md border border-red-200 text-sm text-red-800 font-inter">
+                        This order was refunded{order.metadata?.refunded_at ? ` on ${formatOrderDate(order.metadata.refunded_at)}` : ''}.
+                      </div>
+                    )}
                     <div className="flex flex-wrap justify-end gap-3 mb-4">
                       {(order.tracking?.tracking_link || order.tracking?.tracking_number || order.tracking?.carrier || order.metadata?.tracking_link || order.metadata?.carrier) && (
                         <a

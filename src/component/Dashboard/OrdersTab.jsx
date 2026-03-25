@@ -10,7 +10,7 @@ import AirplaneLoading from '../Shared/AirplaneLoading';
 const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all'); // 'all' | 'succeeded' | 'dispatched'
+  const [selectedStatus, setSelectedStatus] = useState('all'); // 'all' | 'succeeded' | 'dispatched' | 'refunded'
   const [updatingOrders, setUpdatingOrders] = useState(new Set());
   const [dispatchModal, setDispatchModal] = useState(null); // { orderId, currentDispatched }
   const [trackingNumber, setTrackingNumber] = useState('');
@@ -164,6 +164,76 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     return order.metadata?.dispatched === true;
   };
 
+  const isRefunded = (order) => {
+    return order.metadata?.refunded === true || order.status === 'refunded';
+  };
+
+  const handleRefundedUpdate = async (orderId, refunded) => {
+    setUpdatingOrders((prev) => new Set(prev).add(orderId));
+
+    try {
+      const apiUrl = getApiUrl(`/api/orders/${orderId}/refunded`);
+
+      const requestBody = {
+        refunded,
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody),
+      });
+
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('text/html')) {
+        throw new Error('Orders API unavailable. Please try again later.');
+      }
+
+      if (!response.ok) {
+        let errorMessage = refunded ? 'Failed to mark as refunded' : 'Failed to unmark refunded';
+        try {
+          const error = await response.json();
+          errorMessage = error.message || error.error || errorMessage;
+        } catch (e) {
+          errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      if (data?.refunded) {
+        alert('Order marked as refunded.');
+      } else if (data?.refunded === false) {
+        alert('Order marked as not refunded.');
+      }
+
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (error) {
+      console.error('Error updating refunded status:', error);
+      const errorMsg = error.message || 'Failed to update refunded status. Make sure the backend server is running.';
+      alert(`Failed to update refunded status: ${errorMsg}`);
+    } finally {
+      setUpdatingOrders((prev) => {
+        const next = new Set(prev);
+        next.delete(orderId);
+        return next;
+      });
+    }
+  };
+
+  const handleRefundedToggle = (orderId, currentRefunded) => {
+    if (!currentRefunded) {
+      handleRefundedUpdate(orderId, true);
+      return;
+    }
+
+    if (window.confirm('Are you sure you want to mark this order as not refunded?')) {
+      handleRefundedUpdate(orderId, false);
+    }
+  };
+
   // Get unique months/years from orders
   const availableMonths = useMemo(() => {
     if (!orders || orders.length === 0) return [];
@@ -204,11 +274,13 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
       });
     }
 
-    // Filter by status (succeeded = not dispatched, dispatched = dispatched)
+    // Filter by status (succeeded = not dispatched/refunded, dispatched = dispatched, refunded = refunded)
     if (selectedStatus === 'succeeded') {
-      result = result.filter(order => order.metadata?.dispatched !== true);
+      result = result.filter(order => order.metadata?.dispatched !== true && !isRefunded(order));
     } else if (selectedStatus === 'dispatched') {
-      result = result.filter(order => order.metadata?.dispatched === true);
+      result = result.filter(order => order.metadata?.dispatched === true && !isRefunded(order));
+    } else if (selectedStatus === 'refunded') {
+      result = result.filter(order => isRefunded(order));
     }
 
     return result;
@@ -285,6 +357,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
               <option value="all">All Orders</option>
               <option value="succeeded">Succeeded</option>
               <option value="dispatched">Dispatched</option>
+              <option value="refunded">Refunded</option>
             </select>
             <select
               value={selectedMonth}
@@ -335,7 +408,9 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
               <span>
                 {filteredOrders.length} order(s)
                 {selectedStatus !== 'all' && (
-                  <span> ({selectedStatus === 'succeeded' ? 'Succeeded' : 'Dispatched'})</span>
+                  <span>
+                    ({selectedStatus === 'succeeded' ? 'Succeeded' : selectedStatus === 'dispatched' ? 'Dispatched' : 'Refunded'})
+                  </span>
                 )}
                 {selectedMonth !== 'all' && (
                   <span> in {availableMonths.find(m => m.key === selectedMonth)?.label || 'selected period'}</span>
@@ -363,6 +438,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             <option value="all">All Orders</option>
             <option value="succeeded">Succeeded</option>
             <option value="dispatched">Dispatched</option>
+            <option value="refunded">Refunded</option>
           </select>
           <select
             value={selectedMonth}
@@ -409,7 +485,9 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                     <h3 className="font-semibold text-lg">Order #{getOrderDisplayId(order)}</h3>
                     <span
                       className={`px-2 py-1 text-xs rounded ${
-                        isDispatched(order)
+                        isRefunded(order)
+                          ? 'bg-red-100 text-red-800'
+                          : isDispatched(order)
                           ? 'bg-blue-100 text-blue-800'
                           : order.status === 'succeeded'
                           ? 'bg-green-100 text-green-800'
@@ -418,7 +496,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
-                      {isDispatched(order) ? 'Dispatched' : (order.status || 'unknown')}
+                      {isRefunded(order) ? 'Refunded' : isDispatched(order) ? 'Dispatched' : (order.status || 'unknown')}
                     </span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
@@ -511,6 +589,28 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   </div>
                 </div>
                 <div className="ml-4 flex items-center gap-3">
+                  {/* Refunded Checkbox */}
+                  <div
+                    className="flex items-center gap-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRefundedToggle(order.order_id, isRefunded(order));
+                    }}
+                  >
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isRefunded(order)}
+                        onChange={() => {}} // Handled by parent onClick
+                        disabled={updatingOrders.has(order.order_id)}
+                        className="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500 focus:ring-2 cursor-pointer disabled:opacity-50"
+                      />
+                      <span className="text-sm text-gray-600">
+                        {updatingOrders.has(order.order_id) ? 'Updating...' : 'Refunded'}
+                      </span>
+                    </label>
+                  </div>
+
                   {/* Dispatched Checkbox */}
                   <div 
                     className="flex items-center gap-2"
@@ -560,6 +660,19 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             {/* Expanded Details */}
             {isExpanded && (
               <div className="border-t bg-gray-50 p-6">
+                {/* Refunded Banner */}
+                {isRefunded(order) && (
+                  <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h4 className="font-semibold mb-3 text-gray-900">Refunded</h4>
+                    {order.metadata?.refunded_at && (
+                      <div className="text-sm">
+                        <span className="font-medium text-gray-700">Refunded Date:</span>{' '}
+                        <span className="text-gray-900">{formatDate(order.metadata.refunded_at)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Dispatch Information - Prominent Section */}
                 {(order.tracking?.tracking_number || order.tracking?.tracking_link || order.tracking?.carrier || order.metadata?.carrier || order.metadata?.dispatched_at) ? (
                   <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">

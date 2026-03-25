@@ -21,6 +21,13 @@ ADD COLUMN IF NOT EXISTS last_order_dispatched_at TIMESTAMPTZ;
 ALTER TABLE public.profiles
 ADD COLUMN IF NOT EXISTS last_order_dispatched_id VARCHAR(255);
 
+-- Add refunded columns (safe if already exist)
+ALTER TABLE public.profiles
+ADD COLUMN IF NOT EXISTS last_order_refunded_at TIMESTAMPTZ;
+
+ALTER TABLE public.profiles
+ADD COLUMN IF NOT EXISTS last_order_refunded_id VARCHAR(255);
+
 -- Add updated_at if missing (for profile sync)
 ALTER TABLE public.profiles
 ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT NOW();
