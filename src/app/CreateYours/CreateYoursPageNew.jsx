@@ -207,6 +207,7 @@ export default function CreateYoursPageNew() {
                   setIsCaseDropdownOpen={setIsCaseDropdownOpen}
                   Products={productsWithQuantities}
                   cart={cart}
+                  isCaseImageLoading={isCaseImageLoading}
                 />
                 <CharmsSelectionSection
                   isOpen={isCharmsDropdownOpen}
@@ -357,6 +358,7 @@ export default function CreateYoursPageNew() {
           handlePinSelection={handlePinSelectionWithTips}
           Products={productsWithQuantities}
           cart={cart}
+          isCaseImageLoading={isCaseImageLoading}
         />
       )}
 

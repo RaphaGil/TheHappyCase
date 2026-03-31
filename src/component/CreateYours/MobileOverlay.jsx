@@ -24,7 +24,8 @@ const MobileOverlay = ({
   handleColorSelection,
   handlePinSelection,
   Products,
-  cart
+  cart,
+  isCaseImageLoading = false
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visiblePinsCount, setVisiblePinsCount] = useState(24);
@@ -193,6 +194,7 @@ const MobileOverlay = ({
                 onSelect={handleColorSelection}
                 caseType={selectedCaseType}
                 cart={cart}
+                isLoading={isCaseImageLoading}
               />
             </div>
           )}

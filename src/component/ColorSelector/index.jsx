@@ -68,7 +68,7 @@ const getColorName = (image) => {
   return colorPart || 'Color';
 };
 
-const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] }) => {
+const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], isLoading = false }) => {
   const preloadImage = (imagePath) => {
     if (typeof window === 'undefined' || !imagePath) return;
     const normalizedPath = normalizeImagePath(imagePath);
@@ -99,8 +99,21 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
   };
 
   return (
-    <div className="overflow-visible">
-      <div className="flex flex-wrap gap-2 sm:gap-3 overflow-visible justify-center">
+    <div
+      className={`overflow-visible rounded-xl transition-colors duration-200 ${
+        isLoading ? 'bg-gray-50/90 border border-gray-200 p-3 sm:p-4' : ''
+      }`}
+      aria-busy={isLoading}
+    >
+      {isLoading && (
+        <div className="mb-2 text-[11px] sm:text-xs text-gray-500 font-medium text-center">
+          Updating case colors...
+        </div>
+      )}
+      <div className="flex flex-wrap gap-2 sm:gap-3 overflow-visible justify-center relative">
+        {isLoading && (
+          <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse pointer-events-none" />
+        )}
         {colors.map(({ color, image, quantity }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
@@ -110,8 +123,10 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
           return (
             <div
               key={color}
-              className={`transition-all duration-200 flex flex-col items-center overflow-visible ${isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-              onClick={() => !isSoldOut && onSelect(color, image)}
+              className={`transition-all duration-200 flex flex-col items-center overflow-visible ${
+                isLoading ? 'opacity-70 cursor-wait' : isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+              }`}
+              onClick={() => !isLoading && !isSoldOut && onSelect(color, image)}
               onMouseEnter={() => preloadImage(image)}
               onTouchStart={() => preloadImage(image)}
             >

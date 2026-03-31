@@ -13,6 +13,7 @@ const CaseSelectionSection = ({
   setIsCaseDropdownOpen,
   Products,
   cart,
+  isCaseImageLoading = false,
   showOnMobile = false
 }) => {
   return (
@@ -60,6 +61,7 @@ const CaseSelectionSection = ({
                 onSelect={onColorSelect}
                 caseType={selectedCaseType}
                 cart={cart}
+                isLoading={isCaseImageLoading}
               />
             </div>
           )}
