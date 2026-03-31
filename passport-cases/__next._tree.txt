@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/7fe2922e033cb68e.css","style"]
-:HL["/_next/static/chunks/fec630fa224237df.css","style"]
+:HL["/_next/static/chunks/e4f096247bab2fd2.css","style"]
+:HL["/_next/static/chunks/40cc75b04cbf7d79.css","style"]
 :HL["https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Inter:wght@200;300;400;500;600&display=swap","style"]
-0:{"buildId":"rvWQRZ_cSyAXozefCyVGk","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"passport-cases","paramType":null,"paramKey":"passport-cases","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"QhuONyihWdvURjHPZ3O7j","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"passport-cases","paramType":null,"paramKey":"passport-cases","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
