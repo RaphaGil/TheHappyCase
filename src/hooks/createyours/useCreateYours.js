@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import Products from '../../data/products.json';
@@ -61,7 +61,7 @@ export const useCreateYours = () => {
   const preloadedCaseImagesRef = useRef(new Set());
   const hasCompletedInitialCaseLoadRef = useRef(false);
   
-  const productsWithQuantities = getProductsWithQuantities();
+  const productsWithQuantities = useMemo(() => getProductsWithQuantities(), [cart]);
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
 
   const preloadCaseImage = useCallback((imagePath) => {
@@ -457,18 +457,21 @@ export const useCreateYours = () => {
     setCharmInventoryError('');
   }, [setCharmInventoryError]);
 
-  // Track screen size changes (client-side only)
+  // Track screen size changes with media query events (fewer updates than resize)
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
-    // Set initial mobile state on mount
-    setIsMobile(window.innerWidth < 768);
-    
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const handleMediaChange = (event) => {
+      setIsMobile(event.matches);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleMediaChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleMediaChange);
+    };
   }, []);
 
   // Close add text dropdown when mobile step overlays are opened

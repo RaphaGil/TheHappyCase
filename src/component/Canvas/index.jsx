@@ -24,6 +24,7 @@ const Canvas = ({
   const caseBorderRectRef = useRef(null);
   const borderRectsRef = useRef(new Map());
   const boundaryRectTimeoutRef = useRef(null);
+  const controlsRafRef = useRef(null);
   const [selectedPin, setSelectedPin] = useState(null);
   
   // Use hooks for organized functionality
@@ -197,6 +198,17 @@ const Canvas = ({
     updateControlsPosition(obj, fabricCanvas);
   }, [updateControlsPosition]);
 
+  const scheduleControlsUpdate = useCallback((obj) => {
+    if (!obj) return;
+    if (controlsRafRef.current) {
+      cancelAnimationFrame(controlsRafRef.current);
+    }
+    controlsRafRef.current = requestAnimationFrame(() => {
+      updateControls(obj);
+      controlsRafRef.current = null;
+    });
+  }, [updateControls]);
+
 
   const resizeCanvasToFitScreen = useCallback(() => {
     const canvas = fabricCanvas.current;
@@ -304,7 +316,7 @@ const Canvas = ({
       // Update controls position during movement for the active object
       const activeObj = fabricCanvas.current.getActiveObject();
       if (activeObj === obj) {
-        updateControls(obj);
+        scheduleControlsUpdate(obj);
       }
     });
 
@@ -320,7 +332,7 @@ const Canvas = ({
         caseBorderRectRef.current.set('visible', false);
       }
       if (obj && !obj.isCase && obj !== boundaryRectRef.current && obj !== caseBorderRectRef.current) {
-        fabricCanvas.current.renderAll();
+        fabricCanvas.current.requestRenderAll();
       }
       
       if (obj && !obj.isCase) {
@@ -357,7 +369,7 @@ const Canvas = ({
         
         const activeObj = fabricCanvas.current.getActiveObject();
         if (activeObj === obj) {
-          updateControls(obj);
+          scheduleControlsUpdate(obj);
         }
       }
     });
@@ -400,8 +412,8 @@ const Canvas = ({
         updateBorderRect(obj);
         setSelectedPin(obj);
         setShowControls(true);
-        updateControls(obj);
-        fabricCanvas.current.renderAll();
+        scheduleControlsUpdate(obj);
+        fabricCanvas.current.requestRenderAll();
         // Do not notify parent here; handled when adding the pin
       }
     });
@@ -443,8 +455,8 @@ const Canvas = ({
         updateBorderRect(obj);
         setSelectedPin(obj);
         setShowControls(true);
-        updateControls(obj);
-        fabricCanvas.current.renderAll();
+        scheduleControlsUpdate(obj);
+        fabricCanvas.current.requestRenderAll();
         // Don't call onPinSelect here to avoid duplicate additions
       }
     });
@@ -467,7 +479,7 @@ const Canvas = ({
           cornerSize: 0,
           transparentCorners: true,
         });
-        fabricCanvas.current.renderAll();
+        fabricCanvas.current.requestRenderAll();
       } else if (obj && obj.type === 'image' && obj.pinData) {
         // Charms/pins: reset to original scale if user tries to resize
         const origScaleX = obj.__originalScaleX ?? obj.scaleX;
@@ -479,7 +491,7 @@ const Canvas = ({
           lockScalingY: true,
           lockUniScaling: true,
         });
-        fabricCanvas.current.renderAll();
+        fabricCanvas.current.requestRenderAll();
       }
     });
 
@@ -496,7 +508,7 @@ const Canvas = ({
         fabricCanvas.current.remove(borderRect);
         borderRectsRef.current.delete(obj);
       });
-      fabricCanvas.current.renderAll();
+      fabricCanvas.current.requestRenderAll();
       setSelectedPin(null);
       setShowControls(false);
       onPinSelect && onPinSelect(null);
@@ -510,7 +522,7 @@ const Canvas = ({
         const upperText = currentText.toUpperCase();
         if (currentText !== upperText) {
           obj.set('text', upperText);
-          fabricCanvas.current.renderAll();
+          fabricCanvas.current.requestRenderAll();
         }
       }
     });
@@ -529,6 +541,10 @@ const Canvas = ({
     
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (controlsRafRef.current) {
+        cancelAnimationFrame(controlsRafRef.current);
+        controlsRafRef.current = null;
+      }
       
       // Clear any pending boundary rect timeout
       if (timeoutRef.current) {
@@ -547,17 +563,14 @@ const Canvas = ({
       // Since selectedCaseType is removed from dependencies, this won't run on case changes
       canvas?.dispose();
     };
-}, [onPinSelect, updateControls, updateBorderRect, removeBorderRect, resizeCanvasToFitScreen, setShowControls]);
+}, [onPinSelect, scheduleControlsUpdate, updateBorderRect, removeBorderRect, resizeCanvasToFitScreen, setShowControls]);
 
   // Update controls position when selectedPin changes
   useEffect(() => {
     if (selectedPin && showControls) {
-      // Use requestAnimationFrame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        updateControls(selectedPin);
-      });
+      scheduleControlsUpdate(selectedPin);
     }
-  }, [selectedPin, showControls, updateControls, updateControlsPosition]);
+  }, [selectedPin, showControls, scheduleControlsUpdate]);
 
   const handleAddText = useCallback(
     (text, options = {}) => {
@@ -596,13 +609,13 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(textInstance);
       // Create custom border rectangle
       updateBorderRect(textInstance);
-      fabricCanvas.current.renderAll();
+      fabricCanvas.current.requestRenderAll();
 
       setSelectedPin(textInstance);
       setShowControls(true);
-      updateControls(textInstance);
+      scheduleControlsUpdate(textInstance);
     },
-    [updateControls, updateBorderRect, setShowControls]
+    [scheduleControlsUpdate, updateBorderRect, setShowControls]
   );
 
   // Case image loading disabled - using background div instead
@@ -670,7 +683,7 @@ const Canvas = ({
     });
 
     // Re-render canvas to show updated case background while preserving charms
-    fabricCanvas.current.renderAll();
+    fabricCanvas.current.requestRenderAll();
   }, [selectedCaseType, selectedColor]);
 
   // Handle pin selection from PinSelector
@@ -731,7 +744,7 @@ const Canvas = ({
       fabricCanvas.current.setActiveObject(imgInstance);
       // Create custom border rectangle
       updateBorderRect(imgInstance);
-      fabricCanvas.current.renderAll();
+      fabricCanvas.current.requestRenderAll();
       
       // Notify parent about pin addition exactly once per click
       if (onPinSelect) {
@@ -763,7 +776,7 @@ const Canvas = ({
     });
     borderRectsRef.current.clear();
     canvas.discardActiveObject();
-    canvas.renderAll();
+    canvas.requestRenderAll();
     setSelectedPin(null);
     setShowControls(false);
   }, [removeBorderRect]);
@@ -773,8 +786,8 @@ const Canvas = ({
     if (selectedPin) {
       const currentAngle = selectedPin.angle || 0;
       selectedPin.set('angle', currentAngle - 15);
-      fabricCanvas.current.renderAll();
-      updateControls(selectedPin);
+      fabricCanvas.current.requestRenderAll();
+      scheduleControlsUpdate(selectedPin);
     }
   };
 
@@ -782,8 +795,8 @@ const Canvas = ({
     if (selectedPin) {
       const currentAngle = selectedPin.angle || 0;
       selectedPin.set('angle', currentAngle + 15);
-      fabricCanvas.current.renderAll();
-      updateControls(selectedPin);
+      fabricCanvas.current.requestRenderAll();
+      scheduleControlsUpdate(selectedPin);
     }
   };
 
@@ -793,7 +806,7 @@ const Canvas = ({
       removeBorderRect(selectedPin);
       fabricCanvas.current.remove(selectedPin);
       fabricCanvas.current.discardActiveObject();
-      fabricCanvas.current.renderAll();
+      fabricCanvas.current.requestRenderAll();
       setSelectedPin(null);
       setShowControls(false);
       onPinRemove && onPinRemove(selectedPin);

@@ -32,42 +32,26 @@ const CanvasSectionCentered = ({
   selectedCase,
   caseImages,
   isMobile,
+  shouldMountCanvas,
   onPinSelect,
   onPinRemove,
   onOpenImageModal,
   onOpenDescriptionModal,
   Products
 }) => {
-  const [shouldMountCanvas, setShouldMountCanvas] = useState(!isMobile);
+  const [isCanvasMounted, setIsCanvasMounted] = useState(!isMobile);
   const [resolvedCaseImageSrc, setResolvedCaseImageSrc] = useState('');
 
   useEffect(() => {
     if (!isMobile) {
-      setShouldMountCanvas(true);
+      setIsCanvasMounted(true);
       return;
     }
 
-    let timeoutId;
-    let idleId;
-
-    const mountCanvas = () => setShouldMountCanvas(true);
-    const win = typeof window !== 'undefined' ? window : null;
-
-    if (win && 'requestIdleCallback' in win) {
-      idleId = win.requestIdleCallback(mountCanvas, { timeout: 300 });
-    } else {
-      timeoutId = setTimeout(mountCanvas, 150);
+    if (shouldMountCanvas) {
+      setIsCanvasMounted(true);
     }
-
-    return () => {
-      if (win && idleId) {
-        win.cancelIdleCallback(idleId);
-      }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [isMobile]);
+  }, [isMobile, shouldMountCanvas]);
 
   useEffect(() => {
     if (!selectedCaseImage) {
@@ -129,7 +113,7 @@ const CanvasSectionCentered = ({
             className="w-full h-full absolute inset-0 bg-transparent"
             style={{ zIndex: 2, pointerEvents: 'auto' }}
           >
-            {shouldMountCanvas ? (
+            {isCanvasMounted ? (
               <Canvas
                 selectedCaseType={selectedCaseType}
                 selectedColor={selectedColor}

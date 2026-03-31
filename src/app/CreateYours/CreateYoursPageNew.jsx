@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { useCreateYours } from '../../hooks/createyours/useCreateYours';
 import CreateYoursHeader from '../../component/CreateYours/CreateYoursHeader';
 import CanvasSectionCentered from '../../component/CreateYours/CanvasSectionCentered';
@@ -11,12 +12,12 @@ import AddTextSection from '../../component/CreateYours/AddTextSection';
 import PriceSummary from '../../component/CreateYours/PriceSummary';
 import MobileStepButtons from '../../component/CreateYours/MobileStepButtons';
 import MobileAddTextSection from '../../component/CreateYours/MobileAddTextSection';
-import MobileOverlay from '../../component/CreateYours/MobileOverlay';
-import TermsOfUseModal from '../../component/CreateYours/TermsOfUseModal';
-import ItemDescriptionModal from '../../component/CreateYours/ItemDescriptionModal';
-import AddTextModal from '../../component/CreateYours/AddTextModal';
-import DesignTipsModal from '../../component/CreateYours/DesignTipsModal';
-import ImageModal from '../../component/ImageModal';
+const MobileOverlay = dynamic(() => import('../../component/CreateYours/MobileOverlay'), { ssr: false });
+const TermsOfUseModal = dynamic(() => import('../../component/CreateYours/TermsOfUseModal'), { ssr: false });
+const ItemDescriptionModal = dynamic(() => import('../../component/CreateYours/ItemDescriptionModal'), { ssr: false });
+const AddTextModal = dynamic(() => import('../../component/CreateYours/AddTextModal'), { ssr: false });
+const DesignTipsModal = dynamic(() => import('../../component/CreateYours/DesignTipsModal'), { ssr: false });
+const ImageModal = dynamic(() => import('../../component/ImageModal'), { ssr: false });
 
 /**
  * Create Yours page with canvas centered in the middle of the screen.
@@ -25,6 +26,7 @@ import ImageModal from '../../component/ImageModal';
  */
 export default function CreateYoursPageNew() {
   const [showDesignTipsModal, setShowDesignTipsModal] = useState(false);
+  const [hasStartedMobileDesigner, setHasStartedMobileDesigner] = useState(false);
   const hasShownDesignTipsRef = useRef(false);
   const {
     selectedCategory,
@@ -149,6 +151,10 @@ export default function CreateYoursPageNew() {
     }
   }, [isMobile, isAddTextDropdownOpen]);
 
+  const markDesignerInteractionStarted = useCallback(() => {
+    setHasStartedMobileDesigner(true);
+  }, []);
+
   return (
     <div className="h-screen bg-white flex flex-col overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
       <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
@@ -171,6 +177,7 @@ export default function CreateYoursPageNew() {
             selectedCase={selectedCase}
             caseImages={caseImages}
             isMobile={isMobile}
+            shouldMountCanvas={!isMobile || hasStartedMobileDesigner}
             onPinSelect={handlePinSelect}
             onPinRemove={handlePinRemove}
             onOpenImageModal={() => setShowImageModal(true)}
@@ -269,14 +276,26 @@ export default function CreateYoursPageNew() {
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-40  bg-white flex flex-col w-full">
           {/* Case, Color, Charms, Text buttons - at bottom above Add to Cart */}
-          <div className="w-full px-3 xs:px-4  ">
+          <div className="w-full px-3 xs:px-4 mt-4">
             <MobileStepButtons
               selectedCaseType={selectedCaseType}
               selectedColor={selectedColor}
-              onCaseClick={() => setMobileCurrentStep('case')}
-              onColorClick={() => setMobileCurrentStep('color')}
-              onCharmsClick={() => setMobileCurrentStep('charms')}
-              onTextClick={() => setIsAddTextDropdownOpen((prev) => !prev)}
+              onCaseClick={() => {
+                markDesignerInteractionStarted();
+                setMobileCurrentStep('case');
+              }}
+              onColorClick={() => {
+                markDesignerInteractionStarted();
+                setMobileCurrentStep('color');
+              }}
+              onCharmsClick={() => {
+                markDesignerInteractionStarted();
+                setMobileCurrentStep('charms');
+              }}
+              onTextClick={() => {
+                markDesignerInteractionStarted();
+                setIsAddTextDropdownOpen((prev) => !prev);
+              }}
               isAddTextDropdownOpen={isAddTextDropdownOpen}
             />
             {isAddTextDropdownOpen && (
@@ -321,65 +340,77 @@ export default function CreateYoursPageNew() {
         </div>
       )}
 
-      <MobileOverlay
-        mobileCurrentStep={mobileCurrentStep}
-        setMobileCurrentStep={setMobileCurrentStep}
-        selectedCaseType={selectedCaseType}
-        selectedColor={selectedColor}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        mobileSubCategory={mobileSubCategory}
-        setMobileSubCategory={setMobileSubCategory}
-        pins={pins}
-        selectedPins={selectedPins}
-        handleCaseTypeSelection={handleCaseTypeSelection}
-        handleColorSelection={handleColorSelection}
-        handlePinSelection={handlePinSelectionWithTips}
-        Products={productsWithQuantities}
-        cart={cart}
-      />
+      {isMobile && mobileCurrentStep && (
+        <MobileOverlay
+          mobileCurrentStep={mobileCurrentStep}
+          setMobileCurrentStep={setMobileCurrentStep}
+          selectedCaseType={selectedCaseType}
+          selectedColor={selectedColor}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          mobileSubCategory={mobileSubCategory}
+          setMobileSubCategory={setMobileSubCategory}
+          pins={pins}
+          selectedPins={selectedPins}
+          handleCaseTypeSelection={handleCaseTypeSelection}
+          handleColorSelection={handleColorSelection}
+          handlePinSelection={handlePinSelectionWithTips}
+          Products={productsWithQuantities}
+          cart={cart}
+        />
+      )}
 
-      <TermsOfUseModal
-        show={showTermsModal}
-        onClose={() => setShowTermsModal(false)}
-        onAgree={() => {
-          setAgreedToTerms(true);
-          setShowTermsModal(false);
-        }}
-      />
+      {showTermsModal && (
+        <TermsOfUseModal
+          show={showTermsModal}
+          onClose={() => setShowTermsModal(false)}
+          onAgree={() => {
+            setAgreedToTerms(true);
+            setShowTermsModal(false);
+          }}
+        />
+      )}
 
-      <ItemDescriptionModal
-        show={showDescriptionModal}
-        onClose={() => setShowDescriptionModal(false)}
-        selectedCase={selectedCase}
-      />
+      {showDescriptionModal && (
+        <ItemDescriptionModal
+          show={showDescriptionModal}
+          onClose={() => setShowDescriptionModal(false)}
+          selectedCase={selectedCase}
+        />
+      )}
 
-      <AddTextModal
-        show={showAddTextModal}
-        onClose={() => setShowAddTextModal(false)}
-        customText={customText}
-        setCustomText={setCustomText}
-        customTextError={customTextError}
-        setCustomTextError={setCustomTextError}
-        customTextAdded={customTextAdded}
-        setCustomTextAdded={setCustomTextAdded}
-        onTextAdded={handleTextAddedWithTips}
-      />
+      {showAddTextModal && (
+        <AddTextModal
+          show={showAddTextModal}
+          onClose={() => setShowAddTextModal(false)}
+          customText={customText}
+          setCustomText={setCustomText}
+          customTextError={customTextError}
+          setCustomTextError={setCustomTextError}
+          customTextAdded={customTextAdded}
+          setCustomTextAdded={setCustomTextAdded}
+          onTextAdded={handleTextAddedWithTips}
+        />
+      )}
 
-      <DesignTipsModal
-        show={showDesignTipsModal}
-        onClose={() => setShowDesignTipsModal(false)}
-      />
+      {showDesignTipsModal && (
+        <DesignTipsModal
+          show={showDesignTipsModal}
+          onClose={() => setShowDesignTipsModal(false)}
+        />
+      )}
 
-      <ImageModal
-        show={showImageModal}
-        onClose={() => setShowImageModal(false)}
-        selectedCase={selectedCase}
-        selectedColorData={selectedColorData}
-        caseImages={caseImages}
-        selectedModalImage={selectedModalImage}
-        setSelectedModalImage={setSelectedModalImage}
-      />
+      {showImageModal && (
+        <ImageModal
+          show={showImageModal}
+          onClose={() => setShowImageModal(false)}
+          selectedCase={selectedCase}
+          selectedColorData={selectedColorData}
+          caseImages={caseImages}
+          selectedModalImage={selectedModalImage}
+          setSelectedModalImage={setSelectedModalImage}
+        />
+      )}
     </div>
   );
 }
