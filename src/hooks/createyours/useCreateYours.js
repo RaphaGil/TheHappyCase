@@ -59,6 +59,7 @@ export const useCreateYours = () => {
   const [isCaseImageLoading, setIsCaseImageLoading] = useState(false);
   const caseDropdownRef = useRef(null);
   const preloadedCaseImagesRef = useRef(new Set());
+  const hasCompletedInitialCaseLoadRef = useRef(false);
   
   const productsWithQuantities = getProductsWithQuantities();
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
@@ -141,10 +142,13 @@ export const useCreateYours = () => {
       const availableColor = selectedCase.colors.find(c => 
         c.quantity === undefined || c.quantity > 0
       ) || selectedCase.colors[0];
-      
-      setIsCaseImageLoading(true);
+      const nextImage = availableColor.image;
+      const isImageChanging = nextImage && nextImage !== selectedCaseImage;
+      if (isImageChanging) {
+        setIsCaseImageLoading(true);
+      }
       setSelectedColor(availableColor.color);
-      setSelectedCaseImage(availableColor.image);
+      setSelectedCaseImage(nextImage);
     }
     if (isMobile) {
       setMobileCurrentStep(null);
@@ -153,7 +157,10 @@ export const useCreateYours = () => {
 
   // Handle color selection
   const handleColorSelection = (color, image) => {
-    setIsCaseImageLoading(true);
+    const isImageChanging = image && image !== selectedCaseImage;
+    if (isImageChanging) {
+      setIsCaseImageLoading(true);
+    }
     setSelectedColor(color);
     setSelectedCaseImage(image);
     if (isMobile) {
@@ -162,6 +169,7 @@ export const useCreateYours = () => {
   };
 
   const handleCaseImageLoaded = useCallback(() => {
+    hasCompletedInitialCaseLoadRef.current = true;
     setIsCaseImageLoading(false);
   }, []);
 
@@ -258,23 +266,43 @@ export const useCreateYours = () => {
     if (Products.cases.length > 0) {
       const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
       if (defaultCase && defaultCase.colors.length > 0) {
+        const hasCurrentColorInCase = defaultCase.colors.some(c => c.color === selectedColor);
+        if (hasCurrentColorInCase) return;
+
         const defaultColor = defaultCase.colors[0];
-        setIsCaseImageLoading(true);
+        const isImageChanging = defaultColor.image && defaultColor.image !== selectedCaseImage;
+        if (isImageChanging) {
+          setIsCaseImageLoading(true);
+        }
         setSelectedColor(defaultColor.color);
         setSelectedCaseImage(defaultColor.image);
       }
     }
-  }, [selectedCaseType]);
+  }, [selectedCaseType, selectedColor, selectedCaseImage]);
 
-  // Preload all color images for the selected case to make color switching near-instant.
+  // Preload a small subset of alternate colors after first case image settles.
+  // This avoids hurting initial LCP by downloading too many images too early.
   useEffect(() => {
+    if (!hasCompletedInitialCaseLoadRef.current) return;
     const currentCase = Products.cases.find(c => c.type === selectedCaseType);
     if (!currentCase?.colors?.length) return;
+    const alternateImages = currentCase.colors
+      .map((colorOption) => colorOption.image)
+      .filter((imagePath) => imagePath && imagePath !== selectedCaseImage)
+      .slice(0, 2);
 
-    currentCase.colors.forEach((colorOption) => {
-      preloadCaseImage(colorOption.image);
-    });
-  }, [selectedCaseType, preloadCaseImage]);
+    const preloadTask = () => {
+      alternateImages.forEach((imagePath) => preloadCaseImage(imagePath));
+    };
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(preloadTask, { timeout: 1000 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = setTimeout(preloadTask, 250);
+    return () => clearTimeout(timeoutId);
+  }, [selectedCaseType, selectedCaseImage, preloadCaseImage]);
 
   // Handle quantity increment with inventory check
   const handleIncrementQuantity = () => {
