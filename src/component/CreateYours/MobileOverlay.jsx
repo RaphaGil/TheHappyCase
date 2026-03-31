@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import ColorSelector from '../ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../data/constants.js';
 import { filterPinsByCategory } from '../../data/filterHelpers.js';
@@ -26,10 +27,23 @@ const MobileOverlay = ({
   cart
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [visiblePinsCount, setVisiblePinsCount] = useState(24);
+  const [loadedCharmImages, setLoadedCharmImages] = useState({});
+
+  useEffect(() => {
+    // Reset batching when user changes the viewed charm set
+    setVisiblePinsCount(24);
+  }, [selectedCategory, mobileSubCategory, mobileCurrentStep]);
+
+  useEffect(() => {
+    // Clear loaded-image tracking when charm set changes
+    setLoadedCharmImages({});
+  }, [selectedCategory, mobileSubCategory]);
 
   if (!mobileCurrentStep) return null;
 
   const filteredPinsForMobile = filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
+  const visiblePinsForMobile = filteredPinsForMobile.slice(0, visiblePinsCount);
 
   const getFilterTabs = () => {
     if (selectedCategory === 'flags') return FLAGS_FILTER_TABS;
@@ -145,13 +159,15 @@ const MobileOverlay = ({
                     >
                       {caseImage && (
                         <div className="relative w-full aspect-square overflow-hidden ">
-                          <img
+                          <Image
                             src={normalizeImagePath(caseImage)}
                             alt={opt.label}
+                            fill
+                            sizes="(max-width: 640px) 120px, (max-width: 1024px) 180px, 220px"
                             className={`w-full h-full object-contain p-0 xs:p-0.5 sm:p-1.5 md:p-3 lg:p-4 xl:p-5 ${soldOut ? 'opacity-50' : ''}`}
                             loading="lazy"
                             onError={(e) => {
-                              e.target.style.display = 'none';
+                              e.currentTarget.style.visibility = 'hidden';
                             }}
                           />
                         </div>
@@ -199,10 +215,13 @@ const MobileOverlay = ({
                         <div className={`w-16 h-16 xs:w-20 xs:h-20 flex-shrink-0 rounded flex items-center justify-center overflow-hidden relative ${
                           selectedCategory === cat.value ? '' : 'bg-white'
                         }`}>
-                          <img
+                          <Image
                             src={normalizeImagePath(cat.image)}
                             alt={cat.label}
+                            fill
+                            sizes="(max-width: 640px) 64px, 80px"
                             className="w-full h-full object-contain"
+                            loading="lazy"
                           />
                         </div>
                       )}
@@ -271,7 +290,8 @@ const MobileOverlay = ({
                 
                   <div className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
                     <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
-                      {filteredPinsForMobile.map((pin, index) => {
+                      {visiblePinsForMobile.map((pin, index) => {
+                        const pinImageKey = pin.id ?? pin.src ?? `${pin.name}-${index}`;
                         const isSelected = selectedPins.some((p) => p.pin === pin);
 
                         // Check if charm is sold out and get inventory info for badges
@@ -352,10 +372,26 @@ const MobileOverlay = ({
                             }`}
                           >
                             <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible rounded-lg p-0.5 ${isSelected && !isSoldOut ? 'border-2 border-gray-900' : 'border-2 border-transparent'}`}>
-                              <img
+                              {!loadedCharmImages[pinImageKey] && (
+                                <div className="absolute inset-0 rounded bg-gray-100 animate-pulse" aria-hidden="true" />
+                              )}
+                              <Image
                                 src={normalizeImagePath(pin.src)}
                                 alt={pin.name}
-                                className={`max-w-full max-h-full object-contain ${isSoldOut ? 'opacity-50' : ''}`}
+                                fill
+                                sizes="(max-width: 640px) 64px, 80px"
+                                className={`object-contain transition-opacity duration-200 ${
+                                  loadedCharmImages[pinImageKey]
+                                    ? (isSoldOut ? 'opacity-50' : 'opacity-100')
+                                    : 'opacity-0'
+                                }`}
+                                loading="lazy"
+                                onLoadingComplete={() => {
+                                  setLoadedCharmImages((prev) => {
+                                    if (prev[pinImageKey]) return prev;
+                                    return { ...prev, [pinImageKey]: true };
+                                  });
+                                }}
                               />
                               {pin.badge && !isSoldOut && !isSelected && (
                                 <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded z-10 font-inter">
@@ -380,6 +416,18 @@ const MobileOverlay = ({
                         );
                       })}
                     </div>
+                    {filteredPinsForMobile.length > visiblePinsCount && (
+                      <div className="mt-3 flex justify-center">
+                        <button
+                          type="button"
+                          onClick={() => setVisiblePinsCount((prev) => prev + 24)}
+                          className="px-4 py-2 text-xs xs:text-sm border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                          style={{ fontFamily: "'Poppins', sans-serif" }}
+                        >
+                          Load more charms
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
