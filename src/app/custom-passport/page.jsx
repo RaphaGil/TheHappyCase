@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import CustomPassportHolderPageClient from './CustomPassportHolderPageClient';
+import CreateYoursLoading from '@/component/CreateYours/CreateYoursLoading';
 
 export const metadata = {
   title: 'Custom Passport Holder | Design Your Own | The Happy Case',
@@ -6,5 +8,9 @@ export const metadata = {
 };
 
 export default function CustomPassportHolderPage() {
-  return <CustomPassportHolderPageClient />;
+  return (
+    <Suspense fallback={<CreateYoursLoading />}>
+      <CustomPassportHolderPageClient />
+    </Suspense>
+  );
 }
