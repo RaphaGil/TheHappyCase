@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { normalizeImagePath } from '../../utils/imagePath';
+import { getMobileVariantImagePath, normalizeImagePath } from '../../utils/imagePath';
 
 // Lazy-load Canvas (and Fabric.js)
 const Canvas = dynamic(() => import('../Canvas'), {
@@ -37,6 +37,7 @@ const CanvasSection = ({
   Products
 }) => {
   const [shouldMountCanvas, setShouldMountCanvas] = useState(!isMobile);
+  const [resolvedCaseImageSrc, setResolvedCaseImageSrc] = useState('');
 
   useEffect(() => {
     if (!isMobile) {
@@ -66,6 +67,18 @@ const CanvasSection = ({
     };
   }, [isMobile]);
 
+  useEffect(() => {
+    if (!selectedCaseImage) {
+      setResolvedCaseImageSrc('');
+      return;
+    }
+
+    const defaultSrc = normalizeImagePath(selectedCaseImage);
+    const mobileSrc = normalizeImagePath(getMobileVariantImagePath(selectedCaseImage));
+    const shouldTryMobileVariant = isMobile && mobileSrc && mobileSrc !== defaultSrc;
+    setResolvedCaseImageSrc(shouldTryMobileVariant ? mobileSrc : defaultSrc);
+  }, [selectedCaseImage, isMobile]);
+
   return (
     <div className={`flex flex-col flex-shrink-0 ${
       isMobile
@@ -75,9 +88,9 @@ const CanvasSection = ({
       <div className="w-full h-full flex flex-col justify-start xs:justify-start sm:justify-center items-center md:justify-start md:gap-4">
         <div className="w-full max-w-[220px] sm:max-w-[250px] aspect-[270/350] sm:w-[250px] sm:h-[320px] sm:aspect-auto flex-shrink-0 relative mx-auto overflow-visible" style={{isolation: 'isolate'}}>
           {/* Background Case Image - Always behind canvas - Fixed size for all screens */}
-          {selectedCaseImage && (
+          {resolvedCaseImageSrc && (
             <Image
-              src={normalizeImagePath(selectedCaseImage)}
+              src={resolvedCaseImageSrc}
               alt=""
               fill
               className="absolute inset-0 w-full h-full object-contain pointer-events-none"
@@ -91,8 +104,14 @@ const CanvasSection = ({
               blurDataURL={BLUR_PLACEHOLDER}
               sizes="(max-width: 640px) 220px, 250px"
               aria-hidden="true"
-              key={`case-bg-${selectedCaseType}-${selectedColor}`}
+              key={`case-bg-${selectedCaseType}-${selectedColor}-${resolvedCaseImageSrc}`}
               onLoadingComplete={onCaseImageLoaded}
+              onError={() => {
+                const defaultSrc = normalizeImagePath(selectedCaseImage);
+                if (resolvedCaseImageSrc !== defaultSrc) {
+                  setResolvedCaseImageSrc(defaultSrc);
+                }
+              }}
             />
           )}
           {isCaseImageLoading && (

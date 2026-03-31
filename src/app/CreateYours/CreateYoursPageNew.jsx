@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Products from '../../data/products.json';
 import { useCreateYours } from '../../hooks/createyours/useCreateYours';
 import CreateYoursHeader from '../../component/CreateYours/CreateYoursHeader';
 import CanvasSectionCentered from '../../component/CreateYours/CanvasSectionCentered';
@@ -108,10 +107,17 @@ export default function CreateYoursPageNew() {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory === '' && Products?.pins?.colorful?.length) {
+    const shouldInitCharms = isCharmsDropdownOpen || mobileCurrentStep === 'charms';
+    if (shouldInitCharms && selectedCategory === '' && productsWithQuantities?.pins?.colorful?.length) {
       setSelectedCategory('colorful');
     }
-  }, [selectedCategory, setSelectedCategory]);
+  }, [
+    isCharmsDropdownOpen,
+    mobileCurrentStep,
+    selectedCategory,
+    setSelectedCategory,
+    productsWithQuantities,
+  ]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

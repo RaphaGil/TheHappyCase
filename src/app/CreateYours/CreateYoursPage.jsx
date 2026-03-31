@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Products from '../../data/products.json';
 import { useCreateYours } from '../../hooks/createyours/useCreateYours';
 import CreateYoursHeader from '../../component/CreateYours/CreateYoursHeader';
 import CanvasSection from '../../component/CreateYours/CanvasSection';
@@ -87,10 +86,17 @@ export default function CreateYoursPage() {
   } = useCreateYours();
 
   useEffect(() => {
-    if (selectedCategory === '' && Products?.pins?.colorful?.length) {
+    const shouldInitCharms = isCharmsDropdownOpen || mobileCurrentStep === 'charms';
+    if (shouldInitCharms && selectedCategory === '' && productsWithQuantities?.pins?.colorful?.length) {
       setSelectedCategory('colorful');
     }
-  }, [selectedCategory, setSelectedCategory]);
+  }, [
+    isCharmsDropdownOpen,
+    mobileCurrentStep,
+    selectedCategory,
+    setSelectedCategory,
+    productsWithQuantities,
+  ]);
 
   return (
     <div className="min-h-screen md:h-screen bg-white flex flex-col overflow-x-hidden overflow-y-auto md:overflow-hidden pb-[env(safe-area-inset-bottom)]">

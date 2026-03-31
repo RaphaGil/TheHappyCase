@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { normalizeImagePath } from '../../utils/imagePath';
+import { getMobileVariantImagePath, normalizeImagePath } from '../../utils/imagePath';
 import ViewMoreImagesButton from './ViewMoreImagesButton';
 import ItemDescriptionDropdown from './ItemDescriptionDropdown';
 
@@ -39,6 +39,7 @@ const CanvasSectionCentered = ({
   Products
 }) => {
   const [shouldMountCanvas, setShouldMountCanvas] = useState(!isMobile);
+  const [resolvedCaseImageSrc, setResolvedCaseImageSrc] = useState('');
 
   useEffect(() => {
     if (!isMobile) {
@@ -68,6 +69,18 @@ const CanvasSectionCentered = ({
     };
   }, [isMobile]);
 
+  useEffect(() => {
+    if (!selectedCaseImage) {
+      setResolvedCaseImageSrc('');
+      return;
+    }
+
+    const defaultSrc = normalizeImagePath(selectedCaseImage);
+    const mobileSrc = normalizeImagePath(getMobileVariantImagePath(selectedCaseImage));
+    const shouldTryMobileVariant = isMobile && mobileSrc && mobileSrc !== defaultSrc;
+    setResolvedCaseImageSrc(shouldTryMobileVariant ? mobileSrc : defaultSrc);
+  }, [selectedCaseImage, isMobile]);
+
   return (
     <div
       className={`flex flex-col w-full h-full md:items-center ${
@@ -80,9 +93,9 @@ const CanvasSectionCentered = ({
           className="w-full max-w-[270px] aspect-[270/350] sm:w-[270px] sm:h-[350px] sm:aspect-auto flex-shrink-0 relative mx-auto overflow-visible"
           style={{ isolation: 'isolate' }}
         >
-          {selectedCaseImage && (
+          {resolvedCaseImageSrc && (
             <Image
-              src={normalizeImagePath(selectedCaseImage)}
+              src={resolvedCaseImageSrc}
               alt=""
               fill
               className="object-contain pointer-events-none"
@@ -96,8 +109,14 @@ const CanvasSectionCentered = ({
               blurDataURL={BLUR_PLACEHOLDER}
               sizes="(max-width: 768px) 270px, 270px"
               aria-hidden="true"
-              key={`case-bg-${selectedCaseType}-${selectedColor}`}
+              key={`case-bg-${selectedCaseType}-${selectedColor}-${resolvedCaseImageSrc}`}
               onLoadingComplete={onCaseImageLoaded}
+              onError={() => {
+                const defaultSrc = normalizeImagePath(selectedCaseImage);
+                if (resolvedCaseImageSrc !== defaultSrc) {
+                  setResolvedCaseImageSrc(defaultSrc);
+                }
+              }}
             />
           )}
           {isCaseImageLoading && (

@@ -61,6 +61,22 @@ export const normalizeImagePath = (imagePath) => {
 };
 
 /**
+ * Build a mobile-optimized variant path using "*-mobile.ext" convention.
+ * Example: "/images/foo.webp" -> "/images/foo-mobile.webp"
+ * Returns original path for unsupported inputs.
+ * @param {string} imagePath
+ * @returns {string}
+ */
+export const getMobileVariantImagePath = (imagePath) => {
+  if (!imagePath) return imagePath;
+  if (imagePath.startsWith('data:')) return imagePath;
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+  if (/-mobile\.(webp|png|jpg|jpeg)$/i.test(imagePath)) return imagePath;
+
+  return imagePath.replace(/\.(webp|png|jpg|jpeg)$/i, '-mobile.$1');
+};
+
+/**
  * Get the base path for images based on environment
  * @returns {string} Base path for images
  */
