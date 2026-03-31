@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { normalizeImagePath } from '../../utils/imagePath';
@@ -38,6 +38,36 @@ const CanvasSectionCentered = ({
   onOpenDescriptionModal,
   Products
 }) => {
+  const [shouldMountCanvas, setShouldMountCanvas] = useState(!isMobile);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setShouldMountCanvas(true);
+      return;
+    }
+
+    let timeoutId;
+    let idleId;
+
+    const mountCanvas = () => setShouldMountCanvas(true);
+    const win = typeof window !== 'undefined' ? window : null;
+
+    if (win && 'requestIdleCallback' in win) {
+      idleId = win.requestIdleCallback(mountCanvas, { timeout: 300 });
+    } else {
+      timeoutId = setTimeout(mountCanvas, 150);
+    }
+
+    return () => {
+      if (win && idleId) {
+        win.cancelIdleCallback(idleId);
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [isMobile]);
+
   return (
     <div
       className={`flex flex-col w-full h-full md:items-center ${
@@ -77,13 +107,15 @@ const CanvasSectionCentered = ({
             className="w-full h-full absolute inset-0 bg-transparent"
             style={{ zIndex: 2, pointerEvents: 'auto' }}
           >
-            <Canvas
-              selectedCaseType={selectedCaseType}
-              selectedColor={selectedColor}
-              onPinSelect={onPinSelect}
-              onPinRemove={onPinRemove}
-              products={Products}
-            />
+            {shouldMountCanvas ? (
+              <Canvas
+                selectedCaseType={selectedCaseType}
+                selectedColor={selectedColor}
+                onPinSelect={onPinSelect}
+                onPinRemove={onPinRemove}
+                products={Products}
+              />
+            ) : null}
           </div>
         </div>
 
