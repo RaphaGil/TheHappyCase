@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { CASE_OPTIONS } from '../../data/constants';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
@@ -94,14 +95,14 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                         : ""
                     } ${soldOut ? 'opacity-50' : ''}`}
                   >
-                    <img
+                    <Image
                       src={normalizeImagePath(caseImage)}
                       alt={opt.label}
+                      width={190}
+                      height={190}
+                      sizes="(max-width: 480px) 80px, (max-width: 768px) 120px, 190px"
                       className="w-full h-full object-contain p-1 xs:p-1.5 sm:p-2 md:p-2 lg:p-2.5"
                       loading="lazy"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
                     />
                   </div>
                 )}

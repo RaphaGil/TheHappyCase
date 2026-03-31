@@ -5,6 +5,9 @@ import { normalizeImagePath } from '../../utils/imagePath';
 import ViewMoreImagesButton from './ViewMoreImagesButton';
 import ItemDescriptionDropdown from './ItemDescriptionDropdown';
 
+const BLUR_PLACEHOLDER =
+  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjcwIiBoZWlnaHQ9IjM1MCIgdmlld0JveD0iMCAwIDI3MCAzNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI3MCIgaGVpZ2h0PSIzNTAiIGZpbGw9IiNmM2Y0ZjYiLz48L3N2Zz4=';
+
 // Lazy-load Canvas (and Fabric.js) - only when Custom Passport Holder page is opened
 const Canvas = dynamic(() => import('../Canvas'), {
   ssr: false,
@@ -57,6 +60,8 @@ const CanvasSectionCentered = ({
                 objectPosition: 'center 40%',
               }}
               priority
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               sizes="(max-width: 768px) 270px, 270px"
               aria-hidden="true"
               key={`case-bg-${selectedCaseType}-${selectedColor}`}
