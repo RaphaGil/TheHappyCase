@@ -120,7 +120,10 @@ const CanvasSectionCentered = ({
             />
           )}
           {isCaseImageLoading && (
-            <div className="absolute inset-0 z-[3] bg-white/50 transition-opacity duration-200 pointer-events-none" aria-hidden="true" />
+            <div
+              className="absolute inset-0 z-[3] rounded-sm bg-gray-100/90 animate-pulse transition-opacity duration-200 pointer-events-none"
+              aria-hidden="true"
+            />
           )}
           <div
             className="w-full h-full absolute inset-0 bg-transparent"
