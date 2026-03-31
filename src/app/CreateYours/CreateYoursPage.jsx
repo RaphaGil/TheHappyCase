@@ -126,7 +126,7 @@ export default function CreateYoursPage() {
 
         {/* Custom options + Price Summary - Right side. overflow-y-scroll + scrollbar-gutter prevents canvas shift when dropdown opens */}
         <div className="flex flex-col flex-1 min-h-0 md:w-3/5 lg:w-[58%] xl:w-[60%] min-w-0 md:overflow-y-scroll md:overflow-x-hidden md:flex-shrink-0 md:flex-none md:pl-2 lg:pl-4 xl:pl-6 md:items-center [scrollbar-gutter:stable]">
-          <div className="w-full max-w-xl lg:max-w-2xl xl:max-w-2xl  mx-auto flex flex-col md:flex-1 md:min-h-0">
+          <div className="w-full max-w-xl lg:max-w-2xl xl:max-w-2xl  mx-auto flex flex-col md:flex-1 md:min-h-0 md:mr-4">
           {isMobile && (
             <>
               <MobileStepButtons

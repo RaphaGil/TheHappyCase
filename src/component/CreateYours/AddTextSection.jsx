@@ -13,7 +13,7 @@ const AddTextSection = ({
   onTextAdded
 }) => {
   return (
-    <div className="pb-3 sm:pb-4 border-b border-gray-100 pt-2 sm:pt-3 hidden md:block">
+    <div className="pb-3 sm:pb-4 pt-2 sm:pt-3 hidden md:block">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between mb-2 py-1 -my-1 rounded-sm  transition-colors duration-200 "

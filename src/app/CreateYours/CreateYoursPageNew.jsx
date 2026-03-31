@@ -178,7 +178,7 @@ export default function CreateYoursPageNew() {
           {!isMobile && (
             <>
               {/* Scrollable options - dropdowns expand here without moving price summary */}
-              <div className="flex-1 min-h-0 mt-10 overflow-y-auto overflow-x-hidden hide-scrollbar">
+              <div className="flex-1 min-h-0 mt-10 overflow-y-auto overflow-x-hidden hide-scrollbar md:mr-4">
                 <CaseSelectionSection
                   isOpen={isCaseDropdownOpen}
                   onToggle={() => {
