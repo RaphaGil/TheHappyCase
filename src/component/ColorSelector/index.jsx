@@ -1,5 +1,6 @@
 import React from "react";
 import { getMaxAvailableQuantity } from '../../utils/inventory';
+import { normalizeImagePath } from '../../utils/imagePath';
 
 // Helper function to extract color name from image filename
 const getColorName = (image) => {
@@ -68,6 +69,15 @@ const getColorName = (image) => {
 };
 
 const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] }) => {
+  const preloadImage = (imagePath) => {
+    if (typeof window === 'undefined' || !imagePath) return;
+    const normalizedPath = normalizeImagePath(imagePath);
+    if (!normalizedPath) return;
+    const img = new window.Image();
+    img.decoding = 'async';
+    img.src = normalizedPath;
+  };
+
   // Helper function to check if a color is sold out (considering cart inventory)
   const isColorSoldOut = (color) => {
     if (!caseType || !color) {
@@ -102,6 +112,8 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [] })
               key={color}
               className={`transition-all duration-200 flex flex-col items-center overflow-visible ${isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               onClick={() => !isSoldOut && onSelect(color, image)}
+              onMouseEnter={() => preloadImage(image)}
+              onTouchStart={() => preloadImage(image)}
             >
               <div className="relative overflow-visible">
                 <div

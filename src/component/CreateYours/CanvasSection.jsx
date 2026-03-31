@@ -22,6 +22,8 @@ const CanvasSection = ({
   selectedCaseType,
   selectedColor,
   selectedCaseImage,
+  isCaseImageLoading,
+  onCaseImageLoaded,
   selectedCase,
   caseImages,
   isCaseDropdownOpen,
@@ -60,7 +62,11 @@ const CanvasSection = ({
               sizes="(max-width: 640px) 220px, 250px"
               aria-hidden="true"
               key={`case-bg-${selectedCaseType}-${selectedColor}`}
+              onLoadingComplete={onCaseImageLoaded}
             />
+          )}
+          {isCaseImageLoading && (
+            <div className="absolute inset-0 z-[3] bg-white/50 transition-opacity duration-200 pointer-events-none" aria-hidden="true" />
           )}
           {/* Canvas Overlay - On top for pins/text, transparent so case image shows through */}
           <div className="w-full h-full absolute inset-0 bg-transparent" style={{zIndex: 2, pointerEvents: 'auto'}}>

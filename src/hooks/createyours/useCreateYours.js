@@ -56,10 +56,23 @@ export const useCreateYours = () => {
   const [pendingAddToCart, setPendingAddToCart] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
   const [showAddTextModal, setShowAddTextModal] = useState(false);
+  const [isCaseImageLoading, setIsCaseImageLoading] = useState(false);
   const caseDropdownRef = useRef(null);
+  const preloadedCaseImagesRef = useRef(new Set());
   
   const productsWithQuantities = getProductsWithQuantities();
   const selectedCase = productsWithQuantities.cases.find(c => c.type === selectedCaseType);
+
+  const preloadCaseImage = useCallback((imagePath) => {
+    if (typeof window === 'undefined' || !imagePath) return;
+    const normalizedPath = normalizeImagePath(imagePath);
+    if (!normalizedPath || preloadedCaseImagesRef.current.has(normalizedPath)) return;
+
+    const img = new window.Image();
+    img.decoding = 'async';
+    img.src = normalizedPath;
+    preloadedCaseImagesRef.current.add(normalizedPath);
+  }, []);
   
   // Use inventory check hook
   const {
@@ -102,6 +115,7 @@ export const useCreateYours = () => {
         if (colorParam) {
           const colorData = caseFromParam.colors.find(c => c.color === colorParam);
           if (colorData) {
+            setIsCaseImageLoading(true);
             setSelectedColor(colorData.color);
             setSelectedCaseImage(colorData.image);
             return;
@@ -110,6 +124,7 @@ export const useCreateYours = () => {
         
         if (caseFromParam.colors && caseFromParam.colors.length > 0) {
           const firstColor = caseFromParam.colors[0];
+          setIsCaseImageLoading(true);
           setSelectedColor(firstColor.color);
           setSelectedCaseImage(firstColor.image);
         }
@@ -127,6 +142,7 @@ export const useCreateYours = () => {
         c.quantity === undefined || c.quantity > 0
       ) || selectedCase.colors[0];
       
+      setIsCaseImageLoading(true);
       setSelectedColor(availableColor.color);
       setSelectedCaseImage(availableColor.image);
     }
@@ -137,12 +153,17 @@ export const useCreateYours = () => {
 
   // Handle color selection
   const handleColorSelection = (color, image) => {
+    setIsCaseImageLoading(true);
     setSelectedColor(color);
     setSelectedCaseImage(image);
     if (isMobile) {
       setMobileCurrentStep(null);
     }
   };
+
+  const handleCaseImageLoaded = useCallback(() => {
+    setIsCaseImageLoading(false);
+  }, []);
 
   // Handle pin selection from PinSelector
   const handlePinSelection = useCallback((pin) => {
@@ -238,11 +259,22 @@ export const useCreateYours = () => {
       const defaultCase = Products.cases.find(c => c.type === selectedCaseType) || Products.cases[0];
       if (defaultCase && defaultCase.colors.length > 0) {
         const defaultColor = defaultCase.colors[0];
+        setIsCaseImageLoading(true);
         setSelectedColor(defaultColor.color);
         setSelectedCaseImage(defaultColor.image);
       }
     }
   }, [selectedCaseType]);
+
+  // Preload all color images for the selected case to make color switching near-instant.
+  useEffect(() => {
+    const currentCase = Products.cases.find(c => c.type === selectedCaseType);
+    if (!currentCase?.colors?.length) return;
+
+    currentCase.colors.forEach((colorOption) => {
+      preloadCaseImage(colorOption.image);
+    });
+  }, [selectedCaseType, preloadCaseImage]);
 
   // Handle quantity increment with inventory check
   const handleIncrementQuantity = () => {
@@ -475,6 +507,7 @@ export const useCreateYours = () => {
     setShowTermsError,
     showAddTextModal,
     setShowAddTextModal,
+    isCaseImageLoading,
     
     // Computed values
     productsWithQuantities,
@@ -496,6 +529,7 @@ export const useCreateYours = () => {
     // Handlers
     handleCaseTypeSelection,
     handleColorSelection,
+    handleCaseImageLoaded,
     handlePinSelection,
     handleIncrementQuantity,
     handleDecrementQuantity,

@@ -27,6 +27,8 @@ const CanvasSectionCentered = ({
   selectedCaseType,
   selectedColor,
   selectedCaseImage,
+  isCaseImageLoading,
+  onCaseImageLoaded,
   selectedCase,
   caseImages,
   isMobile,
@@ -65,7 +67,11 @@ const CanvasSectionCentered = ({
               sizes="(max-width: 768px) 270px, 270px"
               aria-hidden="true"
               key={`case-bg-${selectedCaseType}-${selectedColor}`}
+              onLoadingComplete={onCaseImageLoaded}
             />
+          )}
+          {isCaseImageLoading && (
+            <div className="absolute inset-0 z-[3] bg-white/50 transition-opacity duration-200 pointer-events-none" aria-hidden="true" />
           )}
           <div
             className="w-full h-full absolute inset-0 bg-transparent"

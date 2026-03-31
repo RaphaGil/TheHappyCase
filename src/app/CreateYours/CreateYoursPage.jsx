@@ -27,6 +27,7 @@ export default function CreateYoursPage() {
     selectedCaseType,
     selectedColor,
     selectedCaseImage,
+    isCaseImageLoading,
     selectedPins,
     showPriceBreakdown,
     setShowPriceBreakdown,
@@ -75,6 +76,7 @@ export default function CreateYoursPage() {
     quantityError,
     handleCaseTypeSelection,
     handleColorSelection,
+    handleCaseImageLoaded,
     handlePinSelection,
     handleIncrementQuantity,
     handleDecrementQuantity,
@@ -102,6 +104,8 @@ export default function CreateYoursPage() {
             selectedCaseType={selectedCaseType}
             selectedColor={selectedColor}
             selectedCaseImage={selectedCaseImage}
+            isCaseImageLoading={isCaseImageLoading}
+            onCaseImageLoaded={handleCaseImageLoaded}
             selectedCase={selectedCase}
             caseImages={caseImages}
             isCaseDropdownOpen={isCaseDropdownOpen}
