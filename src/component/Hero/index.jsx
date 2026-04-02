@@ -115,7 +115,7 @@ function Hero() {
                 href="mailto:hello@thehappycase.com"
                 className="font-medium underline underline-offset-4 hover:text-white"
               >
-                hello@thehappycase.com
+                 thehappycase.shop@gmail.com
               </a>
               . Any orders placed will be dispatched after{' '}
               <span className="font-medium">06/05</span>.
