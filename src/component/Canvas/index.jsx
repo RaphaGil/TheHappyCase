@@ -11,10 +11,8 @@ import { normalizeImagePath } from '../../utils/imagePath';
 const Canvas = ({ 
   selectedCaseType, 
   selectedColor, 
-  selectedPins, 
   onPinSelect, 
   onPinRemove,
-  products,
   onSaveImage
 }) => {
   const canvasRef = useRef(null);

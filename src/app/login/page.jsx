@@ -3,8 +3,12 @@ import Login from '@/component/LoginPage';
 import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 export const metadata = {
-  title: 'Login',
-  description: 'Sign in to your account.',
+  title: 'Login | The Happy Case',
+  description: 'Sign in to your The Happy Case account to access orders and account details.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 function LoadingFallback() {

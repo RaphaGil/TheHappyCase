@@ -5,6 +5,10 @@ import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 export const metadata = {
   title: 'Dashboard | The Happy Case',
   description: 'Admin dashboard for The Happy Case. Manage inventory and orders.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 function LoadingFallback() {

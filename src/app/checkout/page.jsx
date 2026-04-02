@@ -3,8 +3,12 @@ import Checkout from '@/component/Checkout';
 import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 export const metadata = {
-  title: 'Checkout',
-  description: 'Complete your order.',
+  title: 'Checkout | The Happy Case',
+  description: 'Secure checkout for your custom passport case order at The Happy Case.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 function LoadingFallback() {

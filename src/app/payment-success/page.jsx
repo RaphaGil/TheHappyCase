@@ -3,8 +3,12 @@ import PaymentSuccess from '@/component/Payment-Sucess';
 import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 export const metadata = {
-  title: 'Payment Successful',
-  description: 'Thank you for your order.',
+  title: 'Payment Successful | The Happy Case',
+  description: 'Order confirmation and next steps for your The Happy Case purchase.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 function LoadingFallback() {

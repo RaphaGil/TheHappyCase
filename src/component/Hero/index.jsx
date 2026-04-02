@@ -102,6 +102,26 @@ function Hero() {
 
       {/* Text and Shop Now Button - Overlay on Video */}
       <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
+        {/* Holiday notice (positioned to the right on desktop) */}
+        <div className="absolute z-30 left-4 right-4 top-6 sm:left-auto sm:right-6 sm:top-6 sm:max-w-md lg:right-10 lg:top-10">
+          <div className="rounded-lg border border-white/25 bg-black/35 px-4 py-3 backdrop-blur-sm text-center sm:text-right">
+            <p
+              className="text-sm sm:text-base text-white font-light font-inter"
+              style={{ textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)' }}
+            >
+              I&apos;m on holiday from <span className="font-medium">02/04</span> -{' '}
+              <span className="font-medium">06/05</span>. Any queries, contact{' '}
+              <a
+                href="mailto:hello@thehappycase.com"
+                className="font-medium underline underline-offset-4 hover:text-white"
+              >
+                hello@thehappycase.com
+              </a>
+              . Any orders placed will be dispatched after{' '}
+              <span className="font-medium">06/05</span>.
+            </p>
+          </div>
+        </div>
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
           <h1 
             className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white font-inter tracking-title"

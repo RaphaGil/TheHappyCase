@@ -3,8 +3,12 @@ import Login from '@/component/LoginPage';
 import AirplaneLoading from '@/component/Shared/AirplaneLoading';
 
 export const metadata = {
-  title: 'Verify Code',
-  description: 'Enter your verification code.',
+  title: 'Verify Login Code | The Happy Case',
+  description: 'Enter your verification code to securely access your The Happy Case account.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 function LoadingFallback() {
