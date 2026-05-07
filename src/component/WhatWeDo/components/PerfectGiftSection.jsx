@@ -50,15 +50,15 @@ const PerfectGiftSection = ({ image }) => {
   }, [sectionVisible]);
 
   return (
-    <div ref={sectionRef} className="w-full flex flex-col md:flex-row items-stretch md:min-h-screen">
-      {/* Image - Full width on mobile, sticky fixed left on md+ */}
-      <div className="relative w-full md:w-1/2 h-[400px] sm:h-[450px] md:sticky md:top-0 md:h-screen md:min-h-[650px] md:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
+    <div ref={sectionRef} className="w-full flex flex-col lg:flex-row items-stretch lg:min-h-screen">
+      {/* Image - Full width on mobile/tablet, sticky fixed left on lg+ */}
+      <div className="relative w-full lg:w-1/2 h-[400px] sm:h-[450px] md:h-[550px] lg:sticky lg:top-0 lg:h-screen lg:min-h-[650px] lg:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
         {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
           <>
-            {/* Mobile: use img for better performance */}
+            {/* Mobile/tablet: use img for better performance */}
             <img
               src={normalizedImage}
-              className="absolute inset-0 w-full h-full object-cover object-center md:hidden"
+              className="absolute inset-0 w-full h-full object-cover object-center lg:hidden"
               alt="Perfect Gift"
               loading="lazy"
               fetchPriority="low"
@@ -69,12 +69,12 @@ const PerfectGiftSection = ({ image }) => {
                 e.target.style.display = 'none';
               }}
             />
-            {/* md+: lazy-loaded image (loads when section near viewport) */}
+            {/* lg+: lazy-loaded image (loads when section near viewport) */}
             <img
               src={normalizedImage}
               alt=""
               aria-hidden
-              className="hidden md:block absolute inset-0 w-full h-full object-cover object-center"
+              className="hidden lg:block absolute inset-0 w-full h-full object-cover object-center"
               loading="lazy"
               decoding="async"
               width="1200"
@@ -83,8 +83,8 @@ const PerfectGiftSection = ({ image }) => {
           </>
         )}
         
-        {/* Mobile overlay with text */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 md:hidden flex items-center justify-center z-10">
+        {/* Mobile/tablet overlay with text */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 lg:hidden flex items-center justify-center z-10">
           <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center space-y-4 sm:space-y-5">
             <h2 className="text-title text-white tracking-title mb-1 md:mb-2" style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.5)'}}>
               {title}
@@ -124,7 +124,7 @@ const PerfectGiftSection = ({ image }) => {
       </div>
 
       {/* Desktop text content - relative z-10 ensures it stays above left div */}
-      <div className="hidden md:flex md:w-1/2 md:relative md:z-10 items-center justify-center bg-white">
+      <div className="hidden lg:flex lg:w-1/2 lg:relative lg:z-10 items-center justify-center bg-white">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16 space-y-6 lg:space-y-8">
           <h2 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
             {title}
