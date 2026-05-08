@@ -50,9 +50,9 @@ const PerfectGiftSection = ({ image }) => {
   }, [sectionVisible]);
 
   return (
-    <div ref={sectionRef} className="w-full flex flex-col lg:flex-row items-stretch lg:min-h-screen">
+    <div ref={sectionRef} className="w-full flex flex-col lg:flex-row items-stretch">
       {/* Image - Full width on mobile/tablet, sticky fixed left on lg+ */}
-      <div className="relative w-full lg:w-1/2 h-[400px] sm:h-[450px] md:h-[550px] lg:sticky lg:top-0 lg:h-screen lg:min-h-[650px] lg:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
+      <div className="relative w-full lg:w-5/12 h-[320px] sm:h-[380px] md:h-[460px] lg:sticky lg:top-0 lg:h-[85vh] lg:min-h-[560px] lg:self-start overflow-hidden bg-gray-100" role="img" aria-label="Perfect Gift">
         {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
           <>
             {/* Mobile/tablet: use img for better performance */}
@@ -124,7 +124,7 @@ const PerfectGiftSection = ({ image }) => {
       </div>
 
       {/* Desktop text content - relative z-10 ensures it stays above left div */}
-      <div className="hidden lg:flex lg:w-1/2 lg:relative lg:z-10 items-center justify-center bg-white">
+      <div className="hidden lg:flex lg:w-7/12 lg:relative lg:z-10 items-center justify-center bg-white">
         <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 py-12 lg:py-16 space-y-6 lg:space-y-8">
           <h2 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
             {title}
