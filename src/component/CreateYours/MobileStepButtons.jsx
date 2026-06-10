@@ -10,7 +10,7 @@ const MobileStepButtons = ({
   onCharmsClick,
   onTextClick,
   isAddTextDropdownOpen,
-  mobileCurrentStep
+  mobileCurrentStep,
 }) => {
   const isCaseActive = mobileCurrentStep === 'case';
   const isColorActive = mobileCurrentStep === 'color';

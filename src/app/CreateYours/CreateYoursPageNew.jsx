@@ -6,9 +6,7 @@ import dynamic from 'next/dynamic';
 import { useCreateYours } from '../../hooks/createyours/useCreateYours';
 import CreateYoursHeader from '../../component/CreateYours/CreateYoursHeader';
 import CanvasSectionCentered from '../../component/CreateYours/CanvasSectionCentered';
-import CaseSelectionSection from '../../component/CreateYours/CaseSelectionSection';
-import CharmsSelectionSection from '../../component/CreateYours/CharmsSelectionSection';
-import AddTextSection from '../../component/CreateYours/AddTextSection';
+import DesignOptionsPanel from '../../component/CreateYours/DesignOptionsPanel';
 import PriceSummary from '../../component/CreateYours/PriceSummary';
 import MobileStepButtons from '../../component/CreateYours/MobileStepButtons';
 import MobileAddTextSection from '../../component/CreateYours/MobileAddTextSection';
@@ -27,6 +25,7 @@ const ImageModal = dynamic(() => import('../../component/ImageModal'), { ssr: fa
 export default function CreateYoursPageNew() {
   const [showDesignTipsModal, setShowDesignTipsModal] = useState(false);
   const [hasStartedMobileDesigner, setHasStartedMobileDesigner] = useState(false);
+  const [activeDesignStep, setActiveDesignStep] = useState('case');
   const hasShownDesignTipsRef = useRef(false);
   const {
     selectedCategory,
@@ -109,12 +108,15 @@ export default function CreateYoursPageNew() {
   }, []);
 
   useEffect(() => {
-    const shouldInitCharms = isCharmsDropdownOpen || mobileCurrentStep === 'charms';
+    const shouldInitCharms =
+      (isMobile && mobileCurrentStep === 'charms') ||
+      (!isMobile && activeDesignStep === 'charms');
     if (shouldInitCharms && selectedCategory === '' && productsWithQuantities?.pins?.colorful?.length) {
       setSelectedCategory('colorful');
     }
   }, [
-    isCharmsDropdownOpen,
+    activeDesignStep,
+    isMobile,
     mobileCurrentStep,
     selectedCategory,
     setSelectedCategory,
@@ -144,16 +146,19 @@ export default function CreateYoursPageNew() {
     }
   }, [handleMobileAddText, showDesignTipsOnce]);
 
-  // On mobile, when Text section opens, scroll main content to top so the page (canvas) stays fully visible
+  const markDesignerInteractionStarted = useCallback(() => {
+    setHasStartedMobileDesigner(true);
+  }, []);
+
+  const handleDesignStepChange = useCallback((step) => {
+    setActiveDesignStep(step);
+  }, []);
+
   useEffect(() => {
     if (isMobile && isAddTextDropdownOpen && mainContentRef.current) {
       mainContentRef.current.scrollTo({ top: 0, behavior: 'auto' });
     }
   }, [isMobile, isAddTextDropdownOpen]);
-
-  const markDesignerInteractionStarted = useCallback(() => {
-    setHasStartedMobileDesigner(true);
-  }, []);
 
   return (
     <div className="h-screen bg-white flex flex-col overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
@@ -163,7 +168,7 @@ export default function CreateYoursPageNew() {
       <div
         ref={mainContentRef}
         className={`flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden ${
-          isMobile ? (isAddTextDropdownOpen ? 'pb-[380px]' : 'pb-56') : '' 
+          isMobile ? (isAddTextDropdownOpen ? 'pb-[380px]' : 'pb-56') : ''
         }`}
       >
         {/* Canvas - aligned to top on mobile, centered on desktop */}
@@ -186,63 +191,40 @@ export default function CreateYoursPageNew() {
           />
         </div>
 
-        {/* Options column - options scroll, price summary always visible. overflow-hidden keeps canvas from moving. */}
+        {/* Desktop options column */}
         <div className={`flex flex-col md:w-1/2 md:pl-6 lg:pl-8 md:border-l mt-4 md:mt-6 md:border-gray-100 md:min-h-0 md:overflow-hidden ${isMobile ? 'hidden' : 'flex-shrink-0 md:flex-none p-4 lg:p-0'}`}>
           {!isMobile && (
             <>
-              {/* Scrollable options - dropdowns expand here without moving price summary */}
-              <div className="flex-1 min-h-0 mt-10 overflow-y-auto overflow-x-hidden hide-scrollbar md:mr-4">
-                <CaseSelectionSection
-                  isOpen={isCaseDropdownOpen}
-                  onToggle={() => {
-                    setIsCharmsDropdownOpen(false);
-                    setIsAddTextDropdownOpen(false);
-                    setIsCaseDropdownOpen((prev) => !prev);
-                  }}
+              <div className="flex-1 min-h-0 flex flex-col mt-6 md:mr-4">
+                <DesignOptionsPanel
+                  activeStep={activeDesignStep}
+                  onStepChange={handleDesignStepChange}
+                  isMobile={false}
                   selectedCaseType={selectedCaseType}
                   selectedColor={selectedColor}
                   selectedCase={selectedCase}
-                  onCaseSelect={handleCaseTypeSelection}
-                  onColorSelect={handleColorSelection}
-                  setIsCaseDropdownOpen={setIsCaseDropdownOpen}
-                  Products={productsWithQuantities}
-                  cart={cart}
-                  isCaseImageLoading={isCaseImageLoading}
-                />
-                <CharmsSelectionSection
-                  isOpen={isCharmsDropdownOpen}
-                  onToggle={() => {
-                    setIsCaseDropdownOpen(false);
-                    setIsAddTextDropdownOpen(false);
-                    setIsCharmsDropdownOpen((prev) => !prev);
-                  }}
-                  pins={pins}
+                  selectedPins={selectedPins}
+                  customTextAdded={customTextAdded}
                   selectedCategory={selectedCategory}
                   setSelectedCategory={setSelectedCategory}
-                  selectedPins={selectedPins}
-                  onPinSelect={handlePinSelectionWithTips}
-                  Products={productsWithQuantities}
-                  cart={cart}
-                />
-                <AddTextSection
-                  isOpen={isAddTextDropdownOpen}
-                  onToggle={() => {
-                    setIsCaseDropdownOpen(false);
-                    setIsCharmsDropdownOpen(false);
-                    setIsAddTextDropdownOpen((prev) => !prev);
-                  }}
+                  pins={pins}
                   customText={customText}
                   setCustomText={setCustomText}
                   customTextError={customTextError}
                   setCustomTextError={setCustomTextError}
-                  customTextAdded={customTextAdded}
                   setCustomTextAdded={setCustomTextAdded}
+                  onCaseSelect={handleCaseTypeSelection}
+                  onColorSelect={handleColorSelection}
+                  onPinSelect={handlePinSelectionWithTips}
                   onTextAdded={handleTextAddedWithTips}
+                  onMobileAddText={handleMobileAddTextWithTips}
+                  Products={productsWithQuantities}
+                  cart={cart}
+                  isCaseImageLoading={isCaseImageLoading}
                 />
               </div>
 
-              {/* Price summary - always visible at bottom, never scrolls */}
-              <div className="flex-shrink-0 pt-6 border-t border-gray-100 bg-white">
+              <div className="flex-shrink-0 pt-4 border-t border-gray-100 bg-white">
                 <PriceSummary
             totalPrice={totalPrice}
             caseBasePrice={caseBasePrice}
@@ -273,10 +255,9 @@ export default function CreateYoursPageNew() {
         </div>
       </div>
 
-      {/* Mobile: Fixed bottom section - Step buttons + Add to Cart */}
+      {/* Mobile: Fixed bottom - Step buttons + Add to Cart */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-40  bg-white flex flex-col w-full">
-          {/* Case, Color, Charms, Text buttons - at bottom above Add to Cart */}
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white flex flex-col w-full">
           <div className="w-full px-3 xs:px-4 mt-4">
             <MobileStepButtons
               selectedCaseType={selectedCaseType}
@@ -298,6 +279,7 @@ export default function CreateYoursPageNew() {
                 setIsAddTextDropdownOpen((prev) => !prev);
               }}
               isAddTextDropdownOpen={isAddTextDropdownOpen}
+              mobileCurrentStep={mobileCurrentStep}
             />
             {isAddTextDropdownOpen && (
               <MobileAddTextSection
@@ -311,8 +293,7 @@ export default function CreateYoursPageNew() {
               />
             )}
           </div>
-          {/* Add to Cart bar - full width on mobile */}
-          <div className="w-full bg-gray-100  px-3 xs:px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <div className="w-full bg-gray-100 px-3 xs:px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <PriceSummary
               totalPrice={totalPrice}
               caseBasePrice={caseBasePrice}

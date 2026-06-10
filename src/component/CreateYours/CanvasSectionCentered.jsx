@@ -72,7 +72,7 @@ const CanvasSectionCentered = ({
       }`}
     >
       {/* Canvas - aligned to top on mobile, centered on desktop */}
-      <div className={`flex p-6 w-full flex-col items-center ${isMobile ? 'flex-1 justify-start min-h-0' : 'justify-center'}`}>
+      <div className={`flex w-full flex-col items-center ${isMobile ? 'flex-1 justify-start min-h-0 p-6' : 'justify-center p-6'}`}>
         <div
           id="create-yours-preview"
           className="w-full max-w-[270px] aspect-[270/350] sm:w-[270px] sm:h-[350px] sm:aspect-auto flex-shrink-0 relative mx-auto overflow-visible"

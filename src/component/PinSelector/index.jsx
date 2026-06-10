@@ -74,7 +74,7 @@ const CategorySelector = ({
   onDropdownToggle,
   getPreviewImage,
 }) => (
-  <div className="grid grid-cols-3 gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+  <div className="grid grid-cols-3 gap-1 sm:gap-1.5 mb-2">
     {CATEGORY_OPTIONS.map((opt) => {
       const previewImage = getPreviewImage(opt.value);
       const isActive = selectedCategory === opt.value;
@@ -85,8 +85,8 @@ const CategorySelector = ({
           type="button"
           role="option"
           aria-selected={isActive}
-          className={`font-inter flex flex-col items-center p-2.5 rounded-lg transition-all duration-200 ${
-            isActive ? "bg-gray-50 border-2 border-gray-900" : "hover:bg-gray-50 border-2 border-transparent"
+          className={`font-inter flex flex-col items-center px-1 py-1.5 rounded-md transition-all duration-200 ${
+            isActive ? "bg-gray-50 border border-gray-900" : "hover:bg-gray-50 border border-transparent"
           }`}
           onClick={() => {
             setSelectedCategory(opt.value);
@@ -97,30 +97,30 @@ const CategorySelector = ({
         >
           {previewImage && (
             <div
-              className="relative mb-2 flex items-center justify-center rounded overflow-visible"
-              style={{ width: "4rem", height: "4rem" }}
+              className="relative mb-1 flex items-center justify-center rounded overflow-visible"
+              style={{ width: "2.5rem", height: "2.5rem" }}
             >
               <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
                 <Image
                   src={normalizeImagePath(previewImage)}
                   alt={opt.label}
-                  className="max-w-full max-h-full object-contain p-1"
+                  className="max-w-full max-h-full object-contain p-0.5"
                   loading="lazy"
-                  width={64}
-                  height={64}
-                  sizes="64px"
+                  width={40}
+                  height={40}
+                  sizes="40px"
                 />
               </div>
             </div>
           )}
           <span
-            className={`text-xs text-center font-light ${
+            className={`text-[10px] leading-tight text-center font-light ${
               isActive ? "text-gray-900" : "text-gray-600"
             }`}
           >
             {opt.label}
           </span>
-          <span className="text-[10px] text-gray-500 mt-0.5">
+          <span className="text-[9px] text-gray-500 leading-tight">
             {opt.price}
           </span>
         </button>
@@ -141,10 +141,10 @@ const SubCategoryTabs = ({
   if (!tabs) return null;
 
   const baseClasses =
-    "px-3 py-2 text-caption uppercase tracking-wider transition-all duration-200 font-inter";
+    "px-2 py-1 text-[10px] uppercase tracking-wide transition-all duration-200 font-inter";
 
   return (
-    <div className="mb-4 flex flex-wrap gap-1 border-b border-gray-200 justify-center">
+    <div className="mb-2 flex flex-wrap gap-0.5 border-b border-gray-200 justify-center">
       {tabs.map(({ key, label }) => {
         const count = getSubCategoryCount(key);
         const isActive = subCategory === key;
@@ -167,8 +167,8 @@ const SubCategoryTabs = ({
               isActive ? activeClasses : inactiveClasses
             }`}
           >
-            {label}{" "}
-            <span className="text-gray-400 font-normal">({count})</span>
+            {label}
+            <span className="text-gray-400 font-normal text-[9px]"> ({count})</span>
           </button>
         );
       })}
@@ -179,13 +179,13 @@ const SubCategoryTabs = ({
 const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, remainingAvailable = null }) => {
   return (
     <div
-      className={`flex flex-col items-center justify-center text-center space-y-1 sm:space-y-2 p-2 sm:p-3 h-full transition-colors group touch-manipulation ${
+      className={`flex flex-col items-center justify-center text-center space-y-0.5 p-1 sm:p-1.5 h-full transition-colors group touch-manipulation ${
         isSoldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
       }`}
       onClick={onClick}
     >
       <div className={`relative rounded-lg transition-all duration-200 ${isSelected && !isSoldOut ? "border-2 border-gray-900 p-0.5" : "border-2 border-transparent p-0.5"}`} style={{ overflow: "visible" }}>
-        <div className="w-16 h-16 sm:w-20 sm:h-20 aspect-square flex items-center justify-center bg-transparent">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 aspect-square flex items-center justify-center bg-transparent">
           <Image
             src={normalizeImagePath(pin.src)}
             alt={pin.name}
@@ -211,11 +211,11 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
           </div>
         )}
       </div>
-      <span className="text-xs text-center text-gray-700 transition-colors line-clamp-2 font-inter">
+      <span className="text-[10px] leading-tight text-center text-gray-700 transition-colors line-clamp-2 font-inter">
         {pin.name}
       </span>
       {isSoldOut && (
-        <span className="text-[9px] text-red-600 font-medium">Sold Out</span>
+        <span className="text-[8px] text-red-600 font-medium">Sold Out</span>
       )}
     </div>
   );
@@ -318,8 +318,8 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
   };
 
   return (
-    <div className="max-h-64 sm:max-h-72 overflow-y-auto hide-scrollbar p-2">
-      <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-2 justify-items-center md:max-w-3xl mx-auto">
+    <div className="max-h-72 sm:max-h-80 overflow-y-auto hide-scrollbar p-1">
+      <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-1.5 justify-items-center md:max-w-3xl mx-auto">
         {filteredPins.map((pin, index) => {
           const selectedPinEntry = selectedPins.find((p) => p.pin === pin);
           const isSelected = !!selectedPinEntry;
@@ -428,7 +428,7 @@ const PinSelector = ({
       />
 
       {selectedCategory && (
-        <div className="mt-4 pb-4">
+        <div className="mt-2 pb-2">
           <SubCategoryTabs
             selectedCategory={selectedCategory}
             subCategory={subCategory}

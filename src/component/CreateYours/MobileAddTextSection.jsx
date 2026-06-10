@@ -8,10 +8,27 @@ const MobileAddTextSection = ({
   setCustomTextError,
   customTextAdded,
   setCustomTextAdded,
-  onAddText
+  onAddText,
+  showHeading = false,
+  sectionId = 'add-your-name',
 }) => {
   return (
-    <div className="px-2 xs:px-3 sm:px-4 space-y-2 pt-2">
+    <div id={sectionId} className="space-y-2">
+      {showHeading && (
+        <h3
+          className="text-sm uppercase tracking-wider text-gray-900 font-medium flex items-center gap-2"
+          style={{ fontFamily: "'Poppins', sans-serif" }}
+        >
+          Add Your Name
+          {customTextAdded && (
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 text-green-600" aria-hidden="true">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </span>
+          )}
+        </h3>
+      )}
       <div className="flex gap-2 min-w-0">
         <input
           type="text"

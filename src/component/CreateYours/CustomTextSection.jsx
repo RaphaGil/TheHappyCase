@@ -82,7 +82,7 @@ const CustomTextSection = ({
               setCustomTextAdded(false);
             }}
             onFocus={handleInputFocus}
-            placeholder="e.g. Your name or initials"
+            placeholder="Type your name here"
             className="w-full px-3 py-2.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light text-sm font-inter transition-colors"
             maxLength={MAX_TEXT_LENGTH}
           />
