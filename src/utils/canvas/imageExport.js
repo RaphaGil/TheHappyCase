@@ -2,11 +2,178 @@
  * Utility functions for exporting canvas images
  */
 
+export const CREATE_YOURS_PREVIEW_ID = 'create-yours-preview';
+
+const hideTransientCanvasUi = (fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef) => {
+  const hidden = { borderRects: [], boundaryVisible: true, caseBorderVisible: true };
+
+  if (borderRectsRef?.current) {
+    borderRectsRef.current.forEach((borderRect) => {
+      if (borderRect.visible !== false) {
+        hidden.borderRects.push(borderRect);
+        borderRect.visible = false;
+      }
+    });
+  }
+
+  if (boundaryRectRef?.current) {
+    hidden.boundaryVisible = boundaryRectRef.current.visible;
+    boundaryRectRef.current.visible = false;
+  }
+  if (caseBorderRectRef?.current) {
+    hidden.caseBorderVisible = caseBorderRectRef.current.visible;
+    caseBorderRectRef.current.visible = false;
+  }
+
+  if (fabricCanvas?.current) {
+    fabricCanvas.current.discardActiveObject();
+    fabricCanvas.current.requestRenderAll();
+  }
+
+  return hidden;
+};
+
+const restoreTransientCanvasUi = (fabricCanvas, boundaryRectRef, caseBorderRectRef, hidden) => {
+  hidden.borderRects.forEach((borderRect) => {
+    borderRect.visible = true;
+  });
+
+  if (boundaryRectRef?.current) {
+    boundaryRectRef.current.visible = hidden.boundaryVisible;
+  }
+  if (caseBorderRectRef?.current) {
+    caseBorderRectRef.current.visible = hidden.caseBorderVisible;
+  }
+
+  if (fabricCanvas?.current && hidden.borderRects.length > 0) {
+    fabricCanvas.current.requestRenderAll();
+  }
+};
+
+const waitForPaint = () =>
+  new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  });
+
+/**
+ * Capture the live Create Yours preview exactly as rendered in the browser.
+ */
+export const captureDesignPreview = async ({
+  previewElementId = CREATE_YOURS_PREVIEW_ID,
+  fabricCanvas,
+  boundaryRectRef,
+  caseBorderRectRef,
+  borderRectsRef,
+}) => {
+  const previewEl = document.getElementById(previewElementId);
+  if (!previewEl || !fabricCanvas?.current) return null;
+
+  const hiddenUi = hideTransientCanvasUi(
+    fabricCanvas,
+    boundaryRectRef,
+    caseBorderRectRef,
+    borderRectsRef
+  );
+  await waitForPaint();
+
+  const width = previewEl.clientWidth;
+  const height = previewEl.clientHeight;
+  if (!width || !height) {
+    restoreTransientCanvasUi(fabricCanvas, boundaryRectRef, caseBorderRectRef, hiddenUi);
+    return null;
+  }
+
+  const scale = 2;
+  const output = document.createElement('canvas');
+  output.width = Math.round(width * scale);
+  output.height = Math.round(height * scale);
+  const ctx = output.getContext('2d');
+  ctx.scale(scale, scale);
+
+  const containerRect = previewEl.getBoundingClientRect();
+
+  const caseImg =
+    previewEl.querySelector('img[aria-hidden="true"]') || previewEl.querySelector('img');
+  if (caseImg?.complete && caseImg.naturalWidth > 0) {
+    try {
+      const imgRect = caseImg.getBoundingClientRect();
+      ctx.drawImage(
+        caseImg,
+        imgRect.left - containerRect.left,
+        imgRect.top - containerRect.top,
+        imgRect.width,
+        imgRect.height
+      );
+    } catch (error) {
+      console.warn('Could not draw case image from preview DOM:', error);
+    }
+  }
+
+  const fabricEl = fabricCanvas.current.getElement?.() || fabricCanvas.current.lowerCanvasEl;
+  if (fabricEl) {
+    try {
+      const fabricRect = fabricEl.getBoundingClientRect();
+      ctx.drawImage(
+        fabricEl,
+        fabricRect.left - containerRect.left,
+        fabricRect.top - containerRect.top,
+        fabricRect.width,
+        fabricRect.height
+      );
+    } catch (error) {
+      console.warn('Could not draw fabric canvas from preview DOM:', error);
+    }
+  }
+
+  restoreTransientCanvasUi(fabricCanvas, boundaryRectRef, caseBorderRectRef, hiddenUi);
+
+  try {
+    const dataURL = output.toDataURL('image/png', 1);
+    return dataURL.startsWith('data:image/') ? dataURL : null;
+  } catch (error) {
+    console.warn('Preview capture failed (canvas may be tainted):', error);
+    return null;
+  }
+};
+
+/**
+ * Compute draw rect matching CSS object-contain + object-position
+ */
+export const computeObjectContainDrawRect = (
+  imgWidth,
+  imgHeight,
+  containerWidth,
+  containerHeight,
+  objectPositionY = 0.45
+) => {
+  const scale = Math.min(containerWidth / imgWidth, containerHeight / imgHeight);
+  const drawWidth = imgWidth * scale;
+  const drawHeight = imgHeight * scale;
+  const drawX = (containerWidth - drawWidth) / 2;
+  const drawY = containerHeight * objectPositionY - drawHeight / 2;
+  return { drawX, drawY, drawWidth, drawHeight };
+};
+
 /**
  * Export canvas as image data URL
  */
-export const exportCanvasAsDataURL = (fabricCanvas, boundaryRectRef, caseBorderRectRef) => {
+export const exportCanvasAsDataURL = (
+  fabricCanvas,
+  boundaryRectRef,
+  caseBorderRectRef,
+  borderRectsRef
+) => {
   if (!fabricCanvas.current) return null;
+
+  const hiddenBorderRects = [];
+  if (borderRectsRef?.current) {
+    borderRectsRef.current.forEach((borderRect) => {
+      if (borderRect.visible !== false) {
+        hiddenBorderRects.push(borderRect);
+        borderRect.visible = false;
+      }
+    });
+  }
   
   // Temporarily hide boundary and case border for export
   const boundaryVisible = boundaryRectRef.current ? boundaryRectRef.current.visible : true;
@@ -22,7 +189,10 @@ export const exportCanvasAsDataURL = (fabricCanvas, boundaryRectRef, caseBorderR
     format: 'png',
     quality: 1,
     multiplier: 2,
-    backgroundColor: 'white'
+  });
+
+  hiddenBorderRects.forEach((borderRect) => {
+    borderRect.visible = true;
   });
 
   // Restore boundary and case border visibility
@@ -32,7 +202,7 @@ export const exportCanvasAsDataURL = (fabricCanvas, boundaryRectRef, caseBorderR
   if (caseBorderRectRef.current) {
     caseBorderRectRef.current.visible = caseBorderVisible;
   }
-  if (boundaryRectRef.current || caseBorderRectRef.current) {
+  if (hiddenBorderRects.length > 0 || boundaryRectRef.current || caseBorderRectRef.current) {
     fabricCanvas.current.renderAll();
   }
 
@@ -47,7 +217,13 @@ export const exportCanvasAsDataURL = (fabricCanvas, boundaryRectRef, caseBorderR
  * @param {number} height - Height of the output image
  * @returns {Promise<string>} Data URL of the composite image
  */
-export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 300, height = 350) => {
+export const createCompositeDesignImage = (
+  caseImageUrl,
+  canvasDataURL,
+  width = 270,
+  height = 350,
+  objectPositionY = 0.45
+) => {
   return new Promise((resolve, reject) => {
     if (!caseImageUrl && !canvasDataURL) {
       resolve(null);
@@ -93,24 +269,14 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
           src: caseImageUrl.substring(0, 50) + '...'
         });
         
-        // Draw case image as background
-        // Match the CSS background positioning: center 45%
-        const caseImgAspect = caseImg.width / caseImg.height;
-        const canvasAspect = width / height;
-        
-        let drawWidth, drawHeight, drawX, drawY;
-        const targetSize = 270; // Match CSS backgroundSize
-        
-        if (caseImgAspect > canvasAspect) {
-          drawHeight = targetSize;
-          drawWidth = drawHeight * caseImgAspect;
-        } else {
-          drawWidth = targetSize;
-          drawHeight = drawWidth / caseImgAspect;
-        }
-        
-        drawX = (width - drawWidth) / 2;
-        drawY = height * 0.45 - drawHeight / 2; // Match CSS backgroundPosition: center 45%
+        // Draw case image as background (match CSS object-contain + object-position)
+        const { drawX, drawY, drawWidth, drawHeight } = computeObjectContainDrawRect(
+          caseImg.width,
+          caseImg.height,
+          width,
+          height,
+          objectPositionY
+        );
         
         ctx.drawImage(caseImg, drawX, drawY, drawWidth, drawHeight);
         
@@ -156,24 +322,8 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
           height: canvasImg.height
         });
         
-        // Draw canvas content centered, matching the canvas overlay positioning
-        const canvasImgAspect = canvasImg.width / canvasImg.height;
-        const containerAspect = width / height;
-        
-        let drawWidth, drawHeight, drawX, drawY;
-        
-        if (canvasImgAspect > containerAspect) {
-          drawWidth = width;
-          drawHeight = width / canvasImgAspect;
-        } else {
-          drawHeight = height;
-          drawWidth = height * canvasImgAspect;
-        }
-        
-        drawX = (width - drawWidth) / 2;
-        drawY = (height - drawHeight) / 2;
-        
-        ctx.drawImage(canvasImg, drawX, drawY, drawWidth, drawHeight);
+        // Draw pins layer full-bleed — canvas overlay fills the designer container
+        ctx.drawImage(canvasImg, 0, 0, width, height);
         
         // Export composite image
         const finalDataURL = compositeCanvas.toDataURL('image/png', 1);
@@ -202,8 +352,8 @@ export const createCompositeDesignImage = (caseImageUrl, canvasDataURL, width = 
 /**
  * Download canvas as image file
  */
-export const downloadCanvasImage = (fabricCanvas, boundaryRectRef, caseBorderRectRef) => {
-  const dataURL = exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef);
+export const downloadCanvasImage = (fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef) => {
+  const dataURL = exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef);
   if (!dataURL) return;
 
   // Create download link

@@ -403,14 +403,28 @@ export const useCreateYours = () => {
     const finalCaseImage = caseImageToUse || '';
     const normalizedCaseImage = finalCaseImage ? normalizeImagePath(finalCaseImage) : '';
     
-    // Get canvas image data URL
+    // Capture the live preview so the basket matches Create Yours exactly
+    let previewDataURL = null;
     let canvasImageDataURL = null;
-    if (typeof window !== 'undefined' && window.getDesignImageDataURL) {
-      canvasImageDataURL = window.getDesignImageDataURL();
+    let compositeOptions = { width: 270, height: 350, objectPositionY: 0.45 };
+    if (typeof window !== 'undefined') {
+      if (window.getDesignPreviewDataURL) {
+        previewDataURL = await window.getDesignPreviewDataURL();
+      }
+      if (window.getDesignImageDataURL) {
+        canvasImageDataURL = window.getDesignImageDataURL();
+      }
+      if (window.getDesignCompositeOptions) {
+        compositeOptions = window.getDesignCompositeOptions();
+      }
     }
     
-    // Create composite image
-    const designImage = await createDesignImage(normalizedCaseImage, canvasImageDataURL);
+    const designImage = await createDesignImage(
+      normalizedCaseImage,
+      canvasImageDataURL,
+      compositeOptions,
+      previewDataURL
+    );
     
     // Prepare pins details
     const pinsDetails = preparePinsDetails(selectedPins, selectedCategory);

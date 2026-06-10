@@ -82,12 +82,27 @@ export const validateCharmInventory = (selectedPins, cart, quantity, selectedCat
 /**
  * Create composite design image
  */
-export const createDesignImage = async (normalizedCaseImage, canvasImageDataURL) => {
+export const createDesignImage = async (
+  normalizedCaseImage,
+  canvasImageDataURL,
+  { width = 270, height = 350, objectPositionY = 0.45 } = {},
+  previewDataURL = null
+) => {
+  if (previewDataURL && previewDataURL.startsWith('data:image/')) {
+    return previewDataURL;
+  }
+
   let designImage = normalizedCaseImage; // Fallback to normalized case image if composite fails
   
   if (normalizedCaseImage && canvasImageDataURL) {
     try {
-      designImage = await createCompositeDesignImage(normalizedCaseImage, canvasImageDataURL, 300, 350);
+      designImage = await createCompositeDesignImage(
+        normalizedCaseImage,
+        canvasImageDataURL,
+        width,
+        height,
+        objectPositionY
+      );
       
       // Validate the composite image was created successfully
       if (!designImage || !designImage.startsWith('data:image/')) {

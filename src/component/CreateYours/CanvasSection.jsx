@@ -86,7 +86,7 @@ const CanvasSection = ({
         : 'md:flex-shrink-0 md:overflow-hidden md:px-0 md:py-0'
     } px-0 xs:px-2 sm:px-4 py-0 xs:py-1 sm:py-2`}>
       <div className="w-full h-full flex flex-col justify-start xs:justify-start sm:justify-center items-center md:justify-start md:gap-4">
-        <div className="w-full max-w-[220px] sm:max-w-[250px] aspect-[270/350] sm:w-[250px] sm:h-[320px] sm:aspect-auto flex-shrink-0 relative mx-auto overflow-visible" style={{isolation: 'isolate'}}>
+        <div id="create-yours-preview" className="w-full max-w-[220px] sm:max-w-[250px] aspect-[270/350] sm:w-[250px] sm:h-[320px] sm:aspect-auto flex-shrink-0 relative mx-auto overflow-visible" style={{isolation: 'isolate'}}>
           {/* Background Case Image - Always behind canvas - Fixed size for all screens */}
           {resolvedCaseImageSrc && (
             <Image
@@ -129,6 +129,7 @@ const CanvasSection = ({
                 onPinSelect={onPinSelect}
                 onPinRemove={onPinRemove}
                 products={Products}
+                caseObjectPosition={0.45}
               />
             ) : null}
           </div>

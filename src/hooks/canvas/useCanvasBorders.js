@@ -35,7 +35,7 @@ export const useCanvasBorders = (fabricCanvas, caseInstanceRef, boundaryRectRef,
       strokeDashArray: [3, 3], // Dashed border (dots)
       selectable: false,
       evented: false,
-      excludeFromExport: false,
+      excludeFromExport: true,
     });
     
     borderRectsRef.current.set(obj, borderRect);

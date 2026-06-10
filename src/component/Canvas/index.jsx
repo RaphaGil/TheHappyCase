@@ -5,7 +5,11 @@ import * as fabric from 'fabric';
 import CanvasControls from './components/CanvasControls';
 import { useCanvasBorders } from '../../hooks/canvas/useCanvasBorders';
 import { useCanvasControls } from '../../hooks/canvas/useCanvasControls';
-import { exportCanvasAsDataURL, downloadCanvasImage } from '../../utils/canvas/imageExport';
+import {
+  captureDesignPreview,
+  exportCanvasAsDataURL,
+  downloadCanvasImage,
+} from '../../utils/canvas/imageExport';
 import { normalizeImagePath } from '../../utils/imagePath';
 
 const Canvas = ({ 
@@ -13,7 +17,8 @@ const Canvas = ({
   selectedColor, 
   onPinSelect, 
   onPinRemove,
-  onSaveImage
+  onSaveImage,
+  caseObjectPosition = 0.45,
 }) => {
   const canvasRef = useRef(null);
   const fabricCanvas = useRef(null);
@@ -755,12 +760,37 @@ const Canvas = ({
 
   // Handle save image
   const handleSaveImage = useCallback(() => {
-    downloadCanvasImage(fabricCanvas, boundaryRectRef, caseBorderRectRef);
+    downloadCanvasImage(fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef);
   }, []);
 
   // Get current composed design image as data URL
   const getDesignImageDataURL = useCallback(() => {
-    return exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef);
+    return exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef);
+  }, []);
+
+  const getDesignCompositeOptions = useCallback(() => {
+    if (!fabricCanvas.current) {
+      return { width: 270, height: 350, objectPositionY: caseObjectPosition };
+    }
+    return {
+      width: fabricCanvas.current.getWidth(),
+      height: fabricCanvas.current.getHeight(),
+      objectPositionY: caseObjectPosition,
+    };
+  }, [caseObjectPosition]);
+
+  const getDesignPreviewDataURL = useCallback(async () => {
+    setShowControls(false);
+    setSelectedPin(null);
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+    return captureDesignPreview({
+      fabricCanvas,
+      boundaryRectRef,
+      caseBorderRectRef,
+      borderRectsRef,
+    });
   }, []);
 
   // Clear canvas: remove all pins and text (e.g. after add to cart)
@@ -816,6 +846,8 @@ const Canvas = ({
     window.addPinToCanvas = handlePinSelection;
     window.addTextToCanvas = handleAddText;
     window.getDesignImageDataURL = getDesignImageDataURL;
+    window.getDesignCompositeOptions = getDesignCompositeOptions;
+    window.getDesignPreviewDataURL = getDesignPreviewDataURL;
     window.clearCanvas = clearCanvas;
     if (onSaveImage) {
       onSaveImage(handleSaveImage);
@@ -824,9 +856,11 @@ const Canvas = ({
       delete window.addPinToCanvas;
       delete window.addTextToCanvas;
       delete window.getDesignImageDataURL;
+      delete window.getDesignCompositeOptions;
+      delete window.getDesignPreviewDataURL;
       delete window.clearCanvas;
     };
-  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, handleSaveImage, clearCanvas]);
+  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, getDesignCompositeOptions, getDesignPreviewDataURL, handleSaveImage, clearCanvas]);
 
   return (
     <div className="w-full h-full flex flex-col  sm:items-center ">
