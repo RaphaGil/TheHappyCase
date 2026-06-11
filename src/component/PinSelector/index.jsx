@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useLayoutEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/constants";
 import { getMaxAvailableQuantity } from "../../utils/inventory";
@@ -114,7 +114,7 @@ const CategorySelector = ({
             </div>
           )}
           <span
-            className={`text-[10px] leading-tight text-center font-light ${
+            className={`text-[10px] leading-tight text-center font-bold ${
               isActive ? "text-gray-900" : "text-gray-600"
             }`}
           >
@@ -141,7 +141,7 @@ const SubCategoryTabs = ({
   if (!tabs) return null;
 
   const baseClasses =
-    "px-2 py-1 text-[10px] uppercase tracking-wide transition-all duration-200 font-inter";
+    "px-2 py-1 text-[10px] uppercase tracking-wide transition-all duration-200 font-inter font-bold";
 
   return (
     <div className="mb-2 flex flex-wrap gap-0.5 border-b border-gray-200 justify-center">
@@ -151,8 +151,8 @@ const SubCategoryTabs = ({
 
         const activeClasses =
           selectedCategory === "flags"
-            ? "text-gray-900 font-medium"
-            : "border-b-2 border-gray-900 text-gray-900 font-medium";
+            ? "text-gray-900 font-bold"
+            : "border-b-2 border-gray-900 text-gray-900 font-bold";
 
         const inactiveClasses =
           selectedCategory === "flags"
@@ -176,9 +176,28 @@ const SubCategoryTabs = ({
   );
 };
 
-const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, remainingAvailable = null }) => {
+const scrollToFirstCharmRow = (gridContainer) => {
+  if (!gridContainer) return false;
+
+  const scrollParent = gridContainer.closest('[data-design-options-scroll]');
+  if (!scrollParent) return false;
+
+  const firstPin = gridContainer.querySelector('[data-first-pin]');
+  const stickyHeader = gridContainer.previousElementSibling;
+  const headerBottom = stickyHeader
+    ? stickyHeader.getBoundingClientRect().bottom
+    : scrollParent.getBoundingClientRect().top;
+
+  const targetRect = (firstPin || gridContainer).getBoundingClientRect();
+  const offset = targetRect.top - headerBottom;
+  scrollParent.scrollTop = Math.max(0, scrollParent.scrollTop + offset);
+  return true;
+};
+
+const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, remainingAvailable = null, isFirst = false }) => {
   return (
     <div
+      data-first-pin={isFirst ? true : undefined}
       className={`flex flex-col items-center justify-center text-center space-y-0.5 p-1 sm:p-1.5 h-full transition-colors group touch-manipulation ${
         isSoldOut ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
       }`}
@@ -318,7 +337,7 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
   };
 
   return (
-    <div className="max-h-72 sm:max-h-80 overflow-y-auto hide-scrollbar p-1">
+    <div className="p-1 pb-4">
       <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-1.5 justify-items-center md:max-w-3xl mx-auto">
         {filteredPins.map((pin, index) => {
           const selectedPinEntry = selectedPins.find((p) => p.pin === pin);
@@ -347,6 +366,7 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
               onClick={handleClick}
               isLowStock={isLowStock}
               remainingAvailable={remainingAvailable}
+              isFirst={index === 0}
             />
           );
         })}
@@ -367,16 +387,33 @@ const PinSelector = ({
   cart,
 }) => {
   const [subCategory, setSubCategory] = useState("all");
+  const gridScrollRef = useRef(null);
+
+  const runScrollToFirstCharm = useCallback(() => {
+    scrollToFirstCharmRow(gridScrollRef.current);
+  }, []);
+
+  const filteredPins = useMemo(
+    () => filterPinsBySubCategory(pins, selectedCategory, subCategory),
+    [pins, selectedCategory, subCategory]
+  );
 
   // Reset subCategory when selectedCategory changes
   useEffect(() => {
     setSubCategory("all");
   }, [selectedCategory]);
 
-  const filteredPins = useMemo(
-    () => filterPinsBySubCategory(pins, selectedCategory, subCategory),
-    [pins, selectedCategory, subCategory]
-  );
+  // Show the first charm row at the top when category or filter changes
+  useLayoutEffect(() => {
+    if (!selectedCategory) return;
+
+    runScrollToFirstCharm();
+    const raf = requestAnimationFrame(() => {
+      runScrollToFirstCharm();
+      requestAnimationFrame(runScrollToFirstCharm);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [selectedCategory, subCategory, filteredPins, runScrollToFirstCharm]);
 
   // Get preview image for each category
   const getPreviewImage = (categoryValue) => {
@@ -420,22 +457,26 @@ const PinSelector = ({
 
   return (
     <div>
-      <CategorySelector
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        onDropdownToggle={onDropdownToggle}
-        getPreviewImage={getPreviewImage}
-      />
+      <div className="sticky top-0 z-10 bg-white pb-1">
+        <CategorySelector
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          onDropdownToggle={onDropdownToggle}
+          getPreviewImage={getPreviewImage}
+        />
 
-      {selectedCategory && (
-        <div className="mt-2 pb-2">
+        {selectedCategory && (
           <SubCategoryTabs
             selectedCategory={selectedCategory}
             subCategory={subCategory}
             setSubCategory={setSubCategory}
             getSubCategoryCount={getSubCategoryCount}
           />
+        )}
+      </div>
 
+      {selectedCategory && (
+        <div ref={gridScrollRef}>
           <PinGrid
             filteredPins={filteredPins}
             selectedPins={selectedPins}

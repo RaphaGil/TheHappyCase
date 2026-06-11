@@ -32,17 +32,22 @@ const DesignOptionsPanel = ({
   isCaseImageLoading,
 }) => {
   return (
-    <div className="flex flex-col min-h-0 w-full">
-      <DesignOptionsSteps
-        activeStep={activeStep}
-        onStepChange={onStepChange}
-        selectedCaseType={selectedCaseType}
-        selectedColor={selectedColor}
-        selectedPins={selectedPins}
-        customTextAdded={customTextAdded}
-      />
+    <div className="flex flex-col min-h-0 flex-1 w-full overflow-hidden">
+      <div className="flex-shrink-0 bg-white z-20">
+        <DesignOptionsSteps
+          activeStep={activeStep}
+          onStepChange={onStepChange}
+          selectedCaseType={selectedCaseType}
+          selectedColor={selectedColor}
+          selectedPins={selectedPins}
+          customTextAdded={customTextAdded}
+        />
+      </div>
 
-      <div className={`min-h-0 ${isMobile ? '' : 'flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar'}`}>
+      <div
+        data-design-options-scroll
+        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain"
+      >
         {activeStep === 'case' && (
           <CaseSelectionSection
             panelMode

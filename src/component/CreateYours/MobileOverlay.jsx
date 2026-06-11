@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import ColorSelector from '../ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../data/constants.js';
@@ -30,6 +30,7 @@ const MobileOverlay = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visiblePinsCount, setVisiblePinsCount] = useState(24);
   const [loadedCharmImages, setLoadedCharmImages] = useState({});
+  const charmsGridScrollRef = useRef(null);
 
   useEffect(() => {
     // Reset batching when user changes the viewed charm set
@@ -39,6 +40,20 @@ const MobileOverlay = ({
   useEffect(() => {
     // Clear loaded-image tracking when charm set changes
     setLoadedCharmImages({});
+  }, [selectedCategory, mobileSubCategory]);
+
+  useLayoutEffect(() => {
+    const scrollToTop = () => {
+      if (charmsGridScrollRef.current) {
+        charmsGridScrollRef.current.scrollTop = 0;
+      }
+    };
+    scrollToTop();
+    const raf = requestAnimationFrame(() => {
+      scrollToTop();
+      requestAnimationFrame(scrollToTop);
+    });
+    return () => cancelAnimationFrame(raf);
   }, [selectedCategory, mobileSubCategory]);
 
   if (!mobileCurrentStep) return null;
@@ -227,7 +242,7 @@ const MobileOverlay = ({
                           />
                         </div>
                       )}
-                      <span className="font-medium text-xs xs:text-sm">{cat.label}</span>
+                      <span className="font-bold text-xs xs:text-sm">{cat.label}</span>
                     </button>
                   ))}
                 </div>
@@ -290,7 +305,7 @@ const MobileOverlay = ({
               {selectedCategory && (
                 <div>
                 
-                  <div className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
+                  <div ref={charmsGridScrollRef} className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
                     <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
                       {visiblePinsForMobile.map((pin, index) => {
                         const pinImageKey = pin.id ?? pin.src ?? `${pin.name}-${index}`;

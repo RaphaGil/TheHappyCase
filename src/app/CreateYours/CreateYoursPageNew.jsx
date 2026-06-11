@@ -192,10 +192,10 @@ export default function CreateYoursPageNew() {
         </div>
 
         {/* Desktop options column */}
-        <div className={`flex flex-col md:w-1/2 md:pl-6 lg:pl-8 md:border-l mt-4 md:mt-6 md:border-gray-100 md:min-h-0 md:overflow-hidden ${isMobile ? 'hidden' : 'flex-shrink-0 md:flex-none p-4 lg:p-0'}`}>
+        <div className={`flex flex-col md:w-1/2 md:pl-6 lg:pl-8 md:border-l mt-4 md:mt-6 md:border-gray-100 md:min-h-0 md:max-h-full md:overflow-hidden ${isMobile ? 'hidden' : 'flex-shrink-0 md:flex-none p-4 lg:p-0'}`}>
           {!isMobile && (
             <>
-              <div className="flex-1 min-h-0 flex flex-col mt-6 md:mr-4">
+              <div className="flex-1 min-h-0 flex flex-col mt-6 md:mr-4 overflow-hidden">
                 <DesignOptionsPanel
                   activeStep={activeDesignStep}
                   onStepChange={handleDesignStepChange}

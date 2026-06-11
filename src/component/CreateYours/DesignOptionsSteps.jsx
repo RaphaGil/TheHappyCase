@@ -31,7 +31,7 @@ const DesignOptionsSteps = ({
             key={step.id}
             type="button"
             onClick={() => onStepChange(step.id)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors duration-200 ${
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-200 ${
               isActive
                 ? 'bg-btn-primary-blue text-btn-primary-blue-text border-2 border-btn-primary-blue shadow-sm'
                 : isDone
@@ -52,7 +52,7 @@ const DesignOptionsSteps = ({
             >
               {isDone && !isActive ? '✓' : index + 1}
             </span>
-            <span>{step.label}</span>
+            <span className="font-bold">{step.label}</span>
           </button>
         );
       })}

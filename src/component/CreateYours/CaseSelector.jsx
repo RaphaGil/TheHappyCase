@@ -108,7 +108,7 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                 )}
               </div>
               <div className="flex flex-col items-center mt-1.5 md:mt-2 text-center">
-                <span className={`text-xs md:text-sm font-medium tracking-wider ${isSelected ? 'text-gray-700' : 'text-gray-500'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
+                <span className={`text-xs md:text-sm font-bold tracking-wider ${isSelected ? 'text-gray-700' : 'text-gray-500'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
                   {opt.label.split(' - ')[0]}
                 </span>
                 <span className={`text-xs md:text-sm font-medium mt-0.5 ${isSelected ? 'text-gray-500' : 'text-gray-400'}`} style={{fontFamily: "'Poppins', sans-serif"}}>

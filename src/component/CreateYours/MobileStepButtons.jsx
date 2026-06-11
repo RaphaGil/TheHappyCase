@@ -29,7 +29,7 @@ const MobileStepButtons = ({
             icon={faBriefcase} 
             className={`w-4 h-4 xs:w-5 xs:h-5 flex-shrink-0 ${isCaseActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'}`}
           />
-          <span className={`text-xs xs:text-sm sm:text-sm font-medium uppercase tracking-wide leading-tight truncate max-w-full ${isCaseActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className={`text-xs xs:text-sm sm:text-sm font-bold uppercase tracking-wide leading-tight truncate max-w-full ${isCaseActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Case
           </span>
         </button>
@@ -52,7 +52,7 @@ const MobileStepButtons = ({
               !selectedCaseType ? 'text-gray-400' : isColorActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'
             }`}
           />
-          <span className={`text-xs xs:text-sm sm:text-sm font-medium uppercase tracking-wide leading-tight truncate max-w-full ${
+          <span className={`text-xs xs:text-sm sm:text-sm font-bold uppercase tracking-wide leading-tight truncate max-w-full ${
             !selectedCaseType ? 'text-gray-400' : isColorActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'
           }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Color
@@ -77,7 +77,7 @@ const MobileStepButtons = ({
               !selectedCaseType || !selectedColor ? 'text-gray-400' : isCharmsActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'
             }`}
           />
-          <span className={`text-xs xs:text-sm sm:text-sm font-medium uppercase tracking-wide leading-tight truncate max-w-full ${
+          <span className={`text-xs xs:text-sm sm:text-sm font-bold uppercase tracking-wide leading-tight truncate max-w-full ${
             !selectedCaseType || !selectedColor ? 'text-gray-400' : isCharmsActive ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'
           }`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Charms
@@ -95,7 +95,7 @@ const MobileStepButtons = ({
             icon={faFont} 
             className={`w-4 h-4 xs:w-5 xs:h-5 flex-shrink-0 ${isAddTextDropdownOpen ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'}`}
           />
-          <span className={`text-xs xs:text-sm sm:text-sm font-medium uppercase tracking-wide leading-tight truncate max-w-full ${isAddTextDropdownOpen ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
+          <span className={`text-xs xs:text-sm sm:text-sm font-bold uppercase tracking-wide leading-tight truncate max-w-full ${isAddTextDropdownOpen ? 'text-btn-primary-blue-text' : 'text-btn-primary-blue-text'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
             Text
           </span>
         </button>
