@@ -1,27 +1,22 @@
 import React from 'react';
 import { CASE_OPTIONS } from '../../data/constants';
+import { getColorNameFromImage } from '../../utils/colorNames';
 import { OPTION_FONT_STYLE } from './designOptionStyles';
 
 const getCaseLabel = (selectedCase, selectedCaseType) => {
   if (selectedCase?.name) return selectedCase.name;
   const opt = CASE_OPTIONS.find((c) => c.value === selectedCaseType);
-  return opt ? opt.label.split(' - ')[0] : null;
+  return opt ? opt.label : null;
 };
 
-const getColorLabel = (selectedCase, selectedColor) => {
-  const colorData = selectedCase?.colors?.find((c) => c.color === selectedColor);
-  if (!colorData?.image) return null;
-  const filename = colorData.image.split('/').pop().replace(/\.(webp|png|jpg)$/i, '').toLowerCase();
-  const cleaned = filename
-    .replace(/^economycase/i, '')
-    .replace(/^businessclasscase/i, '')
-    .replace(/^firstclasscase/i, '')
-    .replace(/^smartcase/i, '')
-    .replace(/^premiumcase/i, '')
-    .replace(/^firstclass/i, '');
-  if (!cleaned) return 'Color';
-  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
-};
+const SummaryChip = ({ children, className = '' }) => (
+  <span
+    className={`inline-flex max-w-full items-center rounded-full px-2.5 py-1 text-[11px] leading-tight ${className}`}
+    style={OPTION_FONT_STYLE}
+  >
+    {children}
+  </span>
+);
 
 const DesignSummaryStrip = ({
   selectedCase,
@@ -32,55 +27,61 @@ const DesignSummaryStrip = ({
   customTextAdded,
 }) => {
   const caseLabel = getCaseLabel(selectedCase, selectedCaseType);
-  const colorLabel = selectedColor ? getColorLabel(selectedCase, selectedColor) : null;
+  const colorData = selectedCase?.colors?.find((c) => c.color === selectedColor);
+  const colorLabel = colorData ? getColorNameFromImage(colorData.image) : null;
   const charmCount = selectedPins.length;
-  const hasSelection = caseLabel || colorLabel || charmCount > 0 || customTextAdded;
+  const hasCaseAndColor = Boolean(caseLabel && selectedColor && colorLabel);
+  const hasCharms = charmCount > 0;
+  const hasName = Boolean(customTextAdded && customText);
+  const hasSelection = hasCaseAndColor || hasCharms || hasName;
 
   if (!hasSelection) {
     return (
       <div
-        className="w-full max-w-[270px] mx-auto mt-1 px-2 py-1 rounded-md bg-gray-50 border border-gray-100 text-center"
+        className="mx-auto mt-2 w-full max-w-[270px] rounded-lg border border-dashed border-gray-200 bg-gray-50/70 px-3 py-2.5 text-center"
         style={OPTION_FONT_STYLE}
       >
-        <p className="text-xs text-gray-500">Pick a case and color to start your design</p>
+        <p className="text-xs leading-snug text-gray-500">
+          Choose a case and color to start designing
+        </p>
       </div>
     );
   }
 
   return (
     <div
-      className="w-full max-w-[270px] mx-auto mt-1 px-2 py-1 rounded-md bg-gray-50 border border-gray-100"
+      className="mx-auto mt-2 w-full max-w-[270px] rounded-lg border border-gray-100 bg-white px-2.5 py-2 shadow-sm"
       style={OPTION_FONT_STYLE}
       aria-label="Your design summary"
     >
-      <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-gray-700">
+      <div className="flex flex-wrap items-center justify-center gap-1.5">
         {caseLabel && (
-          <span className="font-medium text-gray-900">{caseLabel}</span>
+          <SummaryChip className="bg-gray-100 font-semibold text-gray-800">
+            {caseLabel}
+          </SummaryChip>
         )}
-        {caseLabel && colorLabel && (
-          <span className="text-gray-300" aria-hidden="true">·</span>
-        )}
+
         {colorLabel && selectedColor && (
-          <span className="inline-flex items-center gap-1">
+          <SummaryChip className="gap-1.5 border border-gray-200 bg-white font-medium text-gray-700">
             <span
-              className="inline-block h-3 w-3 rounded-full border border-gray-300 shrink-0"
+              className="inline-block h-3.5 w-3.5 shrink-0 rounded-full border border-gray-200"
               style={{ backgroundColor: selectedColor }}
               aria-hidden="true"
             />
             <span>{colorLabel}</span>
-          </span>
+          </SummaryChip>
         )}
-        {(caseLabel || colorLabel) && charmCount > 0 && (
-          <span className="text-gray-300" aria-hidden="true">·</span>
+
+        {hasCharms && (
+          <SummaryChip className="bg-sky-50 font-medium text-sky-900">
+            {charmCount} charm{charmCount !== 1 ? 's' : ''}
+          </SummaryChip>
         )}
-        {charmCount > 0 && (
-          <span>{charmCount} charm{charmCount !== 1 ? 's' : ''}</span>
-        )}
-        {(caseLabel || colorLabel || charmCount > 0) && customTextAdded && customText && (
-          <span className="text-gray-300" aria-hidden="true">·</span>
-        )}
-        {customTextAdded && customText && (
-          <span className="italic text-gray-600">&ldquo;{customText}&rdquo;</span>
+
+        {hasName && (
+          <SummaryChip className="max-w-[11rem] border border-gray-100 bg-gray-50 italic text-gray-600">
+            <span className="truncate">&ldquo;{customText}&rdquo;</span>
+          </SummaryChip>
         )}
       </div>
     </div>

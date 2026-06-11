@@ -9,15 +9,33 @@ import { getCaseLinePins } from "../../utils/cartHelpers";
 import {
   OPTION_CHARM_CATEGORY_CARD_MIN_H,
   OPTION_CHARM_CATEGORY_IMAGE,
-  OPTION_CATEGORY_LABEL,
-  OPTION_FILTER_TAB,
+  OPTION_CHARM_CATEGORY_LABEL,
+  OPTION_CHARM_FIELD,
+  OPTION_CHARM_ITEM_LABEL,
+  OPTION_CHARM_SOLD_OUT,
+  OPTION_CHARM_TOOLBAR,
   OPTION_FONT_STYLE,
-  OPTION_ITEM_LABEL,
-  OPTION_SOLD_OUT,
   getCategoryLabelColor,
-  getFilterTabClasses,
   getItemLabelColor,
 } from "../CreateYours/designOptionStyles";
+
+const SearchIcon = () => (
+  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const ChevronDownIcon = () => (
+  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+  </svg>
+);
+
+const ClearIcon = () => (
+  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
 
 // -----------------------------
 // Helpers
@@ -86,7 +104,7 @@ const CategorySelector = ({
   onDropdownToggle,
   getPreviewImage,
 }) => (
-  <div className="grid grid-cols-3 gap-1 sm:gap-1.5 mb-2">
+  <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
     {CATEGORY_OPTIONS.map((opt) => {
       const previewImage = getPreviewImage(opt.value);
       const isActive = selectedCategory === opt.value;
@@ -97,8 +115,10 @@ const CategorySelector = ({
           type="button"
           role="option"
           aria-selected={isActive}
-          className={`${OPTION_CHARM_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-md transition-all duration-200 ${
-            isActive ? "bg-gray-50 border border-gray-900" : "hover:bg-gray-50 border border-transparent"
+          className={`${OPTION_CHARM_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-lg transition-all duration-200 ${
+            isActive
+              ? "bg-gray-50 border border-gray-900 shadow-sm ring-1 ring-gray-900/10"
+              : "border border-gray-100 hover:border-gray-200 hover:bg-gray-50/60"
           }`}
           onClick={() => {
             setSelectedCategory(opt.value);
@@ -123,7 +143,7 @@ const CategorySelector = ({
             </div>
           )}
           <span
-            className={`${OPTION_CATEGORY_LABEL} ${getCategoryLabelColor(isActive)}`}
+            className={`${OPTION_CHARM_CATEGORY_LABEL} ${getCategoryLabelColor(isActive)}`}
             style={OPTION_FONT_STYLE}
           >
             {opt.label}
@@ -134,35 +154,74 @@ const CategorySelector = ({
   </div>
 );
 
-const SubCategoryTabs = ({
+const CharmFilterAndSearch = ({
   selectedCategory,
   subCategory,
   setSubCategory,
   getSubCategoryCount,
+  searchQuery,
+  setSearchQuery,
 }) => {
   if (!selectedCategory) return null;
 
   const tabs = SUBCATEGORY_TABS[selectedCategory];
   if (!tabs) return null;
 
-  return (
-    <div className="mb-2 flex flex-wrap gap-0.5 justify-center">
-      {tabs.map(({ key, label }) => {
-        const count = getSubCategoryCount(key);
-        const isActive = subCategory === key;
+  const trimmedQuery = searchQuery.trim();
 
-        return (
-          <button
-            key={key}
-            onClick={() => setSubCategory(key)}
-            className={`${OPTION_FILTER_TAB} ${getFilterTabClasses(isActive)}`}
+  return (
+    <div>
+      <div className={`${OPTION_CHARM_TOOLBAR} flex flex-row gap-2.5`}>
+        <div className="relative flex-1 min-w-0">
+          <label htmlFor="charm-filter-select" className="sr-only">
+            Filter charms
+          </label>
+          <select
+            id="charm-filter-select"
+            value={subCategory}
+            onChange={(e) => setSubCategory(e.target.value)}
+            className={`${OPTION_CHARM_FIELD} appearance-none pr-8`}
             style={OPTION_FONT_STYLE}
           >
-            {label}
-            <span className="text-gray-400 font-normal text-xs"> ({count})</span>
-          </button>
-        );
-      })}
+            {tabs.map(({ key, label }) => (
+              <option key={key} value={key}>
+                {label} ({getSubCategoryCount(key)})
+              </option>
+            ))}
+          </select>
+          <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+            <ChevronDownIcon />
+          </span>
+        </div>
+
+        <div className="relative flex-1 min-w-0">
+          <label htmlFor="charm-search-input" className="sr-only">
+            Search charms
+          </label>
+          <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+            <SearchIcon />
+          </span>
+          <input
+            id="charm-search-input"
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name..."
+            className={`${OPTION_CHARM_FIELD} pl-8 pr-8 placeholder:text-gray-400`}
+            style={OPTION_FONT_STYLE}
+          />
+          {trimmedQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 transition-colors hover:text-gray-700"
+              aria-label="Clear search"
+            >
+              <ClearIcon />
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
@@ -222,13 +281,13 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
         )}
       </div>
       <span
-        className={`${OPTION_ITEM_LABEL} mt-1.5 md:mt-2 transition-colors ${getItemLabelColor(isSelected)}`}
+        className={`${OPTION_CHARM_ITEM_LABEL} mt-1 md:mt-1.5 transition-colors ${getItemLabelColor(isSelected)}`}
         style={OPTION_FONT_STYLE}
       >
         {pin.name}
       </span>
       {isSoldOut && (
-        <span className={OPTION_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
+        <span className={OPTION_CHARM_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
       )}
     </div>
   );
@@ -419,9 +478,7 @@ const PinSelector = ({
     return () => cancelAnimationFrame(raf);
   }, [selectedCategory, subCategory, filteredPins, runScrollToFirstCharm]);
 
-  // Get preview image for each category
   const getPreviewImage = (categoryValue) => {
-    // First try to get from Products.pins
     if (Products && Products.pins) {
       if (
         categoryValue === "bronze" &&
@@ -445,13 +502,12 @@ const PinSelector = ({
         return Products.pins.flags[0].src;
       }
     }
-    
-    // Fallback to predefined images from constants
+
     const categoryOption = CATEGORY_OPTIONS_WITH_IMAGES.find(opt => opt.value === categoryValue);
     if (categoryOption && categoryOption.image) {
       return categoryOption.image;
     }
-    
+
     return null;
   };
 
@@ -459,9 +515,14 @@ const PinSelector = ({
   const getSubCategoryCount = (subCat) =>
     filterPinsBySubCategory(pins, selectedCategory, subCat).length;
 
+  const handleClearFilters = useCallback(() => {
+    setSubCategory("all");
+    setSearchQuery("");
+  }, []);
+
   return (
     <div className="relative z-0">
-      <div className="sticky top-0 z-30 bg-white pb-1 border-b border-gray-100 shadow-[0_2px_6px_-2px_rgba(0,0,0,0.06)]">
+      <div className="sticky top-0 z-30 space-y-3 border-b border-gray-100 bg-white pb-3 pt-0.5">
         <CategorySelector
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
@@ -469,45 +530,45 @@ const PinSelector = ({
           getPreviewImage={getPreviewImage}
         />
 
-        {selectedCategory && (
-          <SubCategoryTabs
-            selectedCategory={selectedCategory}
-            subCategory={subCategory}
-            setSubCategory={setSubCategory}
-            getSubCategoryCount={getSubCategoryCount}
-          />
-        )}
-
-        {selectedCategory && (
-          <div className="mt-1 mb-2 px-0.5">
-            <input
-              type="search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search charms..."
-              className="w-full px-3 py-2 text-xs border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400"
-              style={OPTION_FONT_STYLE}
-              aria-label="Search charms"
-            />
-          </div>
-        )}
+        <CharmFilterAndSearch
+          selectedCategory={selectedCategory}
+          subCategory={subCategory}
+          setSubCategory={setSubCategory}
+          getSubCategoryCount={getSubCategoryCount}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
       </div>
 
       {selectedCategory && (
         <div ref={gridScrollRef} className="relative z-0">
-          {searchQuery.trim() && searchedPins.length === 0 && (
-            <p className="text-xs text-gray-500 text-center py-4" style={OPTION_FONT_STYLE}>
-              No charms match &ldquo;{searchQuery.trim()}&rdquo;
-            </p>
+          {searchQuery.trim() && searchedPins.length === 0 ? (
+            <div className="px-4 py-10 text-center">
+              <p className="text-xs font-medium text-gray-800" style={OPTION_FONT_STYLE}>
+                No charms found
+              </p>
+              <p className="mt-1 text-[10px] text-gray-500" style={OPTION_FONT_STYLE}>
+                Try another name, category, or clear your filters.
+              </p>
+              <button
+                type="button"
+                onClick={handleClearFilters}
+                className="mt-4 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                style={OPTION_FONT_STYLE}
+              >
+                Clear filters
+              </button>
+            </div>
+          ) : (
+            <PinGrid
+              filteredPins={searchedPins}
+              selectedPins={selectedPins}
+              onSelect={onSelect}
+              onRemove={onRemove}
+              cart={cart}
+              selectedCategory={selectedCategory}
+            />
           )}
-          <PinGrid
-            filteredPins={searchedPins}
-            selectedPins={selectedPins}
-            onSelect={onSelect}
-            onRemove={onRemove}
-            cart={cart}
-            selectedCategory={selectedCategory}
-          />
         </div>
       )}
     </div>

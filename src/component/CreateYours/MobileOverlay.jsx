@@ -8,6 +8,31 @@ import { filterPinsByCategory } from '../../data/filterHelpers.js';
 import { getMaxAvailableQuantity } from '../../utils/inventory.js';
 import { normalizeImagePath } from '../../utils/imagePath.js';
 import { getCaseLinePins } from '../../utils/cartHelpers.js';
+import {
+  OPTION_CHARM_FIELD,
+  OPTION_CHARM_TOOLBAR,
+  OPTION_FONT_STYLE,
+  OPTION_SELECTION_CARD_ACTIVE,
+  OPTION_SELECTION_CARD_INACTIVE,
+} from './designOptionStyles';
+
+const SearchIcon = () => (
+  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const ChevronDownIcon = () => (
+  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+  </svg>
+);
+
+const ClearIcon = () => (
+  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
 
 const MobileOverlay = ({
   mobileCurrentStep,
@@ -27,20 +52,24 @@ const MobileOverlay = ({
   cart,
   isCaseImageLoading = false
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visiblePinsCount, setVisiblePinsCount] = useState(24);
+  const [mobileSearchQuery, setMobileSearchQuery] = useState('');
   const [loadedCharmImages, setLoadedCharmImages] = useState({});
   const charmsGridScrollRef = useRef(null);
 
   useEffect(() => {
     // Reset batching when user changes the viewed charm set
     setVisiblePinsCount(24);
-  }, [selectedCategory, mobileSubCategory, mobileCurrentStep]);
+  }, [selectedCategory, mobileSubCategory, mobileSearchQuery, mobileCurrentStep]);
 
   useEffect(() => {
     // Clear loaded-image tracking when charm set changes
     setLoadedCharmImages({});
-  }, [selectedCategory, mobileSubCategory]);
+  }, [selectedCategory, mobileSubCategory, mobileSearchQuery]);
+
+  useEffect(() => {
+    setMobileSearchQuery('');
+  }, [selectedCategory]);
 
   useLayoutEffect(() => {
     const scrollToTop = () => {
@@ -54,12 +83,17 @@ const MobileOverlay = ({
       requestAnimationFrame(scrollToTop);
     });
     return () => cancelAnimationFrame(raf);
-  }, [selectedCategory, mobileSubCategory]);
+  }, [selectedCategory, mobileSubCategory, mobileSearchQuery]);
 
   if (!mobileCurrentStep) return null;
 
   const filteredPinsForMobile = filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
-  const visiblePinsForMobile = filteredPinsForMobile.slice(0, visiblePinsCount);
+  const searchedPinsForMobile = mobileSearchQuery.trim()
+    ? filteredPinsForMobile.filter((pin) =>
+        (pin.name || '').toLowerCase().includes(mobileSearchQuery.trim().toLowerCase())
+      )
+    : filteredPinsForMobile;
+  const visiblePinsForMobile = searchedPinsForMobile.slice(0, visiblePinsCount);
 
   const getFilterTabs = () => {
     if (selectedCategory === 'flags') return FLAGS_FILTER_TABS;
@@ -69,7 +103,6 @@ const MobileOverlay = ({
   };
 
   const filterTabs = getFilterTabs();
-  const selectedFilterLabel = filterTabs.find(tab => tab.key === mobileSubCategory)?.label || 'ALL';
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
@@ -81,7 +114,16 @@ const MobileOverlay = ({
           : 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
       }`}>
         <div className="flex justify-between items-center mb-4 xs:mb-5 sm:mb-6 md:mb-8 border-b border-gray-100 pb-3 xs:pb-4 md:pb-5">
-          <h2 className="text-xs xs:text-sm md:text-base lg:text-lg uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h2
+            className={`uppercase tracking-wider text-gray-900 font-medium ${
+              mobileCurrentStep === 'charms' ||
+              mobileCurrentStep === 'case' ||
+              mobileCurrentStep === 'color'
+                ? 'text-[10px] xs:text-xs'
+                : 'text-xs xs:text-sm md:text-base lg:text-lg'
+            }`}
+            style={{ fontFamily: "'Poppins', sans-serif" }}
+          >
             {mobileCurrentStep === 'case' && 'Choose Case'}
             {mobileCurrentStep === 'color' && 'Choose Color'}
             {mobileCurrentStep === 'charms' && 'Choose Charms'}
@@ -166,10 +208,8 @@ const MobileOverlay = ({
                         }
                       }}
                       disabled={soldOut}
-                      className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 rounded-lg ${
-                        isSelected
-                          ? 'ring-2 ring-gray-900 ring-offset-2  text-gray-900'
-                          : 'hover:border-gray-300'
+                      className={`p-1.5 xs:p-2 text-center transition-all duration-200 flex flex-col items-center gap-1.5 xs:gap-2 rounded-lg ${
+                        isSelected ? OPTION_SELECTION_CARD_ACTIVE : OPTION_SELECTION_CARD_INACTIVE
                       } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
@@ -188,11 +228,11 @@ const MobileOverlay = ({
                           />
                         </div>
                       )}
-                      <span className={`text-xs xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2 ${soldOut ? 'text-gray-500' : ''}`}>
+                      <span className={`text-[10px] xs:text-[11px] font-medium mt-0.5 xs:mt-1 ${soldOut ? 'text-gray-500' : ''}`}>
                         {opt.label}
                       </span>
                       {soldOut && (
-                        <span className="text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs text-red-600 font-medium mt-0.5 xs:mt-1">Sold Out</span>
+                        <span className="text-[9px] xs:text-[10px] text-red-600 font-medium mt-0.5">Sold Out</span>
                       )}
                     </button>
                   );
@@ -215,96 +255,106 @@ const MobileOverlay = ({
           )}
           
           {mobileCurrentStep === 'charms' && selectedCaseType && selectedColor && (
-            <div>
-              {/* Category Selection */}
-              <div className="mb-3 xs:mb-4">
-                <div className="grid grid-cols-3 gap-1.5 xs:gap-2">
+            <div className="space-y-3 xs:space-y-4">
+              <div className="grid grid-cols-3 gap-1.5 xs:gap-2">
                   {CATEGORY_OPTIONS.map((cat) => (
                     <button
                       key={cat.value || 'all'}
+                      type="button"
                       onClick={() => setSelectedCategory(cat.value)}
                       className={`p-1.5 xs:p-2 text-[10px] xs:text-xs text-center transition-all duration-200 flex flex-col items-center gap-1.5 xs:gap-2 relative rounded-lg ${
-                        selectedCategory === cat.value ? 'border-2 border-gray-900' : 'border-2 border-transparent'
+                        selectedCategory === cat.value
+                          ? 'border border-gray-900 bg-gray-50 shadow-sm ring-1 ring-gray-900/10'
+                          : 'border border-gray-100 hover:border-gray-200 hover:bg-gray-50/60'
                       }`}
-                      style={{fontFamily: "'Poppins', sans-serif"}}
+                      style={{ fontFamily: "'Poppins', sans-serif" }}
                     >
                       {cat.image && (
-                        <div className={`w-16 h-16 xs:w-20 xs:h-20 flex-shrink-0 rounded flex items-center justify-center overflow-hidden relative ${
-                          selectedCategory === cat.value ? '' : 'bg-white'
-                        }`}>
+                        <div className="relative flex h-16 w-16 xs:h-20 xs:w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded">
                           <Image
                             src={normalizeImagePath(cat.image)}
                             alt={cat.label}
                             fill
                             sizes="(max-width: 640px) 64px, 80px"
-                            className="w-full h-full object-contain"
+                            className="h-full w-full object-contain"
                             loading="lazy"
                           />
                         </div>
                       )}
-                      <span className="font-bold text-xs xs:text-sm">{cat.label}</span>
+                      <span className="text-[10px] font-bold xs:text-[11px]">{cat.label}</span>
                     </button>
                   ))}
-                </div>
               </div>
 
-              {/* Filter Dropdown */}
               {selectedCategory && filterTabs.length > 0 && (
-                <div className="mb-3 xs:mb-4 relative">
-                  <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="w-full flex items-center justify-between px-3 xs:px-4 py-2 xs:py-2.5  border border-gray-300 text-left transition-all duration-200 hover:bg-gray-200 hover:border-gray-400"
-                    style={{fontFamily: "'Poppins', sans-serif"}}
-                  >
-                    <span className="text-xs xs:text-sm font-medium text-gray-900 uppercase tracking-wider">
-                      {selectedFilterLabel}
-                    </span>
-                    <svg 
-                      className={`w-4 h-4 xs:w-5 xs:h-5 text-gray-500 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  
-                  {isDropdownOpen && (
-                    <>
-                      {/* Backdrop to close dropdown */}
-                      <div 
-                        className="fixed inset-0 z-40" 
-                        onClick={() => setIsDropdownOpen(false)}
-                      />
-                      {/* Dropdown Menu */}
-                      <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 shadow-lg max-h-60 overflow-y-auto">
+                <div>
+                  <div className={`${OPTION_CHARM_TOOLBAR} flex flex-row gap-2`}>
+                    <div className="relative min-w-0 flex-1">
+                      <label htmlFor="mobile-charm-filter-select" className="sr-only">
+                        Filter charms
+                      </label>
+                      <select
+                        id="mobile-charm-filter-select"
+                        value={mobileSubCategory}
+                        onChange={(e) => setMobileSubCategory(e.target.value)}
+                        className={`${OPTION_CHARM_FIELD} appearance-none pr-8`}
+                        style={OPTION_FONT_STYLE}
+                      >
                         {filterTabs.map(({ key, label }) => (
-                          <button
-                            key={key}
-                            onClick={() => {
-                              setMobileSubCategory(key);
-                              setIsDropdownOpen(false);
-                            }}
-                            className={`w-full text-left px-3 xs:px-4 py-2 xs:py-2.5 text-xs xs:text-sm uppercase tracking-wider transition-all duration-200 ${
-                              mobileSubCategory === key
-                                ? ' text-gray-900 font-medium'
-                                : 'text-gray-700 hover:bg-gray-50'
-                            }`}
-                            style={{fontFamily: "'Poppins', sans-serif"}}
-                          >
+                          <option key={key} value={key}>
                             {label}
-                          </button>
+                          </option>
                         ))}
-                      </div>
-                    </>
-                  )}
+                      </select>
+                      <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+                        <ChevronDownIcon />
+                      </span>
+                    </div>
+
+                    <div className="relative min-w-0 flex-1">
+                      <label htmlFor="mobile-charm-search-input" className="sr-only">
+                        Search charms
+                      </label>
+                      <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+                        <SearchIcon />
+                      </span>
+                      <input
+                        id="mobile-charm-search-input"
+                        type="search"
+                        value={mobileSearchQuery}
+                        onChange={(e) => setMobileSearchQuery(e.target.value)}
+                        placeholder="Search by name..."
+                        className={`${OPTION_CHARM_FIELD} pl-8 pr-8 placeholder:text-gray-400`}
+                        style={OPTION_FONT_STYLE}
+                      />
+                      {mobileSearchQuery.trim() && (
+                        <button
+                          type="button"
+                          onClick={() => setMobileSearchQuery('')}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 transition-colors hover:text-gray-700"
+                          aria-label="Clear search"
+                        >
+                          <ClearIcon />
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
 
               {/* Charms Grid */}
               {selectedCategory && (
                 <div>
-                
+                  {mobileSearchQuery.trim() && searchedPinsForMobile.length === 0 ? (
+                    <div className="px-4 py-8 text-center">
+                      <p className="text-xs font-medium text-gray-800" style={OPTION_FONT_STYLE}>
+                        No charms found
+                      </p>
+                      <p className="mt-1 text-[10px] text-gray-500" style={OPTION_FONT_STYLE}>
+                        Try another name, category, or clear your filters.
+                      </p>
+                    </div>
+                  ) : (
                   <div ref={charmsGridScrollRef} className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
                     <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
                       {visiblePinsForMobile.map((pin, index) => {
@@ -421,7 +471,7 @@ const MobileOverlay = ({
                                 </div>
                               )}
                             </div>
-                            <span className={`text-xs xs:text-sm sm:text-base text-center line-clamp-2 mt-0.5 xs:mt-1 ${
+                            <span className={`text-[10px] xs:text-[11px] text-center line-clamp-2 mt-0.5 xs:mt-1 ${
                               isSoldOut ? 'text-gray-500' : 'text-gray-700'
                             }`} style={{fontFamily: "'Poppins', sans-serif"}}>
                               {pin.name}
@@ -433,12 +483,12 @@ const MobileOverlay = ({
                         );
                       })}
                     </div>
-                    {filteredPinsForMobile.length > visiblePinsCount && (
+                    {searchedPinsForMobile.length > visiblePinsCount && (
                       <div className="mt-3 flex justify-center">
                         <button
                           type="button"
                           onClick={() => setVisiblePinsCount((prev) => prev + 24)}
-                          className="px-4 py-2 text-xs xs:text-sm border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                          className="px-4 py-2 text-[10px] xs:text-xs border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors duration-200"
                           style={{ fontFamily: "'Poppins', sans-serif" }}
                         >
                           Load more charms
@@ -446,6 +496,7 @@ const MobileOverlay = ({
                       </div>
                     )}
                   </div>
+                  )}
                 </div>
               )}
             </div>

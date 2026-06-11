@@ -27,9 +27,9 @@ export default function LayoutClient({ children }) {
   const hideNavBar = pathname === '/checkout';
   const hideNavBarOnMobile =
     pathname === '/custom-passport' || pathname === '/custompassport' || pathname === '/AddText';
-  const hideFooter = pathname === '/checkout' || pathname === '/AddText';
-  const hideFooterOnMobile =
-    pathname === '/custom-passport' || pathname === '/custompassport' || pathname === '/AddText';
+  const hideFooter =
+    pathname === '/checkout' || pathname === '/AddText' || isCreateYoursPage;
+  const hideFooterOnMobile = pathname === '/AddText';
 
   return (
     <HelmetProvider>

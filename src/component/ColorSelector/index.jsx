@@ -2,77 +2,12 @@ import React from "react";
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
 import {
+  OPTION_CASE_COLOR_LABEL,
+  OPTION_CASE_SOLD_OUT,
   OPTION_FONT_STYLE,
-  OPTION_ITEM_LABEL,
-  OPTION_SOLD_OUT,
   getItemLabelColor,
 } from '../CreateYours/designOptionStyles';
-
-// Helper function to extract color name from image filename
-const getColorName = (image) => {
-  if (!image) return '';
-  
-  // Extract filename from path
-  const filename = image.split('/').pop().replace('.webp', '').replace('.png', '').replace('.jpg', '').toLowerCase();
-  
-  // Remove case type prefixes (economycase, businessclasscase, firstclasscase, etc.)
-  let colorPart = filename
-    .replace(/^economycase/i, '')
-    .replace(/^businessclasscase/i, '')
-    .replace(/^firstclasscase/i, '')
-    .replace(/^smartcase/i, '')
-    .replace(/^premiumcase/i, '')
-    .replace(/^firstclass/i, '');
-  
-  // Handle common color name patterns
-  const colorMap = {
-    'lightpink': 'Light Pink',
-    'lightblue': 'Light Blue',
-    'lightbrown': 'Light Brown',
-    'darkbrown': 'Dark Brown',
-    'darkblue': 'Dark Blue',
-    'jeansblue': 'Jeans Blue',
-    'brickred': 'Brick Red',
-    'ligthpink': 'Light Pink', // Handle typo
-    'navyblue': 'Navy Blue',
-    'gray': 'Gray',
-    'grey': 'Gray',
-    'black': 'Black',
-    'brown': 'Brown',
-    'red': 'Red',
-    'pink': 'Pink',
-    'blue': 'Blue',
-    'green': 'Green',
-    'purple': 'Purple',
-    'yellow': 'Yellow',
-    'orange': 'Orange'
-  };
-  
-  // Check if exact match exists
-  if (colorMap[colorPart]) {
-    return colorMap[colorPart];
-  }
-  
-  // Try to split camelCase or find common patterns
-  // Split on common word boundaries
-  colorPart = colorPart
-    .replace(/([a-z])([A-Z])/g, '$1 $2') // camelCase
-    .replace(/(dark|light|navy|jeans|brick)([a-z]+)/g, '$1 $2') // prefixes
-    .split(/(?=[A-Z])|(?=dark|light|navy|jeans|brick)/) // split on capitals or prefixes
-    .filter(word => word.length > 0)
-    .join(' ')
-    .toLowerCase()
-    .split(' ')
-    .map(word => {
-      // Check if word is in color map
-      if (colorMap[word]) return colorMap[word];
-      // Capitalize first letter
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    })
-    .join(' ');
-  
-  return colorPart || 'Color';
-};
+import { getColorNameFromImage } from '../../utils/colorNames';
 
 const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], isLoading = false }) => {
   const preloadImage = (imagePath) => {
@@ -112,9 +47,13 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
           <div className="absolute inset-0 z-10 rounded-xl bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse pointer-events-none" aria-hidden="true" />
         </>
       )}
-      <div className="relative grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 gap-0 justify-items-center">
+      <div
+        className="relative grid w-full gap-x-2 gap-y-2.5 sm:gap-x-2.5 sm:gap-y-3 justify-items-center [grid-template-columns:repeat(auto-fill,minmax(min(100%,3.75rem),1fr))] sm:[grid-template-columns:repeat(auto-fill,minmax(min(100%,4.25rem),1fr))]"
+        role="radiogroup"
+        aria-label="Case colors"
+      >
         {colors.map(({ color, image }) => {
-          const colorName = getColorName(image);
+          const colorName = getColorNameFromImage(image);
           const isSelected = selectedColor === color;
           const isSoldOut = isColorSoldOut(color);
 
@@ -122,8 +61,11 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
             <button
               key={color}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              aria-label={isSoldOut ? `${colorName} — sold out` : colorName}
               disabled={isLoading || isSoldOut}
-              className={`flex flex-col items-center justify-center text-center p-0 w-full min-h-[2.75rem] sm:min-h-[3rem] transition-colors touch-manipulation ${
+              className={`flex w-full max-w-[5rem] flex-col items-center justify-start text-center px-0.5 py-1 transition-colors touch-manipulation ${
                 isLoading ? 'cursor-wait' : isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
               }`}
               onClick={() => !isLoading && !isSoldOut && onSelect(color, image)}
@@ -131,7 +73,7 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
               onTouchStart={() => preloadImage(image)}
             >
               <div
-                className={`h-8 w-8 sm:h-9 sm:w-9 shrink-0 rounded-full border-2 box-border transition-colors duration-200 ${
+                className={`h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full border-2 box-border transition-colors duration-200 ${
                   isSelected
                     ? 'border-gray-900 ring-2 ring-inset ring-gray-300'
                     : 'border-gray-200 hover:border-gray-400'
@@ -140,14 +82,14 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
               />
               {colorName && (
                 <span
-                  className={`${OPTION_ITEM_LABEL} mt-px transition-colors ${getItemLabelColor(isSelected)}`}
+                  className={`${OPTION_CASE_COLOR_LABEL} mt-1 w-full px-0.5 transition-colors ${getItemLabelColor(isSelected)}`}
                   style={OPTION_FONT_STYLE}
                 >
                   {colorName}
                 </span>
               )}
               {isSoldOut && (
-                <span className={OPTION_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
+                <span className={OPTION_CASE_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
               )}
             </button>
           );

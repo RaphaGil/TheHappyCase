@@ -7,17 +7,17 @@ export const MAX_TEXT_LENGTH = 10;
 export const CASE_OPTIONS = [
   { 
     value: 'economy', 
-    label: 'Economy - £8.00',
+    label: 'Economy',
     image: '/images/SmartCase/economycaselightpink.webp'
   },
   { 
     value: 'business', 
-    label: 'Business - £15.00',
+    label: 'Business',
     image: '/images/BusinessClassCase/businessclasscasegray.webp'
   },
   { 
     value: 'firstclass', 
-    label: 'First Class - £20.00',
+    label: 'First Class',
     image: '/images/FirstClassCase/firstclasscasebrown.webp'
   },
 ];
@@ -26,17 +26,17 @@ export const CASE_OPTIONS = [
 export const CATEGORY_OPTIONS = [
   { 
     value: 'bronze', 
-    label: 'Bronze - £1.00',
+    label: 'Bronze',
     image: '/images/BronzePins/airplane.webp'
   },
   { 
     value: 'colorful', 
-    label: 'Colorful - £2.00',
+    label: 'Colorful',
     image: '/images/ColorfulPins/beagoodhuman.webp'
   },
   { 
     value: 'flags', 
-    label: 'Flags - £2.00',
+    label: 'Flags',
     image: '/images/Flags/albania.webp'
   },
 ];

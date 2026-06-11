@@ -4,11 +4,13 @@ import { CASE_OPTIONS } from '../../data/constants';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
 import {
+  OPTION_CASE_CATEGORY_LABEL,
+  OPTION_CASE_SOLD_OUT,
   OPTION_CATEGORY_CARD_MIN_H,
   OPTION_CATEGORY_IMAGE,
-  OPTION_CATEGORY_LABEL,
   OPTION_FONT_STYLE,
-  OPTION_SOLD_OUT,
+  OPTION_SELECTION_CARD_ACTIVE,
+  OPTION_SELECTION_CARD_INACTIVE,
   getCategoryLabelColor,
 } from './designOptionStyles';
 
@@ -85,10 +87,8 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
               key={opt.value}
               type="button"
               disabled={soldOut}
-              className={`${OPTION_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-md transition-all duration-200 ${
-                isSelected
-                  ? 'bg-gray-50 border border-gray-900'
-                  : 'hover:bg-gray-50 border border-transparent'
+              className={`${OPTION_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-lg transition-all duration-200 ${
+                isSelected ? OPTION_SELECTION_CARD_ACTIVE : OPTION_SELECTION_CARD_INACTIVE
               } ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               onClick={() => {
                 if (!soldOut) {
@@ -119,13 +119,13 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                 </div>
               )}
               <span
-                className={`${OPTION_CATEGORY_LABEL} ${getCategoryLabelColor(isSelected)}`}
+                className={`${OPTION_CASE_CATEGORY_LABEL} ${getCategoryLabelColor(isSelected)}`}
                 style={OPTION_FONT_STYLE}
               >
-                {opt.label.split(' - ')[0]}
+                {opt.label}
               </span>
               {soldOut && (
-                <span className={OPTION_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
+                <span className={OPTION_CASE_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
               )}
             </button>
           );

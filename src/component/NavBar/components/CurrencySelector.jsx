@@ -6,7 +6,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useCurrency } from '../../../context/CurrencyContext';
 import { currencyToCountry, currencyToFlag, mainCurrencies } from '../../../data/currencyConstants';
 
-const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
+const CurrencySelector = ({ variant = 'desktop', onSelect, inverse = false }) => {
   const { currency, setCurrency, currencySymbol } = useCurrency();
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
   const currencyDropdownRef = useRef(null);
@@ -91,10 +91,14 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
     );
   }
 
+  const desktopTextClasses = inverse
+    ? 'text-white/90 hover:text-white'
+    : 'text-gray-700 hover:text-gray-900';
+
   // Desktop variant
   if (isUKOnly) {
     return (
-      <div className="px-2 md:px-3 py-1 text-gray-700 text-[12px] md:text-xs font-inter">
+      <div className={`px-2 md:px-3 py-1 text-[12px] md:text-xs font-inter ${desktopTextClasses}`}>
         <span className="whitespace-nowrap">{getCurrencyDisplayWithFlag()}</span>
       </div>
     );
@@ -106,7 +110,7 @@ const CurrencySelector = ({ variant = 'desktop', onSelect }) => {
           e.stopPropagation();
           toggleCurrencyDropdown();
         }}
-        className="px-2 md:px-3 py-1 text-gray-700 hover:text-gray-900 focus:outline-none transition-colors flex items-center text-[12px] md:text-xs font-inter"
+        className={`px-2 md:px-3 py-1 focus:outline-none transition-colors flex items-center text-[12px] md:text-xs font-inter ${desktopTextClasses}`}
         aria-label="Select currency"
       >
         <span className="mr-1 whitespace-nowrap">{getCurrencyDisplayWithFlag()}</span>

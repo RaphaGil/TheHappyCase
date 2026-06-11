@@ -121,6 +121,15 @@ export default {
         'body': '0.3px',       // Standard for body text
         'heading': '1px',      // For headings with Fredoka One
       },
+      keyframes: {
+        'banner-progress': {
+          from: { transform: 'scaleX(0)' },
+          to: { transform: 'scaleX(1)' },
+        },
+      },
+      animation: {
+        'banner-progress': 'banner-progress 4.5s linear forwards',
+      },
       fontWeight: {
         // Standard font weights
         'thin': '100',
