@@ -22,30 +22,38 @@ export default function LayoutClient({ children }) {
   }, []);
   const pathname = usePathname();
   const isHomePage = pathname === '/';
+  const isCreateYoursPage =
+    pathname === '/custom-passport' || pathname === '/custompassport';
   const hideNavBar = pathname === '/checkout';
-  const hideNavBarOnMobile = pathname === '/custom-passport' || pathname === '/custompassport' || pathname === '/AddText';
-  const hideFooter = pathname === '/checkout' || pathname === '/AddText';
-  const hideFooterOnMobile = pathname === '/custom-passport' || pathname === '/AddText';
+  const hideNavBarOnMobile = pathname === '/AddText';
+  const hideFooter = pathname === '/checkout' || pathname === '/AddText' || isCreateYoursPage;
+  const hideFooterOnMobile = pathname === '/AddText';
 
   return (
     <HelmetProvider>
       <SEO />
       <CurrencyProvider>
         <CartProvider>
-          <div className="App bg-white min-h-screen">
+          <div
+            className={`App bg-white ${
+              isCreateYoursPage ? 'h-dvh flex flex-col overflow-hidden' : 'min-h-screen'
+            }`}
+          >
             {process.env.NODE_ENV !== 'production' && <EnvDebug />}
           {!hideNavBar && (
-            <header className={`App-header ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{ background: 'white' }}>
+            <header className={`App-header flex-shrink-0 ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{ background: 'white' }}>
               <NavBar isHomePage={isHomePage} />
             </header>
           )}
-          <main>{children}</main>
+          <main className={isCreateYoursPage ? 'flex-1 min-h-0 overflow-hidden' : undefined}>
+            {children}
+          </main>
           {!hideFooter && (
             <div className={hideFooterOnMobile ? 'hidden md:block' : ''}>
               <Footer />
             </div>
           )}
-          <ScrollToTopButton />
+          {!isCreateYoursPage && <ScrollToTopButton />}
           <CartDrawer />
         </div>
       </CartProvider>

@@ -2,8 +2,8 @@
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import ColorSelector from '../ColorSelector/index.jsx';
-import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../data/constants.js';
+import CaseSelectionSection from './CaseSelectionSection';
+import { CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../data/constants.js';
 import { filterPinsByCategory } from '../../data/filterHelpers.js';
 import { getMaxAvailableQuantity } from '../../utils/inventory.js';
 import { normalizeImagePath } from '../../utils/imagePath.js';
@@ -23,6 +23,8 @@ const MobileOverlay = ({
   handleCaseTypeSelection,
   handleColorSelection,
   handlePinSelection,
+  handlePinRemoveFromList,
+  selectedCase,
   Products,
   cart,
   isCaseImageLoading = false
@@ -71,149 +73,63 @@ const MobileOverlay = ({
   const filterTabs = getFilterTabs();
   const selectedFilterLabel = filterTabs.find(tab => tab.key === mobileSubCategory)?.label || 'ALL';
 
+  const sheetTitle =
+    mobileCurrentStep === 'case'
+      ? 'Case & Color'
+      : mobileCurrentStep === 'charms'
+        ? 'Choose Charms'
+        : '';
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
-      <div className={`bg-white rounded-sm p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 w-full overflow-y-auto border border-gray-200 ${
-        mobileCurrentStep === 'charms' 
-          ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg h-fit' 
-          : mobileCurrentStep === 'case'
-          ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
-          : 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
-      }`}>
-        <div className="flex justify-between items-center mb-4 xs:mb-5 sm:mb-6 md:mb-8 border-b border-gray-100 pb-3 xs:pb-4 md:pb-5">
-          <h2 className="text-xs xs:text-sm md:text-base lg:text-lg uppercase tracking-wider text-gray-900 font-medium" style={{fontFamily: "'Poppins', sans-serif"}}>
-            {mobileCurrentStep === 'case' && 'Choose Case'}
-            {mobileCurrentStep === 'color' && 'Choose Color'}
-            {mobileCurrentStep === 'charms' && 'Choose Charms'}
-          </h2>
-          <button
-            onClick={() => setMobileCurrentStep(null)}
-            className="p-0.5 xs:p-1 hover:bg-gray-50 transition-colors"
-          >
-            <svg className="w-4 h-4 xs:w-5 xs:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+    <div className="fixed inset-0 z-50 flex flex-col justify-end overscroll-contain">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40"
+        onClick={() => setMobileCurrentStep(null)}
+        aria-label="Close options"
+      />
+      <div
+        className="relative flex flex-col bg-white rounded-t-2xl shadow-2xl border-t border-gray-200 max-h-[72vh] w-full"
+        role="dialog"
+        aria-modal="true"
+        aria-label={sheetTitle}
+      >
+        <div className="flex-shrink-0 pt-2 pb-3 px-4 border-b border-gray-100">
+          <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-gray-200" aria-hidden="true" />
+          <div className="flex justify-between items-center">
+            <h2 className="text-sm uppercase tracking-wider text-gray-900 font-medium" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              {sheetTitle}
+            </h2>
+            <button
+              type="button"
+              onClick={() => setMobileCurrentStep(null)}
+              className="p-1 hover:bg-gray-50 rounded-md transition-colors"
+              aria-label="Close"
+            >
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
-        
-        {/* Step Content */}
-        <div className="space-y-3 xs:space-y-4 md:space-y-5">
+
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-3">
           {mobileCurrentStep === 'case' && (
-            <div className="w-full">
-              <div className="grid grid-cols-3 gap-1.5 xs:gap-2 sm:gap-3 md:gap-5 lg:gap-6 xl:gap-8">
-                {CASE_OPTIONS.map((opt) => {
-                  // Get case image from Products or use fallback
-                  const getCaseImage = () => {
-                    if (Products && Products.cases) {
-                      const caseData = Products.cases.find(c => c.type === opt.value);
-                      if (caseData && caseData.colors && caseData.colors.length > 0) {
-                        return caseData.colors[0].image;
-                      }
-                    }
-                    return opt.image || null;
-                  };
-                  
-                  // Check if case is sold out
-                  // Shows "Sold Out" if no more items can be added to the basket
-                  const isCaseTypeSoldOut = () => {
-                    const caseData = Products && Products.cases ? Products.cases.find(c => c.type === opt.value) : null;
-                    if (!caseData) return false;
-                    
-                    // Note: We check inventory through getMaxAvailableQuantity below
-                    // which properly handles localStorage quantities, product data, and cart items
-                    // to determine if cases can be added to the basket
-                    
-                    // Check if all colors are sold out (considering cart inventory)
-                    // This uses getMaxAvailableQuantity which checks both color-level and case-level quantities
-                    if (caseData.colors && caseData.colors.length > 0) {
-                      // Check if at least one color has available inventory that can be added to basket
-                      // This considers items already in the basket/cart
-                      const hasAvailableColor = caseData.colors.some(color => {
-                        // Check available inventory considering cart (items in basket)
-                        // getMaxAvailableQuantity returns how many MORE can be added to the basket
-                        // It checks: color-level quantity -> case-level quantity -> product data
-                        // Returns: null (unlimited), > 0 (can add more), or 0 (cannot add any more)
-                        const productForInventory = {
-                          caseType: opt.value,
-                          color: color.color,
-                        };
-                        const maxAvailable = getMaxAvailableQuantity(productForInventory, cart || []);
-                        
-                        // If maxAvailable is null, it means unlimited inventory (can add to basket)
-                        // If maxAvailable > 0, there's inventory available (can add to basket)
-                        // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
-                        return maxAvailable === null || maxAvailable > 0;
-                      });
-                      
-                      // If no color has available inventory (maxAvailable === 0 for all colors), 
-                      // it means no cases can be added to the basket - show as SOLD OUT
-                      return !hasAvailableColor;
-                    }
-                    
-                    return false;
-                  };
-                  
-                  const caseImage = getCaseImage();
-                  const soldOut = isCaseTypeSoldOut();
-                  const isSelected = selectedCaseType === opt.value;
-                  
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => {
-                        if (!soldOut) {
-                          handleCaseTypeSelection(opt.value);
-                        }
-                      }}
-                      disabled={soldOut}
-                      className={`p-0.5 xs:p-1 sm:p-2.5 md:p-4 lg:p-5 xl:p-6 text-center transition-all duration-200 flex flex-col items-center gap-0.5 xs:gap-1 sm:gap-2 md:gap-3 lg:gap-4 rounded-lg ${
-                        isSelected
-                          ? 'ring-2 ring-gray-900 ring-offset-2  text-gray-900'
-                          : 'hover:border-gray-300'
-                      } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      style={{fontFamily: "'Poppins', sans-serif"}}
-                    >
-                      {caseImage && (
-                        <div className="relative w-full aspect-square overflow-hidden ">
-                          <Image
-                            src={normalizeImagePath(caseImage)}
-                            alt={opt.label}
-                            fill
-                            sizes="(max-width: 640px) 120px, (max-width: 1024px) 180px, 220px"
-                            className={`w-full h-full object-contain p-0 xs:p-0.5 sm:p-1.5 md:p-3 lg:p-4 xl:p-5 ${soldOut ? 'opacity-50' : ''}`}
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.style.visibility = 'hidden';
-                            }}
-                          />
-                        </div>
-                      )}
-                      <span className={`text-xs xs:text-sm sm:text-base md:text-base lg:text-lg xl:text-xl font-medium mt-0.5 xs:mt-1 md:mt-2 ${soldOut ? 'text-gray-500' : ''}`}>
-                        {opt.label}
-                      </span>
-                      {soldOut && (
-                        <span className="text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs text-red-600 font-medium mt-0.5 xs:mt-1">Sold Out</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <CaseSelectionSection
+              panelMode
+              showOnMobile
+              isOpen
+              selectedCaseType={selectedCaseType}
+              selectedColor={selectedColor}
+              selectedCase={selectedCase}
+              onCaseSelect={handleCaseTypeSelection}
+              onColorSelect={handleColorSelection}
+              Products={Products}
+              cart={cart}
+              isCaseImageLoading={isCaseImageLoading}
+            />
           )}
-          
-          {mobileCurrentStep === 'color' && selectedCaseType && (
-            <div>
-              <ColorSelector
-                colors={Products.cases.find(c => c.type === selectedCaseType)?.colors || []}
-                selectedColor={selectedColor}
-                onSelect={handleColorSelection}
-                caseType={selectedCaseType}
-                cart={cart}
-                isLoading={isCaseImageLoading}
-              />
-            </div>
-          )}
-          
+
           {mobileCurrentStep === 'charms' && selectedCaseType && selectedColor && (
             <div>
               {/* Category Selection */}

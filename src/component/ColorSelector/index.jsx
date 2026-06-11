@@ -1,6 +1,12 @@
 import React from "react";
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
+import {
+  OPTION_FONT_STYLE,
+  OPTION_ITEM_LABEL,
+  OPTION_SOLD_OUT,
+  getItemLabelColor,
+} from '../CreateYours/designOptionStyles';
 
 // Helper function to extract color name from image filename
 const getColorName = (image) => {
@@ -99,58 +105,51 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
   };
 
   return (
-    <div
-      className={`overflow-visible rounded-xl transition-colors duration-200 ${
-        isLoading ? 'bg-gray-50/90 border border-gray-200 p-3 sm:p-4' : ''
-      }`}
-      aria-busy={isLoading}
-    >
+    <div className="relative overflow-visible rounded-xl" aria-busy={isLoading}>
       {isLoading && (
-        <div className="mb-2 text-[11px] sm:text-xs text-gray-500 font-medium text-center">
-          Updating case colors...
-        </div>
+        <>
+          <div className="absolute inset-0 z-10 rounded-xl bg-gray-50/50 pointer-events-none" aria-hidden="true" />
+          <div className="absolute inset-0 z-10 rounded-xl bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse pointer-events-none" aria-hidden="true" />
+        </>
       )}
-      <div className="flex flex-wrap gap-2 sm:gap-3 overflow-visible justify-center relative">
-        {isLoading && (
-          <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-white/50 to-transparent animate-pulse pointer-events-none" />
-        )}
-        {colors.map(({ color, image, quantity }) => {
+      <div className="relative grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 gap-0 justify-items-center">
+        {colors.map(({ color, image }) => {
           const colorName = getColorName(image);
           const isSelected = selectedColor === color;
-          // Check if sold out considering cart inventory
           const isSoldOut = isColorSoldOut(color);
-          
+
           return (
-            <div
+            <button
               key={color}
-              className={`transition-all duration-200 flex flex-col items-center overflow-visible ${
-                isLoading ? 'opacity-70 cursor-wait' : isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+              type="button"
+              disabled={isLoading || isSoldOut}
+              className={`flex flex-col items-center justify-center text-center p-0 w-full min-h-[2.75rem] sm:min-h-[3rem] transition-colors touch-manipulation ${
+                isLoading ? 'cursor-wait' : isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
               }`}
               onClick={() => !isLoading && !isSoldOut && onSelect(color, image)}
               onMouseEnter={() => preloadImage(image)}
               onTouchStart={() => preloadImage(image)}
             >
-              <div className="relative overflow-visible">
-                <div
-                  className={`w-10 h-10 rounded-full border-2 transition-all duration-200 ${
-                    isSelected
-                      ? "border-gray-900 ring-2 ring-gray-300 scale-110"
-                      : "border-gray-200 hover:border-gray-400"
-                  } ${isSoldOut ? 'opacity-50' : ''}`}
-                  style={{ backgroundColor: color }}
-                />
-              </div>
+              <div
+                className={`h-8 w-8 sm:h-9 sm:w-9 shrink-0 rounded-full border-2 box-border transition-colors duration-200 ${
+                  isSelected
+                    ? 'border-gray-900 ring-2 ring-inset ring-gray-300'
+                    : 'border-gray-200 hover:border-gray-400'
+                } ${isSoldOut ? 'opacity-50' : ''}`}
+                style={{ backgroundColor: color }}
+              />
               {colorName && (
-                <span className={`text-xs font-medium mt-2 text-center font-inter ${
-                  isSelected ? 'text-gray-900' : 'text-gray-700'
-                } ${isSoldOut ? 'text-white ' : ''}`}>
+                <span
+                  className={`${OPTION_ITEM_LABEL} mt-px transition-colors ${getItemLabelColor(isSelected)}`}
+                  style={OPTION_FONT_STYLE}
+                >
                   {colorName}
                 </span>
               )}
               {isSoldOut && (
-                <span className="text-[10px] -mt-4 text-red-600 font-medium ">Sold Out</span>
+                <span className={OPTION_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
               )}
-            </div>
+            </button>
           );
         })}
       </div>

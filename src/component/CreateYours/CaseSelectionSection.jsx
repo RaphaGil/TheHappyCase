@@ -60,9 +60,6 @@ const CaseSelectionSection = ({
 
           {selectedCaseType && (
             <div className="mt-4 overflow-visible">
-              <h4 className="text-xs uppercase tracking-wider text-gray-500 font-medium mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                Choose Color
-              </h4>
               <ColorSelector
                 colors={selectedCase?.colors || []}
                 selectedColor={selectedColor}
@@ -73,6 +70,7 @@ const CaseSelectionSection = ({
               />
             </div>
           )}
+
         </div>
       )}
     </div>

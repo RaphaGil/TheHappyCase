@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import DesignOptionsSteps from './DesignOptionsSteps';
 import CaseSelectionSection from './CaseSelectionSection';
 import CharmsSelectionSection from './CharmsSelectionSection';
@@ -25,15 +25,34 @@ const DesignOptionsPanel = ({
   onCaseSelect,
   onColorSelect,
   onPinSelect,
+  onPinRemove,
   onTextAdded,
   onMobileAddText,
   Products,
   cart,
   isCaseImageLoading,
 }) => {
+  const scrollRef = useRef(null);
+  const preservedScrollTopRef = useRef(null);
+
+  const handleColorSelect = useCallback((color, image) => {
+    if (scrollRef.current) {
+      preservedScrollTopRef.current = scrollRef.current.scrollTop;
+    }
+    onColorSelect(color, image);
+  }, [onColorSelect]);
+
+  useLayoutEffect(() => {
+    if (preservedScrollTopRef.current === null || !scrollRef.current) return;
+    scrollRef.current.scrollTop = preservedScrollTopRef.current;
+    preservedScrollTopRef.current = null;
+  }, [selectedColor]);
+
+  const canLeaveCaseStep = Boolean(selectedCaseType && selectedColor);
+
   return (
-    <div className="flex flex-col min-h-0 flex-1 w-full overflow-hidden">
-      <div className="flex-shrink-0 bg-white z-20">
+    <div className="flex flex-col min-h-0 h-full w-full overflow-hidden">
+      <div className="relative z-30 flex-shrink-0 bg-white shadow-[0_2px_6px_-2px_rgba(0,0,0,0.06)]">
         <DesignOptionsSteps
           activeStep={activeStep}
           onStepChange={onStepChange}
@@ -45,8 +64,9 @@ const DesignOptionsPanel = ({
       </div>
 
       <div
+        ref={scrollRef}
         data-design-options-scroll
-        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain"
+        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain relative z-0 [scrollbar-gutter:stable]"
       >
         {activeStep === 'case' && (
           <CaseSelectionSection
@@ -57,7 +77,7 @@ const DesignOptionsPanel = ({
             selectedColor={selectedColor}
             selectedCase={selectedCase}
             onCaseSelect={onCaseSelect}
-            onColorSelect={onColorSelect}
+            onColorSelect={handleColorSelect}
             Products={Products}
             cart={cart}
             isCaseImageLoading={isCaseImageLoading}
@@ -65,18 +85,25 @@ const DesignOptionsPanel = ({
         )}
 
         {activeStep === 'charms' && (
-          <CharmsSelectionSection
-            panelMode
-            showOnMobile={isMobile}
-            isOpen
-            pins={pins}
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            selectedPins={selectedPins}
-            onPinSelect={onPinSelect}
-            Products={Products}
-            cart={cart}
-          />
+          canLeaveCaseStep ? (
+            <CharmsSelectionSection
+              panelMode
+              showOnMobile={isMobile}
+              isOpen
+              pins={pins}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              selectedPins={selectedPins}
+              onPinSelect={onPinSelect}
+              onPinRemove={onPinRemove}
+              Products={Products}
+              cart={cart}
+            />
+          ) : (
+            <div className="pt-4 text-center text-sm text-gray-500" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              Select a case and color first to choose charms.
+            </div>
+          )
         )}
 
         {activeStep === 'name' && (
@@ -90,7 +117,6 @@ const DesignOptionsPanel = ({
                 customTextAdded={customTextAdded}
                 setCustomTextAdded={setCustomTextAdded}
                 onAddText={onMobileAddText}
-                showHeading
               />
             </div>
           ) : (

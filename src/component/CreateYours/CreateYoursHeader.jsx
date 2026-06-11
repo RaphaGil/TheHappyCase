@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const CreateYoursHeader = ({ isMobile = false, onClose }) => {
   return (
-    <div className="relative text-center flex-shrink-0 mt-1 xs:mt-2 md:mt-2 md:mb-0 px-2 xs:px-0">
+    <div className="relative text-center flex-shrink-0 mt-1 xs:mt-2 md:mt-1 md:mb-0 px-2 xs:px-0">
   
       {isMobile && onClose && (
         <button
@@ -18,11 +18,11 @@ const CreateYoursHeader = ({ isMobile = false, onClose }) => {
           </svg>
         </button>
       )}
-      <h1 className="text-2xl sm:text-3xl md:text-4xl mt-4 md:mt-1 text-gray-900 tracking-tight" style={{fontFamily: "'Poppins', sans-serif"}}>
+      <h1 className="text-2xl sm:text-3xl md:text-2xl mt-4 md:mt-0 text-gray-900 tracking-tight" style={{fontFamily: "'Poppins', sans-serif"}}>
         CREATE YOURS
       </h1>
-      <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-1 md:mb-2 mt-4"></div>
-      <p className="md:block hidden text-sm text-gray-500 max-w-2xl mx-auto font-light" 
+      <div className="w-16 sm:w-20 md:w-20 h-px bg-gray-200 mx-auto mb-1 md:mb-1 mt-3 md:mt-2"></div>
+      <p className="md:block hidden text-xs text-gray-500 max-w-2xl mx-auto font-light md:pb-1" 
          style={{fontFamily: "'Poppins', sans-serif"}}>
         Design your perfect passport case with our interactive creator
       </p>

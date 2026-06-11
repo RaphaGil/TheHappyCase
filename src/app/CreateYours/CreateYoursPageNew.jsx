@@ -93,6 +93,7 @@ export default function CreateYoursPageNew() {
     handleAddToCart,
     handlePinSelect,
     handlePinRemove,
+    handlePinRemoveFromList,
   } = useCreateYours();
   const router = useRouter();
   const mainContentRef = useRef(null);
@@ -151,8 +152,15 @@ export default function CreateYoursPageNew() {
   }, []);
 
   const handleDesignStepChange = useCallback((step) => {
+    if (step !== 'case' && (!selectedCaseType || !selectedColor)) return;
     setActiveDesignStep(step);
-  }, []);
+  }, [selectedCaseType, selectedColor]);
+
+  useEffect(() => {
+    if (!isMobile && activeDesignStep !== 'case' && (!selectedCaseType || !selectedColor)) {
+      setActiveDesignStep('case');
+    }
+  }, [activeDesignStep, isMobile, selectedCaseType, selectedColor]);
 
   useEffect(() => {
     if (isMobile && isAddTextDropdownOpen && mainContentRef.current) {
@@ -160,19 +168,45 @@ export default function CreateYoursPageNew() {
     }
   }, [isMobile, isAddTextDropdownOpen]);
 
+  const priceSummaryProps = {
+    totalPrice,
+    caseBasePrice,
+    groupedPinsList,
+    showPriceBreakdown,
+    quantity,
+    setQuantity,
+    onIncrementQuantity: handleIncrementQuantity,
+    onDecrementQuantity: handleDecrementQuantity,
+    selectedCase,
+    selectedCaseType,
+    selectedColor,
+    selectedPins,
+    selectedCaseImage,
+    pinsPrice,
+    onAddToCart: handleAddToCart,
+    onShowTerms: () => setShowTermsModal(true),
+    agreedToTerms,
+    setAgreedToTerms,
+    showTermsError,
+    inventoryMessage,
+    inventoryType,
+  };
+
   return (
-    <div className="h-screen bg-white flex flex-col overflow-x-hidden pb-[env(safe-area-inset-bottom)]">
-      <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
+    <div className="h-full min-h-0 bg-white flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]">
+      <div className="flex-shrink-0">
+        <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
+      </div>
 
       {/* Main content - canvas centered within its div, options scroll when dropdowns open. Mobile: padding-bottom so fixed bar doesn't cover content */}
       <div
         ref={mainContentRef}
-        className={`flex flex-col justify-center md:flex-row flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden ${
+        className={`flex flex-col md:flex-row md:items-stretch flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden ${
           isMobile ? (isAddTextDropdownOpen ? 'pb-[380px]' : 'pb-56') : ''
         }`}
       >
         {/* Canvas - aligned to top on mobile, centered on desktop */}
-        <div className="flex flex-col flex-1 justify-start md:justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 min-h-0 md:overflow-hidden">
+        <div className="flex flex-col flex-1 justify-start md:justify-center md:w-1/2 md:flex-none md:flex-shrink-0 md:items-center md:min-h-0 md:h-full min-h-0 md:overflow-hidden">
           <CanvasSectionCentered
             selectedCaseType={selectedCaseType}
             selectedColor={selectedColor}
@@ -188,71 +222,50 @@ export default function CreateYoursPageNew() {
             onOpenImageModal={() => setShowImageModal(true)}
             onOpenDescriptionModal={() => setShowDescriptionModal(true)}
             Products={productsWithQuantities}
-          />
-        </div>
-
-        {/* Desktop options column */}
-        <div className={`flex flex-col md:w-1/2 md:pl-6 lg:pl-8 md:border-l mt-4 md:mt-6 md:border-gray-100 md:min-h-0 md:max-h-full md:overflow-hidden ${isMobile ? 'hidden' : 'flex-shrink-0 md:flex-none p-4 lg:p-0'}`}>
-          {!isMobile && (
-            <>
-              <div className="flex-1 min-h-0 flex flex-col mt-6 md:mr-4 overflow-hidden">
-                <DesignOptionsPanel
-                  activeStep={activeDesignStep}
-                  onStepChange={handleDesignStepChange}
-                  isMobile={false}
-                  selectedCaseType={selectedCaseType}
-                  selectedColor={selectedColor}
-                  selectedCase={selectedCase}
-                  selectedPins={selectedPins}
-                  customTextAdded={customTextAdded}
-                  selectedCategory={selectedCategory}
-                  setSelectedCategory={setSelectedCategory}
-                  pins={pins}
-                  customText={customText}
-                  setCustomText={setCustomText}
-                  customTextError={customTextError}
-                  setCustomTextError={setCustomTextError}
-                  setCustomTextAdded={setCustomTextAdded}
-                  onCaseSelect={handleCaseTypeSelection}
-                  onColorSelect={handleColorSelection}
-                  onPinSelect={handlePinSelectionWithTips}
-                  onTextAdded={handleTextAddedWithTips}
-                  onMobileAddText={handleMobileAddTextWithTips}
-                  Products={productsWithQuantities}
-                  cart={cart}
-                  isCaseImageLoading={isCaseImageLoading}
-                />
-              </div>
-
-              <div className="flex-shrink-0 pt-4 border-t border-gray-100 bg-white">
-                <PriceSummary
-            totalPrice={totalPrice}
-            caseBasePrice={caseBasePrice}
-            groupedPinsList={groupedPinsList}
-            showPriceBreakdown={showPriceBreakdown}
-            quantity={quantity}
-            setQuantity={setQuantity}
-            onIncrementQuantity={handleIncrementQuantity}
-            onDecrementQuantity={handleDecrementQuantity}
-            selectedCase={selectedCase}
-            selectedCaseType={selectedCaseType}
-            selectedColor={selectedColor}
             selectedPins={selectedPins}
-            selectedCaseImage={selectedCaseImage}
-            pinsPrice={pinsPrice}
-            onAddToCart={handleAddToCart}
-            onShowTerms={() => setShowTermsModal(true)}
-            agreedToTerms={agreedToTerms}
-            setAgreedToTerms={setAgreedToTerms}
-            showTermsError={showTermsError}
-            inventoryMessage={inventoryMessage}
-            inventoryType={inventoryType}
-            isMobile={isMobile}
+            customText={customText}
+            customTextAdded={customTextAdded}
           />
-              </div>
-            </>
-          )}
         </div>
+
+        {/* Desktop options column: tabs + options scroll, price pinned at bottom */}
+        {!isMobile && (
+          <div className="grid grid-rows-[minmax(0,1fr)_auto] h-full min-h-0 w-1/2 pl-6 lg:pl-8 pr-4 lg:pr-6 border-l border-gray-100 overflow-hidden pt-4 lg:pt-2">
+            <div className="min-h-0 h-full overflow-hidden md:pt-0">
+              <DesignOptionsPanel
+                activeStep={activeDesignStep}
+                onStepChange={handleDesignStepChange}
+                isMobile={false}
+                selectedCaseType={selectedCaseType}
+                selectedColor={selectedColor}
+                selectedCase={selectedCase}
+                selectedPins={selectedPins}
+                customTextAdded={customTextAdded}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                pins={pins}
+                customText={customText}
+                setCustomText={setCustomText}
+                customTextError={customTextError}
+                setCustomTextError={setCustomTextError}
+                setCustomTextAdded={setCustomTextAdded}
+                onCaseSelect={handleCaseTypeSelection}
+                onColorSelect={handleColorSelection}
+                onPinSelect={handlePinSelectionWithTips}
+                onPinRemove={handlePinRemoveFromList}
+                onTextAdded={handleTextAddedWithTips}
+                onMobileAddText={handleMobileAddTextWithTips}
+                Products={productsWithQuantities}
+                cart={cart}
+                isCaseImageLoading={isCaseImageLoading}
+              />
+            </div>
+
+            <div className="relative z-30 flex-shrink-0 bg-white border-t border-gray-200 pt-3 pb-2 shadow-[0_-6px_12px_-8px_rgba(0,0,0,0.08)]">
+              <PriceSummary {...priceSummaryProps} isMobile={false} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile: Fixed bottom - Step buttons + Add to Cart */}
@@ -265,10 +278,6 @@ export default function CreateYoursPageNew() {
               onCaseClick={() => {
                 markDesignerInteractionStarted();
                 setMobileCurrentStep('case');
-              }}
-              onColorClick={() => {
-                markDesignerInteractionStarted();
-                setMobileCurrentStep('color');
               }}
               onCharmsClick={() => {
                 markDesignerInteractionStarted();
@@ -294,30 +303,7 @@ export default function CreateYoursPageNew() {
             )}
           </div>
           <div className="w-full bg-gray-100 px-3 xs:px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <PriceSummary
-              totalPrice={totalPrice}
-              caseBasePrice={caseBasePrice}
-              groupedPinsList={groupedPinsList}
-              showPriceBreakdown={showPriceBreakdown}
-              quantity={quantity}
-              setQuantity={setQuantity}
-              onIncrementQuantity={handleIncrementQuantity}
-              onDecrementQuantity={handleDecrementQuantity}
-              selectedCase={selectedCase}
-              selectedCaseType={selectedCaseType}
-              selectedColor={selectedColor}
-              selectedPins={selectedPins}
-              selectedCaseImage={selectedCaseImage}
-              pinsPrice={pinsPrice}
-              onAddToCart={handleAddToCart}
-              onShowTerms={() => setShowTermsModal(true)}
-              agreedToTerms={agreedToTerms}
-              setAgreedToTerms={setAgreedToTerms}
-              showTermsError={showTermsError}
-              inventoryMessage={inventoryMessage}
-              inventoryType={inventoryType}
-              isMobile={true}
-            />
+            <PriceSummary {...priceSummaryProps} isMobile />
           </div>
         </div>
       )}
@@ -337,6 +323,8 @@ export default function CreateYoursPageNew() {
           handleCaseTypeSelection={handleCaseTypeSelection}
           handleColorSelection={handleColorSelection}
           handlePinSelection={handlePinSelectionWithTips}
+          handlePinRemoveFromList={handlePinRemoveFromList}
+          selectedCase={selectedCase}
           Products={productsWithQuantities}
           cart={cart}
           isCaseImageLoading={isCaseImageLoading}

@@ -3,6 +3,14 @@ import Image from 'next/image';
 import { CASE_OPTIONS } from '../../data/constants';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
+import {
+  OPTION_CATEGORY_CARD_MIN_H,
+  OPTION_CATEGORY_IMAGE,
+  OPTION_CATEGORY_LABEL,
+  OPTION_FONT_STYLE,
+  OPTION_SOLD_OUT,
+  getCategoryLabelColor,
+} from './designOptionStyles';
 
 const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, cart = [] }) => {
   // Get image for a case type
@@ -66,59 +74,60 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
 
   return (
     <div className="w-full">
-      <div className="flex flex-nowrap gap-1.5 xs:gap-2 sm:gap-2.5 md:gap-3 lg:gap-4 justify-center items-start">
+      <div className="grid grid-cols-3 gap-1 sm:gap-1.5 mb-2">
         {CASE_OPTIONS.map((opt) => {
           const caseImage = getCaseImage(opt.value);
           const soldOut = isCaseTypeSoldOut(opt.value);
           const isSelected = selectedCaseType === opt.value;
-          
+
           return (
-            <div
+            <button
               key={opt.value}
-              className={`transition-all duration-200 md:duration-300 lg:duration-500 flex flex-col items-center p-1.5 xs:p-2 sm:p-2 md:p-2.5 rounded-lg flex-1 max-w-[100px] xs:max-w-[120px] sm:max-w-[140px] md:max-w-[150px] lg:max-w-[170px] xl:max-w-[190px] ${isSelected ? 'border-2 border-gray-900 bg-gray-50' : 'border-2 border-transparent'} ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              type="button"
+              disabled={soldOut}
+              className={`${OPTION_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-md transition-all duration-200 ${
+                isSelected
+                  ? 'bg-gray-50 border border-gray-900'
+                  : 'hover:bg-gray-50 border border-transparent'
+              } ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               onClick={() => {
                 if (!soldOut) {
                   onSelect(opt.value);
-                  // Close other dropdowns when selecting a case
                   if (onDropdownToggle) {
                     onDropdownToggle();
                   }
                 }
               }}
             >
-              <div className="relative w-full">
-                {caseImage && (
+              {caseImage && (
+                <div className={OPTION_CATEGORY_IMAGE}>
                   <div
-                    className={`w-full aspect-square transition-all duration-200 md:duration-300 lg:duration-500 overflow-hidden flex items-center justify-center ${
-                      isSelected
-                        ? "  scale-110"
-                        : ""
-                    } ${soldOut ? 'opacity-50' : ''}`}
+                    className={`flex h-full w-full items-center justify-center overflow-hidden rounded ${
+                      soldOut ? 'opacity-50' : ''
+                    }`}
                   >
                     <Image
                       src={normalizeImagePath(caseImage)}
                       alt={opt.label}
-                      width={190}
-                      height={190}
-                      sizes="(max-width: 480px) 80px, (max-width: 768px) 120px, 190px"
-                      className="w-full h-full object-contain p-1 xs:p-1.5 sm:p-2 md:p-2 lg:p-2.5"
+                      className="max-h-full max-w-full object-contain p-0.5"
                       loading="lazy"
+                      width={128}
+                      height={128}
+                      sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
                     />
                   </div>
-                )}
-              </div>
-              <div className="flex flex-col items-center mt-1.5 md:mt-2 text-center">
-                <span className={`text-xs md:text-sm font-bold tracking-wider ${isSelected ? 'text-gray-700' : 'text-gray-500'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
-                  {opt.label.split(' - ')[0]}
-                </span>
-                <span className={`text-xs md:text-sm font-medium mt-0.5 ${isSelected ? 'text-gray-500' : 'text-gray-400'}`} style={{fontFamily: "'Poppins', sans-serif"}}>
-                  {opt.label.split(' - ')[1]}
-                </span>
-              </div>
-              {soldOut && (
-                <span className="text-[10px] md:text-xs lg:text-sm text-red-600 font-medium mt-1 md:mt-2">Sold Out</span>
+                </div>
               )}
-            </div>
+              <span
+                className={`${OPTION_CATEGORY_LABEL} ${getCategoryLabelColor(isSelected)}`}
+                style={OPTION_FONT_STYLE}
+              >
+                {opt.label.split(' - ')[0]}
+              </span>
+              {soldOut && (
+                <span className={OPTION_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
+              )}
+            </button>
           );
         })}
       </div>

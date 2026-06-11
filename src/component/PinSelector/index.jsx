@@ -6,6 +6,18 @@ import { CATEGORY_OPTIONS as CATEGORY_OPTIONS_WITH_IMAGES } from "../../data/con
 import { getMaxAvailableQuantity } from "../../utils/inventory";
 import { normalizeImagePath } from "../../utils/imagePath";
 import { getCaseLinePins } from "../../utils/cartHelpers";
+import {
+  OPTION_CHARM_CATEGORY_CARD_MIN_H,
+  OPTION_CHARM_CATEGORY_IMAGE,
+  OPTION_CATEGORY_LABEL,
+  OPTION_FILTER_TAB,
+  OPTION_FONT_STYLE,
+  OPTION_ITEM_LABEL,
+  OPTION_SOLD_OUT,
+  getCategoryLabelColor,
+  getFilterTabClasses,
+  getItemLabelColor,
+} from "../CreateYours/designOptionStyles";
 
 // -----------------------------
 // Helpers
@@ -28,9 +40,9 @@ const filterPinsBySubCategory = (pins, selectedCategory, subCategory) => {
 };
 
 const CATEGORY_OPTIONS = [
-  { value: "bronze", label: "Bronze Charms", price: "£1.50 each" },
-  { value: "colorful", label: "Colorful Charms", price: "£2.00 each" },
-  { value: "flags", label: "Flags Collection", price: "£2.00 each" },
+  { value: "bronze", label: "Bronze Charms" },
+  { value: "colorful", label: "Colorful Charms" },
+  { value: "flags", label: "Flags Collection" },
 ];
 
 const SUBCATEGORY_TABS = {
@@ -85,7 +97,7 @@ const CategorySelector = ({
           type="button"
           role="option"
           aria-selected={isActive}
-          className={`font-inter flex flex-col items-center px-1 py-1.5 rounded-md transition-all duration-200 ${
+          className={`${OPTION_CHARM_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-md transition-all duration-200 ${
             isActive ? "bg-gray-50 border border-gray-900" : "hover:bg-gray-50 border border-transparent"
           }`}
           onClick={() => {
@@ -96,32 +108,25 @@ const CategorySelector = ({
           }}
         >
           {previewImage && (
-            <div
-              className="relative mb-1 flex items-center justify-center rounded overflow-visible"
-              style={{ width: "2.5rem", height: "2.5rem" }}
-            >
-              <div className="w-full h-full flex items-center justify-center rounded overflow-hidden">
+            <div className={OPTION_CHARM_CATEGORY_IMAGE}>
+              <div className="flex h-full w-full items-center justify-center overflow-hidden rounded">
                 <Image
                   src={normalizeImagePath(previewImage)}
                   alt={opt.label}
-                  className="max-w-full max-h-full object-contain p-0.5"
+                  className="max-h-full max-w-full object-contain p-0.5"
                   loading="lazy"
-                  width={40}
-                  height={40}
-                  sizes="40px"
+                  width={64}
+                  height={64}
+                  sizes="(max-width: 640px) 56px, 64px"
                 />
               </div>
             </div>
           )}
           <span
-            className={`text-[10px] leading-tight text-center font-bold ${
-              isActive ? "text-gray-900" : "text-gray-600"
-            }`}
+            className={`${OPTION_CATEGORY_LABEL} ${getCategoryLabelColor(isActive)}`}
+            style={OPTION_FONT_STYLE}
           >
             {opt.label}
-          </span>
-          <span className="text-[9px] text-gray-500 leading-tight">
-            {opt.price}
           </span>
         </button>
       );
@@ -140,35 +145,21 @@ const SubCategoryTabs = ({
   const tabs = SUBCATEGORY_TABS[selectedCategory];
   if (!tabs) return null;
 
-  const baseClasses =
-    "px-2 py-1 text-[10px] uppercase tracking-wide transition-all duration-200 font-inter font-bold";
-
   return (
-    <div className="mb-2 flex flex-wrap gap-0.5 border-b border-gray-200 justify-center">
+    <div className="mb-2 flex flex-wrap gap-0.5 justify-center">
       {tabs.map(({ key, label }) => {
         const count = getSubCategoryCount(key);
         const isActive = subCategory === key;
-
-        const activeClasses =
-          selectedCategory === "flags"
-            ? "text-gray-900 font-bold"
-            : "border-b-2 border-gray-900 text-gray-900 font-bold";
-
-        const inactiveClasses =
-          selectedCategory === "flags"
-            ? "border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300"
-            : "border-b-2 border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300";
 
         return (
           <button
             key={key}
             onClick={() => setSubCategory(key)}
-            className={`${baseClasses} ${
-              isActive ? activeClasses : inactiveClasses
-            }`}
+            className={`${OPTION_FILTER_TAB} ${getFilterTabClasses(isActive)}`}
+            style={OPTION_FONT_STYLE}
           >
             {label}
-            <span className="text-gray-400 font-normal text-[9px]"> ({count})</span>
+            <span className="text-gray-400 font-normal text-xs"> ({count})</span>
           </button>
         );
       })}
@@ -203,7 +194,7 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
       }`}
       onClick={onClick}
     >
-      <div className={`relative rounded-lg transition-all duration-200 ${isSelected && !isSoldOut ? "border-2 border-gray-900 p-0.5" : "border-2 border-transparent p-0.5"}`} style={{ overflow: "visible" }}>
+      <div className={`relative rounded-md transition-all duration-200 p-0.5 ${isSelected && !isSoldOut ? "bg-gray-50 border border-gray-900" : "border border-transparent hover:bg-gray-50"}`} style={{ overflow: "visible" }}>
         <div className="w-14 h-14 sm:w-16 sm:h-16 aspect-square flex items-center justify-center bg-transparent">
           <Image
             src={normalizeImagePath(pin.src)}
@@ -219,22 +210,25 @@ const PinCard = ({ pin, isSelected, isSoldOut, onClick, isLowStock = false, rema
         </div>
         {/* New badge - top right */}
         {pin.badge && !isSoldOut && !isSelected && (
-          <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[8px] font-medium px-1.5 py-0.5 rounded z-10 font-inter">
+          <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[10px] font-medium px-1.5 py-0.5 rounded z-[1]">
             {pin.badge}
           </div>
         )}
         {/* Low stock badge - top right, stacked below New when both show */}
         {isLowStock && !isSoldOut && remainingAvailable != null && (
-          <div className={`absolute right-0 bg-amber-500 text-white text-[8px] font-medium px-1.5 py-0.5 rounded z-10 font-inter ${pin.badge && !isSelected ? 'top-5' : 'top-0'}`}>
+          <div className={`absolute right-0 bg-amber-500 text-white text-[10px] font-medium px-1.5 py-0.5 rounded z-[1] ${pin.badge && !isSelected ? 'top-5' : 'top-0'}`}>
             {remainingAvailable === 1 ? 'Only 1 left' : `${remainingAvailable} available`}
           </div>
         )}
       </div>
-      <span className="text-[10px] leading-tight text-center text-gray-700 transition-colors line-clamp-2 font-inter">
+      <span
+        className={`${OPTION_ITEM_LABEL} mt-1.5 md:mt-2 transition-colors ${getItemLabelColor(isSelected)}`}
+        style={OPTION_FONT_STYLE}
+      >
         {pin.name}
       </span>
       {isSoldOut && (
-        <span className="text-[8px] text-red-600 font-medium">Sold Out</span>
+        <span className={OPTION_SOLD_OUT} style={OPTION_FONT_STYLE}>Sold Out</span>
       )}
     </div>
   );
@@ -337,8 +331,8 @@ const PinGrid = ({ filteredPins, selectedPins, onSelect, onRemove, cart, selecte
   };
 
   return (
-    <div className="p-1 pb-4">
-      <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-1 sm:gap-1.5 justify-items-center md:max-w-3xl mx-auto">
+    <div className="relative z-0 p-1 pb-4">
+      <div className="relative z-0 grid grid-cols-3 gap-1 sm:gap-1.5 justify-items-center pr-1">
         {filteredPins.map((pin, index) => {
           const selectedPinEntry = selectedPins.find((p) => p.pin === pin);
           const isSelected = !!selectedPinEntry;
@@ -387,6 +381,7 @@ const PinSelector = ({
   cart,
 }) => {
   const [subCategory, setSubCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const gridScrollRef = useRef(null);
 
   const runScrollToFirstCharm = useCallback(() => {
@@ -398,9 +393,18 @@ const PinSelector = ({
     [pins, selectedCategory, subCategory]
   );
 
+  const searchedPins = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return filteredPins;
+    return filteredPins.filter((pin) =>
+      (pin.name || "").toLowerCase().includes(query)
+    );
+  }, [filteredPins, searchQuery]);
+
   // Reset subCategory when selectedCategory changes
   useEffect(() => {
     setSubCategory("all");
+    setSearchQuery("");
   }, [selectedCategory]);
 
   // Show the first charm row at the top when category or filter changes
@@ -456,8 +460,8 @@ const PinSelector = ({
     filterPinsBySubCategory(pins, selectedCategory, subCat).length;
 
   return (
-    <div>
-      <div className="sticky top-0 z-10 bg-white pb-1">
+    <div className="relative z-0">
+      <div className="sticky top-0 z-30 bg-white pb-1 border-b border-gray-100 shadow-[0_2px_6px_-2px_rgba(0,0,0,0.06)]">
         <CategorySelector
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
@@ -473,12 +477,31 @@ const PinSelector = ({
             getSubCategoryCount={getSubCategoryCount}
           />
         )}
+
+        {selectedCategory && (
+          <div className="mt-1 mb-2 px-0.5">
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search charms..."
+              className="w-full px-3 py-2 text-xs border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400"
+              style={OPTION_FONT_STYLE}
+              aria-label="Search charms"
+            />
+          </div>
+        )}
       </div>
 
       {selectedCategory && (
-        <div ref={gridScrollRef}>
+        <div ref={gridScrollRef} className="relative z-0">
+          {searchQuery.trim() && searchedPins.length === 0 && (
+            <p className="text-xs text-gray-500 text-center py-4" style={OPTION_FONT_STYLE}>
+              No charms match &ldquo;{searchQuery.trim()}&rdquo;
+            </p>
+          )}
           <PinGrid
-            filteredPins={filteredPins}
+            filteredPins={searchedPins}
             selectedPins={selectedPins}
             onSelect={onSelect}
             onRemove={onRemove}

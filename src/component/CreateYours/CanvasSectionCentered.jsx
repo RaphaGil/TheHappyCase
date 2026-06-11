@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { getMobileVariantImagePath, normalizeImagePath } from '../../utils/imagePath';
 import ViewMoreImagesButton from './ViewMoreImagesButton';
 import ItemDescriptionDropdown from './ItemDescriptionDropdown';
+import DesignSummaryStrip from './DesignSummaryStrip';
 
 const BLUR_PLACEHOLDER =
   'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjcwIiBoZWlnaHQ9IjM1MCIgdmlld0JveD0iMCAwIDI3MCAzNTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjI3MCIgaGVpZ2h0PSIzNTAiIGZpbGw9IiNmM2Y0ZjYiLz48L3N2Zz4=';
@@ -37,7 +38,10 @@ const CanvasSectionCentered = ({
   onPinRemove,
   onOpenImageModal,
   onOpenDescriptionModal,
-  Products
+  Products,
+  selectedPins = [],
+  customText,
+  customTextAdded,
 }) => {
   const [isCanvasMounted, setIsCanvasMounted] = useState(!isMobile);
   const [resolvedCaseImageSrc, setResolvedCaseImageSrc] = useState('');
@@ -126,6 +130,15 @@ const CanvasSectionCentered = ({
             ) : null}
           </div>
         </div>
+
+        <DesignSummaryStrip
+          selectedCase={selectedCase}
+          selectedCaseType={selectedCaseType}
+          selectedColor={selectedColor}
+          selectedPins={selectedPins}
+          customText={customText}
+          customTextAdded={customTextAdded}
+        />
 
         {/* IMAGES + DETAILS buttons - hidden on mobile, below canvas on desktop */}
         {!isMobile && (

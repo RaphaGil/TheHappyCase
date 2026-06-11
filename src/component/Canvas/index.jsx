@@ -841,9 +841,23 @@ const Canvas = ({
     }
   };
 
+  const handleRemovePinFromCanvas = useCallback((imgInstance) => {
+    if (!imgInstance || !fabricCanvas.current) return;
+    removeBorderRect(imgInstance);
+    fabricCanvas.current.remove(imgInstance);
+    fabricCanvas.current.discardActiveObject();
+    fabricCanvas.current.requestRenderAll();
+    if (selectedPin === imgInstance) {
+      setSelectedPin(null);
+      setShowControls(false);
+    }
+    onPinRemove && onPinRemove(imgInstance);
+  }, [onPinRemove, removeBorderRect, selectedPin, setShowControls]);
+
   // Expose pin selection and clear methods globally
   useEffect(() => {
     window.addPinToCanvas = handlePinSelection;
+    window.removePinFromCanvas = handleRemovePinFromCanvas;
     window.addTextToCanvas = handleAddText;
     window.getDesignImageDataURL = getDesignImageDataURL;
     window.getDesignCompositeOptions = getDesignCompositeOptions;
@@ -854,13 +868,14 @@ const Canvas = ({
     }
     return () => {
       delete window.addPinToCanvas;
+      delete window.removePinFromCanvas;
       delete window.addTextToCanvas;
       delete window.getDesignImageDataURL;
       delete window.getDesignCompositeOptions;
       delete window.getDesignPreviewDataURL;
       delete window.clearCanvas;
     };
-  }, [handleAddText, handlePinSelection, onSaveImage, getDesignImageDataURL, getDesignCompositeOptions, getDesignPreviewDataURL, handleSaveImage, clearCanvas]);
+  }, [handleAddText, handlePinSelection, handleRemovePinFromCanvas, onSaveImage, getDesignImageDataURL, getDesignCompositeOptions, getDesignPreviewDataURL, handleSaveImage, clearCanvas]);
 
   return (
     <div className="w-full h-full flex flex-col  sm:items-center ">

@@ -150,9 +150,6 @@ export const useCreateYours = () => {
       setSelectedColor(availableColor.color);
       setSelectedCaseImage(nextImage);
     }
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
   };
 
   // Handle color selection
@@ -163,9 +160,6 @@ export const useCreateYours = () => {
     }
     setSelectedColor(color);
     setSelectedCaseImage(image);
-    if (isMobile) {
-      setMobileCurrentStep(null);
-    }
   };
 
   const handleCaseImageLoaded = useCallback(() => {
@@ -208,13 +202,7 @@ export const useCreateYours = () => {
     
     setCharmInventoryError('');
     
-    // Close mobile overlay after pin selection
-    if (isMobile && typeof window !== 'undefined') {
-      setMobileCurrentStep(null);
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 100);
-    } else {
+    if (!isMobile && typeof window !== 'undefined') {
       scrollToElement('.happy-card', { block: 'center' });
     }
     return true;
@@ -471,6 +459,14 @@ export const useCreateYours = () => {
     setCharmInventoryError('');
   }, [setCharmInventoryError]);
 
+  const handlePinRemoveFromList = useCallback((imgInstance) => {
+    if (typeof window !== 'undefined' && window.removePinFromCanvas) {
+      window.removePinFromCanvas(imgInstance);
+      return;
+    }
+    handlePinRemove(imgInstance);
+  }, [handlePinRemove]);
+
   // Track screen size changes with media query events (fewer updates than resize)
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -583,6 +579,7 @@ export const useCreateYours = () => {
     executeAddToCart,
     handlePinSelect,
     handlePinRemove,
+    handlePinRemoveFromList,
     
     // Navigation
     router,

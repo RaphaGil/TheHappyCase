@@ -29,7 +29,7 @@ const PriceSummary = ({
   const { formatPrice } = useCurrency();
 
   return (
-      <div className={`${isMobile ? 'pt-0 px-0 py-0 rounded-none w-full' : 'pt-3 md:pt-4 md:sticky md:bottom-0 md:bg-white md:pb-3 '} flex-shrink-0 relative z-0  ${isMobile ? '' : 'flex flex-col justify-between'}`}>
+      <div className={`${isMobile ? 'pt-0 px-0 py-0 rounded-none w-full' : 'w-full'} flex-shrink-0 relative z-0`}>
         {/* Mobile: Price + Quantity + Add to Cart in same row, then Terms below */}
         {isMobile ? (
           <>
@@ -147,20 +147,20 @@ const PriceSummary = ({
             </div>
 
             {/* Desktop: Terms Agreement Checkbox - Before Add to Cart */}
-            <div className="mb-3">
+            <div className="mb-2">
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={agreedToTerms || false}
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 text-gray-900 border-gray-300 rounded "
+                  className="mt-0.5 w-4 h-4 flex-shrink-0 text-gray-900 border-gray-300 rounded"
                 />
-                <span className="text-sm text-gray-700 leading-relaxed font-light font-inter">
+                <span className="text-xs text-gray-700 leading-snug font-light font-inter">
                   I agree to the{' '}
                   <button
                     type="button"
                     onClick={onShowTerms}
-                    className="text-gray-900 underline hover:text-gray-700 transition-colors text-sm font-light"
+                    className="text-gray-900 underline hover:text-gray-700 transition-colors text-xs font-light"
                   >
                     Terms of Use
                   </button>
@@ -169,14 +169,14 @@ const PriceSummary = ({
               </label>
               {/* Error message when trying to add to cart without accepting terms */}
               {showTermsError && (
-                <div className="mt-2 text-sm text-red-600 font-light font-inter">
+                <div className="mt-1.5 text-xs text-red-600 font-light font-inter">
                   You must accept the terms to add items to cart.
                 </div>
               )}
             </div>
 
-            {/* Desktop: Quantity selector and Add to Cart side by side - Pushed to bottom */}
-            <div className={`mt-auto flex flex-row gap-1.5 xs:gap-2 items-center justify-center`}>
+            {/* Desktop: Quantity selector and Add to Cart side by side */}
+            <div className="flex flex-row gap-1.5 xs:gap-2 items-center justify-center">
               <div className={`flex items-center border border-gray-200 rounded-sm py-2.5 px-1`}>
                 <button
                   onClick={onDecrementQuantity || (() => setQuantity(Math.max(0, quantity - 1)))}
