@@ -1,6 +1,5 @@
 import React from 'react';
 import PinSelector from '../PinSelector';
-import SelectedCharmsList from './SelectedCharmsList';
 
 const CharmsSelectionSection = ({
   isOpen,
@@ -48,10 +47,6 @@ const CharmsSelectionSection = ({
 
       {showContent && (
         <div className={`relative z-0 bg-white rounded-lg ${panelMode ? 'p-0 pr-1' : 'p-3 sm:p-4 -mx-2 sm:-mx-3 mt-1'}`}>
-          <SelectedCharmsList
-            selectedPins={selectedPins}
-            onRemove={onPinRemove}
-          />
           <PinSelector
             pins={pins}
             selectedCategory={selectedCategory}

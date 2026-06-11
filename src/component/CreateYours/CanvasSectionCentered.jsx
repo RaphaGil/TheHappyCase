@@ -131,14 +131,16 @@ const CanvasSectionCentered = ({
           </div>
         </div>
 
-        <DesignSummaryStrip
-          selectedCase={selectedCase}
-          selectedCaseType={selectedCaseType}
-          selectedColor={selectedColor}
-          selectedPins={selectedPins}
-          customText={customText}
-          customTextAdded={customTextAdded}
-        />
+        {!isMobile && (
+          <DesignSummaryStrip
+            selectedCase={selectedCase}
+            selectedCaseType={selectedCaseType}
+            selectedColor={selectedColor}
+            selectedPins={selectedPins}
+            customText={customText}
+            customTextAdded={customTextAdded}
+          />
+        )}
 
         {/* IMAGES + DETAILS buttons - hidden on mobile, below canvas on desktop */}
         {!isMobile && (

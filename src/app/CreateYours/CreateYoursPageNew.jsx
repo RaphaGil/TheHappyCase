@@ -129,12 +129,15 @@ export default function CreateYoursPageNew() {
     hasShownDesignTipsRef.current = window.localStorage.getItem(designTipsStorageKey) === 'true';
   }, []);
 
-  const handlePinSelectionWithTips = useCallback((pin) => {
-    const wasAdded = handlePinSelection(pin);
+  const handlePinSelectionWithTips = useCallback(async (pin) => {
+    const wasAdded = await handlePinSelection(pin);
     if (wasAdded) {
       showDesignTipsOnce();
+      if (isMobile && mainContentRef.current) {
+        mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
-  }, [handlePinSelection, showDesignTipsOnce]);
+  }, [handlePinSelection, showDesignTipsOnce, isMobile]);
 
   const handleTextAddedWithTips = useCallback(() => {
     showDesignTipsOnce();
@@ -193,16 +196,26 @@ export default function CreateYoursPageNew() {
   };
 
   return (
-    <div className="h-full min-h-0 bg-white flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]">
-      <div className="flex-shrink-0">
+    <div
+      className={`bg-white flex flex-col pb-[env(safe-area-inset-bottom)] ${
+        isMobile ? 'h-screen overflow-x-hidden' : 'h-full min-h-0 overflow-hidden'
+      }`}
+    >
+      {isMobile ? (
         <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
-      </div>
+      ) : (
+        <div className="flex-shrink-0">
+          <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />
+        </div>
+      )}
 
       {/* Main content - canvas centered within its div, options scroll when dropdowns open. Mobile: padding-bottom so fixed bar doesn't cover content */}
       <div
         ref={mainContentRef}
-        className={`flex flex-col md:flex-row md:items-stretch flex-1 min-h-0 w-full max-w-7xl mx-auto overflow-y-auto md:overflow-hidden ${
-          isMobile ? (isAddTextDropdownOpen ? 'pb-[380px]' : 'pb-56') : ''
+        className={`flex flex-col flex-1 min-h-0 w-full max-w-7xl mx-auto ${
+          isMobile
+            ? `justify-center overflow-y-auto ${isAddTextDropdownOpen ? 'pb-[380px]' : 'pb-56'}`
+            : 'md:flex-row md:items-stretch overflow-y-auto md:overflow-hidden'
         }`}
       >
         {/* Canvas - aligned to top on mobile, centered on desktop */}
@@ -216,7 +229,11 @@ export default function CreateYoursPageNew() {
             selectedCase={selectedCase}
             caseImages={caseImages}
             isMobile={isMobile}
-            shouldMountCanvas={!isMobile || hasStartedMobileDesigner}
+            shouldMountCanvas={
+              !isMobile ||
+              hasStartedMobileDesigner ||
+              Boolean(selectedCaseType && selectedColor)
+            }
             onPinSelect={handlePinSelect}
             onPinRemove={handlePinRemove}
             onOpenImageModal={() => setShowImageModal(true)}
@@ -279,6 +296,10 @@ export default function CreateYoursPageNew() {
                 markDesignerInteractionStarted();
                 setMobileCurrentStep('case');
               }}
+              onColorClick={() => {
+                markDesignerInteractionStarted();
+                setMobileCurrentStep('color');
+              }}
               onCharmsClick={() => {
                 markDesignerInteractionStarted();
                 setMobileCurrentStep('charms');
@@ -323,8 +344,6 @@ export default function CreateYoursPageNew() {
           handleCaseTypeSelection={handleCaseTypeSelection}
           handleColorSelection={handleColorSelection}
           handlePinSelection={handlePinSelectionWithTips}
-          handlePinRemoveFromList={handlePinRemoveFromList}
-          selectedCase={selectedCase}
           Products={productsWithQuantities}
           cart={cart}
           isCaseImageLoading={isCaseImageLoading}

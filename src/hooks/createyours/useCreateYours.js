@@ -150,6 +150,9 @@ export const useCreateYours = () => {
       setSelectedColor(availableColor.color);
       setSelectedCaseImage(nextImage);
     }
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    }
   };
 
   // Handle color selection
@@ -160,6 +163,9 @@ export const useCreateYours = () => {
     }
     setSelectedColor(color);
     setSelectedCaseImage(image);
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    }
   };
 
   const handleCaseImageLoaded = useCallback(() => {
@@ -167,8 +173,22 @@ export const useCreateYours = () => {
     setIsCaseImageLoading(false);
   }, []);
 
+  const addPinToCanvasWithRetry = useCallback(async (pinWithCategory) => {
+    if (typeof window === 'undefined') return false;
+
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      if (window.addPinToCanvas) {
+        const added = await window.addPinToCanvas(pinWithCategory);
+        if (added !== false) return true;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+
+    return false;
+  }, []);
+
   // Handle pin selection from PinSelector
-  const handlePinSelection = useCallback((pin) => {
+  const handlePinSelection = useCallback(async (pin) => {
     const { canAdd, errorMessage, pinWithCategory } = checkPinInventory(
       pin, 
       cart, 
@@ -194,19 +214,24 @@ export const useCreateYours = () => {
       }
       return false;
     }
-    
-    // Add pin to canvas
-    if (typeof window !== 'undefined' && window.addPinToCanvas) {
-      window.addPinToCanvas(pinWithCategory);
+
+    const addedToCanvas = await addPinToCanvasWithRetry(pinWithCategory);
+    if (!addedToCanvas) {
+      setInventoryMessage('Canvas is still loading. Please try again in a moment.');
+      setInventoryType('error');
+      return false;
     }
     
     setCharmInventoryError('');
     
-    if (!isMobile && typeof window !== 'undefined') {
+    // Close mobile overlay after pin is on the canvas
+    if (isMobile) {
+      setMobileCurrentStep(null);
+    } else {
       scrollToElement('.happy-card', { block: 'center' });
     }
     return true;
-  }, [isMobile, cart, selectedPins, selectedCategory, setCharmInventoryError, setInventoryMessage, setInventoryType]);
+  }, [isMobile, cart, selectedPins, selectedCategory, addPinToCanvasWithRetry, setCharmInventoryError, setInventoryMessage, setInventoryType]);
 
   // Handle navigation from other pages
   // Note: Next.js doesn't support location.state like React Router

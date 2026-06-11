@@ -25,9 +25,11 @@ export default function LayoutClient({ children }) {
   const isCreateYoursPage =
     pathname === '/custom-passport' || pathname === '/custompassport';
   const hideNavBar = pathname === '/checkout';
-  const hideNavBarOnMobile = pathname === '/AddText';
-  const hideFooter = pathname === '/checkout' || pathname === '/AddText' || isCreateYoursPage;
-  const hideFooterOnMobile = pathname === '/AddText';
+  const hideNavBarOnMobile =
+    pathname === '/custom-passport' || pathname === '/custompassport' || pathname === '/AddText';
+  const hideFooter = pathname === '/checkout' || pathname === '/AddText';
+  const hideFooterOnMobile =
+    pathname === '/custom-passport' || pathname === '/custompassport' || pathname === '/AddText';
 
   return (
     <HelmetProvider>
@@ -35,8 +37,8 @@ export default function LayoutClient({ children }) {
       <CurrencyProvider>
         <CartProvider>
           <div
-            className={`App bg-white ${
-              isCreateYoursPage ? 'h-dvh flex flex-col overflow-hidden' : 'min-h-screen'
+            className={`App bg-white min-h-screen ${
+              isCreateYoursPage ? 'md:h-dvh md:flex md:flex-col md:overflow-hidden' : ''
             }`}
           >
             {process.env.NODE_ENV !== 'production' && <EnvDebug />}
@@ -45,7 +47,7 @@ export default function LayoutClient({ children }) {
               <NavBar isHomePage={isHomePage} />
             </header>
           )}
-          <main className={isCreateYoursPage ? 'flex-1 min-h-0 overflow-hidden' : undefined}>
+          <main className={isCreateYoursPage ? 'md:flex-1 md:min-h-0 md:overflow-hidden' : undefined}>
             {children}
           </main>
           {!hideFooter && (

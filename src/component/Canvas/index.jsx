@@ -691,7 +691,7 @@ const Canvas = ({
 
   // Handle pin selection from PinSelector
   const handlePinSelection = useCallback(async (pin) => {
-    if (!fabricCanvas.current) return;
+    if (!fabricCanvas.current) return false;
 
     try {
       // Get the pin's size property from products.json
@@ -753,8 +753,10 @@ const Canvas = ({
       if (onPinSelect) {
         onPinSelect(imgInstance);
       }
+      return true;
     } catch (error) {
       console.error('Error loading pin:', error);
+      return false;
     }
   }, [onPinSelect, updateBorderRect, loadImageLegacy]);
 
