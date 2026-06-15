@@ -12,6 +12,17 @@ let inventoryCacheTimestamp = null;
 let inventoryFetchPromise = null; // Track ongoing fetch to avoid duplicate requests
 let isInitializing = false; // Track if we're in the initial load phase
 
+const getPinQuantityFromCache = (categoryKey, pinId, quantities) => {
+  if (!pinId || !quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
+    return undefined;
+  }
+
+  const pinIndex = Products.pins[categoryKey].findIndex((pin) => pin.id === pinId);
+  if (pinIndex === -1) return undefined;
+
+  return quantities.pins[categoryKey][pinIndex];
+};
+
 /**
  * Fetch inventory from Supabase API (inventory_items table)
  * Updates in-memory cache with fresh data from Supabase
@@ -537,33 +548,26 @@ export const getMaxAvailableQuantity = (item, cart) => {
   if (item.type === 'charm' || item.category || item.pin) {
     const category = item.category || (item.pin && item.pin.category);
     const pinName = item.pin?.name || item.pin?.src || item.name;
-    
-    if (!category || !pinName) return null;
+    const categoryKey = category === 'flags' ? 'flags' : category;
 
-    // Find the charm in Products to get the ID
+    if (!category || !categoryKey) return null;
+
     let charmData = null;
-    if (Products.pins && Products.pins[category]) {
-      charmData = Products.pins[category].find(
-        p => (p.name === pinName || p.src === pinName)
-      );
+    if (Products.pins && Products.pins[categoryKey]) {
+      if (item.pin?.id) {
+        charmData = Products.pins[categoryKey].find((pin) => pin.id === item.pin.id);
+      }
+      if (!charmData && pinName) {
+        charmData = Products.pins[categoryKey].find(
+          (pin) => pin.name === pinName || pin.src === pinName
+        );
+      }
     }
 
     if (!charmData) return null;
 
-    let maxQuantity = null;
-
-    // Get quantity from Supabase (via in-memory cache)
-    // Map category to the correct key: 'flags' -> 'pin_flags', 'colorful' -> 'pin_colorful', 'bronze' -> 'pin_bronze'
-    const categoryKey = category === 'flags' ? 'flags' : category;
-    
-    if (quantities && quantities.pins && quantities.pins[categoryKey]) {
-      const pinIndex = Products.pins[categoryKey].findIndex(
-        p => (p.name === pinName || p.src === pinName || p.id === charmData.id)
-      );
-      if (pinIndex !== -1 && quantities.pins[categoryKey][pinIndex] !== undefined) {
-        maxQuantity = quantities.pins[categoryKey][pinIndex];
-      }
-    }
+    const cachedQty = getPinQuantityFromCache(categoryKey, charmData.id, quantities);
+    const maxQuantity = cachedQty !== undefined ? cachedQty : null;
 
     // Check if item exists in Supabase inventory_items table
     // If item doesn't exist in Supabase (maxQuantity is null/undefined), return null (unlimited)

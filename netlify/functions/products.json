@@ -445,15 +445,6 @@
     ],
     "colorful": [
       {
-        "id": 1,
-        "name": "Be a Good Human",
-        "src": "/images/ColorfulPins/beagoodhuman.webp",
-        "price": 2,
-        "size": 0.7,
-        "subCategory": "inspiration",
-        "hidden": true
-      },
-      {
         "id": 2,
         "name": "Airplane",
         "src": "/images/ColorfulPins/airplane.webp",
@@ -470,22 +461,6 @@
         "subCategory": "travel"
       },
       {
-        "id": 4,
-        "name": "Dream Big",
-        "src": "/images/ColorfulPins/dreambig.webp",
-        "price": 2,
-        "size": 0.9,
-        "subCategory": "inspiration",
-        "hidden": true
-      },
-      {
-        "id": 5,
-        "name": "Paw",
-        "src": "/images/ColorfulPins/paw.webp",
-        "price": 2,
-        "size": 0.4
-      },
-      {
         "id": 6,
         "name": "Colorful Camera",
         "src": "/images/ColorfulPins/camera.webp",
@@ -494,19 +469,60 @@
         "subCategory": "travel"
       },
       {
-        "id": 7,
-        "name": "Be Kind",
-        "src": "/images/ColorfulPins/bekind.webp",
+        "id": 22,
+        "name": "Map",
+        "src": "/images/ColorfulPins/map.webp",
         "price": 2,
-        "size": 0.65,
-        "subCategory": "inspiration"
+        "size": 0.85,
+        "subCategory": "travel"
       },
       {
-        "id": 8,
-        "name": "Football",
-        "src": "/images/ColorfulPins/football.webp",
+        "id": 25,
+        "name": "Passport",
+        "src": "/images/ColorfulPins/passport.webp",
         "price": 2,
-        "size": 0.75
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
+        "id": 29,
+        "name": "Suitcase",
+        "src": "/images/ColorfulPins/orangeluggage.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 36,
+        "name": "Combi",
+        "src": "/images/ColorfulPins/combi.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "travel"
+      },
+      {
+        "id": 38,
+        "name": "Vacation",
+        "src": "/images/ColorfulPins/vacation.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "travel"
+      },
+      {
+        "id": 39,
+        "name": "Love",
+        "src": "/images/ColorfulPins/love.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 46,
+        "name": "Blue Luggage",
+        "src": "/images/ColorfulPins/blueluggage.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
       },
       {
         "id": 9,
@@ -517,62 +533,20 @@
         "subCategory": "inspiration"
       },
       {
-        "id": 10,
-        "name": "Be Happy",
-        "src": "/images/ColorfulPins/behappy.webp",
+        "id": 24,
+        "name": "Adventure Awaits Ticket",
+        "src": "/images/ColorfulPins/adventureawaits.webp",
         "price": 2,
         "size": 0.75,
-        "subCategory": "inspiration",
-        "hidden": true
+        "subCategory": "travel"
       },
       {
-        "id": 11,
-        "name": "Lucky Leaf",
-        "src": "/images/ColorfulPins/luckyleafcharm.webp",
+        "id": 51,
+        "name": "Adventure Awaits Ticket",
+        "src": "/images/ColorfulPins/orangeticket.webp",
         "price": 2,
-        "size": 0.5,
-        "subCategory": "nature"
-      },
-      {
-        "id": 12,
-        "name": "Beer",
-        "src": "/images/ColorfulPins/beer.webp",
-        "price": 2,
-        "size": 0.55,
-        "subCategory": "drinks"
-      },
-      {
-        "id": 13,
-        "name": "Bottle of Wine",
-        "src": "/images/ColorfulPins/bottleofwine.webp",
-        "price": 2,
-        "size": 0.7,
-        "subCategory": "drinks"
-      },
-      {
-        "id": 14,
-        "name": "Heart Notification",
-        "src": "/images/ColorfulPins/heartnotification.webp",
-        "price": 2,
-        "size": 0.5,
-        "subCategory": "hearts"
-      },
-      {
-        "id": 15,
-        "name": "Small Boarding Pass",
-        "src": "/images/ColorfulPins/smallboardingpass.webp",
-        "price": 2,
-        "size": 0.75,
-        "subCategory": "travel",
-        "hidden": true
-      },
-      {
-        "id": 16,
-        "name": "Little Heart",
-        "src": "/images/ColorfulPins/littleheart.webp",
-        "price": 2,
-        "size": 0.5,
-        "subCategory": "hearts"
+        "size": 0.9,
+        "subCategory": "travel"
       },
       {
         "id": 17,
@@ -615,90 +589,6 @@
         "subCategory": "disney"
       },
       {
-        "id": 22,
-        "name": "Map",
-        "src": "/images/ColorfulPins/map.webp",
-        "price": 2,
-        "size": 0.85,
-        "subCategory": "travel"
-      },
-      {
-        "id": 23,
-        "name": "London Phone",
-        "src": "/images/ColorfulPins/telephone.webp",
-        "price": 2,
-        "size": 0.85,
-        "subCategory": "travel",
-        "hidden": true
-      },
-      {
-        "id": 24,
-        "name": "Adventure Awaits Ticket",
-        "src": "/images/ColorfulPins/adventureawaits.webp",
-        "price": 2,
-        "size": 0.75,
-        "subCategory": "travel"
-      },
-      {
-        "id": 25,
-        "name": "Passport",
-        "src": "/images/ColorfulPins/passport.webp",
-        "price": 2,
-        "size": 0.7,
-        "subCategory": "travel"
-      },
-      {
-        "id": 26,
-        "name": "Coffee",
-        "src": "/images/ColorfulPins/coffee.webp",
-        "price": 2,
-        "size": 0.4,
-        "subCategory": "drinks"
-      },
-      {
-        "id": 27,
-        "name": "Coconut Tree",
-        "src": "/images/ColorfulPins/coconuttree.webp",
-        "price": 2,
-        "size": 0.8,
-        "subCategory": "nature",
-        "hidden": true
-      },
-      {
-        "id": 28,
-        "name": "Wave",
-        "src": "/images/ColorfulPins/wave.webp",
-        "price": 2,
-        "size": 0.6,
-        "subCategory": "nature"
-      },
-      {
-        "id": 29,
-        "name": "Suitcase",
-        "src": "/images/ColorfulPins/orangeluggage.webp",
-        "price": 2,
-        "size": 0.6,
-        "subCategory": "travel"
-      },
-      {
-        "id": 30,
-        "name": "Black Camera",
-        "src": "/images/ColorfulPins/blackcamera.webp",
-        "price": 2,
-        "size": 0.8,
-        "subCategory": "camera",
-        "hidden": true
-      },
-      {
-        "id": 31,
-        "name": "Pink Camera",
-        "src": "/images/ColorfulPins/pinkcamera.webp",
-        "price": 2,
-        "size": 0.5,
-        "subCategory": "camera",
-        "hidden": true
-      },
-      {
         "id": 32,
         "name": "Daisy Duck",
         "src": "/images/ColorfulPins/daisyduck.webp",
@@ -731,12 +621,84 @@
         "subCategory": "disney"
       },
       {
-        "id": 36,
-        "name": "Combi",
-        "src": "/images/ColorfulPins/combi.webp",
+        "id": 50,
+        "name": "Minnie with Heart",
+        "src": "/images/ColorfulPins/minnie3.webp",
         "price": 2,
-        "size": 0.65,
-        "subCategory": "travel"
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 11,
+        "name": "Lucky Leaf",
+        "src": "/images/ColorfulPins/luckyleafcharm.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "nature"
+      },
+      {
+        "id": 28,
+        "name": "Wave",
+        "src": "/images/ColorfulPins/wave.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 48,
+        "name": "Rainbow",
+        "src": "/images/ColorfulPins/rainbow.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "nature"
+      },
+      {
+        "id": 49,
+        "name": "Sun",
+        "src": "/images/ColorfulPins/sun.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 52,
+        "name": "Take to the Beach",
+        "src": "/images/ColorfulPins/gotothebeach.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "nature"
+      },
+      {
+        "id": 53,
+        "name": "Beach",
+        "src": "/images/ColorfulPins/beach.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "nature"
+      },
+      {
+        "id": 12,
+        "name": "Beer",
+        "src": "/images/ColorfulPins/beer.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "drinks"
+      },
+      {
+        "id": 13,
+        "name": "Bottle of Wine",
+        "src": "/images/ColorfulPins/bottleofwine.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "drinks"
+      },
+      {
+        "id": 26,
+        "name": "Coffee",
+        "src": "/images/ColorfulPins/coffee.webp",
+        "price": 2,
+        "size": 0.4,
+        "subCategory": "drinks"
       },
       {
         "id": 37,
@@ -747,20 +709,20 @@
         "subCategory": "drinks"
       },
       {
-        "id": 38,
-        "name": "Vacation",
-        "src": "/images/ColorfulPins/vacation.webp",
+        "id": 14,
+        "name": "Heart Notification",
+        "src": "/images/ColorfulPins/heartnotification.webp",
         "price": 2,
-        "size": 0.8,
-        "subCategory": "travel"
+        "size": 0.5,
+        "subCategory": "hearts"
       },
       {
-        "id": 39,
-        "name": "Love",
-        "src": "/images/ColorfulPins/love.webp",
+        "id": 16,
+        "name": "Little Heart",
+        "src": "/images/ColorfulPins/littleheart.webp",
         "price": 2,
-        "size": 0.6,
-        "subCategory": "travel"
+        "size": 0.5,
+        "subCategory": "hearts"
       },
       {
         "id": 40,
@@ -777,6 +739,13 @@
         "price": 2,
         "size": 0.5,
         "subCategory": "food"
+      },
+      {
+        "id": 5,
+        "name": "Paw",
+        "src": "/images/ColorfulPins/paw.webp",
+        "price": 2,
+        "size": 0.4
       },
       {
         "id": 42,
@@ -803,6 +772,21 @@
         "subCategory": "animal"
       },
       {
+        "id": 47,
+        "name": "Dog",
+        "src": "/images/ColorfulPins/dog.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "animal"
+      },
+      {
+        "id": 8,
+        "name": "Football",
+        "src": "/images/ColorfulPins/football.webp",
+        "price": 2,
+        "size": 0.75
+      },
+      {
         "id": 45,
         "name": "Happy",
         "src": "/images/ColorfulPins/happy.webp",
@@ -812,68 +796,85 @@
         "badge": "New"
       },
       {
-        "id": 46,
-        "name": "Blue Luggage",
-        "src": "/images/ColorfulPins/blueluggage.webp",
-        "price": 2,
-        "size": 0.6,
-        "subCategory": "travel"
-      },
-      {
-        "id": 47,
-        "name": "Dog",
-        "src": "/images/ColorfulPins/dog.webp",
-        "price": 2,
-        "size": 0.6,
-        "subCategory": "animal"
-      },
-      {
-        "id": 48,
-        "name": "Rainbow",
-        "src": "/images/ColorfulPins/rainbow.webp",
-        "price": 2,
-        "size": 0.8,
-        "subCategory": "nature"
-      },
-      {
-        "id": 49,
-        "name": "Sun",
-        "src": "/images/ColorfulPins/sun.webp",
-        "price": 2,
-        "size": 0.6,
-        "subCategory": "nature"
-      },
-      {
-        "id": 50,
-        "name": "Minnie with Heart",
-        "src": "/images/ColorfulPins/minnie3.webp",
+        "id": 1,
+        "name": "Be a Good Human",
+        "src": "/images/ColorfulPins/beagoodhuman.webp",
         "price": 2,
         "size": 0.7,
-        "subCategory": "disney"
+        "subCategory": "inspiration",
+        "hidden": true
       },
       {
-        "id": 51,
-        "name": "Adventure Awaits Ticket",
-        "src": "/images/ColorfulPins/orangeticket.webp",
+        "id": 4,
+        "name": "Dream Big",
+        "src": "/images/ColorfulPins/dreambig.webp",
         "price": 2,
         "size": 0.9,
-        "subCategory": "travel"
+        "subCategory": "inspiration",
+        "hidden": true
       },
       {
-        "id": 52,
-        "name": "Take to the Beach",
-        "src": "/images/ColorfulPins/gotothebeach.webp",
+        "id": 7,
+        "name": "Be Kind",
+        "src": "/images/ColorfulPins/bekind.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "inspiration",
+        "hidden": true
+      },
+      {
+        "id": 10,
+        "name": "Be Happy",
+        "src": "/images/ColorfulPins/behappy.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "inspiration",
+        "hidden": true
+      },
+      {
+        "id": 15,
+        "name": "Small Boarding Pass",
+        "src": "/images/ColorfulPins/smallboardingpass.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "travel",
+        "hidden": true
+      },
+      {
+        "id": 23,
+        "name": "London Phone",
+        "src": "/images/ColorfulPins/telephone.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "travel",
+        "hidden": true
+      },
+      {
+        "id": 27,
+        "name": "Coconut Tree",
+        "src": "/images/ColorfulPins/coconuttree.webp",
         "price": 2,
         "size": 0.8,
-        "subCategory": "nature"
+        "subCategory": "nature",
+        "hidden": true
       },
       {
-        "id": 53,
-        "name": "Beach",
-        "src": "/images/ColorfulPins/beach.webp",
+        "id": 30,
+        "name": "Black Camera",
+        "src": "/images/ColorfulPins/blackcamera.webp",
+        "price": 2,
+        "size": 0.8,
+        "subCategory": "camera",
+        "hidden": true
+      },
+      {
+        "id": 31,
+        "name": "Pink Camera",
+        "src": "/images/ColorfulPins/pinkcamera.webp",
         "price": 2,
         "size": 0.5,
-        "subCategory": "nature"
+        "subCategory": "camera",
+        "hidden": true
       }
     ],
     "bronze": [

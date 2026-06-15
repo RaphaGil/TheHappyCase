@@ -1,6 +1,25 @@
 import Products from '../../data/products.json';
 import { getCachedInventory } from '../inventory';
 
+const getPinQuantityFromCache = (categoryKey, pinId, quantities) => {
+  if (!pinId || !quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
+    return undefined;
+  }
+
+  const pinIndex = Products.pins[categoryKey].findIndex((pin) => pin.id === pinId);
+  if (pinIndex === -1) return undefined;
+
+  return quantities.pins[categoryKey][pinIndex];
+};
+
+const mergePinQuantities = (pins, categoryKey, quantities) =>
+  (pins || []).map((pin) => ({
+    ...pin,
+    quantity:
+      getPinQuantityFromCache(categoryKey, pin.id, quantities) ??
+      pin.quantity,
+  }));
+
 /**
  * Get products with quantities merged from Supabase inventory (in-memory cache)
  * This is a shared utility that handles both cases and charms to avoid duplication
@@ -38,24 +57,9 @@ export const getProductsWithQuantities = () => {
     if (quantities.pins) {
       mergedProducts.pins = {
         ...mergedProducts.pins,
-        flags: mergedProducts.pins?.flags?.map((pin, index) => ({
-          ...pin,
-          quantity: quantities.pins.flags?.[index] !== undefined 
-            ? quantities.pins.flags[index] 
-            : pin.quantity
-        })) || [],
-        colorful: mergedProducts.pins?.colorful?.map((pin, index) => ({
-          ...pin,
-          quantity: quantities.pins.colorful?.[index] !== undefined 
-            ? quantities.pins.colorful[index] 
-            : pin.quantity
-        })) || [],
-        bronze: mergedProducts.pins?.bronze?.map((pin, index) => ({
-          ...pin,
-          quantity: quantities.pins.bronze?.[index] !== undefined 
-            ? quantities.pins.bronze[index] 
-            : pin.quantity
-        })) || []
+        flags: mergePinQuantities(mergedProducts.pins?.flags, 'flags', quantities),
+        colorful: mergePinQuantities(mergedProducts.pins?.colorful, 'colorful', quantities),
+        bronze: mergePinQuantities(mergedProducts.pins?.bronze, 'bronze', quantities),
       };
     }
     

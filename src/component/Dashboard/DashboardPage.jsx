@@ -31,21 +31,28 @@ function mergeInventoryWithProducts(products, inventory) {
     });
   }
   if (inventory.pins) {
+    const getPinQuantity = (category, pin, index) => {
+      const cachedQty = inventory.pins?.[category]?.[
+        (Products.pins?.[category] || []).findIndex((item) => item.id === pin.id)
+      ];
+      return cachedQty !== undefined ? cachedQty : pin.quantity;
+    };
+
     merged.pins = {
       flags: (merged.pins?.flags || []).map((p, i) => ({
         ...p,
         image: p.src || p.image,
-        quantity: inventory.pins?.flags?.[i] ?? p.quantity,
+        quantity: getPinQuantity('flags', p, i),
       })),
       colorful: (merged.pins?.colorful || []).map((p, i) => ({
         ...p,
         image: p.src || p.image,
-        quantity: inventory.pins?.colorful?.[i] ?? p.quantity,
+        quantity: getPinQuantity('colorful', p, i),
       })),
       bronze: (merged.pins?.bronze || []).map((p, i) => ({
         ...p,
         image: p.src || p.image,
-        quantity: inventory.pins?.bronze?.[i] ?? p.quantity,
+        quantity: getPinQuantity('bronze', p, i),
       })),
     };
   }
