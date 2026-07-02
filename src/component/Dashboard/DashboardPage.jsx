@@ -12,10 +12,24 @@ import OrdersTab from './OrdersTab';
 
 const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 
+function getPinQuantityFromInventory(inventory, category, pin) {
+  if (!inventory?.pins?.[category]) {
+    return pin.quantity ?? null;
+  }
+
+  const pinIndex = (Products.pins?.[category] || []).findIndex((item) => item.id === pin.id);
+  if (pinIndex === -1) {
+    return pin.quantity ?? null;
+  }
+
+  const cachedQty = inventory.pins[category][pinIndex];
+  return cachedQty !== undefined ? cachedQty : (pin.quantity ?? null);
+}
+
 function mergeInventoryWithProducts(products, inventory) {
-  if (!inventory) return products;
   const merged = JSON.parse(JSON.stringify(products));
-  if (inventory.caseColors) {
+
+  if (inventory?.caseColors) {
     merged.cases = merged.cases.map((caseItem, caseIndex) => {
       const updated = { ...caseItem };
       if (inventory.caseColors[caseIndex] && Array.isArray(caseItem.colors)) {
@@ -30,32 +44,25 @@ function mergeInventoryWithProducts(products, inventory) {
       return updated;
     });
   }
-  if (inventory.pins) {
-    const getPinQuantity = (category, pin, index) => {
-      const cachedQty = inventory.pins?.[category]?.[
-        (Products.pins?.[category] || []).findIndex((item) => item.id === pin.id)
-      ];
-      return cachedQty !== undefined ? cachedQty : pin.quantity;
-    };
 
-    merged.pins = {
-      flags: (merged.pins?.flags || []).map((p, i) => ({
-        ...p,
-        image: p.src || p.image,
-        quantity: getPinQuantity('flags', p, i),
-      })),
-      colorful: (merged.pins?.colorful || []).map((p, i) => ({
-        ...p,
-        image: p.src || p.image,
-        quantity: getPinQuantity('colorful', p, i),
-      })),
-      bronze: (merged.pins?.bronze || []).map((p, i) => ({
-        ...p,
-        image: p.src || p.image,
-        quantity: getPinQuantity('bronze', p, i),
-      })),
-    };
-  }
+  merged.pins = {
+    flags: (merged.pins?.flags || []).map((pin) => ({
+      ...pin,
+      image: pin.src || pin.image,
+      quantity: getPinQuantityFromInventory(inventory, 'flags', pin),
+    })),
+    colorful: (merged.pins?.colorful || []).map((pin) => ({
+      ...pin,
+      image: pin.src || pin.image,
+      quantity: getPinQuantityFromInventory(inventory, 'colorful', pin),
+    })),
+    bronze: (merged.pins?.bronze || []).map((pin) => ({
+      ...pin,
+      image: pin.src || pin.image,
+      quantity: getPinQuantityFromInventory(inventory, 'bronze', pin),
+    })),
+  };
+
   return merged;
 }
 
@@ -85,9 +92,22 @@ export default function DashboardPage() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [ordersError, setOrdersError] = useState('');
 
+  const syncNewInventoryItems = useCallback(async () => {
+    try {
+      const res = await fetch(getApiUrl('/api/inventory/sync'), { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.success && data.inserted > 0) {
+        console.log(`Dashboard: synced ${data.inserted} new inventory item(s)`);
+      }
+    } catch (err) {
+      console.warn('Dashboard: sync new inventory items failed', err);
+    }
+  }, []);
+
   const fetchInventory = useCallback(async () => {
     setLoadingInventory(true);
     try {
+      await syncNewInventoryItems();
       const res = await fetch(getApiUrl('/api/inventory'));
       const data = await res.json();
       if (res.ok && data.success && data.inventory) {
@@ -102,7 +122,7 @@ export default function DashboardPage() {
     } finally {
       setLoadingInventory(false);
     }
-  }, []);
+  }, [syncNewInventoryItems]);
 
   const fetchOrders = useCallback(async () => {
     setLoadingOrders(true);

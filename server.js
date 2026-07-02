@@ -10,8 +10,13 @@ import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { readFileSync } from "fs";
+import { createRequire } from "module";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { getResendFromEmail, getResendReplyToEmail } from "./src/utils/resendFromEmail.js";
+
+const require = createRequire(import.meta.url);
+const { buildAllInventoryItems } = require("./netlify/functions/utils/buildInventoryItems.cjs");
 
 // Load .env.local so backend sees RESEND_API_KEY etc. when only .env.local exists (e.g. Next.js setup)
 try { dotenvConfig({ path: join(process.cwd(), ".env.local") }); } catch (_) {}
@@ -851,27 +856,8 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       });
     }
 
-    // Resend requires verified domains. For testing, use onboarding@resend.dev
-    // For production, you must verify your own domain at https://resend.com/domains
-    let fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
-    
-    // Check if FROM_EMAIL is a Gmail address (which cannot be verified)
-    const emailDomain = fromEmail.split('@')[1]?.toLowerCase();
-    const unverifiedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-    
-    if (emailDomain && unverifiedDomains.includes(emailDomain)) {
-      console.warn('⚠️  WARNING: FROM_EMAIL is set to a Gmail/unverified domain address.');
-      console.warn(`   Current FROM_EMAIL: ${fromEmail}`);
-      console.warn('   Resend does not allow sending from Gmail/Yahoo/Hotmail/Outlook/iCloud domains.');
-      console.warn('   Falling back to test email: onboarding@resend.dev');
-      console.warn('');
-      console.warn('   To fix this:');
-      console.warn('   1. For testing: Remove FROM_EMAIL from .env (or set to onboarding@resend.dev)');
-      console.warn('   2. For production: Verify your own domain at https://resend.com/domains');
-      console.warn('      Then set FROM_EMAIL to an email from your verified domain (e.g., orders@yourdomain.com)');
-      console.warn('');
-      fromEmail = 'onboarding@resend.dev';
-    }
+    const fromEmail = getResendFromEmail();
+    const replyToEmail = getResendReplyToEmail();
 
     // Send email using Resend
     try {
@@ -880,6 +866,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       console.log(`API Key length: ${resendApiKey.length} characters`);
       console.log(`API Key starts with 're_': ${resendApiKey.startsWith('re_')}`);
       console.log(`From: ${fromEmail}`);
+      console.log(`Reply-To: ${replyToEmail}`);
       console.log(`To: ${customerInfo.email}`);
       console.log(`Subject: ${emailSubject}`);
       console.log(`HTML length: ${emailHtml.length} characters`);
@@ -896,6 +883,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
       console.log('📧 Calling Resend API...');
       const { data, error } = await resend.emails.send({
         from: `The Happy Case <${fromEmail}>`,
+        reply_to: replyToEmail,
         to: customerInfo.email,
         subject: emailSubject,
         html: emailHtml,
@@ -1064,17 +1052,12 @@ app.post("/api/test-email", async (req, res) => {
       });
     }
     
-    let fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
-    const emailDomain = fromEmail.split('@')[1]?.toLowerCase();
-    const unverifiedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-    
-    if (emailDomain && unverifiedDomains.includes(emailDomain)) {
-      fromEmail = 'onboarding@resend.dev';
-      console.log(`⚠️ FROM_EMAIL is unverified domain, using: ${fromEmail}`);
-    }
+    const fromEmail = getResendFromEmail();
+    const replyToEmail = getResendReplyToEmail();
     
     console.log(`API Key: ${resendApiKey.substring(0, 10)}...${resendApiKey.substring(resendApiKey.length - 4)}`);
     console.log(`From: ${fromEmail}`);
+    console.log(`Reply-To: ${replyToEmail}`);
     console.log(`To: ${testEmail}`);
     
     const resend = new Resend(resendApiKey);
@@ -1092,6 +1075,7 @@ app.post("/api/test-email", async (req, res) => {
     
     const { data, error } = await resend.emails.send({
       from: `The Happy Case <${fromEmail}>`,
+      reply_to: replyToEmail,
       to: testEmail,
       subject: 'Test Email - The Happy Case',
       html: testHtml,
@@ -2631,13 +2615,8 @@ async function sendDispatchNotificationEmail({ to, customerName, orderNumber, tr
     return { sent: false, reason: 'invalid_resend_key' };
   }
 
-  let fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
-  const emailDomain = fromEmail.split('@')[1]?.toLowerCase();
-  const unverifiedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
-  if (emailDomain && unverifiedDomains.includes(emailDomain)) {
-    console.warn('⚠️ FROM_EMAIL is unverified domain; using onboarding@resend.dev for dispatch email');
-    fromEmail = 'onboarding@resend.dev';
-  }
+  const fromEmail = getResendFromEmail();
+  const replyToEmail = getResendReplyToEmail();
 
   const websiteUrl = process.env.FRONTEND_URL || (process.env.CUSTOM_DOMAIN ? `https://${process.env.CUSTOM_DOMAIN}` : 'https://thehappycase.store');
   const logoUrl = `${websiteUrl}/assets/logo.webp`;
@@ -2738,11 +2717,12 @@ async function sendDispatchNotificationEmail({ to, customerName, orderNumber, tr
   `;
 
   try {
-    console.log('📧 [Dispatch email] Sending via Resend – From:', fromEmail, '| To:', toEmail.replace(/(.{2}).*(@.*)/, '$1***$2'), '| Order:', orderNumber);
+    console.log('📧 [Dispatch email] Sending via Resend – From:', fromEmail, '| Reply-To:', replyToEmail, '| To:', toEmail.replace(/(.{2}).*(@.*)/, '$1***$2'), '| Order:', orderNumber);
 
     const resend = new Resend(resendApiKey);
     const { data, error } = await resend.emails.send({
       from: `The Happy Case <${fromEmail}>`,
+      reply_to: replyToEmail,
       to: toEmail,
       subject: `Your order ${orderNumber} is on its way`,
       html: emailHtml,
@@ -3213,6 +3193,77 @@ app.get("/payment-intent-details", async (req, res) => {
   } catch (error) {
     console.error("Error retrieving payment intent:", error);
     res.status(500).json({ error: error.message || "Failed to retrieve payment intent" });
+  }
+});
+
+// --- Sync new products into inventory_items (insert missing rows only) ---
+app.post("/api/inventory/sync", async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(503).json({
+        success: false,
+        error: "Supabase not configured",
+        message: "Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env to enable inventory sync.",
+      });
+    }
+
+    if (!Products?.cases || !Products?.pins) {
+      return res.status(500).json({
+        success: false,
+        error: "Products data not loaded",
+      });
+    }
+
+    const allItems = buildAllInventoryItems(Products);
+    const { data: existing, error: fetchError } = await supabase
+      .from("inventory_items")
+      .select("item_id");
+
+    if (fetchError) {
+      if (fetchError.code === "PGRST116" || fetchError.code === "42P01") {
+        return res.json({
+          success: true,
+          inserted: 0,
+          message: "inventory_items table does not exist yet",
+        });
+      }
+      throw fetchError;
+    }
+
+    const existingIds = new Set((existing || []).map((row) => row.item_id));
+    const missingItems = allItems.filter((item) => !existingIds.has(item.item_id));
+
+    if (missingItems.length === 0) {
+      return res.json({
+        success: true,
+        inserted: 0,
+        message: "All products already exist in inventory",
+      });
+    }
+
+    const { error: insertError } = await supabase
+      .from("inventory_items")
+      .insert(missingItems);
+
+    if (insertError) {
+      throw insertError;
+    }
+
+    console.log(`✅ Synced ${missingItems.length} new inventory item(s)`);
+    return res.json({
+      success: true,
+      inserted: missingItems.length,
+      items: missingItems.map((item) => ({
+        item_id: item.item_id,
+        name: item.name,
+      })),
+    });
+  } catch (error) {
+    console.error("Error syncing inventory items:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || "Failed to sync inventory items",
+    });
   }
 });
 

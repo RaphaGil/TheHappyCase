@@ -14,7 +14,7 @@ const CharmsSection = ({ charms, onQuantityChange }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {charms.flags.map((charm, index) => (
             <CharmItem
-              key={index}
+              key={`flags-${charm.id}`}
               charm={charm}
               index={index}
               category="flags"
@@ -32,7 +32,7 @@ const CharmsSection = ({ charms, onQuantityChange }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {charms.colorful.map((charm, index) => (
             <CharmItem
-              key={index}
+              key={`colorful-${charm.id}`}
               charm={charm}
               index={index}
               category="colorful"
@@ -50,7 +50,7 @@ const CharmsSection = ({ charms, onQuantityChange }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {charms.bronze.map((charm, index) => (
             <CharmItem
-              key={index}
+              key={`bronze-${charm.id}`}
               charm={charm}
               index={index}
               category="bronze"

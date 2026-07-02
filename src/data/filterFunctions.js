@@ -30,9 +30,12 @@ export const filterColorfulCharms = (pin, selectedCategory) => {
       pinNameLower.includes('boarding') ||
       pinNameLower.includes('ticket') ||
       pinNameLower.includes('heart globe') ||
+      pinNameLower.includes('world') ||
+      pinNameLower.includes('luggage') ||
       pinNameLower.includes('combi') ||
       pinNameLower.includes('telephone') ||
-      pinNameLower.includes('london phone')
+      pinNameLower.includes('london phone') ||
+      pinNameLower.includes('evil eye')
     );
   }
   
@@ -143,6 +146,14 @@ export const filterFlags = (flag, selectedContinent) => {
   
   if (selectedContinent === 'americas') {
     return flagNameLower.includes('brazil');
+  }
+
+  if (selectedContinent === 'asia') {
+    return (
+      flagNameLower.includes('india') ||
+      flagNameLower.includes('japan') ||
+      flagNameLower.includes('thailand')
+    );
   }
   
   if (selectedContinent === 'special') {

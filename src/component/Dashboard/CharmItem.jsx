@@ -19,10 +19,10 @@ const CharmItem = ({ charm, index, category, onQuantityChange }) => {
       )}
       
       {/* Charm Image */}
-      {charm.image && (
+      {(charm.image || charm.src) && (
         <div className="w-16 h-16 flex items-center justify-center border border-gray-200 rounded-sm bg-white">
           <img
-            src={charm.image}
+            src={charm.image || charm.src}
             alt={charm.name}
             className="max-w-full max-h-full object-contain"
           />

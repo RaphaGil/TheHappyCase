@@ -6,11 +6,13 @@
  * Invoked via redirect from /api/orders/:orderId/dispatched
  * Parses orderId from event.path
  *
- * Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (optional), FROM_EMAIL (optional)
+ * Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY (optional)
+ * FROM_EMAIL is optional (defaults to orders@<site-domain>, e.g. orders@thehappycase.store)
  */
 
 const { createClient } = require("@supabase/supabase-js");
 const { Resend } = require("resend");
+const { getResendFromEmail, getResendReplyToEmail } = require("./utils/getFromEmail.cjs");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -46,7 +48,8 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
   if (!resendApiKey || !resendApiKey.startsWith("re_") || resendApiKey.length < 20) {
     return { sent: false, reason: "resend_not_configured" };
   }
-  let fromEmail = process.env.FROM_EMAIL || "onboarding@resend.dev";
+  const fromEmail = getResendFromEmail();
+  const replyToEmail = getResendReplyToEmail();
   const websiteUrl = process.env.URL || "https://thehappycase.shop";
   const logoUrl = `${websiteUrl}/assets/logo.webp`;
   const formatOrderDate = (d) => (d ? new Date(d).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "");
@@ -265,9 +268,11 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
   </body>
 </html>`;
   try {
+    console.log("[Dispatch email] From:", fromEmail, "| Reply-To:", replyToEmail, "| To:", to.replace(/(.{2}).*(@.*)/, "$1***$2"));
     const resend = new Resend(resendApiKey);
     const { error } = await resend.emails.send({
       from: `The Happy Case <${fromEmail}>`,
+      reply_to: replyToEmail,
       to: to.trim(),
       subject: `Your order ${orderNumber} is on its way`,
       html: emailHtml,

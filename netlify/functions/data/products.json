@@ -441,6 +441,14 @@
         "price": 2,
         "size": 0.5,
         "continent": "americas"
+      },
+      {
+        "id": 34,
+        "name": "Thailand",
+        "src": "/images/Flags/thailand.webp",
+        "price": 2,
+        "size": 0.55,
+        "continent": "asia"
       }
     ],
     "colorful": [
@@ -458,6 +466,14 @@
         "src": "/images/ColorfulPins/heartglobe.webp",
         "price": 2,
         "size": 0.65,
+        "subCategory": "travel"
+      },
+      {
+        "id": 55,
+        "name": "World",
+        "src": "/images/ColorfulPins/world.webp",
+        "price": 2,
+        "size": 0.55,
         "subCategory": "travel"
       },
       {
@@ -493,6 +509,22 @@
         "subCategory": "travel"
       },
       {
+        "id": 46,
+        "name": "Blue Luggage",
+        "src": "/images/ColorfulPins/blueluggage.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 54,
+        "name": "Pink Luggage",
+        "src": "/images/ColorfulPins/pinkluggage.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
         "id": 36,
         "name": "Combi",
         "src": "/images/ColorfulPins/combi.webp",
@@ -512,14 +544,6 @@
         "id": 39,
         "name": "Love",
         "src": "/images/ColorfulPins/love.webp",
-        "price": 2,
-        "size": 0.6,
-        "subCategory": "travel"
-      },
-      {
-        "id": 46,
-        "name": "Blue Luggage",
-        "src": "/images/ColorfulPins/blueluggage.webp",
         "price": 2,
         "size": 0.6,
         "subCategory": "travel"
@@ -601,7 +625,7 @@
         "name": "Duck",
         "src": "/images/ColorfulPins/duck.webp",
         "price": 2,
-        "size": 0.75,
+        "size": 0.6,
         "subCategory": "disney"
       },
       {
@@ -656,6 +680,14 @@
         "id": 49,
         "name": "Sun",
         "src": "/images/ColorfulPins/sun.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "nature"
+      },
+      {
+        "id": 56,
+        "name": "Sunny",
+        "src": "/images/ColorfulPins/sunny.webp",
         "price": 2,
         "size": 0.6,
         "subCategory": "nature"
@@ -875,6 +907,30 @@
         "size": 0.5,
         "subCategory": "camera",
         "hidden": true
+      },
+      {
+        "id": 59,
+        "name": "Evil Eye",
+        "src": "/images/ColorfulPins/evileye.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "travel"
+      },
+      {
+        "id": 57,
+        "name": "Flip Flop",
+        "src": "/images/ColorfulPins/fliflop.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "nature"
+      },
+      {
+        "id": 58,
+        "name": "Flamingos",
+        "src": "/images/ColorfulPins/flamingos.webp",
+        "price": 2,
+        "size": 0.9,
+        "subCategory": "animal"
       }
     ],
     "bronze": [
@@ -1159,6 +1215,14 @@
         "price": 1,
         "size": 0.5,
         "subCategory": "animals"
+      },
+      {
+        "id": 37,
+        "name": "Sun",
+        "src": "/images/BronzePins/sun.webp",
+        "price": 1,
+        "size": 0.6,
+        "subCategory": "nature"
       }
     ]
   }

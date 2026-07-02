@@ -121,7 +121,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
       if (data.dispatchEmailSent) {
         alert('Order marked as dispatched. Tracking email with tracking info sent to the customer.');
       } else if (data.dispatchEmailError) {
-        alert(`Order marked as dispatched, but the tracking email could not be sent: ${data.dispatchEmailError}. Check server logs and RESEND_API_KEY in .env`);
+        alert(`Order marked as dispatched, but the tracking email could not be sent: ${data.dispatchEmailError}. Check Netlify function logs and RESEND_API_KEY.`);
       }
       
       // Close modal and reset form

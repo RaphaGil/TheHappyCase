@@ -320,7 +320,7 @@ const MobileOverlay = ({
                       </span>
                       <input
                         id="mobile-charm-search-input"
-                        type="search"
+                        type="text"
                         value={mobileSearchQuery}
                         onChange={(e) => setMobileSearchQuery(e.target.value)}
                         placeholder="Search by name..."

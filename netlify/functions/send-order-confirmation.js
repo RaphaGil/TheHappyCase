@@ -7,10 +7,12 @@
  *
  * Env:
  * - RESEND_API_KEY (optional but recommended)
- * - FROM_EMAIL (optional, defaults to onboarding@resend.dev)
+ * - FROM_EMAIL (optional, defaults to orders@<your-domain>)
+ * - RESEND_DOMAIN or CUSTOM_DOMAIN (optional, if site URL differs from verified Resend domain)
  */
 
 const { Resend } = require("resend");
+const { getResendFromEmail, getResendReplyToEmail } = require("./utils/getFromEmail.cjs");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -110,11 +112,9 @@ exports.handler = async (event) => {
   });
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM_EMAIL = process.env.FROM_EMAIL || "onboarding@resend.dev";
-  const fromHeader =
-    typeof FROM_EMAIL === "string" && FROM_EMAIL.includes("<") && FROM_EMAIL.includes(">")
-      ? FROM_EMAIL
-      : `The Happy Case <${FROM_EMAIL}>`;
+  const fromEmail = getResendFromEmail();
+  const replyToEmail = getResendReplyToEmail();
+  const fromHeader = `The Happy Case <${fromEmail}>`;
 
   // If RESEND_API_KEY is not configured, return a soft warning so frontend logs a warning, not an error
   if (!RESEND_API_KEY) {
@@ -349,6 +349,7 @@ exports.handler = async (event) => {
   try {
     const { data, error } = await resend.emails.send({
       from: fromHeader,
+      reply_to: replyToEmail,
       to: email,
       subject,
       text: lines.join("\n"),

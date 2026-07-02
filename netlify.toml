@@ -180,6 +180,11 @@ to = "/.netlify/functions/inventory"
 status = 200
 
 [[redirects]]
+from = "/api/inventory/sync"
+to = "/.netlify/functions/inventory-sync"
+status = 200
+
+[[redirects]]
 from = "/api/save-order"
 to = "/.netlify/functions/save-order"
 status = 200

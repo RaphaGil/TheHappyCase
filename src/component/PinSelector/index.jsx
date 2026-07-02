@@ -203,7 +203,7 @@ const CharmFilterAndSearch = ({
           </span>
           <input
             id="charm-search-input"
-            type="search"
+            type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name..."
