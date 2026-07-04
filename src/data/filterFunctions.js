@@ -7,6 +7,8 @@ export const filterColorfulCharms = (pin, selectedCategory) => {
     return (
       pinNameLower.includes('pizza') ||
       pinNameLower.includes('chocolate') ||
+      pinNameLower.includes('burger') ||
+      pinNameLower.includes('croissant') ||
       pinNameLower.includes('icecream') 
     );
   }
@@ -75,6 +77,7 @@ export const filterColorfulCharms = (pin, selectedCategory) => {
       pinNameLower.includes('goofy') ||
       pinNameLower.includes('guufy') ||
       pinNameLower.includes('daisy duck') ||
+      pinNameLower.includes('donald') ||
       pinNameLower.includes('duck')
     );
   }

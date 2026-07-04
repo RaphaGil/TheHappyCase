@@ -13,7 +13,17 @@ let inventoryFetchPromise = null; // Track ongoing fetch to avoid duplicate requ
 let isInitializing = false; // Track if we're in the initial load phase
 
 const getPinQuantityFromCache = (categoryKey, pinId, quantities) => {
-  if (!pinId || !quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
+  if (!pinId || !quantities) {
+    return undefined;
+  }
+
+  // Prefer id-keyed map from API (order-independent, survives products.json reordering)
+  const byId = quantities.pinQtyById?.[categoryKey];
+  if (byId && Object.prototype.hasOwnProperty.call(byId, pinId)) {
+    return byId[pinId];
+  }
+
+  if (!quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
     return undefined;
   }
 
@@ -21,6 +31,66 @@ const getPinQuantityFromCache = (categoryKey, pinId, quantities) => {
   if (pinIndex === -1) return undefined;
 
   return quantities.pins[categoryKey][pinIndex];
+};
+
+const buildPinQtyByIdFromArrays = (pinsArrays) => {
+  const result = { flags: {}, colorful: {}, bronze: {} };
+  for (const categoryKey of ['flags', 'colorful', 'bronze']) {
+    (Products.pins[categoryKey] || []).forEach((pin, index) => {
+      const qty = pinsArrays?.[categoryKey]?.[index];
+      if (pin?.id != null && qty !== undefined) {
+        result[categoryKey][pin.id] = qty;
+      }
+    });
+  }
+  return result;
+};
+
+const buildCaseQtyByTypeFromArrays = (caseColors) => {
+  const result = {};
+  Products.cases.forEach((caseItem, caseIndex) => {
+    result[caseItem.type] = {};
+    (caseItem.colors || []).forEach((colorEntry, colorIndex) => {
+      const qty = caseColors?.[caseIndex]?.[colorIndex];
+      if (qty !== undefined) {
+        result[caseItem.type][colorEntry.color] = qty;
+      }
+    });
+  });
+  return result;
+};
+
+const getCaseColorQuantityFromCache = (caseType, color, quantities) => {
+  if (!caseType || !color || !quantities) return undefined;
+
+  const byType = quantities.caseQtyByType?.[caseType];
+  if (byType && Object.prototype.hasOwnProperty.call(byType, color)) {
+    return byType[color];
+  }
+
+  if (!quantities.caseColors) return undefined;
+
+  const caseIndex = Products.cases.findIndex((c) => c.type === caseType);
+  if (caseIndex === -1) return undefined;
+
+  const caseData = Products.cases[caseIndex];
+  const colorIndex = caseData?.colors?.findIndex((c) => c.color === color) ?? -1;
+  if (colorIndex === -1) return undefined;
+
+  return quantities.caseColors[caseIndex]?.[colorIndex];
+};
+
+const normalizeInventoryQuantities = (inventory) => {
+  const quantities = {
+    cases: inventory.cases,
+    caseColors: inventory.caseColors,
+    pins: inventory.pins,
+    pinQtyById:
+      inventory.pinQtyById || buildPinQtyByIdFromArrays(inventory.pins),
+    caseQtyByType:
+      inventory.caseQtyByType || buildCaseQtyByTypeFromArrays(inventory.caseColors),
+  };
+  return quantities;
 };
 
 /**
@@ -130,11 +200,7 @@ const fetchInventoryFromSupabase = async () => {
               if (directResponse.ok) {
                 const data = await safeParseJSON(directResponse);
                 if (data.success && data.inventory) {
-                  const quantities = {
-                    cases: data.inventory.cases,
-                    caseColors: data.inventory.caseColors,
-                    pins: data.inventory.pins
-                  };
+                  const quantities = normalizeInventoryQuantities(data.inventory);
                   
                   // Update in-memory cache
                   inventoryCache = quantities;
@@ -226,11 +292,7 @@ const fetchInventoryFromSupabase = async () => {
             console.log('[INVENTORY] 🔄 STEP 5: Parsing inventory data from API response...');
             
             // Convert Supabase format to quantities format
-            const quantities = {
-              cases: data.inventory.cases,
-              caseColors: data.inventory.caseColors,
-              pins: data.inventory.pins
-            };
+            const quantities = normalizeInventoryQuantities(data.inventory);
             
             console.log('[INVENTORY] 🔍 STEP 5.1: Parsed quantities structure:', {
               casesType: typeof quantities.cases,
@@ -345,11 +407,7 @@ const fetchInventoryFromSupabase = async () => {
             if (directResponse.ok) {
               const data = await safeParseJSON(directResponse);
               if (data.success && data.inventory) {
-                const quantities = {
-                  cases: data.inventory.cases,
-                  caseColors: data.inventory.caseColors,
-                  pins: data.inventory.pins
-                };
+                const quantities = normalizeInventoryQuantities(data.inventory);
                 
                 // Update in-memory cache
                 inventoryCache = quantities;
@@ -487,8 +545,13 @@ export const getMaxAvailableQuantity = (item, cart) => {
     // Get color-specific quantity from Supabase (via in-memory cache)
     let maxQuantity = null;
 
-    // Primary: Get from caseColors array (from Supabase inventory_items table)
-    if (quantities && quantities.caseColors) {
+    const cachedColorQty = getCaseColorQuantityFromCache(item.caseType, item.color, quantities);
+    if (cachedColorQty !== undefined) {
+      maxQuantity = cachedColorQty;
+    }
+
+    // Legacy fallback: scan caseColors arrays directly
+    if (maxQuantity === null && quantities && quantities.caseColors) {
       const caseIndex = Products.cases.findIndex(c => c.type === item.caseType);
       
       if (caseIndex !== -1 && quantities.caseColors[caseIndex]) {
@@ -554,8 +617,11 @@ export const getMaxAvailableQuantity = (item, cart) => {
 
     let charmData = null;
     if (Products.pins && Products.pins[categoryKey]) {
-      if (item.pin?.id) {
+      if (item.pin?.id != null) {
         charmData = Products.pins[categoryKey].find((pin) => pin.id === item.pin.id);
+      }
+      if (!charmData && item.pin?.src) {
+        charmData = Products.pins[categoryKey].find((pin) => pin.src === item.pin.src);
       }
       if (!charmData && pinName) {
         charmData = Products.pins[categoryKey].find(

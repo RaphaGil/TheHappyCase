@@ -9,6 +9,12 @@ import { getMaxAvailableQuantity } from '../../utils/inventory.js';
 import { normalizeImagePath } from '../../utils/imagePath.js';
 import { getCaseLinePins } from '../../utils/cartHelpers.js';
 import {
+  buildCharmProduct,
+  countMatchingCharms,
+  getCharmCategory,
+  isSameCharm,
+} from '../../utils/charmHelpers.js';
+import {
   OPTION_CHARM_FIELD,
   OPTION_CHARM_TOOLBAR,
   OPTION_FONT_STYLE,
@@ -356,49 +362,30 @@ const MobileOverlay = ({
                     </div>
                   ) : (
                   <div ref={charmsGridScrollRef} className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
-                    <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3">
+                    <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3 items-start">
                       {visiblePinsForMobile.map((pin, index) => {
-                        const pinImageKey = pin.id ?? pin.src ?? `${pin.name}-${index}`;
+                        const pinImageKey = pin.id ?? pin.src ?? pin.name;
                         const isSelected = selectedPins.some((p) => p.pin === pin);
 
-                        // Check if charm is sold out and get inventory info for badges
                         const getCharmInventoryInfo = () => {
-                          const charmCategory = pin.category || selectedCategory || 'colorful';
-                          const charmName = pin.name || pin.src || '';
-
-                          const product = {
-                            type: 'charm',
-                            category: charmCategory,
-                            pin: pin,
-                            name: charmName
-                          };
-
+                          const charmCategory = getCharmCategory(pin, selectedCategory);
+                          const product = buildCharmProduct(pin, charmCategory);
                           const maxAvailable = getMaxAvailableQuantity(product, cart || []);
 
                           if (maxAvailable === null) {
                             return { isSoldOut: false, remainingAvailable: null, isLowStock: false };
                           }
 
-                          const charmCountInDesign = selectedPins.filter(p => {
-                            const pPin = p.pin || p;
-                            const pPinName = pPin.name || pPin.src;
-                            const pPinCategory = pPin.category || charmCategory;
-                            return (pPinName === charmName || pPinName === pin.src) &&
-                              pPinCategory === charmCategory;
-                          }).length;
-
+                          const charmCountInDesign = countMatchingCharms(selectedPins, pin, charmCategory);
                           const remainingAvailable = Math.max(0, maxAvailable - charmCountInDesign);
                           let isSoldOut = maxAvailable === 0 || remainingAvailable === 0;
 
                           if (!isSoldOut) {
                             let standaloneCharmsInCart = 0;
-                            (cart || []).forEach(cartItem => {
+                            (cart || []).forEach((cartItem) => {
                               if (cartItem.type === 'charm') {
                                 const cartPin = cartItem.pin || cartItem;
-                                const cartPinName = cartPin.name || cartPin.src;
-                                const cartPinCategory = cartPin.category || cartItem.category || charmCategory;
-                                if ((cartPinName === charmName || cartPinName === pin.src) &&
-                                  cartPinCategory === charmCategory) {
+                                if (isSameCharm(cartPin, pin, charmCategory)) {
                                   standaloneCharmsInCart += (cartItem.quantity || 1);
                                 }
                               }
@@ -407,12 +394,7 @@ const MobileOverlay = ({
                             let charmCountInCustomDesigns = 0;
                             (cart || []).forEach((cartItem) => {
                               getCaseLinePins(cartItem).forEach((cartPin) => {
-                                const cartPinName = cartPin.name || cartPin.src;
-                                const cartPinCategory = cartPin.category || charmCategory;
-                                if (
-                                  (cartPinName === charmName || cartPinName === pin.src) &&
-                                  cartPinCategory === charmCategory
-                                ) {
+                                if (isSameCharm(cartPin, pin, charmCategory)) {
                                   charmCountInCustomDesigns += cartItem.quantity || 1;
                                 }
                               });
@@ -431,10 +413,10 @@ const MobileOverlay = ({
                         
                         return (
                           <button
-                            key={pin.id ?? `${pin.src}-${index}`}
+                            key={`${selectedCategory}-${pin.id ?? pin.src ?? pin.name}`}
                             onClick={() => !isSoldOut && handlePinSelection(pin)}
                             disabled={isSoldOut}
-                            className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center ${
+                            className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center justify-start ${
                               isSoldOut ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                           >
@@ -471,14 +453,19 @@ const MobileOverlay = ({
                                 </div>
                               )}
                             </div>
-                            <span className={`text-[10px] xs:text-[11px] text-center line-clamp-2 mt-0.5 xs:mt-1 ${
-                              isSoldOut ? 'text-gray-500' : 'text-gray-700'
-                            }`} style={{fontFamily: "'Poppins', sans-serif"}}>
-                              {pin.name}
-                            </span>
-                            {isSoldOut && (
-                              <span className="text-[8px] xs:text-[9px] text-red-600 font-medium mt-0.5">Sold Out</span>
-                            )}
+                            <div className="flex min-h-[2.25rem] flex-col items-center justify-start">
+                              <span className={`text-[10px] xs:text-[11px] text-center line-clamp-2 mt-0.5 xs:mt-1 ${
+                                isSoldOut ? 'text-gray-500' : 'text-gray-700'
+                              }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+                                {pin.name}
+                              </span>
+                              <span
+                                className={`text-[8px] xs:text-[9px] text-red-600 font-medium mt-0.5 ${isSoldOut ? '' : 'invisible'}`}
+                                aria-hidden={!isSoldOut}
+                              >
+                                Sold Out
+                              </span>
+                            </div>
                           </button>
                         );
                       })}

@@ -541,6 +541,14 @@
         "subCategory": "travel"
       },
       {
+        "id": 59,
+        "name": "Evil Eye",
+        "src": "/images/ColorfulPins/evileye.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "travel"
+      },
+      {
         "id": 39,
         "name": "Love",
         "src": "/images/ColorfulPins/love.webp",
@@ -616,6 +624,14 @@
         "id": 32,
         "name": "Daisy Duck",
         "src": "/images/ColorfulPins/daisyduck.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 62,
+        "name": "Donald Duck",
+        "src": "/images/ColorfulPins/donald.webp",
         "price": 2,
         "size": 0.7,
         "subCategory": "disney"
@@ -709,6 +725,14 @@
         "subCategory": "nature"
       },
       {
+        "id": 57,
+        "name": "Flip Flop",
+        "src": "/images/ColorfulPins/fliflop.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "nature"
+      },
+      {
         "id": 12,
         "name": "Beer",
         "src": "/images/ColorfulPins/beer.webp",
@@ -773,6 +797,22 @@
         "subCategory": "food"
       },
       {
+        "id": 60,
+        "name": "Burger",
+        "src": "/images/ColorfulPins/burger.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "food"
+      },
+      {
+        "id": 61,
+        "name": "Croissant",
+        "src": "/images/ColorfulPins/croissant.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "food"
+      },
+      {
         "id": 5,
         "name": "Paw",
         "src": "/images/ColorfulPins/paw.webp",
@@ -809,6 +849,14 @@
         "src": "/images/ColorfulPins/dog.webp",
         "price": 2,
         "size": 0.6,
+        "subCategory": "animal"
+      },
+      {
+        "id": 58,
+        "name": "Flamingos",
+        "src": "/images/ColorfulPins/flamingos.webp",
+        "price": 2,
+        "size": 0.9,
         "subCategory": "animal"
       },
       {
@@ -907,30 +955,6 @@
         "size": 0.5,
         "subCategory": "camera",
         "hidden": true
-      },
-      {
-        "id": 59,
-        "name": "Evil Eye",
-        "src": "/images/ColorfulPins/evileye.webp",
-        "price": 2,
-        "size": 0.5,
-        "subCategory": "travel"
-      },
-      {
-        "id": 57,
-        "name": "Flip Flop",
-        "src": "/images/ColorfulPins/fliflop.webp",
-        "price": 2,
-        "size": 0.5,
-        "subCategory": "nature"
-      },
-      {
-        "id": 58,
-        "name": "Flamingos",
-        "src": "/images/ColorfulPins/flamingos.webp",
-        "price": 2,
-        "size": 0.9,
-        "subCategory": "animal"
       }
     ],
     "bronze": [

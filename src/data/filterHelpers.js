@@ -37,6 +37,7 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
           n.includes('round') ||
           n.includes('mickey') ||
           n.includes('daisy') ||
+          n.includes('donald') ||
           n.includes('duck') ||
           n.includes('guufy')
         );
@@ -53,6 +54,7 @@ export const filterPinsByCategory = (pins, selectedCategory, subCategory) => {
           n.includes('pizza') ||
           n.includes('chocolate') ||
           n.includes('burger') ||
+          n.includes('croissant') ||
           n.includes('ice') ||
           n.includes('donut') ||
           n.includes('doughnut') ||

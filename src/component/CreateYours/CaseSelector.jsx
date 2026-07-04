@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { CASE_OPTIONS } from '../../data/constants';
 import { getMaxAvailableQuantity } from '../../utils/inventory';
 import { normalizeImagePath } from '../../utils/imagePath';
+import { useInventoryReady } from '../../hooks/useInventoryReady';
 import {
   OPTION_CASE_CATEGORY_LABEL,
   OPTION_CASE_SOLD_OUT,
@@ -15,6 +16,9 @@ import {
 } from './designOptionStyles';
 
 const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, cart = [] }) => {
+  const inventoryReady = useInventoryReady();
+  void inventoryReady;
+
   // Get image for a case type
   const getCaseImage = (caseType) => {
     // First try to get from Products.cases

@@ -20,11 +20,18 @@ export const getItemGroupKey = (item) => {
     return `custom-${item.id || Date.now()}`;
   }
   
-  // For charms, always group by category and pin name (ignore unique IDs for grouping)
-  // This ensures the same charm shows as one item with quantity, regardless of where it came from
+  // For charms, group by category and pin id (fallback to src/name for legacy items)
   if (item.type === 'charm' || (item.category && item.pin)) {
     const category = item.category || (item.pin && item.pin.category) || 'colorful';
-    const pinName = item.pin?.name || item.pin?.src || item.name || '';
+    const pinId = item.pin?.id;
+    if (pinId != null) {
+      return `charm-${category}-${pinId}`;
+    }
+    const pinSrc = item.pin?.src || '';
+    if (pinSrc) {
+      return `charm-${category}-${pinSrc}`;
+    }
+    const pinName = item.pin?.name || item.name || '';
     return `charm-${category}-${pinName}`;
   }
   

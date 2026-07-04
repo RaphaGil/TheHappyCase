@@ -3552,6 +3552,23 @@ app.get("/api/inventory", async (req, res) => {
       }
     });
 
+    inventory.pinQtyById = {
+      flags: Object.fromEntries(flagPins.map((item) => [item.product_id, item.qty_in_stock])),
+      colorful: Object.fromEntries(colorfulPins.map((item) => [item.product_id, item.qty_in_stock])),
+      bronze: Object.fromEntries(bronzePins.map((item) => [item.product_id, item.qty_in_stock])),
+    };
+
+    inventory.caseQtyByType = {};
+    caseItems.forEach((item) => {
+      const caseData = Products.cases.find((c) => c.id === item.product_id);
+      if (caseData?.type && item.color != null) {
+        if (!inventory.caseQtyByType[caseData.type]) {
+          inventory.caseQtyByType[caseData.type] = {};
+        }
+        inventory.caseQtyByType[caseData.type][item.color] = item.qty_in_stock;
+      }
+    });
+
     // Send success response with error handling
     if (!res.headersSent) {
       try {

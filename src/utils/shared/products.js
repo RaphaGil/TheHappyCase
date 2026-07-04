@@ -2,7 +2,16 @@ import Products from '../../data/products.json';
 import { getCachedInventory } from '../inventory';
 
 const getPinQuantityFromCache = (categoryKey, pinId, quantities) => {
-  if (!pinId || !quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
+  if (!pinId || !quantities) {
+    return undefined;
+  }
+
+  const byId = quantities.pinQtyById?.[categoryKey];
+  if (byId && Object.prototype.hasOwnProperty.call(byId, pinId)) {
+    return byId[pinId];
+  }
+
+  if (!quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
     return undefined;
   }
 

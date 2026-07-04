@@ -236,6 +236,35 @@ exports.handler = async (event) => {
       }
     }
 
+    inventory.pinQtyById = {
+      flags: Object.fromEntries(
+        items
+          .filter((item) => item.item_type === "pin_flags")
+          .map((item) => [item.product_id, item.qty_in_stock ?? null])
+      ),
+      colorful: Object.fromEntries(
+        items
+          .filter((item) => item.item_type === "pin_colorful")
+          .map((item) => [item.product_id, item.qty_in_stock ?? null])
+      ),
+      bronze: Object.fromEntries(
+        items
+          .filter((item) => item.item_type === "pin_bronze")
+          .map((item) => [item.product_id, item.qty_in_stock ?? null])
+      ),
+    };
+
+    inventory.caseQtyByType = {};
+    for (const item of items) {
+      if (item.item_type !== "case_color" || item.color == null) continue;
+      const caseData = Products.cases.find((c) => c.id === item.product_id);
+      if (!caseData?.type) continue;
+      if (!inventory.caseQtyByType[caseData.type]) {
+        inventory.caseQtyByType[caseData.type] = {};
+      }
+      inventory.caseQtyByType[caseData.type][item.color] = item.qty_in_stock ?? null;
+    }
+
     // --------------------
     // 7) Return response
     // --------------------
