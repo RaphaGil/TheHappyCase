@@ -1044,7 +1044,8 @@
         "src": "/images/BronzePins/littleheart.webp",
         "price": 1,
         "size": 0.25,
-        "subCategory": "love"
+        "subCategory": "love",
+        "hidden": true
       },
       {
         "id": 12,
