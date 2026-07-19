@@ -848,7 +848,7 @@
         "name": "Dog",
         "src": "/images/ColorfulPins/dog.webp",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "subCategory": "animal"
       },
       {
