@@ -121,6 +121,36 @@ const PaymentSection = ({
     return () => observer.disconnect();
   }, [paymentElementReady]);
 
+  const handleLoadError = (event) => {
+    const stripeError = event?.error;
+    const message =
+      stripeError?.message ||
+      stripeError?.code ||
+      (typeof stripeError === "string" ? stripeError : null);
+
+    console.error("[Checkout] Payment Element loaderror:", stripeError || event);
+
+    if (
+      message?.includes("hcaptcha") ||
+      message?.includes("hCaptcha")
+    ) {
+      return;
+    }
+
+    const isKeyMismatch =
+      /publishable key|secret key|test mode|live mode|api key/i.test(
+        String(message || "")
+      );
+
+    onPaymentError?.(
+      message
+        ? isKeyMismatch
+          ? `${message} Make sure NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY and STRIPE_SECRET_KEY are both test (pk_test_/sk_test_) or both live (pk_live_/sk_live_).`
+          : message
+        : "Failed to load payment form. Check that your Stripe publishable key matches the secret key mode (test vs live), then refresh."
+    );
+  };
+
   return (
     <div className="space-y-3 sm:space-y-4">
       <h3 className="text-md sm:text-md uppercase tracking-wider text-gray-900 mb-3 sm:mb-4 font-bold font-inter">
@@ -131,7 +161,7 @@ const PaymentSection = ({
         ref={paymentElementRef}
         className="p-3 sm:p-4 border border-gray-200 rounded-sm overflow-hidden min-h-[220px]"
       >
-        {!paymentElementReady && (
+        {!paymentElementReady && !error && (
           <div className="mb-2 text-xs sm:text-sm text-gray-500 font-light font-inter">
             Loading payment form...
           </div>
@@ -151,33 +181,21 @@ const PaymentSection = ({
               wallets: {
                 applePay: "auto",
                 googlePay: "auto",
-              },
-              paymentMethodTypes: {
-                card: "always",
-                klarna: "always",
-                afterpayClearpay: "always",
-                paypal: "never",
                 link: "never",
-                amazonPay: "never",
-                revolutPay: "never",
               },
+              paymentMethodOrder: [
+                "card",
+                "klarna",
+                "afterpay_clearpay",
+                "apple_pay",
+                "google_pay",
+              ],
               business: {
                 name: "The Happy Case",
               },
             }}
             onReady={onPaymentReady}
-            onError={(error) => {
-              if (
-                error?.message?.includes("hcaptcha") ||
-                error?.message?.includes("hCaptcha")
-              ) {
-                return;
-              }
-              onPaymentError?.(
-                error.message ||
-                  "Failed to load payment form. Please refresh the page."
-              );
-            }}
+            onLoadError={handleLoadError}
           />
         </div>
       </div>

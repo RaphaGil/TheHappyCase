@@ -43,6 +43,10 @@ const getStripeKey = () => {
 
 const stripePublishableKey = getStripeKey();
 
+// Publishable keys must start with pk_ — using sk_ here causes PaymentIntent mismatch errors
+const publishableKeyLooksInvalid =
+  !!stripePublishableKey && !stripePublishableKey.startsWith('pk_');
+
 // Debug logging in development
 if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
   console.log('[Checkout] Stripe key check:', {
@@ -50,12 +54,18 @@ if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'development') {
     hasEnv: typeof process !== 'undefined' && !!process.env,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: typeof process !== 'undefined' ? !!process.env?.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY : false,
     VITE_STRIPE_PUBLISHABLE_KEY: typeof process !== 'undefined' ? !!process.env?.VITE_STRIPE_PUBLISHABLE_KEY : false,
-    stripePublishableKey: stripePublishableKey ? `${stripePublishableKey.substring(0, 20)}...` : 'NOT SET',
+    stripePublishableKey: stripePublishableKey ? `${stripePublishableKey.substring(0, 12)}...` : 'NOT SET',
+    publishableKeyLooksInvalid,
   });
+  if (publishableKeyLooksInvalid) {
+    console.error(
+      '[Checkout] NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY must start with pk_test_ or pk_live_. A secret key (sk_...) was set by mistake.'
+    );
+  }
   // Warn if using live key on localhost – use test keys locally to avoid 400 and Stripe’s HTTPS warning
   if (stripePublishableKey && stripePublishableKey.startsWith('pk_live_') && typeof window !== 'undefined' && (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1')) {
     console.warn(
-      '[Checkout] Live Stripe key (pk_live_...) on localhost (HTTP). Use test keys locally: set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_... and STRIPE_SECRET_KEY=sk_test_... in your backend. This avoids the 400 error and Stripe’s “live integrations must use HTTPS” warning.'
+      '[Checkout] Live Stripe key (pk_live_...) on localhost (HTTP). Prefer test keys in .env.local: pk_test_... + sk_test_... from the same Stripe account.'
     );
   }
 }
@@ -72,12 +82,16 @@ if (typeof window !== 'undefined' && (window.location?.hostname === 'localhost' 
   console.__stripeHttpWarnPatched = true;
 }
 
-// Validate Stripe key format (silent validation)
+// Only load Stripe when we have a real publishable key (avoid silent Element load failures)
+const isPlaceholderStripeKey =
+  !stripePublishableKey ||
+  publishableKeyLooksInvalid ||
+  stripePublishableKey === 'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890' ||
+  !/^pk_(test|live)_/.test(stripePublishableKey);
 
-const stripePromise = loadStripe(
-  stripePublishableKey || 
-  'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890'
-);
+const stripePromise = isPlaceholderStripeKey
+  ? Promise.resolve(null)
+  : loadStripe(stripePublishableKey);
 
 // UK only - we ship to the United Kingdom exclusively (flat rate matches PaymentIntent & save-order)
 const UK_FLAT_SHIPPING_GBP = 3;
@@ -719,9 +733,20 @@ const Checkout = () => {
         };
         
         const result = await createPaymentIntent(paymentData);
+        const clientSecret = result?.client_secret;
+
+        if (
+          !clientSecret ||
+          typeof clientSecret !== 'string' ||
+          !clientSecret.includes('_secret_')
+        ) {
+          throw new Error(
+            'Backend returned an invalid client secret. Redeploy Netlify functions and confirm STRIPE_SECRET_KEY is set.'
+          );
+        }
 
         setOptions({
-          clientSecret: result.client_secret,
+          clientSecret,
           appearance: {
             theme: 'stripe',
             variables: {
@@ -803,8 +828,7 @@ const Checkout = () => {
   }
 
   // Validate Stripe key is set and not the placeholder
-  const isPlaceholderKey = stripePublishableKey === 'pk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890';
-  if (!stripePublishableKey || isPlaceholderKey) {
+  if (isPlaceholderStripeKey) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
         <CheckoutHeader />
@@ -815,10 +839,12 @@ const Checkout = () => {
                 Stripe Configuration Missing
               </h2>
               <p className="text-yellow-700 mb-4 font-inter">
-                Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment variables.
+                {publishableKeyLooksInvalid
+                  ? 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is set to a secret key (sk_...). It must be the publishable key (pk_test_... or pk_live_...).'
+                  : 'Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment variables.'}
               </p>
               <p className="text-xs text-yellow-600 mb-2 font-inter">
-                (Also supports VITE_STRIPE_PUBLISHABLE_KEY for backward compatibility)
+                Use matching keys from the same Stripe account: pk_* on the frontend and sk_* as STRIPE_SECRET_KEY on the backend.
               </p>
               <p className="text-sm text-yellow-600 font-inter">
                 The Stripe publishable key is required to process payments.

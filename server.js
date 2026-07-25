@@ -18,8 +18,11 @@ import { getResendFromEmail, getResendReplyToEmail } from "./src/utils/resendFro
 const require = createRequire(import.meta.url);
 const { buildAllInventoryItems } = require("./netlify/functions/utils/buildInventoryItems.cjs");
 
-// Load .env.local so backend sees RESEND_API_KEY etc. when only .env.local exists (e.g. Next.js setup)
-try { dotenvConfig({ path: join(process.cwd(), ".env.local") }); } catch (_) {}
+// Load .env.local WITH override so local dev matches Next.js env priority
+// (Next.js prefers .env.local over .env — without override the backend would
+// keep live keys from .env while the frontend uses test keys, causing
+// "client_secret does not match any PaymentIntent" errors.)
+try { dotenvConfig({ path: join(process.cwd(), ".env.local"), override: true }); } catch (_) {}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -824,7 +827,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
 
     // Configure Resend email service
     const resendApiKey = process.env.RESEND_API_KEY;
-    const placeholderKey = 're_iV7Ucv7i_M6Bbi2iwk9HFxBzfNSsJqJWY';
+    const placeholderKey = 're_REPLACE_WITH_YOUR_RESEND_API_KEY';
     
     // Check if API key is missing or is the placeholder/default value
     if (!resendApiKey || resendApiKey === placeholderKey) {
@@ -1034,7 +1037,7 @@ app.post("/api/test-email", async (req, res) => {
     console.log(`Test email address: ${testEmail}`);
     
     const resendApiKey = process.env.RESEND_API_KEY;
-    const placeholderKey = 're_iV7Ucv7i_M6Bbi2iwk9HFxBzfNSsJqJWY';
+    const placeholderKey = 're_REPLACE_WITH_YOUR_RESEND_API_KEY';
     
     if (!resendApiKey || resendApiKey === placeholderKey) {
       return res.json({
@@ -2600,7 +2603,7 @@ async function sendDispatchNotificationEmail({ to, customerName, orderNumber, tr
   // Same Resend config as order confirmation: RESEND_API_KEY + FROM_EMAIL
   // Server loads .env from project root; ensure RESEND_API_KEY is in .env (not only .env.local)
   const resendApiKey = process.env.RESEND_API_KEY;
-  const placeholderKey = 're_iV7Ucv7i_M6Bbi2iwk9HFxBzfNSsJqJWY';
+  const placeholderKey = 're_REPLACE_WITH_YOUR_RESEND_API_KEY';
 
   console.log('\n📧 [Dispatch email] RESEND_API_KEY set:', !!resendApiKey, '| length:', resendApiKey?.length ?? 0, '| is placeholder:', resendApiKey === placeholderKey);
 
