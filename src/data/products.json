@@ -545,7 +545,7 @@
         "name": "Evil Eye",
         "src": "/images/ColorfulPins/evileye.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.4,
         "subCategory": "travel"
       },
       {
@@ -569,7 +569,7 @@
         "name": "Adventure Awaits Ticket",
         "src": "/images/ColorfulPins/adventureawaits.webp",
         "price": 2,
-        "size": 0.75,
+        "size": 0.7,
         "subCategory": "travel"
       },
       {
@@ -673,7 +673,7 @@
         "name": "Lucky Leaf",
         "src": "/images/ColorfulPins/luckyleafcharm.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.4,
         "subCategory": "nature"
       },
       {
@@ -777,7 +777,7 @@
         "name": "Little Heart",
         "src": "/images/ColorfulPins/littleheart.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.4,
         "subCategory": "hearts"
       },
       {
@@ -793,7 +793,7 @@
         "name": "Chocolate",
         "src": "/images/ColorfulPins/chocolate.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.45,
         "subCategory": "food"
       },
       {
@@ -824,7 +824,7 @@
         "name": "Black Cat",
         "src": "/images/ColorfulPins/blackcat.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.4,
         "subCategory": "animal"
       },
       {
@@ -840,7 +840,7 @@
         "name": "Black Dog",
         "src": "/images/ColorfulPins/blackdog.webp",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "subCategory": "animal"
       },
       {
@@ -971,7 +971,7 @@
         "name": "Cardinal Points",
         "src": "/images/BronzePins/cardinalpoints.webp",
         "price": 1,
-        "size": 0.7,
+        "size": 0.6,
         "subCategory": "symbols"
       },
       {
@@ -1035,7 +1035,7 @@
         "name": "Lucky Leaf",
         "src": "/images/BronzePins/luckyleaf.webp",
         "price": 1,
-        "size": 0.35,
+        "size": 0.2,
         "subCategory": "nature"
       },
       {
@@ -1043,7 +1043,7 @@
         "name": "Little Heart",
         "src": "/images/BronzePins/littleheart.webp",
         "price": 1,
-        "size": 0.25,
+        "size": 0.20,
         "subCategory": "love",
         "hidden": true
       },
@@ -1160,7 +1160,7 @@
         "name": "Heart",
         "src": "/images/BronzePins/heart.webp",
         "price": 1,
-        "size": 0.7,
+        "size": 0.65,
         "subCategory": "love"
       },
       {
@@ -1207,7 +1207,7 @@
         "name": "Paw",
         "src": "/images/BronzePins/paw.webp",
         "price": 1,
-        "size": 0.5,
+        "size": 0.4,
         "subCategory": "animals"
       },
       {
