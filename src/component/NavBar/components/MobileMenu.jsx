@@ -10,11 +10,10 @@ import SocialMediaIcons from './SocialMediaIcons';
 import CurrencySelector from './CurrencySelector';
 import Logo from './Logo';
 import { getSupabaseClient } from '../../../utils/supabaseClient';
+import { isAuthorizedDashboardEmail } from '../../../utils/authorizedEmails';
 
 // Get shared Supabase client instance
 const supabase = getSupabaseClient();
-
-const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 
 const MobileMenu = ({ isOpen, onClose }) => {
   const router = useRouter();
@@ -77,15 +76,10 @@ const MobileMenu = ({ isOpen, onClose }) => {
           setUserEmail(email);
           setIsLoggedIn(true);
 
-          const userEmailLower = email?.toLowerCase().trim();
-          const authorizedEmail = AUTHORIZED_EMAIL.toLowerCase().trim();
-          
-          setIsAuthorized(userEmailLower === authorizedEmail);
+          setIsAuthorized(isAuthorizedDashboardEmail(email));
         } else if (emailFromStorage && loggedInFromStorage) {
           // Fallback to localStorage email
-          const emailLower = emailFromStorage.toLowerCase().trim();
-          const authorizedEmail = AUTHORIZED_EMAIL.toLowerCase().trim();
-          setIsAuthorized(emailLower === authorizedEmail);
+          setIsAuthorized(isAuthorizedDashboardEmail(emailFromStorage));
         } else {
           setIsAuthorized(false);
         }

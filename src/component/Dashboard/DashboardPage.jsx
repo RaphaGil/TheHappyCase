@@ -6,11 +6,10 @@ import Link from 'next/link';
 import { getSupabaseClient } from '@/utils/supabaseClient';
 import { getApiUrl } from '@/utils/apiConfig';
 import Products from '@/data/products.json';
+import { isAuthorizedDashboardEmail } from '@/utils/authorizedEmails';
 import DashboardTabs from './DashboardTabs';
 import InventoryTab from './InventoryTab';
 import OrdersTab from './OrdersTab';
-
-const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 
 function getPinQuantityFromInventory(inventory, category, pin) {
   if (!inventory?.pins?.[category]) {
@@ -155,8 +154,8 @@ export default function DashboardPage() {
         router.push('/login?redirect=/dashboard');
         return;
       }
-      const email = (data.user?.email || '').toLowerCase().trim();
-      if (email !== AUTHORIZED_EMAIL.toLowerCase().trim()) {
+      const email = data.user?.email || '';
+      if (!isAuthorizedDashboardEmail(email)) {
         router.push('/login?redirect=/dashboard');
         return;
       }

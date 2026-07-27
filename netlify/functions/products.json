@@ -473,7 +473,7 @@
         "name": "World",
         "src": "/images/ColorfulPins/world.webp",
         "price": 2,
-        "size": 0.55,
+        "size": 0.45,
         "subCategory": "travel"
       },
       {
@@ -481,7 +481,7 @@
         "name": "Colorful Camera",
         "src": "/images/ColorfulPins/camera.webp",
         "price": 2,
-        "size": 0.55,
+        "size": 0.45,
         "subCategory": "travel"
       },
       {
@@ -497,7 +497,7 @@
         "name": "Passport",
         "src": "/images/ColorfulPins/passport.webp",
         "price": 2,
-        "size": 0.7,
+        "size": 0.6,
         "subCategory": "travel"
       },
       {
@@ -537,7 +537,7 @@
         "name": "Vacation",
         "src": "/images/ColorfulPins/vacation.webp",
         "price": 2,
-        "size": 0.8,
+        "size": 0.6,
         "subCategory": "travel"
       },
       {
@@ -729,8 +729,8 @@
         "name": "Flip Flop",
         "src": "/images/ColorfulPins/fliflop.webp",
         "price": 2,
-        "size": 0.5,
-        "subCategory": "nature"
+        "size": 0.4,
+        "subCategory": "travel"
       },
       {
         "id": 12,
@@ -1200,7 +1200,7 @@
         "src": "/images/BronzePins/flipflop.webp",
         "price": 1,
         "size": 0.5,
-        "subCategory": "nature"
+        "subCategory": "travel"
       },
       {
         "id": 32,

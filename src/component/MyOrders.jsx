@@ -7,11 +7,11 @@ import { getApiUrl } from '../utils/apiConfig';
 import OrderItem from './Payment-Sucess/OrderItem';
 import AirplaneLoading from './Shared/AirplaneLoading';
 import { getOrderDisplayId } from '../utils/paymentsucess/helpers';
+import { isAuthorizedDashboardEmail } from '../utils/authorizedEmails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 
 const supabase = getSupabaseClient();
-const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 
 const formatOrderDate = (dateInput) => {
   if (!dateInput) return 'N/A';
@@ -41,8 +41,7 @@ const MyOrders = () => {
       return;
     }
 
-    const emailLower = emailFromStorage?.toLowerCase().trim();
-    setIsAuthorized(emailLower === AUTHORIZED_EMAIL.toLowerCase().trim());
+    setIsAuthorized(isAuthorizedDashboardEmail(emailFromStorage));
 
     const fetchOrders = async () => {
       try {

@@ -5,11 +5,10 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { getSupabaseClient } from '../../../utils/supabaseClient';
+import { isAuthorizedDashboardEmail } from '../../../utils/authorizedEmails';
 
 // Get shared Supabase client instance
 const supabase = getSupabaseClient();
-
-const AUTHORIZED_EMAIL = 'thehappycase.shop@gmail.com';
 
 const DashboardIcon = ({ isMobile = false }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -31,10 +30,7 @@ const DashboardIcon = ({ isMobile = false }) => {
         return;
       }
 
-      const userEmail = data.user?.email?.toLowerCase().trim();
-      const authorizedEmail = AUTHORIZED_EMAIL.toLowerCase().trim();
-      
-      setIsAuthorized(userEmail === authorizedEmail);
+      setIsAuthorized(isAuthorizedDashboardEmail(data.user?.email));
     });
   }, []);
 
