@@ -64,10 +64,39 @@ try {
   }
 
   // Step 4: Clean .next directory to remove stale cache
+  // Retry: macOS can throw ENOTEMPTY if a file is briefly locked (e.g. by a running next process)
   const nextDir = join(projectRoot, '.next');
   if (existsSync(nextDir)) {
     console.log('🧹 Cleaning .next cache...');
-    rmSync(nextDir, { recursive: true, force: true });
+    let cleaned = false;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        rmSync(nextDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+        cleaned = true;
+        break;
+      } catch (err) {
+        if (attempt < 3) {
+          try {
+            execSync(`sleep ${0.2 * attempt}`, { stdio: 'ignore' });
+          } catch {
+            // ignore
+          }
+        }
+      }
+    }
+    if (!cleaned && existsSync(nextDir)) {
+      try {
+        execSync(`rm -rf "${nextDir}"`, { stdio: 'ignore', cwd: projectRoot });
+        cleaned = !existsSync(nextDir);
+      } catch {
+        // ignore
+      }
+    }
+    if (!cleaned && existsSync(nextDir)) {
+      throw new Error(
+        `Could not delete .next cache. Stop any running "next"/"npm run dev" processes, then delete .next manually and retry.`
+      );
+    }
   }
 
   // Step 5: Run Next.js build
