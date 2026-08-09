@@ -27,32 +27,47 @@ try { dotenvConfig({ path: join(process.cwd(), ".env.local"), override: true });
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Load Products.json with error handling
+// Load Products.json with error handling (reload on inventory routes so catalog edits apply without full restart)
 let Products;
-try {
-  const productsPath = join(__dirname, './src/data/products.json');
-  const productsContent = readFileSync(productsPath, 'utf-8');
-  Products = JSON.parse(productsContent);
-  console.log('✅ Products.json loaded successfully');
-  console.log(`   - Cases: ${Products?.cases?.length || 0}`);
-  console.log(`   - Pins flags: ${Products?.pins?.flags?.length || 0}`);
-  console.log(`   - Pins colorful: ${Products?.pins?.colorful?.length || 0}`);
-  console.log(`   - Pins bronze: ${Products?.pins?.bronze?.length || 0}`);
-} catch (error) {
-  console.error('\n❌ ========== CRITICAL ERROR LOADING PRODUCTS.JSON ==========');
-  console.error('Error loading products.json:', error.message);
-  console.error('Error path:', join(__dirname, './src/data/products.json'));
-  console.error('============================================================\n');
-  // Set Products to empty structure to prevent crashes
-  Products = {
-    cases: [],
-    pins: {
-      flags: [],
-      colorful: [],
-      bronze: []
+const productsPath = join(__dirname, './src/data/products.json');
+const emptyProducts = {
+  cases: [],
+  pins: {
+    flags: [],
+    colorful: [],
+    bronze: []
+  }
+};
+
+function loadProductsFromDisk({ log = false } = {}) {
+  try {
+    const productsContent = readFileSync(productsPath, 'utf-8');
+    const parsed = JSON.parse(productsContent);
+    if (log) {
+      console.log('✅ Products.json loaded successfully');
+      console.log(`   - Cases: ${parsed?.cases?.length || 0}`);
+      console.log(`   - Pins flags: ${parsed?.pins?.flags?.length || 0}`);
+      console.log(`   - Pins colorful: ${parsed?.pins?.colorful?.length || 0}`);
+      console.log(`   - Pins bronze: ${parsed?.pins?.bronze?.length || 0}`);
     }
-  };
+    return parsed;
+  } catch (error) {
+    console.error('\n❌ ========== CRITICAL ERROR LOADING PRODUCTS.JSON ==========');
+    console.error('Error loading products.json:', error.message);
+    console.error('Error path:', productsPath);
+    console.error('============================================================\n');
+    return emptyProducts;
+  }
 }
+
+function reloadProducts() {
+  Products = loadProductsFromDisk();
+  return Products;
+}
+
+Products = loadProductsFromDisk({ log: true });
+
+const pinIdsMatch = (pinId, productId) => Number(pinId) === Number(productId);
 
 // --- Validate keys ---
 if (
@@ -3202,6 +3217,8 @@ app.get("/payment-intent-details", async (req, res) => {
 // --- Sync new products into inventory_items (insert missing rows only) ---
 app.post("/api/inventory/sync", async (req, res) => {
   try {
+    reloadProducts();
+
     if (!supabase) {
       return res.status(503).json({
         success: false,
@@ -3273,6 +3290,7 @@ app.post("/api/inventory/sync", async (req, res) => {
 // --- Get Inventory from Supabase (New Structure: inventory_items) ---
 app.get("/api/inventory", async (req, res) => {
   console.log("📥 GET /api/inventory - Request received");
+  reloadProducts();
   
   // Helper to send JSON error response
   const sendError = (status, error, message, details) => {
@@ -3524,7 +3542,7 @@ app.get("/api/inventory", async (req, res) => {
     // Process pins - map by product_id
     flagPins.forEach(item => {
       try {
-        const index = Products.pins.flags.findIndex(p => p.id === item.product_id);
+        const index = Products.pins.flags.findIndex(p => pinIdsMatch(p.id, item.product_id));
         if (index !== -1 && inventory.pins.flags) {
           inventory.pins.flags[index] = item.qty_in_stock;
         }
@@ -3535,7 +3553,7 @@ app.get("/api/inventory", async (req, res) => {
 
     colorfulPins.forEach(item => {
       try {
-        const index = Products.pins.colorful.findIndex(p => p.id === item.product_id);
+        const index = Products.pins.colorful.findIndex(p => pinIdsMatch(p.id, item.product_id));
         if (index !== -1 && inventory.pins.colorful) {
           inventory.pins.colorful[index] = item.qty_in_stock;
         }
@@ -3546,7 +3564,7 @@ app.get("/api/inventory", async (req, res) => {
 
     bronzePins.forEach(item => {
       try {
-        const index = Products.pins.bronze.findIndex(p => p.id === item.product_id);
+        const index = Products.pins.bronze.findIndex(p => pinIdsMatch(p.id, item.product_id));
         if (index !== -1 && inventory.pins.bronze) {
           inventory.pins.bronze[index] = item.qty_in_stock;
         }
@@ -3556,9 +3574,9 @@ app.get("/api/inventory", async (req, res) => {
     });
 
     inventory.pinQtyById = {
-      flags: Object.fromEntries(flagPins.map((item) => [item.product_id, item.qty_in_stock])),
-      colorful: Object.fromEntries(colorfulPins.map((item) => [item.product_id, item.qty_in_stock])),
-      bronze: Object.fromEntries(bronzePins.map((item) => [item.product_id, item.qty_in_stock])),
+      flags: Object.fromEntries(flagPins.map((item) => [Number(item.product_id), item.qty_in_stock])),
+      colorful: Object.fromEntries(colorfulPins.map((item) => [Number(item.product_id), item.qty_in_stock])),
+      bronze: Object.fromEntries(bronzePins.map((item) => [Number(item.product_id), item.qty_in_stock])),
     };
 
     inventory.caseQtyByType = {};
@@ -3650,6 +3668,8 @@ app.get("/api/inventory", async (req, res) => {
 
 // --- Update Inventory in Supabase (New Structure: inventory_items) ---
 app.post("/api/inventory", async (req, res) => {
+  reloadProducts();
+
   // Helper to send JSON error response
   const sendError = (status, error, message, details) => {
     if (!res.headersSent) {

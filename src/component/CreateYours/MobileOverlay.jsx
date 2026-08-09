@@ -6,14 +6,9 @@ import ColorSelector from '../ColorSelector/index.jsx';
 import { CASE_OPTIONS, CATEGORY_OPTIONS, FLAGS_FILTER_TABS, COLORFUL_FILTER_TABS, BRONZE_FILTER_TABS } from '../../data/constants.js';
 import { filterPinsByCategory } from '../../data/filterHelpers.js';
 import { getMaxAvailableQuantity } from '../../utils/inventory.js';
+import { useInventoryReady } from '../../hooks/useInventoryReady';
+import { getCharmInventoryState } from '../../utils/charmInventory';
 import { normalizeImagePath } from '../../utils/imagePath.js';
-import { getCaseLinePins } from '../../utils/cartHelpers.js';
-import {
-  buildCharmProduct,
-  countMatchingCharms,
-  getCharmCategory,
-  isSameCharm,
-} from '../../utils/charmHelpers.js';
 import {
   OPTION_CHARM_FIELD,
   OPTION_CHARM_TOOLBAR,
@@ -22,21 +17,9 @@ import {
   OPTION_SELECTION_CARD_INACTIVE,
 } from './designOptionStyles';
 
-const SearchIcon = () => (
-  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-);
-
 const ChevronDownIcon = () => (
   <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-  </svg>
-);
-
-const ClearIcon = () => (
-  <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
 
@@ -59,23 +42,19 @@ const MobileOverlay = ({
   isCaseImageLoading = false
 }) => {
   const [visiblePinsCount, setVisiblePinsCount] = useState(24);
-  const [mobileSearchQuery, setMobileSearchQuery] = useState('');
   const [loadedCharmImages, setLoadedCharmImages] = useState({});
   const charmsGridScrollRef = useRef(null);
+  useInventoryReady();
 
   useEffect(() => {
     // Reset batching when user changes the viewed charm set
     setVisiblePinsCount(24);
-  }, [selectedCategory, mobileSubCategory, mobileSearchQuery, mobileCurrentStep]);
+  }, [selectedCategory, mobileSubCategory, mobileCurrentStep]);
 
   useEffect(() => {
     // Clear loaded-image tracking when charm set changes
     setLoadedCharmImages({});
-  }, [selectedCategory, mobileSubCategory, mobileSearchQuery]);
-
-  useEffect(() => {
-    setMobileSearchQuery('');
-  }, [selectedCategory]);
+  }, [selectedCategory, mobileSubCategory]);
 
   useLayoutEffect(() => {
     const scrollToTop = () => {
@@ -89,17 +68,12 @@ const MobileOverlay = ({
       requestAnimationFrame(scrollToTop);
     });
     return () => cancelAnimationFrame(raf);
-  }, [selectedCategory, mobileSubCategory, mobileSearchQuery]);
+  }, [selectedCategory, mobileSubCategory]);
 
   if (!mobileCurrentStep) return null;
 
   const filteredPinsForMobile = filterPinsByCategory(pins, selectedCategory, mobileSubCategory);
-  const searchedPinsForMobile = mobileSearchQuery.trim()
-    ? filteredPinsForMobile.filter((pin) =>
-        (pin.name || '').toLowerCase().includes(mobileSearchQuery.trim().toLowerCase())
-      )
-    : filteredPinsForMobile;
-  const visiblePinsForMobile = searchedPinsForMobile.slice(0, visiblePinsCount);
+  const visiblePinsForMobile = filteredPinsForMobile.slice(0, visiblePinsCount);
 
   const getFilterTabs = () => {
     if (selectedCategory === 'flags') return FLAGS_FILTER_TABS;
@@ -317,33 +291,6 @@ const MobileOverlay = ({
                       </span>
                     </div>
 
-                    <div className="relative min-w-0 flex-1">
-                      <label htmlFor="mobile-charm-search-input" className="sr-only">
-                        Search charms
-                      </label>
-                      <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
-                        <SearchIcon />
-                      </span>
-                      <input
-                        id="mobile-charm-search-input"
-                        type="text"
-                        value={mobileSearchQuery}
-                        onChange={(e) => setMobileSearchQuery(e.target.value)}
-                        placeholder="Search by name..."
-                        className={`${OPTION_CHARM_FIELD} pl-8 pr-8 placeholder:text-gray-400`}
-                        style={OPTION_FONT_STYLE}
-                      />
-                      {mobileSearchQuery.trim() && (
-                        <button
-                          type="button"
-                          onClick={() => setMobileSearchQuery('')}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 transition-colors hover:text-gray-700"
-                          aria-label="Clear search"
-                        >
-                          <ClearIcon />
-                        </button>
-                      )}
-                    </div>
                   </div>
                 </div>
               )}
@@ -351,89 +298,42 @@ const MobileOverlay = ({
               {/* Charms Grid */}
               {selectedCategory && (
                 <div>
-                  {mobileSearchQuery.trim() && searchedPinsForMobile.length === 0 ? (
-                    <div className="px-4 py-8 text-center">
-                      <p className="text-xs font-medium text-gray-800" style={OPTION_FONT_STYLE}>
-                        No charms found
-                      </p>
-                      <p className="mt-1 text-[10px] text-gray-500" style={OPTION_FONT_STYLE}>
-                        Try another name, category, or clear your filters.
-                      </p>
-                    </div>
-                  ) : (
                   <div ref={charmsGridScrollRef} className="max-h-[60vh] xs:max-h-96 overflow-y-auto">
                     <div className="grid grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3 items-start">
                       {visiblePinsForMobile.map((pin, index) => {
                         const pinImageKey = pin.id ?? pin.src ?? pin.name;
                         const isSelected = selectedPins.some((p) => p.pin === pin);
-
-                        const getCharmInventoryInfo = () => {
-                          const charmCategory = getCharmCategory(pin, selectedCategory);
-                          const product = buildCharmProduct(pin, charmCategory);
-                          const maxAvailable = getMaxAvailableQuantity(product, cart || []);
-
-                          if (maxAvailable === null) {
-                            return { isSoldOut: false, remainingAvailable: null, isLowStock: false };
-                          }
-
-                          const charmCountInDesign = countMatchingCharms(selectedPins, pin, charmCategory);
-                          const remainingAvailable = Math.max(0, maxAvailable - charmCountInDesign);
-                          let isSoldOut = maxAvailable === 0 || remainingAvailable === 0;
-
-                          if (!isSoldOut) {
-                            let standaloneCharmsInCart = 0;
-                            (cart || []).forEach((cartItem) => {
-                              if (cartItem.type === 'charm') {
-                                const cartPin = cartItem.pin || cartItem;
-                                if (isSameCharm(cartPin, pin, charmCategory)) {
-                                  standaloneCharmsInCart += (cartItem.quantity || 1);
-                                }
-                              }
-                            });
-
-                            let charmCountInCustomDesigns = 0;
-                            (cart || []).forEach((cartItem) => {
-                              getCaseLinePins(cartItem).forEach((cartPin) => {
-                                if (isSameCharm(cartPin, pin, charmCategory)) {
-                                  charmCountInCustomDesigns += cartItem.quantity || 1;
-                                }
-                              });
-                            });
-
-                            const totalInventory = maxAvailable + standaloneCharmsInCart;
-                            const totalUsage = standaloneCharmsInCart + charmCountInCustomDesigns + charmCountInDesign;
-                            isSoldOut = maxAvailable === 0 || totalUsage >= totalInventory;
-                          }
-
-                          const isLowStock = remainingAvailable > 0 && remainingAvailable < 3;
-                          return { isSoldOut, remainingAvailable, isLowStock };
-                        };
-
-                        const { isSoldOut, remainingAvailable, isLowStock } = getCharmInventoryInfo();
+                        const { isSoldOut, isUnavailable, remainingAvailable, isLowStock } =
+                          getCharmInventoryState(pin, {
+                            selectedCategory,
+                            selectedPins,
+                            cart,
+                          });
                         
                         return (
                           <button
                             key={`${selectedCategory}-${pin.id ?? pin.src ?? pin.name}`}
-                            onClick={() => !isSoldOut && handlePinSelection(pin)}
-                            disabled={isSoldOut}
+                            onClick={() => !isUnavailable && handlePinSelection(pin)}
+                            disabled={isUnavailable}
                             className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center justify-start ${
-                              isSoldOut ? 'opacity-50 cursor-not-allowed' : ''
+                              isUnavailable ? 'opacity-50 cursor-not-allowed' : ''
                             }`}
                           >
-                            <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible rounded-lg p-0.5 ${isSelected && !isSoldOut ? 'border-2 border-gray-900' : 'border-2 border-transparent'}`}>
+                            <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible rounded-lg p-0.5 bg-transparent ${isSelected && !isUnavailable ? 'border-2 border-gray-900' : 'border-2 border-transparent'}`}>
                               {!loadedCharmImages[pinImageKey] && (
-                                <div className="absolute inset-0 rounded bg-gray-100 animate-pulse" aria-hidden="true" />
+                                <div className="absolute inset-0 rounded bg-transparent" aria-hidden="true" />
                               )}
                               <Image
                                 src={normalizeImagePath(pin.src)}
                                 alt={pin.name}
                                 fill
                                 sizes="(max-width: 640px) 64px, 80px"
-                                className={`object-contain transition-opacity duration-200 ${
+                                className={`object-contain bg-transparent transition-opacity duration-200 ${
                                   loadedCharmImages[pinImageKey]
-                                    ? (isSoldOut ? 'opacity-50' : 'opacity-100')
+                                    ? (isUnavailable ? 'opacity-50' : 'opacity-100')
                                     : 'opacity-0'
                                 }`}
+                                style={{ backgroundColor: 'transparent' }}
                                 loading="lazy"
                                 onLoadingComplete={() => {
                                   setLoadedCharmImages((prev) => {
@@ -442,7 +342,7 @@ const MobileOverlay = ({
                                   });
                                 }}
                               />
-                              {pin.badge && !isSoldOut && !isSelected && (
+                              {pin.badge && !isUnavailable && !isSelected && (
                                 <div className="absolute top-0 right-0 bg-btn-primary-blue text-white text-[8px] xs:text-[9px] font-medium px-1 xs:px-1.5 py-0.5 rounded z-10 font-inter">
                                   {pin.badge}
                                 </div>
@@ -453,10 +353,13 @@ const MobileOverlay = ({
                                 </div>
                               )}
                             </div>
-                            <div className="flex min-h-[2.25rem] flex-col items-center justify-start">
-                              <span className={`text-[10px] xs:text-[11px] text-center line-clamp-2 mt-0.5 xs:mt-1 ${
-                                isSoldOut ? 'text-gray-500' : 'text-gray-700'
-                              }`} style={{fontFamily: "'Poppins', sans-serif"}}>
+                            <div className="mt-1 flex min-h-[2.25rem] flex-col items-center justify-start text-center">
+                              <span
+                                className={`text-[9px] xs:text-[10px] font-medium leading-tight ${
+                                  isSoldOut ? 'text-gray-500' : 'text-gray-700'
+                                }`}
+                                style={OPTION_FONT_STYLE}
+                              >
                                 {pin.name}
                               </span>
                               <span
@@ -470,7 +373,7 @@ const MobileOverlay = ({
                         );
                       })}
                     </div>
-                    {searchedPinsForMobile.length > visiblePinsCount && (
+                    {filteredPinsForMobile.length > visiblePinsCount && (
                       <div className="mt-3 flex justify-center">
                         <button
                           type="button"
@@ -483,7 +386,6 @@ const MobileOverlay = ({
                       </div>
                     )}
                   </div>
-                  )}
                 </div>
               )}
             </div>

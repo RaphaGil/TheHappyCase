@@ -12,11 +12,24 @@ import InventoryTab from './InventoryTab';
 import OrdersTab from './OrdersTab';
 
 function getPinQuantityFromInventory(inventory, category, pin) {
+  if (!inventory) {
+    return pin.quantity ?? null;
+  }
+
+  const byId = inventory.pinQtyById?.[category];
+  if (byId && pin?.id != null && Object.prototype.hasOwnProperty.call(byId, pin.id)) {
+    return byId[pin.id];
+  }
+  // Also try string key (API responses sometimes stringify ids)
+  if (byId && pin?.id != null && Object.prototype.hasOwnProperty.call(byId, String(pin.id))) {
+    return byId[String(pin.id)];
+  }
+
   if (!inventory?.pins?.[category]) {
     return pin.quantity ?? null;
   }
 
-  const pinIndex = (Products.pins?.[category] || []).findIndex((item) => item.id === pin.id);
+  const pinIndex = (Products.pins?.[category] || []).findIndex((item) => Number(item.id) === Number(pin.id));
   if (pinIndex === -1) {
     return pin.quantity ?? null;
   }

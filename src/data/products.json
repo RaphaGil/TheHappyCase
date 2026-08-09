@@ -485,6 +485,14 @@
         "subCategory": "travel"
       },
       {
+        "id": 66,
+        "name": "Blue Camera",
+        "src": "/images/ColorfulPins/bluecamera.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "travel"
+      },
+      {
         "id": 22,
         "name": "Map",
         "src": "/images/ColorfulPins/map.webp",
@@ -669,6 +677,22 @@
         "subCategory": "disney"
       },
       {
+        "id": 64,
+        "name": "Mickey with Heart",
+        "src": "/images/ColorfulPins/mickeyheart.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 63,
+        "name": "Golden Snitch",
+        "src": "/images/ColorfulPins/goldensnitch.webp",
+        "price": 2,
+        "size": 0.85,
+        "subCategory": "inspiration"
+      },
+      {
         "id": 11,
         "name": "Lucky Leaf",
         "src": "/images/ColorfulPins/luckyleafcharm.webp",
@@ -721,7 +745,7 @@
         "name": "Beach",
         "src": "/images/ColorfulPins/beach.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.65,
         "subCategory": "nature"
       },
       {
@@ -810,6 +834,14 @@
         "src": "/images/ColorfulPins/croissant.webp",
         "price": 2,
         "size": 0.5,
+        "subCategory": "food"
+      },
+      {
+        "id": 65,
+        "name": "Ice Cream",
+        "src": "/images/ColorfulPins/icecream.webp",
+        "price": 2,
+        "size": 0.6,
         "subCategory": "food"
       },
       {

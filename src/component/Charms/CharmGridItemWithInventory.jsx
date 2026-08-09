@@ -1,9 +1,11 @@
 import React from 'react';
-import { getMaxAvailableQuantity } from '../../utils/inventory';
+import { getMaxAvailableQuantity, isPinSoldOutInWarehouse } from '../../utils/inventory';
+import { useInventoryReady } from '../../hooks/useInventoryReady';
 import CharmGridItem from './CharmGridItem';
 
 const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart, charmPrice }) => {
-  // Create a product object for inventory checking
+  useInventoryReady();
+
   const product = {
     name: charm.name,
     price: charmPrice,
@@ -11,19 +13,20 @@ const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart
     image: charm.src,
     pin: charm,
     category: charmType,
-    type: 'charm'
+    type: 'charm',
   };
 
-  // Check inventory availability
   const maxAvailable = getMaxAvailableQuantity(product, cart);
-  const isSoldOut = maxAvailable !== null && maxAvailable === 0;
+  // Match dashboard: Sold Out only when warehouse qty is 0
+  const isSoldOut = isPinSoldOutInWarehouse(charmType, charm.id);
+  const isUnavailable = isSoldOut || (maxAvailable !== null && maxAvailable === 0);
   const isLowStock = maxAvailable !== null && maxAvailable > 0 && maxAvailable < 3;
 
   return (
     <CharmGridItem
       charm={charm}
       index={index}
-      onAddToCart={onAddToCart}
+      onAddToCart={isUnavailable ? undefined : onAddToCart}
       isSoldOut={isSoldOut}
       maxAvailable={maxAvailable}
       isLowStock={isLowStock}
@@ -33,11 +36,3 @@ const CharmGridItemWithInventory = ({ charm, index, onAddToCart, charmType, cart
 };
 
 export default CharmGridItemWithInventory;
-
-
-
-
-
-
-
-

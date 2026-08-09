@@ -9,7 +9,8 @@ export const filterColorfulCharms = (pin, selectedCategory) => {
       pinNameLower.includes('chocolate') ||
       pinNameLower.includes('burger') ||
       pinNameLower.includes('croissant') ||
-      pinNameLower.includes('icecream') 
+      pinNameLower.includes('icecream') ||
+      pinNameLower.includes('ice cream') 
     );
   }
   if (selectedCategory === 'drinks') {
@@ -37,7 +38,8 @@ export const filterColorfulCharms = (pin, selectedCategory) => {
       pinNameLower.includes('combi') ||
       pinNameLower.includes('telephone') ||
       pinNameLower.includes('london phone') ||
-      pinNameLower.includes('evil eye')
+      pinNameLower.includes('evil eye') ||
+      pinNameLower.includes('camera')
     );
   }
   
@@ -48,7 +50,9 @@ export const filterColorfulCharms = (pin, selectedCategory) => {
       pinNameLower.includes('be happy') ||
       pinNameLower.includes('dream big') ||
       pinNameLower.includes('life is good') ||
-      pinNameLower.includes('stay pawsitive')
+      pinNameLower.includes('stay pawsitive') ||
+      pinNameLower.includes('golden snitch') ||
+      pinNameLower.includes('snitch')
     );
   }
   

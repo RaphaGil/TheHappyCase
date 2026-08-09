@@ -4,9 +4,6 @@ import { normalizeImagePath } from '../../utils/imagePath';
 
 const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSoldOut = false, maxAvailable = null, isLowStock = false, charmPrice }) => {
   const { formatPrice } = useCurrency();
-  const pastelColors = ['bg-pink-50', 'bg-blue-50', 'bg-purple-50', 'bg-green-50', 'bg-yellow-50', 'bg-orange-50'];
-  const pastelBorders = ['border-pink-100', 'border-blue-100', 'border-purple-100', 'border-green-100', 'border-yellow-100', 'border-orange-100'];
-  const colorIndex = index % pastelColors.length;
 
   // Lazy loading: all charm images use lazy to defer off-screen loading
   const loadingStrategy = 'lazy';
@@ -19,7 +16,7 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
     <div
       className="flex flex-col group"
     >
-      <div className={`aspect-square mb-3 ${pastelColors[colorIndex]} flex items-center justify-center overflow-hidden md:border ${pastelBorders[colorIndex]} relative`}>
+      <div className="aspect-square mb-3 bg-transparent flex items-center justify-center overflow-hidden md:border md:border-gray-100 relative">
         <img
           src={normalizeImagePath(charm.src)}
           alt={charm.name}
@@ -31,7 +28,8 @@ const CharmGridItem = ({ charm, index, onAddToCart, isSelected, onSelect, isSold
           height="200"
           style={{
             transform: `scale(${scale})`,
-            willChange: index < 4 ? 'transform' : 'auto'
+            willChange: index < 4 ? 'transform' : 'auto',
+            backgroundColor: 'transparent',
           }}
           onError={(e) => {
             if (e.target) {

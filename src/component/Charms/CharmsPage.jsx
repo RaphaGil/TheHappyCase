@@ -10,7 +10,8 @@ import Pagination from './Pagination';
 import ResultsCount from './ResultsCount';
 import EmptyState from './EmptyState';
 import CharmsCallToAction from './CharmsCallToAction';
-import { getMaxAvailableQuantity } from '../../utils/inventory';
+import { getMaxAvailableQuantity, isPinSoldOutInWarehouse } from '../../utils/inventory';
+import { useInventoryReady } from '../../hooks/useInventoryReady';
 import { areItemsIdentical } from '../../utils/cartHelpers';
 import InventoryAlertModal from '../InventoryAlertModal';
 
@@ -27,28 +28,15 @@ const CharmsPage = ({
   inlineTabs = false
 }) => {
   const { addToCart, cart } = useCart();
+  useInventoryReady();
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [inventoryMessage, setInventoryMessage] = useState('');
   const [inventoryType, setInventoryType] = useState('error');
   
-  // Helper function to check if a charm is sold out (considering cart inventory)
+  // Helper function to check if a charm is sold out (matches dashboard warehouse qty === 0)
   const isCharmSoldOut = (charm) => {
     if (!charm) return false;
-    
-    const pinName = charm.name || charm.src;
-    if (!categoryName || !pinName) return false;
-    
-    // Check available inventory considering cart (items in basket)
-    const productForInventory = {
-      type: 'charm',
-      category: categoryName,
-      pin: charm,
-      name: pinName
-    };
-    const maxAvailable = getMaxAvailableQuantity(productForInventory, cart);
-    
-    // If maxAvailable === 0, no more can be added (all in basket or sold out) - SOLD OUT
-    return maxAvailable !== null && maxAvailable === 0;
+    return isPinSoldOutInWarehouse(categoryName, charm.id);
   };
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');

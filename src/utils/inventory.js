@@ -13,25 +13,54 @@ let inventoryFetchPromise = null; // Track ongoing fetch to avoid duplicate requ
 let isInitializing = false; // Track if we're in the initial load phase
 
 const getPinQuantityFromCache = (categoryKey, pinId, quantities) => {
-  if (!pinId || !quantities) {
+  if (pinId == null || !quantities) {
     return undefined;
   }
 
   // Prefer id-keyed map from API (order-independent, survives products.json reordering)
   const byId = quantities.pinQtyById?.[categoryKey];
-  if (byId && Object.prototype.hasOwnProperty.call(byId, pinId)) {
-    return byId[pinId];
+  if (byId) {
+    if (Object.prototype.hasOwnProperty.call(byId, pinId)) {
+      return byId[pinId];
+    }
+    const asNumber = Number(pinId);
+    if (!Number.isNaN(asNumber) && Object.prototype.hasOwnProperty.call(byId, asNumber)) {
+      return byId[asNumber];
+    }
+    const asString = String(pinId);
+    if (Object.prototype.hasOwnProperty.call(byId, asString)) {
+      return byId[asString];
+    }
   }
 
   if (!quantities?.pins?.[categoryKey] || !Products.pins?.[categoryKey]) {
     return undefined;
   }
 
-  const pinIndex = Products.pins[categoryKey].findIndex((pin) => pin.id === pinId);
+  const pinIndex = Products.pins[categoryKey].findIndex(
+    (pin) => Number(pin.id) === Number(pinId)
+  );
   if (pinIndex === -1) return undefined;
 
   return quantities.pins[categoryKey][pinIndex];
 };
+
+/**
+ * Raw warehouse qty for a pin (same source as dashboard).
+ * null = unlimited, 0 = sold out, undefined = inventory not loaded / unknown.
+ */
+export const getPinStockQuantity = (categoryKey, pinId) => {
+  if (!inventoryCache || pinId == null || !categoryKey) {
+    return undefined;
+  }
+  return getPinQuantityFromCache(categoryKey, pinId, inventoryCache);
+};
+
+/**
+ * Sold out when warehouse qty is exactly 0 — matches dashboard InventoryBadge.
+ */
+export const isPinSoldOutInWarehouse = (categoryKey, pinId) =>
+  getPinStockQuantity(categoryKey, pinId) === 0;
 
 const buildPinQtyByIdFromArrays = (pinsArrays) => {
   const result = { flags: {}, colorful: {}, bronze: {} };
