@@ -205,6 +205,16 @@ to = "/.netlify/functions/get-orders"
 status = 200
 
 [[redirects]]
+from = "/api/payment-intent-details"
+to = "/.netlify/functions/payment-intent-details"
+status = 200
+
+[[redirects]]
+from = "/api/stripe-webhook"
+to = "/.netlify/functions/stripe-webhook"
+status = 200
+
+[[redirects]]
 from = "/api/orders/*/dispatched"
 to = "/.netlify/functions/orders-dispatched?orderId=:splat"
 status = 200

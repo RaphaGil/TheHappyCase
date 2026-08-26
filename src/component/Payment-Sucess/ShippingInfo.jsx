@@ -24,6 +24,12 @@ const ShippingInfo = ({ customerInfo }) => {
               <p className="text-gray-900 font-inter">{customerInfo.email}</p>
             </div>
           )}
+          {customerInfo.phone && (
+            <div className="py-2 border-b border-gray-100">
+              <span className="text-gray-600 font-medium font-inter block mb-1">Phone:</span>
+              <p className="text-gray-900 font-inter">{customerInfo.phone}</p>
+            </div>
+          )}
           {customerInfo.address && customerInfo.address.line1 && (
             <div className="py-2">
               <span className="text-gray-600 font-medium font-inter block mb-1">Address:</span>

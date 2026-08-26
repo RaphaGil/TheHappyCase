@@ -6,6 +6,21 @@ import { getOrderDisplayId } from '../../utils/paymentsucess/helpers';
 import { getColorName } from '../../utils/createyours/helpers';
 import { normalizeImagePath } from '../../utils/imagePath';
 import AirplaneLoading from '../Shared/AirplaneLoading';
+import { TRACKING_CARRIERS, getCarrierTrackingUrl, isDefaultTrackingUrl } from '../../utils/trackingCarriers';
+
+const getOrderCustomerDisplayName = (order) => {
+  const first = String(order?.metadata?.customer_first_name || '').trim();
+  const surname = String(order?.metadata?.customer_surname || '').trim();
+  const composed = [first, surname].filter(Boolean).join(' ').trim();
+  if (composed) return composed;
+
+  const stored = String(order?.customer_name || '').trim();
+  if (stored && surname && !stored.toLowerCase().endsWith(surname.toLowerCase())) {
+    return `${stored} ${surname}`.trim();
+  }
+
+  return stored || order?.shipping_address?.name || order?.customer_email || 'N/A';
+};
 
 const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
   const [expandedOrder, setExpandedOrder] = useState(null);
@@ -45,9 +60,15 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     const order = orders.find(o => o.order_id === orderId);
     // If dispatching (turning on) or editing, show modal to enter/edit tracking info
     if (!currentDispatched) {
-      setTrackingNumber(order?.tracking?.tracking_number || '');
-      setTrackingLink(order?.tracking?.tracking_link || order?.metadata?.tracking_link || '');
-      setTrackingCarrier('EVRI');
+      const existingCarrier = order?.tracking?.carrier || order?.metadata?.carrier || 'EVRI';
+      const existingNumber = order?.tracking?.tracking_number || '';
+      setTrackingNumber(existingNumber);
+      setTrackingCarrier(existingCarrier);
+      setTrackingLink(
+        order?.tracking?.tracking_link ||
+          order?.metadata?.tracking_link ||
+          getCarrierTrackingUrl(existingCarrier, existingNumber)
+      );
       setDispatchModal({ orderId, currentDispatched });
     } else {
       // If undispatching (turning off), show confirmation or update directly
@@ -59,9 +80,15 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
 
   const handleEditTracking = (orderId) => {
     const order = orders.find(o => o.order_id === orderId);
-    setTrackingNumber(order?.tracking?.tracking_number || '');
-    setTrackingLink(order?.tracking?.tracking_link || order?.metadata?.tracking_link || '');
-    setTrackingCarrier('EVRI');
+    const existingCarrier = order?.tracking?.carrier || order?.metadata?.carrier || 'EVRI';
+    const existingNumber = order?.tracking?.tracking_number || '';
+    setTrackingNumber(existingNumber);
+    setTrackingCarrier(existingCarrier);
+    setTrackingLink(
+      order?.tracking?.tracking_link ||
+        order?.metadata?.tracking_link ||
+        getCarrierTrackingUrl(existingCarrier, existingNumber)
+    );
     setDispatchModal({ orderId, currentDispatched: isDispatched(order) });
   };
 
@@ -147,15 +174,29 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
     }
   };
 
+  const handleCarrierChange = (carrier) => {
+    setTrackingCarrier(carrier);
+    if (!trackingLink || isDefaultTrackingUrl(trackingLink)) {
+      setTrackingLink(getCarrierTrackingUrl(carrier, trackingNumber));
+    }
+  };
+
+  const handleTrackingNumberChange = (value) => {
+    setTrackingNumber(value);
+    if (!trackingLink || isDefaultTrackingUrl(trackingLink)) {
+      setTrackingLink(getCarrierTrackingUrl(trackingCarrier, value));
+    }
+  };
+
   const handleDispatchSubmit = () => {
     if (dispatchModal) {
-      // Submitting the modal always means "mark as dispatched" (first time) or "update tracking" (edit). Carrier is always EVRI.
+      const carrier = trackingCarrier || 'EVRI';
       handleDispatchedUpdate(
         dispatchModal.orderId,
         true,
         trackingNumber,
-        trackingLink,
-        'EVRI'
+        trackingLink || getCarrierTrackingUrl(carrier, trackingNumber),
+        carrier
       );
     }
   };
@@ -502,7 +543,7 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
                     <div>
                       <span className="font-medium">Customer:</span>{' '}
-                      {order.customer_name || order.customer_email}
+                      {getOrderCustomerDisplayName(order)}
                     </div>
                     <div>
                       <span className="font-medium">Date:</span> {formatDate(order.order_date)}
@@ -747,8 +788,24 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                     <div className="space-y-2 text-sm">
                       <div>
                         <span className="font-medium text-gray-700">Name:</span>{' '}
-                        {order.customer_name || 'N/A'}
+                        {getOrderCustomerDisplayName(order)}
                       </div>
+                      {(order.metadata?.customer_first_name || order.metadata?.customer_surname) && (
+                        <div className="text-gray-600 pl-0 sm:pl-0">
+                          {order.metadata?.customer_first_name && (
+                            <div>
+                              <span className="font-medium text-gray-700">First name:</span>{' '}
+                              {order.metadata.customer_first_name}
+                            </div>
+                          )}
+                          {order.metadata?.customer_surname && (
+                            <div>
+                              <span className="font-medium text-gray-700">Surname:</span>{' '}
+                              {order.metadata.customer_surname}
+                            </div>
+                          )}
+                        </div>
+                      )}
                       <div>
                         <span className="font-medium text-gray-700">Email:</span>{' '}
                         <a
@@ -865,9 +922,9 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                                 ))}
                               </div>
                             )}
-                            {(item.customText || item.custom_text) && (
+                            {String(item.customText || item.custom_text || '').trim() && (
                               <div>
-                                <span className="font-medium">Custom text:</span> &quot;{item.customText || item.custom_text}&quot;
+                                <span className="font-medium">Custom text:</span> &quot;{String(item.customText || item.custom_text).trim()}&quot;
                               </div>
                             )}
                             {item.custom_design && (
@@ -968,11 +1025,19 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Carrier
+                  Posted with
                 </label>
-                <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-900 font-medium">
-                  EVRI
-                </div>
+                <select
+                  value={trackingCarrier}
+                  onChange={(e) => handleCarrierChange(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent bg-white text-gray-900"
+                >
+                  {TRACKING_CARRIERS.map((carrier) => (
+                    <option key={carrier.id} value={carrier.id}>
+                      {carrier.label}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -981,8 +1046,8 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                 <input
                   type="text"
                   value={trackingNumber}
-                  onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="e.g., 16 digit Evri tracking number"
+                  onChange={(e) => handleTrackingNumberChange(e.target.value)}
+                  placeholder={trackingCarrier === 'Royal Mail' ? 'Royal Mail tracking number' : 'e.g., Evri tracking number'}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>
@@ -995,7 +1060,11 @@ const OrdersTab = ({ orders, loadingOrders, ordersError, onRefresh }) => {
                   type="url"
                   value={trackingLink}
                   onChange={(e) => setTrackingLink(e.target.value)}
-                  placeholder="https://www.evri.com/track-a-parcel or your tracking URL"
+                  placeholder={
+                    trackingCarrier === 'Royal Mail'
+                      ? 'https://www.royalmail.com/track-your-item'
+                      : 'https://www.evri.com/track-a-parcel'
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>

@@ -80,9 +80,9 @@ const OrderItem = ({ item }) => {
               </span>
             </p>
           )}
-          {(item.customText || item.custom_text) && (
+          {String(item.customText || item.custom_text || '').trim() && (
             <p className="text-sm text-gray-600 mb-1 font-inter">
-              Text: <span className="font-medium">&quot;{item.customText || item.custom_text}&quot;</span>
+              Text: <span className="font-medium">&quot;{String(item.customText || item.custom_text).trim()}&quot;</span>
             </p>
           )}
           {item.quantity > 1 && (

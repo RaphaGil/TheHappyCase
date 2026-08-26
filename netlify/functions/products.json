@@ -489,7 +489,7 @@
         "name": "Blue Camera",
         "src": "/images/ColorfulPins/bluecamera.webp",
         "price": 2,
-        "size": 0.55,
+        "size": 0.65,
         "subCategory": "travel"
       },
       {
@@ -745,7 +745,7 @@
         "name": "Beach",
         "src": "/images/ColorfulPins/beach.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.65,
         "subCategory": "nature"
       },
       {
@@ -841,7 +841,7 @@
         "name": "Ice Cream",
         "src": "/images/ColorfulPins/icecream.webp",
         "price": 2,
-        "size": 0.7,
+        "size": 0.6,
         "subCategory": "food"
       },
       {

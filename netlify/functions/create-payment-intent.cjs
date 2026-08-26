@@ -160,7 +160,7 @@ exports.handler = async (event) => {
         };
       }
       paymentIntentParams.shipping = {
-        name: customerInfo.name || "Customer",
+        name: [customerInfo.name, customerInfo.surname].filter(Boolean).join(" ").trim() || "Customer",
         address: {
           line1: customerInfo.address.line1 || "",
           line2: customerInfo.address.line2 || "",

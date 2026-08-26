@@ -168,6 +168,42 @@ app.use(
   })
 );
 
+app.post("/api/stripe-webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  const webhookSecret = (process.env.STRIPE_WEBHOOK_SECRET || "").trim();
+  if (!webhookSecret) {
+    return res.status(503).json({ error: "STRIPE_WEBHOOK_SECRET is not configured" });
+  }
+
+  const signature = req.headers["stripe-signature"];
+  let stripeEvent;
+  try {
+    stripeEvent = stripe.webhooks.constructEvent(req.body, signature, webhookSecret);
+  } catch (err) {
+    console.error("Webhook signature verification failed:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (stripeEvent.type !== "payment_intent.succeeded") {
+    return res.json({ received: true, ignored: stripeEvent.type });
+  }
+
+  if (!supabase) {
+    return res.status(503).json({ error: "Supabase is not configured" });
+  }
+
+  try {
+    const { saveOrderFromPaymentIntent } = require("./netlify/functions/utils/saveOrderFromPaymentIntent.cjs");
+    const pi = await stripe.paymentIntents.retrieve(stripeEvent.data.object.id, {
+      expand: ["payment_method", "latest_charge"],
+    });
+    const result = await saveOrderFromPaymentIntent(supabase, pi);
+    return res.json({ received: true, ...result });
+  } catch (err) {
+    console.error("stripe-webhook error:", err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.static("public"));
@@ -356,7 +392,7 @@ app.post("/api/create-payment-intent", async (req, res) => {
       metadata: {
         item_count: Array.isArray(items) ? items.length : 0,
         customer_email: customerInfo?.email || "",
-        customer_name: customerInfo?.name || "",
+        customer_name: [customerInfo?.name, customerInfo?.surname].filter(Boolean).join(" ") || "",
       }
     });
 
@@ -370,7 +406,7 @@ app.post("/api/create-payment-intent", async (req, res) => {
       metadata: {
         item_count: Array.isArray(items) ? items.length : 0,
         customer_email: customerInfo?.email || "",
-        customer_name: customerInfo?.name || "",
+        customer_name: [customerInfo?.name, customerInfo?.surname].filter(Boolean).join(" ") || "",
       },
     });
 
@@ -798,7 +834,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
           <div style="background-color: #f9fafb; padding: 20px; border-radius: 6px; margin-bottom: 30px;">
             <h2 style="margin-top: 0; font-size: 20px; color: #111827;">Shipping Address</h2>
             <p style="margin: 5px 0;">
-              ${(customerInfo.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}<br>
+              ${[customerInfo.name, customerInfo.surname].filter(Boolean).join(' ').replace(/</g, '&lt;').replace(/>/g, '&gt;')}<br>
               ${(customerInfo.address.line1 || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}<br>
               ${customerInfo.address.line2 ? (customerInfo.address.line2.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '<br>') : ''}
               ${(customerInfo.address.city || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')} ${(customerInfo.address.postal_code || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}<br>
@@ -1702,7 +1738,7 @@ app.post("/api/save-order", async (req, res) => {
       order_number: orderNumber, // Order # generated in order summary
       payment_intent_id: paymentIntent.id, // VARCHAR(255)
       customer_email: customerInfo.email, // VARCHAR(255) NOT NULL
-      customer_name: customerInfo.name || null, // VARCHAR(255)
+      customer_name: [customerInfo.name, customerInfo.surname].map((v) => String(v || '').trim()).filter(Boolean).join(' ').trim() || customerInfo.name || null, // VARCHAR(255)
       customer_phone: customerInfo.phone || null, // VARCHAR(50)
       total_amount: parseFloat(totalAmount.toFixed(2)), // DECIMAL(10, 2) NOT NULL
       currency: (paymentIntent.currency || 'gbp').toLowerCase(), // VARCHAR(10) DEFAULT 'gbp'
@@ -1710,6 +1746,7 @@ app.post("/api/save-order", async (req, res) => {
       order_date: orderDate, // TIMESTAMPTZ NOT NULL
       user_id: userId ?? null, // UUID - Supabase auth user ID (nullable)
       shipping_address: customerInfo.address ? { // JSONB
+        name: [customerInfo.name, customerInfo.surname].map((v) => String(v || '').trim()).filter(Boolean).join(' ').trim() || customerInfo.name || null,
         line1: customerInfo.address.line1,
         line2: customerInfo.address.line2 || null,
         city: customerInfo.address.city,
@@ -1722,6 +1759,8 @@ app.post("/api/save-order", async (req, res) => {
         ...(paymentIntent.metadata || {}),
         dispatched: false,
         dispatched_at: null,
+        customer_first_name: customerInfo.name ? String(customerInfo.name).trim() : null,
+        customer_surname: customerInfo.surname ? String(customerInfo.surname).trim() : null,
       }, // JSONB - tracking info is stored in separate tracking table
       // created_at and updated_at are auto-generated by database
     };
@@ -2695,7 +2734,9 @@ async function sendDispatchNotificationEmail({ to, customerName, orderNumber, tr
   const displayName = (customerName && typeof customerName === 'string' && customerName.trim()) ? customerName.trim() : null;
   const greeting = displayName ? `Hi ${displayName},` : 'Hi there,';
 
-  const trackButtonUrl = trackingLink || 'https://www.evri.com/track-a-parcel';
+  const trackButtonUrl = trackingLink || (/royal\s*mail/i.test(String(carrier || ''))
+    ? 'https://www.royalmail.com/track-your-item'
+    : 'https://www.evri.com/track-a-parcel');
   const trackButton = `
     <div style="text-align: center; margin: 28px 0;">
       <a href="${trackButtonUrl}" style="display: inline-block; padding: 14px 32px; background-color: ${gray900}; color: #ffffff; font-family: ${fontFamily}; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 8px;">Track your parcel</a>
@@ -3197,16 +3238,21 @@ app.get("/session-status", async (req, res) => {
 });
 
 // --- Payment Intent details (for success page after redirect e.g. 3DS, Klarna) ---
-app.get("/payment-intent-details", async (req, res) => {
+app.get(["/payment-intent-details", "/api/payment-intent-details"], async (req, res) => {
   try {
     const { payment_intent } = req.query;
     if (!payment_intent) return res.status(400).json({ error: "payment_intent is required" });
 
-    const pi = await stripe.paymentIntents.retrieve(payment_intent);
+    const pi = await stripe.paymentIntents.retrieve(payment_intent, {
+      expand: ["payment_method", "latest_charge"],
+    });
     res.json({
       id: pi.id,
       status: pi.status,
       created: pi.created,
+      currency: pi.currency,
+      amount: pi.amount,
+      payment_method_type: pi.payment_method?.type || null,
     });
   } catch (error) {
     console.error("Error retrieving payment intent:", error);

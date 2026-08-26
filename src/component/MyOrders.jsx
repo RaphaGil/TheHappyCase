@@ -7,6 +7,7 @@ import { getApiUrl } from '../utils/apiConfig';
 import OrderItem from './Payment-Sucess/OrderItem';
 import AirplaneLoading from './Shared/AirplaneLoading';
 import { getOrderDisplayId } from '../utils/paymentsucess/helpers';
+import { getOrderTrackingHref } from '../utils/trackingCarriers';
 import { isAuthorizedDashboardEmail } from '../utils/authorizedEmails';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
@@ -179,7 +180,7 @@ const MyOrders = () => {
                     <div className="flex flex-wrap justify-end gap-3 mb-4">
                       {(order.tracking?.tracking_link || order.tracking?.tracking_number || order.tracking?.carrier || order.metadata?.tracking_link || order.metadata?.carrier) && (
                         <a
-                          href={order.tracking?.tracking_link || order.metadata?.tracking_link || 'https://www.evri.com/track-a-parcel'}
+                          href={getOrderTrackingHref(order)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-md transition-colors font-inter"

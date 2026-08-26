@@ -22,6 +22,8 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
   const [orderSaved, setOrderSaved] = useState(false);
   const [recoveredData, setRecoveredData] = useState(null); // Store recovered data from sessionStorage
   const sessionId = searchParams?.get('session_id');
+  const paymentIntentIdFromUrl = searchParams?.get('payment_intent');
+  const redirectStatus = searchParams?.get('redirect_status');
   const processingRef = useRef(false); // Prevent multiple simultaneous calls
   const orderDataRef = useRef({
     paymentIntent,
@@ -100,7 +102,16 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
   // Save order to Supabase and send confirmation email
   useEffect(() => {
     // Get order data from props, recovered data, or ref backup
-    const orderPaymentIntent = paymentIntent || recoveredData?.paymentIntent || orderDataRef.current.paymentIntent;
+    const urlPaymentIntent =
+      paymentIntentIdFromUrl && redirectStatus !== 'failed'
+        ? {
+            id: paymentIntentIdFromUrl,
+            status: redirectStatus || 'succeeded',
+            created: Math.floor(Date.now() / 1000),
+          }
+        : null;
+    const orderPaymentIntent =
+      paymentIntent || recoveredData?.paymentIntent || orderDataRef.current.paymentIntent || urlPaymentIntent;
     const orderCustomerInfo = customerInfo || recoveredData?.customerInfo || orderDataRef.current.customerInfo;
     const orderItems = items || recoveredData?.items || orderDataRef.current.items;
     const resolveShipping = () => {
@@ -342,7 +353,7 @@ export const useOrderProcessing = (paymentIntent, customerInfo, items, orderNumb
 
       saveOrderAndSendEmail();
     }
-  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, shippingCostProp, orderSaved, sessionId, recoveredData]);
+  }, [paymentIntent, customerInfo, items, orderNumberFromPayload, shippingCostProp, orderSaved, sessionId, recoveredData, paymentIntentIdFromUrl, redirectStatus]);
 
   // Handle Stripe redirect with session_id - try to fetch and process order
   useEffect(() => {

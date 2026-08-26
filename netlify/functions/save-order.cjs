@@ -47,6 +47,30 @@ function jsonResponse(statusCode, body) {
   };
 }
 
+async function uploadOrderImage(supabase, imageData, orderId, itemId, imageType) {
+  if (!imageData || typeof imageData !== "string") return imageData || null;
+  if (!imageData.startsWith("data:image/")) return imageData;
+
+  const matches = imageData.match(/^data:image\/(\w+);base64,(.+)$/);
+  if (!matches) return imageData;
+
+  const buffer = Buffer.from(matches[2], "base64");
+  const filename = `${orderId}/${itemId}-${imageType}-${Date.now()}.${matches[1]}`;
+
+  const { error } = await supabase.storage.from("order-images").upload(filename, buffer, {
+    contentType: `image/${matches[1]}`,
+    upsert: false,
+  });
+
+  if (error) {
+    console.error(`Failed to upload ${imageType} for ${orderId}:`, error.message || error);
+    return imageData;
+  }
+
+  const { data } = supabase.storage.from("order-images").getPublicUrl(filename);
+  return data?.publicUrl || imageData;
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === "OPTIONS") {
     return { statusCode: 200, headers: corsHeaders, body: "" };
@@ -171,36 +195,62 @@ exports.handler = async (event) => {
     ? new Date(paymentIntent.created * 1000).toISOString()
     : new Date().toISOString();
 
-  const itemsForDb = items.map((item, index) => {
-    const up = unitPrice(item);
-    const n = qty(item);
-    return {
-      id: item.id ?? null,
-      name: item.caseName ?? item.name ?? "Custom Case",
-      case_type: item.caseType ?? null,
-      color: item.color ?? null,
-      quantity: n,
-      unit_price: up,
-      total_price: up * n,
-      pins: item.pins ?? item.pinsDetails ?? null,
-      custom_text:
-        item.customText != null && String(item.customText).trim()
-          ? String(item.customText).trim()
-          : item.custom_text != null && String(item.custom_text).trim()
-            ? String(item.custom_text).trim()
-            : null,
-      custom_design: item.customDesign ?? false,
-      case_image: item.caseImage ?? item.image ?? null,
-      design_image: item.designImage ?? null,
-    };
-  });
+  const itemsForDb = await Promise.all(
+    items.map(async (item, index) => {
+      const up = unitPrice(item);
+      const n = qty(item);
+      const itemId = item.id || `item-${index}`;
+      const caseImage = await uploadOrderImage(
+        supabase,
+        item.caseImage ?? item.image ?? null,
+        orderNumber,
+        itemId,
+        "case"
+      );
+      const designImage = await uploadOrderImage(
+        supabase,
+        item.designImage ?? null,
+        orderNumber,
+        itemId,
+        "design"
+      );
+      return {
+        id: item.id ?? null,
+        name: item.caseName ?? item.name ?? "Custom Case",
+        case_type: item.caseType ?? null,
+        color: item.color ?? null,
+        quantity: n,
+        unit_price: up,
+        total_price: up * n,
+        pins: item.pins ?? item.pinsDetails ?? null,
+        custom_text:
+          item.customText != null && String(item.customText).trim()
+            ? String(item.customText).trim()
+            : item.custom_text != null && String(item.custom_text).trim()
+              ? String(item.custom_text).trim()
+              : null,
+        custom_design: item.customDesign ?? false,
+        case_image: caseImage,
+        design_image: designImage,
+      };
+    })
+  );
+
+  const customerFullName =
+    [customerInfo.name, customerInfo.surname]
+      .map((v) => String(v || "").trim())
+      .filter(Boolean)
+      .join(" ")
+      .trim() ||
+    String(customerInfo.name || "").trim() ||
+    null;
 
   const orderData = {
     order_id: orderNumber,
     order_number: orderNumber,
     payment_intent_id: paymentIntentId,
     customer_email: customerInfo.email,
-    customer_name: customerInfo.name ?? null,
+    customer_name: customerFullName,
     customer_phone: customerInfo.phone ?? null,
     total_amount: parseFloat(totalAmount.toFixed(2)),
     currency: (paymentIntent.currency || "gbp").toLowerCase(),
@@ -209,6 +259,7 @@ exports.handler = async (event) => {
     user_id: userId ?? null,
     shipping_address: customerInfo.address
       ? {
+          name: customerFullName,
           line1: customerInfo.address.line1,
           line2: customerInfo.address.line2 ?? null,
           city: customerInfo.address.city,
@@ -222,6 +273,8 @@ exports.handler = async (event) => {
       ...(paymentIntent.metadata || {}),
       dispatched: false,
       dispatched_at: null,
+      customer_first_name: customerInfo.name ? String(customerInfo.name).trim() : null,
+      customer_surname: customerInfo.surname ? String(customerInfo.surname).trim() : null,
     },
   };
 

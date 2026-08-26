@@ -766,9 +766,39 @@ const Canvas = ({
   }, []);
 
   // Get current composed design image as data URL
-  const getDesignImageDataURL = useCallback(() => {
-    return exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef);
+  const bringTextToFront = useCallback(() => {
+    if (!fabricCanvas.current) return;
+    fabricCanvas.current.getObjects().forEach((obj) => {
+      if (obj.type === 'textbox' || obj.type === 'text' || obj.type === 'i-text') {
+        fabricCanvas.current.bringObjectToFront(obj);
+      }
+    });
+    fabricCanvas.current.requestRenderAll();
   }, []);
+
+  const ensureTextOnCanvas = useCallback((text, options = {}) => {
+    if (!fabricCanvas.current) return false;
+    const wanted = (text || '').trim();
+    if (!wanted) return false;
+
+    const alreadyOnCanvas = fabricCanvas.current.getObjects().some((obj) => {
+      if (obj.type !== 'textbox' && obj.type !== 'text' && obj.type !== 'i-text') return false;
+      return String(obj.text || '').trim().toUpperCase() === wanted.toUpperCase();
+    });
+    if (alreadyOnCanvas) {
+      bringTextToFront();
+      return true;
+    }
+
+    handleAddText(wanted, options);
+    bringTextToFront();
+    return true;
+  }, [bringTextToFront, handleAddText]);
+
+  const getDesignImageDataURL = useCallback(() => {
+    bringTextToFront();
+    return exportCanvasAsDataURL(fabricCanvas, boundaryRectRef, caseBorderRectRef, borderRectsRef);
+  }, [bringTextToFront]);
 
   const getDesignCompositeOptions = useCallback(() => {
     if (!fabricCanvas.current) {
@@ -784,6 +814,7 @@ const Canvas = ({
   const getDesignPreviewDataURL = useCallback(async () => {
     setShowControls(false);
     setSelectedPin(null);
+    bringTextToFront();
     await new Promise((resolve) => {
       requestAnimationFrame(() => requestAnimationFrame(resolve));
     });
@@ -793,7 +824,7 @@ const Canvas = ({
       caseBorderRectRef,
       borderRectsRef,
     });
-  }, []);
+  }, [bringTextToFront]);
 
   // Clear canvas: remove all pins and text (e.g. after add to cart)
   const clearCanvas = useCallback(() => {
@@ -861,6 +892,7 @@ const Canvas = ({
     window.addPinToCanvas = handlePinSelection;
     window.removePinFromCanvas = handleRemovePinFromCanvas;
     window.addTextToCanvas = handleAddText;
+    window.ensureTextOnCanvas = ensureTextOnCanvas;
     window.getDesignImageDataURL = getDesignImageDataURL;
     window.getDesignCompositeOptions = getDesignCompositeOptions;
     window.getDesignPreviewDataURL = getDesignPreviewDataURL;
@@ -872,12 +904,13 @@ const Canvas = ({
       delete window.addPinToCanvas;
       delete window.removePinFromCanvas;
       delete window.addTextToCanvas;
+      delete window.ensureTextOnCanvas;
       delete window.getDesignImageDataURL;
       delete window.getDesignCompositeOptions;
       delete window.getDesignPreviewDataURL;
       delete window.clearCanvas;
     };
-  }, [handleAddText, handlePinSelection, handleRemovePinFromCanvas, onSaveImage, getDesignImageDataURL, getDesignCompositeOptions, getDesignPreviewDataURL, handleSaveImage, clearCanvas]);
+  }, [handleAddText, ensureTextOnCanvas, handlePinSelection, handleRemovePinFromCanvas, onSaveImage, getDesignImageDataURL, getDesignCompositeOptions, getDesignPreviewDataURL, handleSaveImage, clearCanvas]);
 
   return (
     <div className="w-full h-full flex flex-col  sm:items-center ">

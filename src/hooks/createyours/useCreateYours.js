@@ -421,6 +421,15 @@ export const useCreateYours = () => {
     let canvasImageDataURL = null;
     let compositeOptions = { width: 270, height: 350, objectPositionY: 0.45 };
     if (typeof window !== 'undefined') {
+      if (customTextAdded && customText.trim() && window.ensureTextOnCanvas) {
+        window.ensureTextOnCanvas(customText.trim(), {
+          fill: CUSTOM_TEXT_COLOR,
+          fontSize: CUSTOM_TEXT_SIZE,
+        });
+        await new Promise((resolve) => {
+          requestAnimationFrame(() => requestAnimationFrame(resolve));
+        });
+      }
       if (window.getDesignPreviewDataURL) {
         previewDataURL = await window.getDesignPreviewDataURL();
       }
@@ -455,7 +464,7 @@ export const useCreateYours = () => {
       normalizedCaseImage,
       pinsDetails,
       selectedCategory,
-      customText
+      customText: customTextAdded ? customText : '',
     });
     
     // Add to cart (charms live on the case row only)

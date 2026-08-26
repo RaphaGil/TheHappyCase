@@ -168,7 +168,9 @@ async function sendDispatchEmail({ to, customerName, orderNumber, trackingNumber
       : `<tr><td style="padding:12px 14px;color:#475569;">(No items provided)</td><td></td></tr>`;
   const displayName = customerName && typeof customerName === "string" && customerName.trim() ? customerName.trim() : null;
   const greeting = displayName ? `Hi ${displayName},` : "Hi there,";
-  const trackButtonUrl = trackingLink || "https://www.evri.com/track-a-parcel";
+  const trackButtonUrl = trackingLink || (/royal\s*mail/i.test(String(carrier || ""))
+    ? "https://www.royalmail.com/track-your-item"
+    : "https://www.evri.com/track-a-parcel");
   const trackButton = `<div style="text-align:center;margin:18px 0 0;">
     <a href="${trackButtonUrl}" style="display:inline-block;background:#1d4ed8;color:#ffffff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 18px;border-radius:10px;">
       Track your parcel

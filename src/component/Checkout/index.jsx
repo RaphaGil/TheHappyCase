@@ -104,6 +104,40 @@ const CURRENCY_MULTIPLIERS = {
   'vnd': 1,  // Vietnamese Dong doesn't use decimals
 };
 
+const getCustomerFullName = (info) =>
+  [info?.name, info?.surname]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean)
+    .join(' ');
+
+const getNameValidationError = (info) => {
+  const name = String(info?.name || '').trim();
+  const surname = String(info?.surname || '').trim();
+  if (!name && !surname) return 'Please enter your name and surname.';
+  if (!name) return 'Please enter your name.';
+  if (!surname) return 'Please enter your surname.';
+  return null;
+};
+
+const getPhoneDigits = (value) => String(value || '').replace(/\D/g, '');
+
+const toStripePhone = (value) => {
+  const trimmed = String(value || '').trim();
+  const digits = getPhoneDigits(trimmed);
+  if (!digits) return '';
+  if (trimmed.startsWith('+')) return `+${digits}`;
+  if (digits.startsWith('0') && digits.length === 11) return `+44${digits.slice(1)}`;
+  if (digits.startsWith('44')) return `+${digits}`;
+  return `+${digits}`;
+};
+
+const getPhoneValidationError = (info) => {
+  const digits = getPhoneDigits(info?.phone);
+  if (!digits) return 'Please enter your phone number.';
+  if (digits.length < 10 || digits.length > 15) return 'Please enter a valid phone number.';
+  return null;
+};
+
 const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }) => {
   // --- Hooks ---
   const stripe = useStripe();
@@ -121,9 +155,12 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authenticatedEmail, setAuthenticatedEmail] = useState('');
   const [itemErrors, setItemErrors] = useState({});
+  const [showNameErrors, setShowNameErrors] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     email: '',
     name: '',
+    surname: '',
+    phone: '',
     address: {
       line1: '',
       line2: '',
@@ -367,6 +404,14 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const nameValidationError = getNameValidationError(customerInfo);
+    const phoneValidationError = getPhoneValidationError(customerInfo);
+    if (nameValidationError || phoneValidationError) {
+      setShowNameErrors(true);
+      setError(nameValidationError || phoneValidationError);
+      return;
+    }
     
     if (!stripe || !elements) {
       setError('Stripe is not loaded. Please wait...');
@@ -475,11 +520,23 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/payment-success`,
+          shipping: {
+            name: getCustomerFullName(customerInfo),
+            phone: toStripePhone(customerInfo.phone) || undefined,
+            address: {
+              line1: customerInfo.address.line1,
+              line2: customerInfo.address.line2 || undefined,
+              city: customerInfo.address.city,
+              postal_code: customerInfo.address.postal_code,
+              country: customerInfo.address.country,
+              state: customerInfo.address.state || undefined,
+            },
+          },
           payment_method_data: {
             billing_details: {
-              name: customerInfo.name,
+              name: getCustomerFullName(customerInfo),
               email: customerInfo.email,
-              phone: null, // Required when fields.billing_details.phone is set to 'never'
+              phone: toStripePhone(customerInfo.phone),
               address: {
                 line1: customerInfo.address.line1,
                 line2: customerInfo.address.line2,
@@ -580,6 +637,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         {/* Customer Information */}
         <CustomerInfoForm 
           customerInfo={customerInfo}
+          showNameErrors={showNameErrors}
           onInputChange={handleInputChange}
           isAuthenticated={isAuthenticated}
           authenticatedEmail={authenticatedEmail}

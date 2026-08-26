@@ -173,6 +173,7 @@ const PaymentSection = ({
               layout: "accordion",
               fields: {
                 billingDetails: {
+                  name: "never",
                   email: "never",
                   phone: "never",
                   address: "never",

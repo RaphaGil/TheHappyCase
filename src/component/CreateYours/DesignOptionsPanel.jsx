@@ -107,30 +107,36 @@ const DesignOptionsPanel = ({
         )}
 
         {activeStep === 'name' && (
-          isMobile ? (
-            <div className="pt-2">
-              <MobileAddTextSection
+          canLeaveCaseStep ? (
+            isMobile ? (
+              <div className="pt-2">
+                <MobileAddTextSection
+                  customText={customText}
+                  setCustomText={setCustomText}
+                  customTextError={customTextError}
+                  setCustomTextError={setCustomTextError}
+                  customTextAdded={customTextAdded}
+                  setCustomTextAdded={setCustomTextAdded}
+                  onAddText={onMobileAddText}
+                />
+              </div>
+            ) : (
+              <AddTextSection
+                alwaysVisible
+                panelMode
                 customText={customText}
                 setCustomText={setCustomText}
                 customTextError={customTextError}
                 setCustomTextError={setCustomTextError}
                 customTextAdded={customTextAdded}
                 setCustomTextAdded={setCustomTextAdded}
-                onAddText={onMobileAddText}
+                onTextAdded={onTextAdded}
               />
-            </div>
+            )
           ) : (
-            <AddTextSection
-              alwaysVisible
-              panelMode
-              customText={customText}
-              setCustomText={setCustomText}
-              customTextError={customTextError}
-              setCustomTextError={setCustomTextError}
-              customTextAdded={customTextAdded}
-              setCustomTextAdded={setCustomTextAdded}
-              onTextAdded={onTextAdded}
-            />
+            <div className="pt-4 text-center text-sm text-gray-500" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              Select a case and color first to add a name.
+            </div>
           )
         )}
       </div>

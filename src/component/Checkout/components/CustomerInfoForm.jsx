@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authenticatedEmail, onSignIn, onSignOut }) => {
+const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authenticatedEmail, onSignIn, onSignOut, showNameErrors = false }) => {
   const router = useRouter();
   const [showLoginDropdown, setShowLoginDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -41,6 +41,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
 
   const sanitizeName = (value) => value.replace(/[^A-Za-zÀ-ÿ\s'-]/g, '');
   const sanitizeAddress = (value) => value.replace(/[^A-Za-z0-9À-ÿ\s.,#'/-]/g, '');
+  const sanitizePhone = (value) => value.replace(/[^\d+\s()-]/g, '');
 
   const handleSanitizedChange = (event, sanitizer) => {
     const { name, value } = event.target;
@@ -140,6 +141,30 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           </p>
         </div>
       )}
+      <div>
+        <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+          Phone Number *
+        </label>
+        <input
+          type="tel"
+          name="phone"
+          value={customerInfo.phone ?? ''}
+          onChange={(e) => handleSanitizedChange(e, sanitizePhone)}
+          required
+          autoComplete="tel"
+          inputMode="tel"
+          placeholder="e.g. 07123 456789"
+          aria-required="true"
+          maxLength={20}
+          className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base ${
+            showNameErrors && String(customerInfo.phone || '').replace(/\D/g, '').length < 10 ? 'border-red-400' : 'border-gray-200'
+          }`}
+          style={{ fontSize: '16px' }}
+        />
+        {showNameErrors && String(customerInfo.phone || '').replace(/\D/g, '').length < 10 && (
+          <p className="mt-1 text-xs text-red-600 font-light font-inter">Phone number is required</p>
+        )}
+      </div>
       <h3 className="text-md uppercase tracking-wider text-gray-900 mb-4 font-bold font-inter">
         Delivery
       </h3>
@@ -156,10 +181,18 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.name ?? ''}
             onChange={(e) => handleSanitizedChange(e, sanitizeName)}
             required
-            maxLength={15}
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            autoComplete="given-name"
+            placeholder="First name"
+            aria-required="true"
+            maxLength={30}
+            className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base ${
+              showNameErrors && !String(customerInfo.name || '').trim() ? 'border-red-400' : 'border-gray-200'
+            }`}
             style={{ fontSize: '16px' }}
           />
+          {showNameErrors && !String(customerInfo.name || '').trim() && (
+            <p className="mt-1 text-xs text-red-600 font-light font-inter">Name is required</p>
+          )}
           </div>
           <div>
            <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
@@ -171,10 +204,18 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.surname ?? ''}
             onChange={(e) => handleSanitizedChange(e, sanitizeName)}
             required
-            maxLength={15}
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            autoComplete="family-name"
+            placeholder="Surname"
+            aria-required="true"
+            maxLength={30}
+            className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base ${
+              showNameErrors && !String(customerInfo.surname || '').trim() ? 'border-red-400' : 'border-gray-200'
+            }`}
             style={{ fontSize: '16px' }}
           />
+          {showNameErrors && !String(customerInfo.surname || '').trim() && (
+            <p className="mt-1 text-xs text-red-600 font-light font-inter">Surname is required</p>
+          )}
           </div>
     
         

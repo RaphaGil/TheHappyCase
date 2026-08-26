@@ -190,7 +190,7 @@ export const createCartProducts = ({
     quantity: effectiveQuantity,
     pins: pinsDetails,
     pinsDetails,
-    ...(customText && customText.trim() && { customText: customText.trim() })
+    ...(customText && String(customText).trim() && { customText: String(customText).trim() })
   };
 
   // Charms are stored on the case (pinsDetails); no separate cart rows (avoids duplicates under “previous cases”)
