@@ -12,7 +12,9 @@
  */
 
 const { Resend } = require("resend");
+const { createClient } = require("@supabase/supabase-js");
 const { getResendFromEmail, getResendReplyToEmail } = require("./utils/getFromEmail.cjs");
+const { buildOrderItemsEmailHtml, formatGBP } = require("./utils/buildOrderItemsEmailHtml.cjs");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -140,80 +142,35 @@ exports.handler = async (event) => {
       ? `Thank you for your order ${displayOrderNumber} – The Happy Case`
       : "Your order – The Happy Case";
 
-  const websiteUrl = process.env.URL || "https://thehappycase.shop";
+  const websiteUrl = process.env.URL || process.env.FRONTEND_URL || "https://thehappycase.shop";
   const logoUrl = `${websiteUrl}/assets/logo.webp`;
   const viewOrderUrl = `${websiteUrl}/my-orders`;
 
-  const formatGBP = (value) => `£${Number(value || 0).toFixed(2)}`;
-  const itemsToDisplay = Array.isArray(items) ? items : [];
-  const normalizeColorName = (raw) => {
-    if (raw == null) return null;
-    const s = String(raw).trim();
-    if (!s) return null;
-
-    const lower = s.toLowerCase();
-    const hex = lower.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
-    if (hex) {
-      let h = hex[1].toLowerCase();
-      if (h.length === 3) h = h.split("").map((c) => c + c).join("");
-      const map = {
-        "000000": "black",
-        "ffffff": "white",
-        "ff0000": "red",
-        "00ff00": "green",
-        "0000ff": "blue",
-        "ffff00": "yellow",
-        "ff00ff": "pink",
-        "ffc0cb": "pink",
-        "00ffff": "cyan",
-        "808080": "grey",
-        "c0c0c0": "silver",
-        "a52a2a": "brown",
-        "ffa500": "orange",
-        "800080": "purple",
-        "f5f5f5": "white",
-      };
-      return map[h] || null;
+  // Prefer saved order items (Supabase Storage design images) when available
+  let itemsToDisplay = Array.isArray(items) ? items : [];
+  const paymentIntentId = paymentIntent?.id || null;
+  try {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (supabaseUrl && supabaseKey && paymentIntentId) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const { data: savedOrder } = await supabase
+        .from("orders")
+        .select("items, order_number")
+        .eq("payment_intent_id", paymentIntentId)
+        .maybeSingle();
+      if (savedOrder?.items && Array.isArray(savedOrder.items) && savedOrder.items.length > 0) {
+        itemsToDisplay = savedOrder.items;
+        if (savedOrder.order_number) {
+          displayOrderNumber = savedOrder.order_number;
+        }
+      }
     }
+  } catch (_) {
+    // Keep request items if lookup fails
+  }
 
-    if (/^(rgb|rgba|hsl|hsla)\(/i.test(s)) return null;
-    const cleaned = s.replace(/[^a-zA-Z\s-]/g, " ").replace(/\s+/g, " ").trim();
-    if (!cleaned) return null;
-    return cleaned.toLowerCase();
-  };
-  const toTitleCase = (value) =>
-    String(value || "")
-      .replace(/[-_]+/g, " ")
-      .trim()
-      .replace(/\b\w/g, (m) => m.toUpperCase());
-
-  const itemsHtml =
-    itemsToDisplay.length > 0
-      ? itemsToDisplay
-          .map((item) => {
-            const name = item.caseName || item.name || item.title || "Custom Case";
-            const qty = item.quantity ?? 1;
-            const rawColor = item.color || item.caseColor || item.colour || item.case_colour;
-            const colorName = normalizeColorName(rawColor);
-            const unit = item.price ?? item.basePrice ?? 0;
-            const total =
-              item.totalPrice ??
-              item.total_price ??
-              (Number(unit || 0) * Number(qty || 1));
-            return `<tr>
-              <td style="padding:12px 14px;border-bottom:1px solid #dbeafe;">
-                <div style="font-weight:600;color:#0f172a;">${String(name)}</div>
-                <div style="color:#475569;font-size:13px;margin-top:2px;">
-                  Qty: ${qty}${colorName ? ` • Color: ${toTitleCase(colorName)}` : ""}
-                </div>
-              </td>
-              <td style="padding:12px 14px;border-bottom:1px solid #dbeafe;text-align:right;white-space:nowrap;font-weight:600;color:#0f172a;">
-                ${formatGBP(total)}
-              </td>
-            </tr>`;
-          })
-          .join("")
-      : `<tr><td style="padding:12px 14px;color:#475569;">(No items provided)</td><td></td></tr>`;
+  const itemsHtml = buildOrderItemsEmailHtml(itemsToDisplay, websiteUrl);
 
   const address = customerInfo?.address || {};
   const shippingAddressLines = [
@@ -333,6 +290,27 @@ exports.handler = async (event) => {
     displayOrderNumber && displayOrderNumber !== "N/A"
       ? `Order number: ${displayOrderNumber}`
       : null,
+    "",
+    "Items:",
+    ...itemsToDisplay.map((item) => {
+      const name = item.caseName || item.name || "Custom Case";
+      const qty = item.quantity ?? 1;
+      const pins = item.pinsDetails || item.pins || [];
+      const pinList = Array.isArray(pins)
+        ? pins
+            .map((p) => (typeof p === "object" ? p.name || "Charm" : String(p)))
+            .filter(Boolean)
+        : [];
+      const uniquePins = [...new Set(pinList)];
+      const customText = String(item.customText || item.custom_text || "").trim();
+      return [
+        `- ${name} (x${qty})`,
+        customText ? `  Name on case: "${customText}"` : null,
+        uniquePins.length ? `  Charms: ${uniquePins.join(", ")}` : null,
+      ]
+        .filter(Boolean)
+        .join("\n");
+    }),
     "",
     `Subtotal: £${computedSubtotal.toFixed(2)}`,
     `Shipping: £${computedShipping.toFixed(2)}`,

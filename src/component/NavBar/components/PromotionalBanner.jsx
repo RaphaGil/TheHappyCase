@@ -100,12 +100,12 @@ const PromotionalBanner = () => {
           aria-atomic="true"
         >
           <p
-            className={`flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] font-medium tracking-wide transition-all duration-300 sm:text-xs font-inter ${
+            className={`flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-xs font-medium tracking-wide transition-all duration-300 md:text-sm font-inter ${
               isVisible ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
             }`}
           >
             <span
-              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/90 text-sm shadow-sm"
+              className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/90 text-sm shadow-sm md:h-7 md:w-7"
               aria-hidden="true"
             >
               {message.icon}

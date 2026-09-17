@@ -17,6 +17,7 @@ import { getResendFromEmail, getResendReplyToEmail } from "./src/utils/resendFro
 
 const require = createRequire(import.meta.url);
 const { buildAllInventoryItems } = require("./netlify/functions/utils/buildInventoryItems.cjs");
+const { buildOrderItemsEmailHtml } = require("./netlify/functions/utils/buildOrderItemsEmailHtml.cjs");
 
 // Load .env.local WITH override so local dev matches Next.js env priority
 // (Next.js prefers .env.local over .env — without override the backend would
@@ -560,11 +561,22 @@ app.post("/api/send-order-confirmation", async (req, res) => {
     let savedOrderTotals = null;
     if (supabase && orderId) {
       try {
-        const { data: savedOrder } = await supabase
+        let savedOrder = null;
+        const byPaymentIntent = await supabase
           .from('orders')
-          .select('items, total_amount, shipping_address')
-          .eq('order_id', orderId)
+          .select('items, total_amount, shipping_address, order_number')
+          .eq('payment_intent_id', orderId)
           .maybeSingle();
+        if (byPaymentIntent?.data) {
+          savedOrder = byPaymentIntent.data;
+        } else {
+          const byOrderId = await supabase
+            .from('orders')
+            .select('items, total_amount, shipping_address, order_number')
+            .eq('order_id', orderId)
+            .maybeSingle();
+          savedOrder = byOrderId?.data || null;
+        }
         
         if (savedOrder) {
           if (savedOrder.items && Array.isArray(savedOrder.items)) {
@@ -572,11 +584,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
             console.log(`✅ Found saved order with ${savedOrderItems.length} items (using Supabase Storage URLs)`);
           }
           
-          // Try to get shipping info from saved order metadata or calculate from address
           if (savedOrder.total_amount && savedOrder.shipping_address) {
-            // We can use the saved total_amount, but we still need to calculate breakdown
-            // The order might have shipping included in total_amount, but we don't store breakdown separately
-            // So we'll still calculate from address if not provided
             savedOrderTotals = {
               total_amount: savedOrder.total_amount
             };
@@ -585,7 +593,6 @@ app.post("/api/send-order-confirmation", async (req, res) => {
         }
       } catch (fetchError) {
         console.warn('⚠️ Could not fetch saved order for images:', fetchError.message);
-        // Continue with original items
       }
     }
     const orderDate = paymentIntent?.created 
@@ -626,96 +633,8 @@ app.post("/api/send-order-confirmation", async (req, res) => {
     
     let itemsHtml = '';
     try {
-      itemsHtml = itemsToDisplay.map((item, index) => {
-        const itemName = item.caseName || item.name || 'Custom Case';
-      const quantity = item.quantity || 1;
-      
-      // Calculate price - handle both saved order format (unit_price, total_price) and original format (price, totalPrice)
-      let itemPrice = 0;
-      if (item.total_price !== undefined) {
-        // Saved order format: use total_price directly
-        itemPrice = parseFloat(item.total_price) || 0;
-      } else if (item.unit_price !== undefined) {
-        // Saved order format: unit_price * quantity
-        itemPrice = (parseFloat(item.unit_price) || 0) * quantity;
-      } else if (item.totalPrice !== undefined) {
-        // Original format: totalPrice * quantity
-        itemPrice = (parseFloat(item.totalPrice) || 0) * quantity;
-      } else if (item.price !== undefined) {
-        // Original format: price * quantity
-        itemPrice = (parseFloat(item.price) || 0) * quantity;
-      }
-      const formattedPrice = itemPrice.toFixed(2);
-      
-      // Get item image URL - match dashboard priority: design_image first (custom design with charms), then case_image (just the case)
-      // This matches the dashboard display logic: design_image > case_image
-      let itemImageUrl = item.design_image || item.designImage || item.case_image || item.caseImage || item.image || null;
-      
-      // Ensure image URL is absolute (add protocol if missing)
-      if (itemImageUrl && !itemImageUrl.startsWith('data:') && !itemImageUrl.startsWith('http://') && !itemImageUrl.startsWith('https://')) {
-        // If it's a relative URL, make it absolute using the website URL
-        if (itemImageUrl.startsWith('/')) {
-          itemImageUrl = `${websiteUrl}${itemImageUrl}`;
-        } else {
-          itemImageUrl = `${websiteUrl}/${itemImageUrl}`;
-        }
-      }
-      
-      // Log image URL for debugging
-      console.log(`   Item ${index + 1} (${itemName}):`);
-      console.log(`     - Image URL: ${itemImageUrl || 'NONE'}`);
-      if (itemImageUrl) {
-        // Determine which image type was used (matches dashboard logic)
-        const imageType = itemImageUrl === (item.design_image || item.designImage) ? 'DESIGN (custom with charms)' : 
-                         itemImageUrl === (item.case_image || item.caseImage) ? 'CASE (base case only)' : 
-                         'OTHER';
-        console.log(`       - Image type: ${imageType}`);
-        console.log(`       - URL type: ${itemImageUrl.startsWith('data:') ? 'BASE64 (not usable in email)' : itemImageUrl.startsWith('http') ? 'HTTP/HTTPS URL' : 'RELATIVE URL'}`);
-        if (itemImageUrl.includes('supabase')) {
-          console.log(`       - Source: Supabase Storage`);
-        } else if (itemImageUrl.includes(websiteUrl)) {
-          console.log(`       - Source: Website assets`);
-        } else {
-          console.log(`       - Source: External URL`);
-        }
-      }
-      console.log(`     - Price: £${formattedPrice} (unit: ${item.unit_price || item.price || 'N/A'}, qty: ${quantity})`);
-      
-      // If image is a data URL (base64), we can't use it in email - skip it
-      // Also check if it's a valid HTTP/HTTPS URL
-      const hasValidImage = itemImageUrl && 
-                           !itemImageUrl.startsWith('data:') && 
-                           (itemImageUrl.startsWith('http://') || itemImageUrl.startsWith('https://'));
-      
-      return `
-        <tr>
-          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
-            ${hasValidImage ? `
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <img 
-                  src="${itemImageUrl}" 
-                  alt="${itemName}" 
-                  style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px; border: 1px solid #e5e7eb; display: block; background-color: #f3f4f6;"
-                />
-                <div style="flex: 1;">
-                  <strong>${itemName}</strong>
-                  ${item.color ? `<br><span style="color: #6b7280; font-size: 14px;">Color: ${item.color}</span>` : ''}
-                  ${(item.pinsDetails && item.pinsDetails.length > 0) || (item.pins && Array.isArray(item.pins) && item.pins.length > 0) ? `<br><span style="color: #6b7280; font-size: 14px;">Charms: ${(item.pinsDetails || item.pins || []).length}</span>` : ''}
-                </div>
-              </div>
-            ` : `
-              <div>
-                <strong>${itemName}</strong>
-                ${item.color ? `<br><span style="color: #6b7280; font-size: 14px;">Color: ${item.color}</span>` : ''}
-                ${(item.pinsDetails && item.pinsDetails.length > 0) || (item.pins && Array.isArray(item.pins) && item.pins.length > 0) ? `<br><span style="color: #6b7280; font-size: 14px;">Charms: ${(item.pinsDetails || item.pins || []).length}</span>` : ''}
-              </div>
-            `}
-          </td>
-          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center; vertical-align: middle;">${quantity}</td>
-          <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; vertical-align: middle; font-weight: 500;">£${formattedPrice}</td>
-        </tr>
-      `;
-      }).join('') || '';
+      itemsHtml = buildOrderItemsEmailHtml(itemsToDisplay, websiteUrl);
+      console.log(`✅ Generated rich items HTML for email (${itemsToDisplay.length} items)`);
     } catch (itemsError) {
       console.error('❌ Error generating items HTML:', itemsError);
       console.error('   Error details:', {
@@ -723,33 +642,29 @@ app.post("/api/send-order-confirmation", async (req, res) => {
         stack: itemsError.stack,
         items: itemsToDisplay
       });
-      // Generate fallback HTML without images if there's an error
       if (!Array.isArray(itemsToDisplay) || itemsToDisplay.length === 0) {
-        itemsHtml = '<tr><td colspan="3" style="padding: 12px; text-align: center; color: #6b7280;">No items found</td></tr>';
+        itemsHtml = '<tr><td colspan="2" style="padding: 12px; text-align: center; color: #6b7280;">No items found</td></tr>';
       } else {
-        itemsHtml = itemsToDisplay.map((item, index) => {
-        const itemName = item.caseName || item.name || 'Custom Case';
-        const quantity = item.quantity || 1;
-        let itemPrice = 0;
-        if (item.total_price !== undefined) {
-          itemPrice = parseFloat(item.total_price) || 0;
-        } else if (item.unit_price !== undefined) {
-          itemPrice = (parseFloat(item.unit_price) || 0) * quantity;
-        } else if (item.totalPrice !== undefined) {
-          itemPrice = (parseFloat(item.totalPrice) || 0) * quantity;
-        } else if (item.price !== undefined) {
-          itemPrice = (parseFloat(item.price) || 0) * quantity;
-        }
-        const formattedPrice = itemPrice.toFixed(2);
-        
-        return `
+        itemsHtml = itemsToDisplay.map((item) => {
+          const itemName = item.caseName || item.name || 'Custom Case';
+          const quantity = item.quantity || 1;
+          let itemPrice = 0;
+          if (item.total_price !== undefined) {
+            itemPrice = parseFloat(item.total_price) || 0;
+          } else if (item.unit_price !== undefined) {
+            itemPrice = (parseFloat(item.unit_price) || 0) * quantity;
+          } else if (item.totalPrice !== undefined) {
+            itemPrice = (parseFloat(item.totalPrice) || 0) * quantity;
+          } else if (item.price !== undefined) {
+            itemPrice = (parseFloat(item.price) || 0) * quantity;
+          }
+          return `
           <tr>
             <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
               <strong>${itemName}</strong>
               ${item.color ? `<br><span style="color: #6b7280; font-size: 14px;">Color: ${item.color}</span>` : ''}
             </td>
-            <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: center; vertical-align: middle;">${quantity}</td>
-            <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; vertical-align: middle; font-weight: 500;">£${formattedPrice}</td>
+            <td style="padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: right; vertical-align: middle; font-weight: 500;">£${itemPrice.toFixed(2)}</td>
           </tr>
         `;
         }).join('') || '';
@@ -804,8 +719,7 @@ app.post("/api/send-order-confirmation", async (req, res) => {
               <thead>
                 <tr style="background-color: #f9fafb;">
                   <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Item</th>
-                  <th style="padding: 12px; text-align: center; border-bottom: 2px solid #e5e7eb;">Qty</th>
-                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Price</th>
+                  <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -813,17 +727,17 @@ app.post("/api/send-order-confirmation", async (req, res) => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="2" style="padding: 8px 12px; text-align: right; border-top: 2px solid #e5e7eb; color: #6b7280;">Subtotal:</td>
+                  <td style="padding: 8px 12px; text-align: right; border-top: 2px solid #e5e7eb; color: #6b7280;">Subtotal:</td>
                   <td style="padding: 8px 12px; text-align: right; border-top: 2px solid #e5e7eb;">£${calculatedSubtotal.toFixed(2)}</td>
                 </tr>
                 ${calculatedShipping > 0 ? `
                 <tr>
-                  <td colspan="2" style="padding: 8px 12px; text-align: right; color: #6b7280;">Shipping:</td>
+                  <td style="padding: 8px 12px; text-align: right; color: #6b7280;">Shipping:</td>
                   <td style="padding: 8px 12px; text-align: right;">£${calculatedShipping.toFixed(2)}</td>
                 </tr>
                 ` : ''}
                 <tr>
-                  <td colspan="2" style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #e5e7eb; font-size: 16px;">Total:</td>
+                  <td style="padding: 12px; text-align: right; font-weight: bold; border-top: 2px solid #e5e7eb; font-size: 16px;">Total:</td>
                   <td style="padding: 12px; text-align: right; font-weight: bold; font-size: 18px; border-top: 2px solid #e5e7eb;">£${totalAmount.toFixed(2)}</td>
                 </tr>
               </tfoot>
