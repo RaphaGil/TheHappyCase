@@ -497,7 +497,7 @@
         "name": "Map",
         "src": "/images/ColorfulPins/map.webp",
         "price": 2,
-        "size": 0.85,
+        "size": 0.65,
         "subCategory": "travel"
       },
       {
@@ -888,7 +888,7 @@
         "name": "Flamingos",
         "src": "/images/ColorfulPins/flamingos.webp",
         "price": 2,
-        "size": 0.9,
+        "size": 0.85,
         "subCategory": "animal"
       },
       {
@@ -987,6 +987,62 @@
         "size": 0.5,
         "subCategory": "camera",
         "hidden": true
+      },
+      {
+        "id": 67,
+        "name": "Backpack",
+        "src": "/images/ColorfulPins/backpack.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "travel"
+      },
+      {
+        "id": 68,
+        "name": "Binoculars",
+        "src": "/images/ColorfulPins/binocle.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "travel"
+      },
+      {
+        "id": 69,
+        "name": "Cardinal Points",
+        "src": "/images/ColorfulPins/colorfulcardinalpoints.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "travel"
+      },
+      {
+        "id": 70,
+        "name": "Teddy Bear",
+        "src": "/images/ColorfulPins/colorfultedbear.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "animal"
+      },
+      {
+        "id": 71,
+        "name": "Game Controller",
+        "src": "/images/ColorfulPins/controllervideogame.webp",
+        "price": 2,
+        "size": 0.55
+      },
+      {
+        "id": 72,
+        "name": "Light Wave",
+        "src": "/images/ColorfulPins/lightwave.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "nature",
+        "hidden": true
+      },
+      {
+        "id": 73,
+        "name": "Jet Airplane",
+        "src": "/images/ColorfulPins/newairplane.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "travel"
       }
     ],
     "bronze": [
@@ -1280,6 +1336,14 @@
         "price": 1,
         "size": 0.6,
         "subCategory": "nature"
+      },
+      {
+        "id": 38,
+        "name": "Teddy Bear",
+        "src": "/images/BronzePins/bronzetedbear.webp",
+        "price": 1,
+        "size": 0.55,
+        "subCategory": "animals"
       }
     ]
   }
