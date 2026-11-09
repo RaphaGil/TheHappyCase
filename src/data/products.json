@@ -625,38 +625,6 @@
         "subCategory": "disney"
       },
       {
-        "id": 18,
-        "name": "Pluto",
-        "src": "/images/ColorfulPins/pluto.webp",
-        "price": 2,
-        "size": 0.85,
-        "subCategory": "disney"
-      },
-      {
-        "id": 19,
-        "name": "Round Minnnie",
-        "src": "/images/ColorfulPins/roundminnie.webp",
-        "price": 2,
-        "size": 0.85,
-        "subCategory": "disney"
-      },
-      {
-        "id": 20,
-        "name": "Round Mickey",
-        "src": "/images/ColorfulPins/roundmickey.webp",
-        "price": 2,
-        "size": 0.85,
-        "subCategory": "disney"
-      },
-      {
-        "id": 21,
-        "name": "Guufy",
-        "src": "/images/ColorfulPins/guufy.webp",
-        "price": 2,
-        "size": 0.85,
-        "subCategory": "disney"
-      },
-      {
         "id": 32,
         "name": "Daisy Duck",
         "src": "/images/ColorfulPins/daisyduck.webp",
@@ -678,14 +646,6 @@
         "src": "/images/ColorfulPins/duck.webp",
         "price": 2,
         "size": 0.6,
-        "subCategory": "disney"
-      },
-      {
-        "id": 34,
-        "name": "Minnie",
-        "src": "/images/ColorfulPins/minnie.webp",
-        "price": 2,
-        "size": 0.7,
         "subCategory": "disney"
       },
       {
