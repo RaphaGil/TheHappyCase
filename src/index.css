@@ -502,3 +502,50 @@ select optgroup {
 .animate-airplane-fly {
   animation: airplaneFly 1.8s ease-in-out infinite;
 }
+
+/* Christmas hero: falling snow */
+@keyframes heroSnowFall {
+  0% {
+    transform: translate3d(0, -10vh, 0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--snow-drift, 20px), 100vh, 0);
+    opacity: 0.2;
+  }
+}
+
+.hero-snowflake {
+  position: absolute;
+  top: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+  animation-name: heroSnowFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+/* Red / green / gold string of lights along the top of the hero */
+.hero-garland {
+  background-image: repeating-linear-gradient(
+    90deg,
+    #c8102e 0 14px,
+    transparent 14px 22px,
+    #1f7a3a 22px 36px,
+    transparent 36px 44px,
+    #e8b923 44px 58px,
+    transparent 58px 66px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-snowflake {
+    animation: none;
+    display: none;
+  }
+}

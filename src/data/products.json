@@ -456,6 +456,14 @@
         "subCategory": "travel"
       },
       {
+        "id": 73,
+        "name": "Jet Airplane",
+        "src": "/images/ColorfulPins/newairplane.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
         "id": 3,
         "name": "Heart Globe",
         "src": "/images/ColorfulPins/heartglobe.webp",
@@ -499,6 +507,14 @@
         "id": 25,
         "name": "Passport",
         "src": "/images/ColorfulPins/passport.webp",
+        "price": 2,
+        "size": 0.6,
+        "subCategory": "travel"
+      },
+      {
+        "id": 77,
+        "name": "Red Passport",
+        "src": "/images/ColorfulPins/redpassport.webp",
         "price": 2,
         "size": 0.6,
         "subCategory": "travel"
@@ -582,6 +598,23 @@
         "price": 2,
         "size": 0.9,
         "subCategory": "travel"
+      },
+      {
+        "id": 78,
+        "name": "Ticket to Anywhere",
+        "src": "/images/ColorfulPins/tickettoanywhere.webp",
+        "price": 2,
+        "size": 0.7,
+        "subCategory": "travel"
+      },
+      {
+        "id": 15,
+        "name": "Small Boarding Pass",
+        "src": "/images/ColorfulPins/smallboardingpass.webp",
+        "price": 2,
+        "size": 0.75,
+        "subCategory": "travel",
+        "hidden": true
       },
       {
         "id": 17,
@@ -677,6 +710,14 @@
         "src": "/images/ColorfulPins/mickeyheart.webp",
         "price": 2,
         "size": 0.7,
+        "subCategory": "disney"
+      },
+      {
+        "id": 76,
+        "name": "Shining Mickey",
+        "src": "/images/ColorfulPins/mickeyshine.webp",
+        "price": 2,
+        "size": 0.5,
         "subCategory": "disney"
       },
       {
@@ -939,15 +980,6 @@
         "hidden": true
       },
       {
-        "id": 15,
-        "name": "Small Boarding Pass",
-        "src": "/images/ColorfulPins/smallboardingpass.webp",
-        "price": 2,
-        "size": 0.75,
-        "subCategory": "travel",
-        "hidden": true
-      },
-      {
         "id": 23,
         "name": "London Phone",
         "src": "/images/ColorfulPins/telephone.webp",
@@ -1032,14 +1064,6 @@
         "hidden": true
       },
       {
-        "id": 73,
-        "name": "Jet Airplane",
-        "src": "/images/ColorfulPins/newairplane.webp",
-        "price": 2,
-        "size": 0.7,
-        "subCategory": "travel"
-      },
-      {
         "id": 74,
         "name": "Christmas Tree",
         "src": "/images/ColorfulPins/christmas.webp",
@@ -1054,14 +1078,6 @@
         "price": 2,
         "size": 0.55,
         "subCategory": "seasonal"
-      },
-      {
-        "id": 76,
-        "name": "Shining Mickey",
-        "src": "/images/ColorfulPins/mickeyshine.webp",
-        "price": 2,
-        "size": 0.5,
-        "subCategory": "seasonal"
       }
     ],
     "bronze": [
@@ -1072,6 +1088,13 @@
         "price": 1,
         "size": 0.7,
         "subCategory": "travel"
+      },
+      {
+        "id": 24,
+        "name": "Airplane War",
+        "src": "/images/BronzePins/airplanewar.webp",
+        "price": 1,
+        "size": 0.8
       },
       {
         "id": 2,
@@ -1150,7 +1173,7 @@
         "name": "Little Heart",
         "src": "/images/BronzePins/littleheart.webp",
         "price": 1,
-        "size": 0.20,
+        "size": 0.2,
         "subCategory": "love",
         "hidden": true
       },
@@ -1246,13 +1269,6 @@
         "price": 1,
         "size": 0.8,
         "subCategory": "love"
-      },
-      {
-        "id": 24,
-        "name": "Airplane War",
-        "src": "/images/BronzePins/airplanewar.webp",
-        "price": 1,
-        "size": 0.8
       },
       {
         "id": 25,

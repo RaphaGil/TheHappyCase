@@ -15,8 +15,16 @@ const heroImageWebP = normalizeImagePath('/images/heroimage.webp');
 const CHRISTMAS_CHARMS = [
   { src: '/images/ColorfulPins/christmas.webp', name: 'Christmas Tree' },
   { src: '/images/ColorfulPins/merrychristmas.webp', name: 'Merry Christmas' },
-  { src: '/images/ColorfulPins/mickeyshine.webp', name: 'Shining Mickey' },
 ];
+
+// Deterministic snowflakes (same on server and client, so no hydration mismatch)
+const SNOWFLAKES = Array.from({ length: 40 }, (_, i) => ({
+  left: (i * 37) % 100,
+  size: 2 + ((i * 7) % 5),
+  duration: 8 + ((i * 13) % 10),
+  delay: -((i * 11) % 18),
+  drift: ((i * 17) % 60) - 30,
+}));
 
 // TEMP: hide hero media for speed testing
 const HIDE_HOME_IMAGES_FOR_TEST = false;
@@ -102,12 +110,38 @@ function Hero() {
         )}
         {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-black/50 z-10"></div>
+        {/* Warm festive glow: deep red at the bottom, fading up */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-red-950/60 via-red-900/10 to-transparent"></div>
+        {/* Falling snow */}
+        <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden" aria-hidden="true">
+          {SNOWFLAKES.map((flake, i) => (
+            <span
+              key={i}
+              className="hero-snowflake"
+              style={{
+                left: `${flake.left}%`,
+                width: `${flake.size}px`,
+                height: `${flake.size}px`,
+                animationDuration: `${flake.duration}s`,
+                animationDelay: `${flake.delay}s`,
+                '--snow-drift': `${flake.drift}px`,
+              }}
+            />
+          ))}
+        </div>
+        {/* String of Christmas lights along the top edge */}
+        <div className="hero-garland absolute top-0 left-0 right-0 h-1.5 z-20" aria-hidden="true"></div>
       </div>
 
       {/* Text and Shop Now Button - Overlay on Video */}
       <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
-          <h1 
+          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-300/60 bg-red-700/80 px-4 py-1 text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-white font-inter shadow-lg">
+            <span aria-hidden="true">🎄</span>
+            The perfect Christmas gift
+            <span aria-hidden="true">🎁</span>
+          </p>
+          <h1
             className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white font-inter tracking-title"
             style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
           >
@@ -148,11 +182,12 @@ function Hero() {
             type="button"
             onClick={handleStartDesigning}
             aria-label="New Christmas charms – start designing your case"
-            className={`mt-5 w-full max-w-md rounded-xl border border-white/20 bg-black/35 px-3 py-3 backdrop-blur-sm transition-opacity duration-700 ease-out hover:bg-black/50 hover:border-white/40 cursor-pointer ${buttonVisible ? 'opacity-100' : 'opacity-0'}`}
+            className={`relative mt-5 w-full max-w-md overflow-hidden rounded-xl border border-amber-300/50 bg-gradient-to-br from-red-900/70 via-black/40 to-green-900/70 px-3 pb-3 pt-4 backdrop-blur-sm transition-opacity duration-700 ease-out hover:border-amber-300 hover:from-red-800/80 hover:to-green-800/80 cursor-pointer ${buttonVisible ? 'opacity-100' : 'opacity-0'}`}
           >
+            <span className="hero-garland absolute top-0 left-0 right-0 h-1" aria-hidden="true"></span>
             <p className="text-center text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-white font-inter" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
               <span className="mr-2 rounded-full bg-red-600 px-2 py-0.5 text-[10px] sm:text-xs tracking-wider">New</span>
-              Christmas charms
+              Christmas charms <span aria-hidden="true">❄️</span>
             </p>
             <div className="mt-3 flex items-end justify-center gap-3">
               {CHRISTMAS_CHARMS.map((charm) => (
