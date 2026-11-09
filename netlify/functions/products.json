@@ -645,7 +645,7 @@
         "name": "Duck",
         "src": "/images/ColorfulPins/duck.webp",
         "price": 2,
-        "size": 0.6,
+        "size": 0.5,
         "subCategory": "disney"
       },
       {
@@ -677,7 +677,7 @@
         "name": "Shining Mickey",
         "src": "/images/ColorfulPins/mickeyshine.webp",
         "price": 2,
-        "size": 0.5,
+        "size": 0.6,
         "subCategory": "disney"
       },
       {
@@ -1028,7 +1028,7 @@
         "name": "Christmas Tree",
         "src": "/images/ColorfulPins/christmas.webp",
         "price": 2,
-        "size": 0.65,
+        "size": 0.55,
         "subCategory": "seasonal"
       },
       {
