@@ -7,7 +7,6 @@
       "images": [
         "/images/SmartCase/economycaselightpink.webp",
         "/images/SmartCase/economycasered.webp",
-        "/images/SmartCase/economycasejeansblue.webp",
         "/images/SmartCase/economycasebrown.webp",
         "/images/SmartCase/economycaselightblue.webp",
         "/images/SmartCase/economycaseblack.webp"
@@ -24,10 +23,6 @@
         {
           "color": "#9cb4b8",
           "image": "/images/SmartCase/economycaselightblue.webp"
-        },
-        {
-          "color": "#627386",
-          "image": "/images/SmartCase/economycasejeansblue.webp"
         },
         {
           "color": "#b0582c",

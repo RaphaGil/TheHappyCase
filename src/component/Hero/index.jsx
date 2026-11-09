@@ -144,9 +144,15 @@ function Hero() {
             </a>
             .
           </p>
-          <div className={`mt-5 w-full max-w-md rounded-xl border border-white/20 bg-black/35 px-3 py-3 backdrop-blur-sm transition-opacity duration-700 ease-out ${buttonVisible ? 'opacity-100' : 'opacity-0'}`}>
+          <button
+            type="button"
+            onClick={handleStartDesigning}
+            aria-label="New Christmas charms – start designing your case"
+            className={`mt-5 w-full max-w-md rounded-xl border border-white/20 bg-black/35 px-3 py-3 backdrop-blur-sm transition-opacity duration-700 ease-out hover:bg-black/50 hover:border-white/40 cursor-pointer ${buttonVisible ? 'opacity-100' : 'opacity-0'}`}
+          >
             <p className="text-center text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-white font-inter" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
-              Christmas charms coming soon
+              <span className="mr-2 rounded-full bg-red-600 px-2 py-0.5 text-[10px] sm:text-xs tracking-wider">New</span>
+              Christmas charms
             </p>
             <div className="mt-3 flex items-end justify-center gap-3">
               {CHRISTMAS_CHARMS.map((charm) => (
@@ -161,7 +167,7 @@ function Hero() {
                 </div>
               ))}
             </div>
-          </div>
+          </button>
         </div>
       </div>
     
