@@ -104,7 +104,7 @@ export const getColorName = (colorHexOrImage, imagePath = null) => {
       '#413f44': 'Black',
       '#c8b593': 'Gray',
       '#da8ca6': 'Light Pink',
-      '#daaf49': 'Yellow',
+      '#1e3a5f': 'Navy Blue',
       '#d33d72': 'Pink',
       '#c49154': 'Brown',
       '#36312b': 'Black',

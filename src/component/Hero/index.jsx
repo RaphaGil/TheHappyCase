@@ -12,6 +12,11 @@ const videoMp4Src = normalizeImagePath('/assets/videos/hero.mp4');
 const videoWebmSrc = normalizeImagePath('/assets/videos/hero.webm');
 const heroFallbackImage = normalizeImagePath('/images/heroimage.png');
 const heroImageWebP = normalizeImagePath('/images/heroimage.webp');
+const CHRISTMAS_CHARMS = [
+  { src: '/images/ColorfulPins/christmas.webp', name: 'Christmas Tree' },
+  { src: '/images/ColorfulPins/merrychristmas.webp', name: 'Merry Christmas' },
+  { src: '/images/ColorfulPins/mickeyshine.webp', name: 'Shining Mickey' },
+];
 
 // TEMP: hide hero media for speed testing
 const HIDE_HOME_IMAGES_FOR_TEST = false;
@@ -139,6 +144,24 @@ function Hero() {
             </a>
             .
           </p>
+          <div className={`mt-5 w-full max-w-md rounded-xl border border-white/20 bg-black/35 px-3 py-3 backdrop-blur-sm transition-opacity duration-700 ease-out ${buttonVisible ? 'opacity-100' : 'opacity-0'}`}>
+            <p className="text-center text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-white font-inter" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
+              Christmas charms coming soon
+            </p>
+            <div className="mt-3 flex items-end justify-center gap-3">
+              {CHRISTMAS_CHARMS.map((charm) => (
+                <div key={charm.name} className="flex flex-col items-center gap-1.5">
+                  <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-white/95 p-1 shadow-md">
+                    <img
+                      src={normalizeImagePath(charm.src)}
+                      alt={charm.name}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     

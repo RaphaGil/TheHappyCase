@@ -82,8 +82,8 @@
           "image": "/images/BusinessClassCase/businessclasscaselightpink.webp"
         },
         {
-          "color": "#daaf49",
-          "image": "/images/BusinessClassCase/businessclasscaseyellow.webp"
+          "color": "#1e3a5f",
+          "image": "/images/BusinessClassCase/businessclasscasenavy.jpg"
         },
         {
           "color": "#d33d72",
@@ -1043,6 +1043,30 @@
         "price": 2,
         "size": 0.7,
         "subCategory": "travel"
+      },
+      {
+        "id": 74,
+        "name": "Christmas Tree",
+        "src": "/images/ColorfulPins/christmas.webp",
+        "price": 2,
+        "size": 0.65,
+        "subCategory": "seasonal"
+      },
+      {
+        "id": 75,
+        "name": "Merry Christmas",
+        "src": "/images/ColorfulPins/merrychristmas.webp",
+        "price": 2,
+        "size": 0.55,
+        "subCategory": "seasonal"
+      },
+      {
+        "id": 76,
+        "name": "Shining Mickey",
+        "src": "/images/ColorfulPins/mickeyshine.webp",
+        "price": 2,
+        "size": 0.5,
+        "subCategory": "seasonal"
       }
     ],
     "bronze": [
