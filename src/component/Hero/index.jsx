@@ -160,7 +160,11 @@ function Hero() {
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <button type="button" onClick={handleStartDesigning} className="btn-happy btn-sunny font-inter">
-              Design yours ✨
+              Design yours
+              <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="currentColor" aria-hidden="true">
+                <path d="M11 2.5l1.9 4.9 4.9 1.9-4.9 1.9L11 16.1l-1.9-4.9L4.2 9.3l4.9-1.9z" />
+                <path d="M18.5 14l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z" />
+              </svg>
             </button>
             <Link
               href="/passport-cases"
