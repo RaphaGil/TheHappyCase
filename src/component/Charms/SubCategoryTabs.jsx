@@ -5,18 +5,19 @@ const SubCategoryTabs = ({ categories, selectedCategory, onCategoryChange }) => 
 
   return (
     <div className="flex justify-center mb-6">
-      <div className="flex gap-1 border-b border-gray-200 flex-wrap justify-center">
+      <div className="flex gap-2 flex-wrap justify-center">
         {categories.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => onCategoryChange(key)}
-            className={`px-4 py-2 text-[10px] uppercase tracking-wider transition-all duration-200 font-inter ${
+            aria-pressed={selectedCategory === key}
+            className={`rounded-full px-4 py-1.5 text-sm transition-all duration-200 font-inter ${
               selectedCategory === key
-                ? 'border-b-2 border-blue-700 text-gray-900 font-medium'
-                : 'border-b-2 border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
+                ? 'bg-[#ffd93d] text-[#30279f] font-semibold'
+                : 'bg-white text-gray-600 ring-1 ring-inset ring-[#30279f]/15 hover:text-[#30279f] hover:ring-[#30279f]/40'
             }`}
           >
-            {label}
+            {label === label.toUpperCase() ? label.charAt(0) + label.slice(1).toLowerCase() : label}
           </button>
         ))}
       </div>

@@ -44,14 +44,14 @@ const OrderSummary = ({
       </div>
       
       {/* Fixed totals section */}
-      <div className="flex-shrink-0 pt-6  mt-4 ">
+      <div className="flex-shrink-0 pt-6 mt-4 ">
         <div className="space-y-3">
-          <div className="flex justify-between text-sm font-light text-gray-700 font-inter">
+          <div className="flex justify-between text-sm font-normal text-gray-700 font-inter">
             <span>Subtotal</span>
             <span className="font-medium text-gray-900 font-inter">{formatPrice(subtotal)}</span>
           </div>
           
-          <div className="flex justify-between text-sm font-light text-gray-700 font-inter">
+          <div className="flex justify-between text-sm font-normal text-gray-700 font-inter">
             <span className="flex items-center gap-1.5">
               Shipping ({shippingLabel})
               <button
@@ -70,12 +70,12 @@ const OrderSummary = ({
         </div>
         
         <div className="flex justify-between py-4 border-t border-gray-200 mt-4 pt-4">
-          <span className="text-base font-medium text-gray-900 font-inter uppercase tracking-wider">Total</span>
+          <span className="text-base font-medium text-gray-900 font-inter ">Total</span>
           <span className="text-xl font-semibold text-gray-900 font-inter">{formatPrice(totalWithShipping)}</span>
         </div>
        
         <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-500 font-light font-inter leading-relaxed">
+          <p className="text-xs text-gray-500 font-normal font-inter leading-relaxed">
             Shipping and taxes are calculated at checkout if applicable.{' '}
             <Link
               href="/shipping"

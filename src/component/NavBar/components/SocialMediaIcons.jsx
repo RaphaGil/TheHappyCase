@@ -4,7 +4,9 @@ import { faInstagram, faTiktok, faFacebook, faEtsy } from '@fortawesome/free-bra
 
 const ETSY_SHOP_URL = 'https://www.etsy.com/shop/TheHappyCaseShop';
 
-const SocialMediaIcons = ({ isMobile = false }) => {
+const SocialMediaIcons = ({ isMobile = false, inverse = false }) => {
+  // inverse: plain white icons for dark backgrounds
+  const tint = (brand) => (inverse ? { color: '#ffffff' } : { color: brand });
   const iconSize = isMobile ? 'text-xl' : 'text-md';
   const containerClass = isMobile 
     ? 'flex gap-4' 
@@ -19,7 +21,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Visit our Etsy shop"
       >
-        <FontAwesomeIcon icon={faEtsy} className={iconSize} style={{ color: '#F16521' }} />
+        <FontAwesomeIcon icon={faEtsy} className={iconSize} style={tint('#F16521')} />
       </a>
       <a
         href="https://instagram.com/thehappycase.store"
@@ -28,7 +30,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Follow us on Instagram"
       >
-        <FontAwesomeIcon icon={faInstagram} className={iconSize} style={{color: '#E4405F'}} />
+        <FontAwesomeIcon icon={faInstagram} className={iconSize} style={tint('#E4405F')} />
       </a>
       <a
         href="https://tiktok.com/@thehappycase.store"
@@ -37,7 +39,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Follow us on TikTok"
       >
-        <FontAwesomeIcon icon={faTiktok} className={iconSize} style={{color: '#000000'}} />
+        <FontAwesomeIcon icon={faTiktok} className={iconSize} style={tint('#000000')} />
       </a>
       <a
         href="https://facebook.com/thehappycase"
@@ -46,7 +48,7 @@ const SocialMediaIcons = ({ isMobile = false }) => {
         className={`${isMobile ? 'w-10 h-10 flex items-center justify-center' : ''} transition-opacity hover:opacity-80`}
         aria-label="Follow us on Facebook"
       >
-        <FontAwesomeIcon icon={faFacebook} className={iconSize} style={{color: '#1877F2'}} />
+        <FontAwesomeIcon icon={faFacebook} className={iconSize} style={tint('#1877F2')} />
       </a>
     </div>
   );

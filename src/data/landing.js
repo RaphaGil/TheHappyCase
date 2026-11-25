@@ -28,6 +28,7 @@ export const Wedo = {
       images: [
         '/images/SmartCase/economycaseblack.webp',
         '/images/SmartCase/economycasebrown.webp',
+        '/images/SmartCase/economycasejeansblue.webp',
         '/images/SmartCase/economycaselightblue.webp',
         '/images/SmartCase/economycasepink.webp',
         '/images/SmartCase/economycasered.webp',

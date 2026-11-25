@@ -102,7 +102,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
               <div className="mt-3">
                 <button
                   onClick={() => onRemove(index)}
-                  className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
+                  className="text-xs text-red-600 hover:text-red-700 font-normal font-inter transition-colors"
                 >
                   Remove
                 </button>
@@ -199,7 +199,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
             <div className="mt-3">
               <button
                 onClick={() => onRemove(index)}
-                className="text-xs text-red-600 hover:text-red-700 font-light font-inter uppercase tracking-wider transition-colors"
+                className="text-xs text-red-600 hover:text-red-700 font-normal font-inter transition-colors"
               >
                 Remove
               </button>
@@ -229,7 +229,7 @@ const OrderSummaryItem = ({ item, index, formatPrice, onIncrement, onDecrement, 
                             loading="lazy" 
                           />
                         </div>
-                        <span className="text-xs font-light text-gray-700 font-inter">
+                        <span className="text-xs font-normal text-gray-700 font-inter">
                           {groupedPin.name}
                           {totalPinQty > 1 && (
                             <span className="text-gray-500"> (×{totalPinQty} total)</span>

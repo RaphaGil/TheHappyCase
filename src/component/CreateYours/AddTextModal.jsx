@@ -93,12 +93,12 @@ const AddTextModal = ({
       onClick={onClose}
     >
       <div 
-        className="bg-white  max-w-md w-full border border-gray-200 shadow-lg"
+        className="bg-white max-w-md w-full border border-gray-200 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between p-3 xs:p-4 border-b border-gray-200">
-          <h3 className="text-xs xs:text-sm font-medium text-gray-900 uppercase tracking-wider" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className="text-xs xs:text-sm font-medium text-gray-900 " style={{fontFamily: "'Poppins', sans-serif"}}>
              Add Text
           </h3>
           <button
@@ -146,7 +146,7 @@ const AddTextModal = ({
             </div>
           )}
           {customTextAdded && (
-            <div className="text-sm text-gray-600  px-3 py-2 font-inter">
+            <div className="text-sm text-gray-600 px-3 py-2 font-inter">
               Text added to your design! You can drag it to reposition it.
             </div>
           )}
@@ -155,14 +155,14 @@ const AddTextModal = ({
             <button
               onClick={handleAddText}
               disabled={!customText.trim()}
-              className="flex-1 px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-blue-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed  active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-1 font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+              className="btn-happy flex-1 px-3 py-1.5 text-xs disabled:cursor-not-allowed active:scale-95 disabled:scale-100 font-inter"
             >
               Add Text
             </button>
             <button
               onClick={handleClear}
               disabled={!customText.trim()}
-              className="px-3 py-1.5 text-xs font-medium uppercase tracking-wider active:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed active:scale-95 disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1 font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200"
+              className="btn-happy btn-soft px-3 py-1.5 text-xs disabled:cursor-not-allowed active:scale-95 disabled:scale-100 font-inter"
             >
               Clear
             </button>

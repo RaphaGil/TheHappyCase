@@ -16,7 +16,7 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 flex-shrink-0">
-          <h3 className="text-xs sm:text-sm uppercase tracking-wider text-gray-900 font-medium font-inter">
+          <h3 className="text-xs sm:text-sm text-gray-900 font-medium font-inter">
             {selectedCase.name}
           </h3>
           <button
@@ -58,10 +58,10 @@ const ImageModal = ({ show, selectedCase, selectedColorData, caseImages, selecte
                     key={index}
                     onClick={() => setSelectedModalImage(index)}
                     className={`aspect-square overflow-hidden border transition-all duration-200 ${
-                      selectedModalImage === index
-                        ? 'border-gray-900 ring-2 ring-gray-300'
-                        : 'border-gray-200 hover:border-gray-400'
-                    }`}
+ selectedModalImage === index
+ ? 'border-gray-900 ring-2 ring-gray-300'
+ : 'border-gray-200 hover:border-gray-400'
+ }`}
                   >
                     <Image
                       src={normalizeImagePath(image)}

@@ -356,7 +356,7 @@ const ExpressCheckout = ({ amount, currency, paymentElementReady }) => {
     >
       <div className="mb-6 express-checkout-container">
         {error && (
-          <div className="text-red-600 text-xs sm:text-sm bg-red-50 p-2 sm:p-3 rounded-sm font-light font-inter mb-2">
+          <div className="text-red-600 text-xs sm:text-sm bg-red-50 p-2 sm:p-3 rounded-sm font-normal font-inter mb-2">
             {error}
           </div>
         )}

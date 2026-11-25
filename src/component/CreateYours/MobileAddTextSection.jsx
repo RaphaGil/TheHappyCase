@@ -16,7 +16,7 @@ const MobileAddTextSection = ({
     <div id={sectionId} className="space-y-2">
       {showHeading && (
         <h3
-          className="text-sm uppercase tracking-wider text-gray-900 font-medium flex items-center gap-2"
+          className="text-sm text-gray-900 font-medium flex items-center gap-2"
           style={{ fontFamily: "'Poppins', sans-serif" }}
         >
           Add Your Name
@@ -51,7 +51,7 @@ const MobileAddTextSection = ({
         <button
           onClick={onAddText}
           disabled={!customText.trim()}
-          className="min-h-[44px] px-4 py-2 text-xs font-medium uppercase tracking-wider disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed disabled:border-gray-100 rounded-sm active:scale-95 disabled:scale-100 focus:outline-none font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 flex-shrink-0"
+          className="btn-happy min-h-[44px] px-4 py-2 text-xs disabled:cursor-not-allowed active:scale-95 disabled:scale-100 font-inter flex-shrink-0"
         >
           Add
         </button>

@@ -113,7 +113,7 @@ const MyOrders = () => {
           <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 text-center">
             <h2 className="text-xl font-semibold text-gray-900 mb-2 font-inter">Error Loading Orders</h2>
             <p className="text-gray-600 mb-6 font-inter">{error}</p>
-            <button onClick={fetchUserOrders} className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-md transition-colors font-inter">Try Again</button>
+            <button onClick={fetchUserOrders} className="btn-happy px-6 py-3 font-inter">Try Again</button>
           </div>
         </div>
       </div>
@@ -128,7 +128,7 @@ const MyOrders = () => {
             <h1 className="text-2xl font-semibold text-gray-900 font-inter">My Orders</h1>
             <div className="flex gap-3">
               {isAuthorized && (
-                <button onClick={() => router.push('/dashboard')} className="px-4 py-2 text-sm text-white bg-gray-900 hover:bg-gray-800 rounded-md font-inter flex items-center gap-2">
+                <button onClick={() => router.push('/dashboard')} className="btn-happy px-4 py-2 text-sm font-inter flex items-center gap-2">
                   <FontAwesomeIcon icon={faChartLine} className="w-4 h-4" /> Dashboard
                 </button>
               )}
@@ -140,7 +140,7 @@ const MyOrders = () => {
             <div className="text-center py-12">
               <h2 className="text-xl font-semibold text-gray-900 mb-2 font-inter">No Orders Yet</h2>
               <p className="text-gray-600 mb-6 font-inter">You haven&apos;t placed any orders yet.</p>
-              <button onClick={() => router.push('/')} className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-md font-inter">Start Shopping</button>
+              <button onClick={() => router.push('/')} className="btn-happy px-6 py-3 font-inter">Start Shopping</button>
             </div>
           ) : (
             <div className="space-y-6">
@@ -158,12 +158,12 @@ const MyOrders = () => {
                       <div className="flex flex-col sm:items-end gap-2">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-semibold font-inter ${
-                            isOrderRefunded(order)
-                              ? 'bg-red-100 text-red-800'
-                              : order.status === 'succeeded' || order.status === 'complete'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
+ isOrderRefunded(order)
+ ? 'bg-red-100 text-red-800'
+ : order.status === 'succeeded' || order.status === 'complete'
+ ? 'bg-green-100 text-green-800'
+ : 'bg-gray-100 text-gray-800'
+ }`}
                         >
                           {order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}
                         </span>
@@ -183,7 +183,7 @@ const MyOrders = () => {
                           href={getOrderTrackingHref(order)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-md transition-colors font-inter"
+                          className="btn-happy inline-flex items-center gap-2 px-4 py-2 text-sm font-inter"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

@@ -7,6 +7,7 @@
       "images": [
         "/images/SmartCase/economycaselightpink.webp",
         "/images/SmartCase/economycasered.webp",
+        "/images/SmartCase/economycasejeansblue.webp",
         "/images/SmartCase/economycasebrown.webp",
         "/images/SmartCase/economycaselightblue.webp",
         "/images/SmartCase/economycaseblack.webp"
@@ -23,6 +24,10 @@
         {
           "color": "#9cb4b8",
           "image": "/images/SmartCase/economycaselightblue.webp"
+        },
+        {
+          "color": "#627386",
+          "image": "/images/SmartCase/economycasejeansblue.webp"
         },
         {
           "color": "#b0582c",
@@ -44,6 +49,7 @@
       "specifications": {
         "dimensions": "14.9cm (W) x 10.7cm (H) x 1cm (D)",
         "rfid": "Yes",
+        "passportCapacity": "Holds 2 passports",
         "material": "PU Leather",
         "closure": "Magnetic Snap Closure",
         "cardSlots": "3",
@@ -161,6 +167,7 @@
       "specifications": {
         "dimensions": "14cm (W) x 10.5cm (H) x 1.5cm (D)",
         "rfid": "Yes",
+        "passportCapacity": "Holds 2 passports",
         "material": "Genuine Leather",
         "closure": "Button Snap Closure",
         "cardSlots": "3",

@@ -15,7 +15,7 @@ const DesignTipsModal = ({ show, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-gray-200 p-4">
-          <h3 className="text-sm font-medium uppercase tracking-wider text-gray-900 font-inter">
+          <h3 className="text-sm font-medium text-gray-900 font-inter">
             Quick Tip
           </h3>
           <button
@@ -41,7 +41,7 @@ const DesignTipsModal = ({ show, onClose }) => {
         <div className="border-t border-gray-200 p-4">
           <button
             onClick={onClose}
-            className="w-full border border-btn-primary-blue-border bg-btn-primary-blue py-2 text-xs font-light uppercase tracking-wider text-btn-primary-blue-text transition-all duration-200 hover:border-btn-primary-blue-hover hover:bg-btn-primary-blue-hover font-inter"
+            className="btn-happy w-full py-2 text-xs font-inter"
           >
             Got It
           </button>

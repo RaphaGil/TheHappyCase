@@ -27,7 +27,7 @@ const DesignOptionsSteps = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 sm:gap-3 pb-3">
+    <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-4 pb-3">
       {DESIGN_STEPS.map((step, index) => {
         const isActive = activeStep === step.id;
         const isDone = stepStatus[step.id];
@@ -41,15 +41,15 @@ const DesignOptionsSteps = ({
             disabled={isLocked}
             title={isLocked ? 'Select a case and color first' : undefined}
             className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-colors duration-200 ${
-              isLocked
-                ? 'bg-gray-50 text-gray-400 border border-gray-100 cursor-not-allowed opacity-60'
-                :
-              isActive
-                ? 'bg-btn-primary-blue text-btn-primary-blue-text border-2 border-btn-primary-blue shadow-sm'
-                : isDone
-                  ? 'bg-green-50 text-green-800 border border-green-200 hover:bg-green-100'
-                  : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
-            }`}
+ isLocked
+ ? 'bg-gray-50 text-gray-400 border border-gray-100 cursor-not-allowed opacity-60'
+ :
+ isActive
+ ? 'bg-btn-primary-blue text-btn-primary-blue-text border-2 border-btn-primary-blue shadow-sm'
+ : isDone
+ ? 'bg-green-50 text-green-800 border border-green-200 hover:bg-green-100'
+ : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
+ }`}
             style={{ fontFamily: "'Poppins', sans-serif" }}
             aria-pressed={isActive}
             aria-disabled={isLocked}

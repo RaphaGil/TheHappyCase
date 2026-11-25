@@ -48,7 +48,7 @@ const CurrencySelector = ({ variant = 'desktop', onSelect, inverse = false }) =>
     return (
       <div className="relative" ref={currencyDropdownRef}>
         {isUKOnly ? (
-          <div className="w-full text-left text-sm uppercase tracking-wider font-inter" style={{color: '#6b7280'}}>
+          <div className="w-full text-left text-sm font-inter" style={{color: '#6b7280'}}>
             {getCurrencyDisplayWithFlag()}
           </div>
         ) : (
@@ -57,7 +57,7 @@ const CurrencySelector = ({ variant = 'desktop', onSelect, inverse = false }) =>
             e.stopPropagation();
             toggleCurrencyDropdown();
           }}
-          className={`w-full text-left hover:text-gray-900 font-light transition-all duration-200 flex items-center justify-between text-sm uppercase tracking-wider font-inter ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
+          className={`w-full text-left hover:text-gray-900 font-normal transition-all duration-200 flex items-center justify-between text-sm font-inter ${isCurrencyDropdownOpen ? 'bg-gray-50' : ''}`}
           style={{color: '#6b7280'}}
         >
           <span>{getCurrencyDisplayWithFlag()}</span>
@@ -73,7 +73,7 @@ const CurrencySelector = ({ variant = 'desktop', onSelect, inverse = false }) =>
                   e.stopPropagation();
                   handleCurrencySelect(curr.code);
                 }}
-                className={`w-full text-left px-8 py-2.5 text-sm transition-colors font-light font-inter ${currency === curr.code ? 'bg-gray-100' : 'hover:bg-gray-100'}`}
+                className={`w-full text-left px-8 py-2.5 text-sm transition-colors font-normal font-inter ${currency === curr.code ? 'bg-gray-100' : 'hover:bg-gray-100'}`}
                 style={{color: currency === curr.code ? '#111827' : '#374151'}}
               >
                 <div className="flex items-center justify-between">
@@ -81,7 +81,7 @@ const CurrencySelector = ({ variant = 'desktop', onSelect, inverse = false }) =>
                     <span className="text-lg">{curr.flag}</span>
                     <span>{curr.symbol} {curr.code}</span>
                   </div>
-                  {curr.name !== 'Euro' && <span className="text-sm text-gray-500 font-light">{curr.name}</span>}
+                  {curr.name !== 'Euro' && <span className="text-sm text-gray-500 font-normal">{curr.name}</span>}
                 </div>
               </button>
             ))}

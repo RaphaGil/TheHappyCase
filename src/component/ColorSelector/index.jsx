@@ -84,8 +84,8 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
               }
               disabled={isLoading || isSoldOut}
               className={`flex w-full max-w-[5rem] flex-col items-center justify-start text-center px-0.5 py-1 transition-colors touch-manipulation ${
-                isLoading ? 'cursor-wait' : isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-              }`}
+ isLoading ? 'cursor-wait' : isSoldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+ }`}
               onClick={() => !isLoading && !isSoldOut && onSelect(color, image)}
               onMouseEnter={() => preloadImage(image)}
               onTouchStart={() => preloadImage(image)}
@@ -93,10 +93,10 @@ const ColorSelector = ({ colors, selectedColor, onSelect, caseType, cart = [], i
               <div className="relative">
                 <div
                   className={`h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full border-2 box-border transition-colors duration-200 ${
-                    isSelected
-                      ? 'border-gray-900 ring-2 ring-inset ring-gray-300'
-                      : 'border-gray-200 hover:border-gray-400'
-                  } ${isSoldOut ? 'opacity-50' : ''}`}
+ isSelected
+ ? 'border-gray-900 ring-2 ring-inset ring-gray-300'
+ : 'border-gray-200 hover:border-gray-400'
+ } ${isSoldOut ? 'opacity-50' : ''}`}
                   style={{ backgroundColor: color }}
                 />
                 {isLowStock && !isSoldOut && remainingAvailable != null && (

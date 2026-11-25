@@ -124,8 +124,8 @@ const FAQ = () => {
                     </h2>
                     <svg
                       className={`w-5 h-5 text-gray-600 flex-shrink-0 transform transition-transform ${
-                        openId === item.id ? 'rotate-180' : ''
-                      }`}
+ openId === item.id ? 'rotate-180' : ''
+ }`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

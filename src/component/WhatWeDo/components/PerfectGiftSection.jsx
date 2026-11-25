@@ -90,7 +90,7 @@ const PerfectGiftSection = ({ image }) => {
               {title}
             </h2>
             <div className="w-16 sm:w-20 md:w-24 h-px bg-white/30 mx-auto mb-3 sm:mb-4"></div>
-            <p className="text-sm text-white/90 max-w-2xl mx-auto font-light px-4 font-inter" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'}}>
+            <p className="text-sm text-white/90 max-w-2xl mx-auto font-normal px-4 font-inter" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.5)'}}>
               {description}
             </p>
             
@@ -101,11 +101,11 @@ const PerfectGiftSection = ({ image }) => {
                   <span className="text-2xl font-light font-inter">
                     {customerCount}+
                   </span>
-                  <span className="text-sm font-light font-inter">
+                  <span className="text-sm font-normal font-inter">
                     Happy Customers
                   </span>
                 </div>
-                <span className="flex items-center gap-2 text-sm font-light font-inter">
+                <span className="flex items-center gap-2 text-sm font-normal font-inter">
                
                   Reviews on Etsy    <a
                     href={ETSY_SHOP_URL}
@@ -130,7 +130,7 @@ const PerfectGiftSection = ({ image }) => {
             {title}
           </h2>
           <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mb-3 sm:mb-4"></div>
-          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light px-4 font-inter">
+          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-normal px-4 font-inter">
             {description}
           </p>
           
@@ -141,12 +141,12 @@ const PerfectGiftSection = ({ image }) => {
                 <span className="text-3xl font-light font-inter text-gray-900">
                   {customerCount}+
                 </span>
-                <span className="text-base font-light font-inter text-gray-700">
+                <span className="text-base font-normal font-inter text-gray-700">
                   Happy Customers
                 </span>
               </div>
               <div className="w-px h-6 bg-gray-300"></div>
-              <span className="flex items-center gap-2 text-base font-light font-inter text-gray-700">
+              <span className="flex items-center gap-2 text-base font-normal font-inter text-gray-700">
               
                 Reviews on   <a
                   href={ETSY_SHOP_URL}

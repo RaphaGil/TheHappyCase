@@ -6,9 +6,10 @@ import { HelmetProvider } from 'react-helmet-async';
 import { CartProvider } from '@/context/CartContext';
 import { CurrencyProvider } from '@/context/CurrencyContext';
 import NavBar from '@/component/NavBar';
+import PromotionalBanner from '@/component/NavBar/components/PromotionalBanner';
 import Footer from '@/component/Footer';
 import CartDrawer from '@/component/CartDrawer';
-import ScrollToTopButton from '@/component/ScrollToTopButton';
+import WhatsAppButton from '@/component/WhatsAppButton';
 import EnvDebug from '@/component/EnvDebug';
 import SEO from '@/component/SEO';
 
@@ -38,12 +39,20 @@ export default function LayoutClient({ children }) {
         <CartProvider>
           <div
             className={`App bg-white min-h-screen ${
-              isCreateYoursPage ? 'md:h-dvh md:flex md:flex-col md:overflow-hidden' : ''
-            }`}
+ isCreateYoursPage ? 'md:h-dvh md:flex md:flex-col md:overflow-hidden' : ''
+ }`}
           >
             {process.env.NODE_ENV !== 'production' && <EnvDebug />}
           {!hideNavBar && (
-            <header className={`App-header flex-shrink-0 ${hideNavBarOnMobile ? 'hidden md:block' : ''}`} style={{ background: 'white' }}>
+            <div className={`flex-shrink-0 ${hideNavBarOnMobile ? 'hidden md:block' : ''}`}>
+              <PromotionalBanner />
+            </div>
+          )}
+          {!hideNavBar && (
+            <header
+              className={`App-header flex-shrink-0 z-40 border-b border-[#30279f]/10 shadow-[0_1px_12px_rgba(48,39,159,0.06)] ${isCreateYoursPage ? '' : 'sticky top-0'} ${hideNavBarOnMobile ? 'hidden md:block' : ''}`}
+              style={{ background: 'white' }}
+            >
               <NavBar isHomePage={isHomePage} />
             </header>
           )}
@@ -55,7 +64,8 @@ export default function LayoutClient({ children }) {
               <Footer />
             </div>
           )}
-          {!isCreateYoursPage && <ScrollToTopButton />}
+          {/* Floating WhatsApp chat (hidden where it would cover checkout/designer controls) */}
+          {!isCreateYoursPage && !hideNavBar && <WhatsAppButton />}
           <CartDrawer />
         </div>
       </CartProvider>

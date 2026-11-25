@@ -15,7 +15,7 @@ const QuantityControls = ({ quantity, onDecrement, onIncrement }) => {
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-btn-primary-blue/40"
         aria-label="Decrease quantity"
       >
-        <span className="text-lg font-light leading-none" aria-hidden>
+        <span className="text-lg font-normal leading-none" aria-hidden>
           −
         </span>
       </button>
@@ -28,7 +28,7 @@ const QuantityControls = ({ quantity, onDecrement, onIncrement }) => {
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-btn-primary-blue/40"
         aria-label="Increase quantity"
       >
-        <span className="text-lg font-light leading-none" aria-hidden>
+        <span className="text-lg font-normal leading-none" aria-hidden>
           +
         </span>
       </button>

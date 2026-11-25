@@ -6,6 +6,7 @@ import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 import { getCaseDisplayName, getColorName } from '../../../utils/passportcases/helpers';
 import Products from '../../../data/products.json';
+import SectionHeader from './SectionHeader';
 
 // Map internal case type to URL path (kebab-case)
 const CASE_TYPE_TO_PATH = {
@@ -34,16 +35,16 @@ const CaseOptionsSection = () => {
   }, []);
 
   return (
-    <div ref={sectionRef} className="w-full mt-12 md:mt-16 mb-12 md:mb-16">
-      <div className="text-center mb-6 md:mb-8">
-        <h2 className="text-xl md:text-2xl font-light text-gray-900 font-inter tracking-title">
-          DISCOVER OUR CASES
-        </h2>
-        <p className="text-gray-600 text-sm md:text-base font-light font-inter mt-2 max-w-xl mx-auto">
-         Choose the style that fits your journey.
-        </p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 w-full max-w-6xl mx-auto px-2 sm:px-0">
+    <section ref={sectionRef} className="w-full section-lavender">
+      <div className="mx-auto max-w-7xl px-4 py-14 md:px-8 md:py-20">
+      <SectionHeader
+        eyebrow="Our cases"
+        title="Discover our cases"
+        subtitle="Choose the style that fits your journey."
+        linkHref="/passport-cases"
+        linkLabel="Shop all cases"
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 md:gap-8 w-full">
         {cases.map((caseItem) => {
           const casePath = `/passport-cases/${CASE_TYPE_TO_PATH[caseItem.type] || caseItem.type}`;
           const createPath = `/custom-passport?case=${caseItem.type}`;
@@ -54,18 +55,23 @@ const CaseOptionsSection = () => {
           return (
             <div
               key={caseItem.type}
-              className="group bg-white transition-all duration-700 ease-out overflow-hidden"
+              className="group card-happy p-3 md:p-4 overflow-hidden"
             >
               <Link
                 href={casePath}
-                className="relative flex w-full aspect-square overflow-hidden rounded-sm cursor-pointer border border-gray-100 bg-gray-50 items-center justify-center p-4 md:p-6 lg:p-8"
+                className="relative flex w-full aspect-[16/10] sm:aspect-square overflow-hidden rounded-2xl cursor-pointer bg-white items-center justify-center p-3 sm:p-4 md:p-6 lg:p-8"
                 aria-label={`Go to ${displayName} passport case page`}
               >
+                {caseItem.specifications?.passportCapacity && (
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-[#30279f] px-2.5 py-1 text-[11px] font-semibold text-[#ffd93d] font-inter">
+                    {caseItem.specifications.passportCapacity}
+                  </span>
+                )}
                 {!HIDE_HOME_IMAGES_FOR_TEST && mounted && displayImage && (
                   <img
                     key={displayImage}
                     src={normalizeImagePath(displayImage)}
-                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105"
                     alt={getColorName(displayImage) ? `${displayName} in ${getColorName(displayImage)}` : displayName}
                     loading="lazy"
                     decoding="async"
@@ -75,12 +81,16 @@ const CaseOptionsSection = () => {
                   />
                 )}
               </Link>
-              <div className="bg-white py-3 md:py-4">
-                <p className="text-gray-900 text-center text-md md:text-base font-light leading-tight font-inter">
+              <div className="pt-3 md:pt-4 pb-1">
+                <p className="text-gray-900 text-center text-md md:text-base font-normal leading-tight font-inter">
                   {displayName}
                 </p>
                 <p className="text-gray-500 text-center text-sm mt-0.5 font-inter">
-                  {colors.length > 0 ? `${colors.length} colours available` : ''}
+                  {caseItem.basePrice != null && (
+                    <span className="font-semibold text-[#30279f]">£{Number(caseItem.basePrice).toFixed(2)}</span>
+                  )}
+                  {caseItem.basePrice != null && colors.length > 0 && <span aria-hidden="true"> · </span>}
+                  {colors.length > 0 ? `${colors.length} colours` : ''}
                 </p>
                 {/* Circle dots - click to show case image in that colour */}
                 {colors.length > 0 && (
@@ -93,8 +103,8 @@ const CaseOptionsSection = () => {
                           type="button"
                           onClick={(e) => handleColorDotClick(caseItem.type, index, e)}
                           className={`w-4 h-4 rounded-full border-2 flex-shrink-0 shadow-sm transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400 ${
-                            isSelected ? 'border-gray-900 ring-2 ring-gray-300 scale-110' : 'border-gray-300'
-                          }`}
+ isSelected ? 'border-gray-900 ring-2 ring-gray-300 scale-110' : 'border-gray-300'
+ }`}
                           style={{ backgroundColor: colorOption.color }}
                           title={getColorName(colorOption.image) || `Colour ${index + 1}`}
                           aria-label={`Show ${getColorName(colorOption.image) || `colour ${index + 1}`}`}
@@ -107,9 +117,9 @@ const CaseOptionsSection = () => {
                 <div className="flex justify-center mt-4">
                   <Link
                     href={createPath}
-                    className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+                    className="btn-happy btn-happy-sm font-inter"
                   >
-                    Customize
+                    Customise
                   </Link>
                 </div>
               </div>
@@ -117,15 +127,8 @@ const CaseOptionsSection = () => {
           );
         })}
       </div>
-      <div className="flex justify-center mt-8">
-        <Link
-          href="/passport-cases"
-          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
-        >
-          Shop Passport Cases
-        </Link>
       </div>
-    </div>
+    </section>
   );
 };
 

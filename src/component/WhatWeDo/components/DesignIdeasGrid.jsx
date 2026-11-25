@@ -39,22 +39,22 @@ const DesignIdeasGrid = ({ images }) => {
   return (
     <div ref={sectionRef} className="w-full mb-12 md:mb-16">
       <div className="text-center mb-6 md:mb-8">
-        <h2 className="text-xl md:text-2xl font-light text-gray-900 font-inter tracking-title">
-          CHARMS AVAILABLE
+        <h2 className="text-xl md:text-2xl font-light title-brand font-inter tracking-title">
+          Charms available
         </h2>
-        <p className="text-gray-600 text-sm md:text-base font-light font-inter mt-2 max-w-xl mx-auto">
+        <p className="text-gray-600 text-sm md:text-base font-normal font-inter mt-2 max-w-xl mx-auto">
           Colorful, Bronze, Mixed &amp; Flags — explore design ideas and find your style.
         </p>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 w-full px-0">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 w-full max-w-7xl mx-auto px-3 md:px-6">
         {images.map((image, index) => {
           const isVisible = visibleImages.has(index);
           return (
             <div
               key={index}
-              className={`group bg-white transition-all duration-700 ease-out  overflow-hidden ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
+              className={`group card-happy transition-all duration-700 ease-out overflow-hidden ${
+ isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+ }`}
             >
               <Link
                 href={imageLinks[index] || '/charms/colorful'}
@@ -73,8 +73,8 @@ const DesignIdeasGrid = ({ images }) => {
                   />
                 )}
               </Link>
-              <div className="bg-white py-3 md:py-4">
-                <p className="text-gray-900 text-center text-md md:text-base font-light leading-tight font-inter">
+              <div className="py-3 md:py-4">
+                <p className="text-gray-900 text-center text-md md:text-base font-normal leading-tight font-inter">
                   {imageTexts[index] || ''}
                 </p>
               </div>
@@ -85,9 +85,9 @@ const DesignIdeasGrid = ({ images }) => {
       <div className="flex justify-center mt-8">
         <Link
           href="/custom-passport"
-          className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
+          className="btn-happy font-inter"
         >
-          Start Designing
+          Start designing
         </Link>
       </div>
     </div>

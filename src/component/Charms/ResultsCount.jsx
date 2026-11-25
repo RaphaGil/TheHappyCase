@@ -1,19 +1,10 @@
 import React from 'react';
 
-const ResultsCount = ({ count, currentPage, totalPages }) => {
-  return (
-    <div className="flex items-center text-sm text-gray-500 font-inter whitespace-nowrap">
-      <p>
-        {count} {count === 1 ? 'item' : 'items'}
-        {totalPages > 1 && (
-          <span className="ml-2">
-            (Page {currentPage} of {totalPages})
-          </span>
-        )}
-      </p>
-    </div>
-  );
-};
+const ResultsCount = ({ count, currentPage, totalPages }) => (
+  <p className="whitespace-nowrap text-sm text-gray-500 font-inter">
+    <span className="font-semibold text-gray-900">{count}</span> {count === 1 ? 'charm' : 'charms'}
+    {totalPages > 1 && <span className="ml-1.5">· page {currentPage} of {totalPages}</span>}
+  </p>
+);
 
 export default ResultsCount;
-

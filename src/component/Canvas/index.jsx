@@ -913,8 +913,8 @@ const Canvas = ({
   }, [handleAddText, ensureTextOnCanvas, handlePinSelection, handleRemovePinFromCanvas, onSaveImage, getDesignImageDataURL, getDesignCompositeOptions, getDesignPreviewDataURL, handleSaveImage, clearCanvas]);
 
   return (
-    <div className="w-full h-full flex flex-col  sm:items-center ">
-      <div className="w-full h-full relative flex item-top justify-center  ">
+    <div className="w-full h-full flex flex-col sm:items-center ">
+      <div className="w-full h-full relative flex item-top justify-center ">
         <canvas 
           ref={canvasRef} 
           className="w-full h-full"

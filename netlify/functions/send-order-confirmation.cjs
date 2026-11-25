@@ -9,12 +9,13 @@
  * - RESEND_API_KEY (optional but recommended)
  * - FROM_EMAIL (optional, defaults to orders@<your-domain>)
  * - RESEND_DOMAIN or CUSTOM_DOMAIN (optional, if site URL differs from verified Resend domain)
+ * - ORDER_NOTIFICATION_EMAIL (optional, where the shop's copy of each order goes; defaults to the reply-to address)
  */
 
 const { Resend } = require("resend");
 const { createClient } = require("@supabase/supabase-js");
 const { getResendFromEmail, getResendReplyToEmail } = require("./utils/getFromEmail.cjs");
-const { buildOrderItemsEmailHtml, formatGBP } = require("./utils/buildOrderItemsEmailHtml.cjs");
+const { buildOrderItemsEmailHtml, formatGBP, escapeHtml } = require("./utils/buildOrderItemsEmailHtml.cjs");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -303,8 +304,12 @@ exports.handler = async (event) => {
         : [];
       const uniquePins = [...new Set(pinList)];
       const customText = String(item.customText || item.custom_text || "").trim();
+      const caseType = item.caseType || item.case_type;
+      const color = item.color || item.caseColor || item.colour || item.case_colour;
       return [
         `- ${name} (x${qty})`,
+        caseType ? `  Case: ${caseType}` : null,
+        color ? `  Colour: ${color}` : null,
         customText ? `  Name on case: "${customText}"` : null,
         uniquePins.length ? `  Charms: ${uniquePins.join(", ")}` : null,
       ]
@@ -339,6 +344,36 @@ exports.handler = async (event) => {
         success: false,
         error: error.message || "Failed to send email via Resend",
       });
+    }
+
+    // Send a copy to the shop owner so every order's details land in the shop inbox
+    const ownerEmail = (process.env.ORDER_NOTIFICATION_EMAIL || replyToEmail || "").trim();
+    if (ownerEmail && ownerEmail.toLowerCase() !== email.toLowerCase()) {
+      const contactLines = [
+        `Customer: ${customerName}`,
+        `Email: ${email}`,
+        customerInfo.phone ? `Phone: ${customerInfo.phone}` : null,
+        paymentIntentId ? `Stripe payment: ${paymentIntentId}` : null,
+      ].filter(Boolean);
+      const ownerBanner = `<div style="max-width:640px;margin:0 auto;padding:16px 16px 0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;">
+        <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:12px;padding:14px 16px;color:#78350f;font-size:14px;line-height:1.6;">
+          <strong>New order received — copy of the customer's confirmation</strong><br/>
+          ${contactLines.map((l) => escapeHtml(l)).join("<br/>")}
+        </div>
+      </div>`;
+      try {
+        const { error: ownerError } = await resend.emails.send({
+          from: fromHeader,
+          reply_to: email,
+          to: ownerEmail,
+          subject: `New order ${displayOrderNumber} – ${customerName} – ${formatGBP(computedTotal)}`,
+          text: ["NEW ORDER (copy of customer confirmation)", ...contactLines, "", ...lines].join("\n"),
+          html: emailHtml.replace('<body style="margin:0;padding:0;background:#eff6ff;">', (m) => m + ownerBanner),
+        });
+        if (ownerError) console.error("Failed to send owner order copy:", ownerError);
+      } catch (ownerErr) {
+        console.error("Failed to send owner order copy:", ownerErr);
+      }
     }
 
     return jsonResponse(200, {

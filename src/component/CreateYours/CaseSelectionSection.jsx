@@ -26,7 +26,7 @@ const CaseSelectionSection = ({
           onClick={onToggle}
           className="w-full flex items-center justify-between mb-2 py-1 -my-1 rounded-md transition-colors duration-200"
         >
-          <h3 className="text-sm uppercase tracking-wider text-gray-900 font-medium flex items-center gap-2" style={{fontFamily: "'Poppins', sans-serif"}}>
+          <h3 className="text-sm text-gray-900 font-medium flex items-center gap-2" style={{fontFamily: "'Poppins', sans-serif"}}>
             1. Case & Color
             {selectedCaseType && selectedColor && (
               <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100 text-green-600" aria-hidden="true">

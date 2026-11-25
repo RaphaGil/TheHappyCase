@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import PassportCasesHeader from '../../component/PassportCases/components/PassportCasesHeader';
+import PageHeader from '../../component/Shared/PageHeader';
 import LoadingState from '../../component/PassportCases/components/LoadingState';
 import CaseTypeTabs from '../../component/PassportCases/components/CaseTypeTabs';
 import ImageGallery from '../../component/PassportCases/components/ImageGallery';
@@ -44,8 +44,12 @@ const PassportCases = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <PassportCasesHeader />
+      <PageHeader
+        title="Passport cases"
+        crumbs={[{ href: '/', label: 'Home' }, { href: '/passport-cases', label: 'Passport cases' }]}
+        subtitle="Three styles, lots of colours. Personalise yours with charms and your name."
+      />
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-10">
 
         <CaseTypeTabs
           cases={productsWithQuantities.cases}
@@ -56,7 +60,7 @@ const PassportCases = () => {
         />
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 mb-16 items-start">
           {/* Left Side - Image Gallery */}
           <ImageGallery
             currentImage={currentImage}
@@ -68,7 +72,16 @@ const PassportCases = () => {
           />
 
           {/* Right Side - Details and Selection (Color + Specs before price summary) */}
-          <div className="space-y-4 sm:space-y-6 md:space-y-8 flex flex-col justify-between">
+          <div className="flex flex-col gap-6">
+            <div>
+              <h2 className="text-h2 text-[#30279f]">
+                {getCaseDisplayName(selectedCaseType)}
+              </h2>
+              <p className="mt-2 text-2xl font-semibold text-gray-900 font-inter">
+                £{Number(selectedCase.basePrice).toFixed(2)}
+              </p>
+            </div>
+
             <ColorSelection
               colors={selectedCase.colors}
               selectedColor={selectedColor}
@@ -77,15 +90,8 @@ const PassportCases = () => {
               getColorName={getColorName}
             />
 
-            <SpecificationsDropdown
-              specifications={selectedCase.specifications}
-              isOpen={isSpecificationsOpen}
-              onToggle={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
-            />
-
-            <ProductInfo specifications={selectedCase.specifications} />
-
             <PriceAndCTA
+              showPrice={false}
               selectedCase={selectedCase}
               selectedCaseType={selectedCaseType}
               selectedColor={selectedColor}
@@ -97,6 +103,14 @@ const PassportCases = () => {
               onDecrementQuantity={handleDecrementQuantity}
               onAddToCart={handleAddToCart}
             />
+
+            <ProductInfo specifications={selectedCase.specifications} />
+            <SpecificationsDropdown
+              specifications={selectedCase.specifications}
+              isOpen={isSpecificationsOpen}
+              onToggle={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
+            />
+
           </div>
         </div>
       </div>

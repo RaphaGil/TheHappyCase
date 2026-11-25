@@ -14,41 +14,44 @@ const PriceAndCTA = ({
   isSelectedColorSoldOut,
   onIncrementQuantity,
   onDecrementQuantity,
-  onAddToCart
+  onAddToCart,
+  showPrice = true,
 }) => {
   const router = useRouter();
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-light text-gray-900 font-inter">£{selectedCase.basePrice.toFixed(2)}</span>
-      </div>
+      {showPrice && (
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-semibold text-gray-900 font-inter">£{selectedCase.basePrice.toFixed(2)}</span>
+        </div>
+      )}
       
       {/* Quantity Controls and Add to Cart */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
           {/* Quantity Controls */}
-          <div className="flex items-center border border-gray-200 rounded-sm h-[42px]">
+          <div className="flex items-center rounded-full border border-[#30279f]/20 h-[46px] px-1">
             <button
               onClick={onDecrementQuantity}
               disabled={quantity <= 1}
-              className="h-full px-3 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-9 w-9 rounded-full flex items-center justify-center text-[#30279f] hover:bg-[#eef0ff] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               aria-label="Decrease quantity"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 12H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
               </svg>
             </button>
-            <span className="text-sm font-medium text-gray-900 text-center font-inter min-w-[2.5rem] px-3 b flex items-center justify-center h-full">
+            <span className="text-sm font-semibold text-gray-900 text-center font-inter min-w-[2rem] flex items-center justify-center h-full">
               {quantity}
             </span>
             <button
               onClick={onIncrementQuantity}
-              className="h-full px-3 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
+              className="h-9 w-9 rounded-full flex items-center justify-center text-[#30279f] hover:bg-[#eef0ff] transition-colors"
               aria-label="Increase quantity"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v16m8-8H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
             </button>
           </div>
@@ -71,7 +74,7 @@ const PriceAndCTA = ({
               }}
               disabled={isSelectedColorSoldOut()}
               onAdd={onAddToCart}
-              className="bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200"
+              className=""
             />
           </div>
         </div>
@@ -89,9 +92,9 @@ const PriceAndCTA = ({
           window.scrollTo({ top: 0, behavior: 'instant' });
           router.push(`/custom-passport?case=${selectedCaseType}&color=${selectedColor}`);
         }}
-        className="w-full py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+        className="btn-happy w-full py-3 text-sm font-inter"
       >
-        PERSONALIZE
+        Personalise
       </button>
     </div>
   );

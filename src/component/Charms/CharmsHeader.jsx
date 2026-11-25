@@ -7,7 +7,7 @@ const CharmsHeader = ({ title, description }) => {
         {title}
       </h1>
       <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
-      <p className="text-body-sm text-gray-500 max-w-2xl mx-auto font-light font-inter">
+      <p className="text-body-sm text-gray-500 max-w-2xl mx-auto font-normal font-inter">
         {description}
       </p>
     </div>

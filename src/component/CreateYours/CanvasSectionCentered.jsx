@@ -72,8 +72,8 @@ const CanvasSectionCentered = ({
   return (
     <div
       className={`flex flex-col w-full h-full md:items-center ${
-        isMobile ? 'flex-1 min-h-0 pt-2 pb-4 justify-start md:mt-0' : 'md:py-0 md:justify-center'
-      }`}
+ isMobile ? 'flex-1 min-h-0 pt-2 pb-4 justify-start md:mt-0' : 'md:py-0 md:justify-center'
+ }`}
     >
       {/* Canvas - aligned to top on mobile, centered on desktop */}
       <div className={`flex w-full flex-col items-center ${isMobile ? 'flex-1 justify-start min-h-0 p-6' : 'justify-center p-6'}`}>
@@ -144,7 +144,7 @@ const CanvasSectionCentered = ({
 
         {/* IMAGES + DETAILS buttons - hidden on mobile, below canvas on desktop */}
         {!isMobile && (
-          <div className="flex flex-row  gap-2 w-full flex-shrink-0 mt-4">
+          <div className="flex flex-row gap-2 w-full flex-shrink-0 mt-4">
             <ViewMoreImagesButton
               caseImages={caseImages}
               onOpenModal={onOpenImageModal}

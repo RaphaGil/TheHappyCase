@@ -11,7 +11,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase }) => {
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center  p-4"
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div 
@@ -43,7 +43,7 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase }) => {
             <div className="">
               <button
                 onClick={() => setIsSpecificationsOpen(!isSpecificationsOpen)}
-                className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-900 font-medium hover:text-gray-700 transition-colors font-inter"
+                className="w-full flex items-center justify-between py-2 text-sm text-gray-900 font-medium hover:text-gray-700 transition-colors font-inter"
               >
                 <span>Specifications</span>
               
@@ -72,6 +72,13 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase }) => {
                     </div>
                   )}
                   
+                  {specifications.passportCapacity && (
+                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
+                      <span className="text-sm text-gray-500 font-inter">Capacity</span>
+                      <span className="text-sm text-gray-900 font-inter">{specifications.passportCapacity}</span>
+                    </div>
+                  )}
+
                   {specifications.material && (
                     <div className="flex justify-between items-center py-2 border-b border-gray-50">
                       <span className="text-sm text-gray-500 font-inter">Material</span>

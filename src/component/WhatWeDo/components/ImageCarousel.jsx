@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
 import { normalizeImagePath } from '../../../utils/imagePath';
 import { carouselImages } from '../../../data/data';
+import SectionHeader from './SectionHeader';
 
 const SLIDE_WIDTH = 300;
 const DURATION = 50;
@@ -33,7 +34,15 @@ const ImageCarousel = () => {
   };
 
   return (
-    <div ref={sectionRef} className="w-full overflow-hidden">
+    <section ref={sectionRef} className="w-full overflow-hidden pt-14 md:pt-20">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <SectionHeader
+          eyebrow="#TheHappyCase"
+          title="Designed by you"
+          subtitle="Every case is one of a kind. Here are a few of our favourites."
+          align="center"
+        />
+      </div>
       <style>{`
         @keyframes whatwedo-carousel-scroll {
           0% { transform: translateX(0); }
@@ -81,14 +90,14 @@ const ImageCarousel = () => {
           <div className="pointer-events-auto">
             <button
               onClick={handlePersonalise}
-              className="px-8 py-3 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 shadow-lg"
+              className="btn-happy font-inter"
             >
               Personalise
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

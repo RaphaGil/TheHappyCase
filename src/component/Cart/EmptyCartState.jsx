@@ -6,13 +6,13 @@ const EmptyCartState = ({ onContinueShopping }) => (
       <h2 className="text-xl md:text-2xl font-light text-gray-900 mb-4 font-inter">
         Your cart is empty
       </h2>
-      <p className="text-gray-500 mb-8 text-sm font-light font-inter">
+      <p className="text-gray-500 mb-8 text-sm font-normal font-inter">
         Start creating your custom case to add items to your cart.
       </p>
 
       <button
         onClick={onContinueShopping}
-        className="px-6 py-2 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+        className="btn-happy px-6 py-3 text-sm font-inter"
       >
         Create Your Case
       </button>

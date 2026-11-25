@@ -5,32 +5,25 @@ import Link from 'next/link';
 
 const Logo = () => {
   return (
-    <Link href="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
-      {/* Mobile: Logo Image */}
-      <img 
-        src="/assets/logo.webp" 
-        alt="The Happy Case Logo" 
-        className="h-10 w-auto lg:hidden"
-        loading="lazy"
+    <Link
+      href="/"
+      className="flex items-center gap-2.5 hover:opacity-90 transition-opacity duration-300"
+      aria-label="The Happy Case home"
+    >
+      <img
+        src="/assets/logo.webp"
+        alt=""
+        className="h-10 w-10 lg:h-11 lg:w-11 object-contain"
+        width="44"
+        height="44"
       />
-      
-      {/* Desktop: Text Logo */}
-      <div
-        className="hidden lg:flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-inter"
+      <span
+        className="font-brand hidden lg:inline text-2xl leading-none text-[#30279f] whitespace-nowrap"
       >
-        <span className="text-[9px] font-light leading-tight text-gray-900 font-inter tracking-title uppercase">
-          THE
-        </span>
-        <span className="text-2xl md:text-3xl lg:text-4xl font-bold  text-blue-900">
-          HAPPY
-        </span>
-        <span className="text-end text-[10px] font-light leading-tight text-gray-900 font-inter tracking-title uppercase">
-          CASE
-        </span>
-      </div>
+        The Happy Case
+      </span>
     </Link>
   );
 };
 
 export default Logo;
-

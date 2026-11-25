@@ -1,5 +1,48 @@
 const Stripe = require("stripe");
 
+const toTitleCase = (value) =>
+  String(value || "")
+    .replace(/[-_]+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (m) => m.toUpperCase());
+
+// Human-readable summary of one cart item: case, style, colour, name on case, charms.
+const describeItem = (item) => {
+  if (!item || typeof item !== "object") return "Item";
+  const qty = item.quantity || 1;
+  const parts = [`${qty}x ${item.caseName || item.name || item.title || "Item"}`];
+
+  const caseType = item.caseType || item.case_type;
+  if (caseType) parts.push(`Case: ${toTitleCase(caseType)}`);
+
+  const color = item.color || item.caseColor || item.colour || item.case_colour;
+  if (color) parts.push(`Colour: ${toTitleCase(color)}`);
+
+  const customText = String(item.customText || item.custom_text || "").trim();
+  if (customText) parts.push(`Name: "${customText}"`);
+
+  const pins = Array.isArray(item.pinsDetails)
+    ? item.pinsDetails
+    : Array.isArray(item.pins)
+      ? item.pins
+      : item.pin
+        ? [item.pin]
+        : [];
+  if (pins.length > 0) {
+    const counts = new Map();
+    for (const pin of pins) {
+      const pinName = (pin && typeof pin === "object" ? pin.name : pin) || "Charm";
+      counts.set(pinName, (counts.get(pinName) || 0) + 1);
+    }
+    const charmList = Array.from(counts.entries())
+      .map(([n, c]) => (c > 1 ? `${n} x${c}` : n))
+      .join(", ");
+    parts.push(`Charms: ${charmList}`);
+  }
+
+  return parts.join(" | ");
+};
+
 // Helper function to get Stripe instance with validation
 const getStripeInstance = () => {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -129,6 +172,12 @@ exports.handler = async (event) => {
       if (items) {
         const slimItems = sanitizeItems(items);
         paymentIntentParams.metadata.items = sanitizeForMetadata(slimItems);
+        // One readable line per item (Stripe allows 50 keys, 500 chars each)
+        if (Array.isArray(items)) {
+          items.slice(0, 40).forEach((item, idx) => {
+            paymentIntentParams.metadata[`item_${idx + 1}`] = sanitizeForMetadata(describeItem(item));
+          });
+        }
       }
       if (customerInfo) {
         paymentIntentParams.metadata.customerInfo = sanitizeForMetadata(customerInfo);
@@ -141,7 +190,11 @@ exports.handler = async (event) => {
 
     // Add description
     if (items && Array.isArray(items) && items.length > 0) {
-      paymentIntentParams.description = `Order for ${items.length} item(s)`;
+      // Full order details in the description so they appear in Stripe's payment emails and dashboard
+      const details = items.map(describeItem).join("\n");
+      const description = `Order for ${items.length} item(s):\n${details}`;
+      paymentIntentParams.description =
+        description.length > 1000 ? description.substring(0, 997) + "…" : description;
     }
 
     // UK only - validate shipping address

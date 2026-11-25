@@ -198,8 +198,8 @@ export default function CreateYoursPageNew() {
   return (
     <div
       className={`bg-white flex flex-col pb-[env(safe-area-inset-bottom)] ${
-        isMobile ? 'h-screen overflow-x-hidden' : 'h-full min-h-0 overflow-hidden'
-      }`}
+ isMobile ? 'h-screen overflow-x-hidden' : 'h-full min-h-0 overflow-hidden'
+ }`}
     >
       {isMobile ? (
         <CreateYoursHeader isMobile={isMobile} onClose={() => router.back()} />

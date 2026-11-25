@@ -40,10 +40,10 @@ const PriceSummary = ({
                 {/* Total Price + Terms - inline on mobile */}
                 <div className="flex flex-row items-center justify-between gap-2 mb-1">
                   <div className="flex flex-row items-center gap-1.5">
-                    <h3 className="text-[14px] xs:text-sm text-gray-900 font-light font-inter">
+                    <h3 className="text-[14px] xs:text-sm text-gray-900 font-normal font-inter">
                       Total:
                     </h3>
-                    <h3 className="text-md xs:text-base sm:text-lg text-gray-900 font-light font-inter leading-none mb-1">
+                    <h3 className="text-md xs:text-base sm:text-lg text-gray-900 font-normal font-inter leading-none mb-1">
                       {formatPrice(totalPrice)}
                     </h3>
                   </div>
@@ -54,11 +54,11 @@ const PriceSummary = ({
                       onChange={(e) => setAgreedToTerms(e.target.checked)}
                       className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-gray-900 border-gray-300 rounded"
                     />
-                    <span className="text-xs xs:text-sm text-gray-700 leading-tight font-light font-inter">
+                    <span className="text-xs xs:text-sm text-gray-700 leading-tight font-normal font-inter">
                       <button
                         type="button"
                         onClick={onShowTerms}
-                        className="text-gray-900 underline hover:text-gray-700 transition-colors font-light"
+                        className="text-gray-900 underline hover:text-gray-700 transition-colors font-normal"
                       >
                         Terms of Use
                       </button>
@@ -67,7 +67,7 @@ const PriceSummary = ({
                 </div>
                 {/* Error message when trying to add to cart without accepting terms */}
                 {showTermsError && (
-                  <div className="mt-1 text-xs xs:text-sm text-red-600 font-light font-inter">
+                  <div className="mt-1 text-xs xs:text-sm text-red-600 font-normal font-inter">
                     You must accept the terms to add items to cart.
                   </div>
                 )}
@@ -84,7 +84,7 @@ const PriceSummary = ({
                   > 
                     −
                   </button>
-                  <div className="px-1 xs:px-1.5 py-0.5 text-sm xs:text-base text-gray-900 font-light font-inter min-w-[1.5rem] xs:min-w-[2rem] text-center">
+                  <div className="px-1 xs:px-1.5 py-0.5 text-sm xs:text-base text-gray-900 font-normal font-inter min-w-[1.5rem] xs:min-w-[2rem] text-center">
                     {Math.max(quantity, 1)}
                   </div>
                   <button
@@ -118,7 +118,7 @@ const PriceSummary = ({
                       quantity: quantity
                     }}
                     onAdd={onAddToCart}
-                    className="!w-full cursor-pointer bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200 py-3 px-4 xs:py-3.5 xs:px-6 sm:px-8 text-sm xs:text-sm font-light whitespace-nowrap rounded-sm min-h-[52px]"
+                    className="!w-full cursor-pointer py-3 px-4 xs:py-3.5 xs:px-6 sm:px-8 text-sm xs:text-sm whitespace-nowrap min-h-[52px]"
                     disabled={false}
                   />
                 </div>
@@ -127,9 +127,9 @@ const PriceSummary = ({
             
             {/* Inventory Alert Message - Mobile only, shown inline */}
             {inventoryMessage && (
-              <div className={`mt-1.5 text-xs xs:text-sm font-light font-inter ${
-                inventoryType === 'error' ? 'text-red-600' : 'text-orange-600'
-              }`}>
+              <div className={`mt-1.5 text-xs xs:text-sm font-normal font-inter ${
+ inventoryType === 'error' ? 'text-red-600' : 'text-orange-600'
+ }`}>
                 {inventoryMessage}
               </div>
             )}
@@ -138,7 +138,7 @@ const PriceSummary = ({
           <>
             {/* Desktop: Price on top - font matches Add to Cart (font-inter, font-light) */}
             <div className="flex items-baseline flex-row mb-3 gap-2 ">
-              <h3 className="text-sm text-gray-600 font-light font-inter">
+              <h3 className="text-sm text-gray-600 font-normal font-inter">
                 Total
               </h3>
               <h3 className="text-xl font-semibold text-gray-900 font-inter">
@@ -155,12 +155,12 @@ const PriceSummary = ({
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
                   className="mt-0.5 w-4 h-4 flex-shrink-0 text-gray-900 border-gray-300 rounded"
                 />
-                <span className="text-xs text-gray-700 leading-snug font-light font-inter">
+                <span className="text-xs text-gray-700 leading-snug font-normal font-inter">
                   I agree to the{' '}
                   <button
                     type="button"
                     onClick={onShowTerms}
-                    className="text-gray-900 underline hover:text-gray-700 transition-colors text-xs font-light"
+                    className="text-gray-900 underline hover:text-gray-700 transition-colors text-xs font-normal"
                   >
                     Terms of Use
                   </button>
@@ -169,7 +169,7 @@ const PriceSummary = ({
               </label>
               {/* Error message when trying to add to cart without accepting terms */}
               {showTermsError && (
-                <div className="mt-1.5 text-xs text-red-600 font-light font-inter">
+                <div className="mt-1.5 text-xs text-red-600 font-normal font-inter">
                   You must accept the terms to add items to cart.
                 </div>
               )}
@@ -185,7 +185,7 @@ const PriceSummary = ({
                 > 
                   −
                 </button>
-                <div className={`px-3 py-0 text-sm text-gray-900 font-light font-inter min-w-[2rem] text-center`}>
+                <div className={`px-3 py-0 text-sm text-gray-900 font-normal font-inter min-w-[2rem] text-center`}>
                   {Math.max(quantity, 1)}
                 </div>
                 <button
@@ -218,7 +218,7 @@ const PriceSummary = ({
                     quantity: quantity
                   }}
                   onAdd={onAddToCart}
-                  className="cursor-pointer bg-btn-success hover:bg-btn-success-hover text-btn-success-text border border-btn-success-border hover:border-btn-success-hover transition-all duration-200 py-2.5 text-sm font-light"
+                  className="cursor-pointer py-2.5 text-sm"
                   disabled={false}
                 />
               </div>
@@ -226,9 +226,9 @@ const PriceSummary = ({
 
             {/* Inventory Alert Message - Desktop */}
             {inventoryMessage && (
-              <div className={`mt-4 text-sm font-light font-inter ${
-                inventoryType === 'error' ? 'text-red-600' : 'text-orange-600'
-              }`}>
+              <div className={`mt-4 text-sm font-normal font-inter ${
+ inventoryType === 'error' ? 'text-red-600' : 'text-orange-600'
+ }`}>
                 {inventoryMessage}
               </div>
             )}
@@ -238,14 +238,14 @@ const PriceSummary = ({
       {/* Price Breakdown Dropdown */}
       {showPriceBreakdown && (
         <div className={`space-y-1 ${isMobile ? 'text-xs xs:text-sm mb-1 pt-1' : 'text-xs mb-4 pt-4'} text-gray-600 border-t border-gray-100`}>
-          <div className="flex justify-between font-light font-inter">
+          <div className="flex justify-between font-normal font-inter">
             <span>Case:</span>
-            <span className="font-light font-inter">{formatPrice(caseBasePrice)}</span>
+            <span className="font-normal font-inter">{formatPrice(caseBasePrice)}</span>
           </div>
           {groupedPinsList.map((pin, index) => (
-            <div key={index} className="flex justify-between font-light font-inter">
+            <div key={index} className="flex justify-between font-normal font-inter">
               <span>{pin.name}{pin.count > 1 ? ` (x${pin.count})` : ''}:</span>
-              <span className="font-light font-inter">{formatPrice(pin.price * pin.count)}</span>
+              <span className="font-normal font-inter">{formatPrice(pin.price * pin.count)}</span>
             </div>
           ))}
         </div>

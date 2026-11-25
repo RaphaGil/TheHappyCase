@@ -227,49 +227,49 @@ const Login = () => {
           {isLoggedIn && (
             <div className="mb-4">
               <p className="text-gray-600 font-inter">{email}</p>
-              <button onClick={handleLogout} className="mt-2 text-sm text-gray-600 hover:text-gray-900 font-light font-inter underline">Sign Out</button>
+              <button onClick={handleLogout} className="mt-2 text-sm text-gray-600 hover:text-gray-900 font-normal font-inter underline">Sign Out</button>
             </div>
           )}
         </div>
 
         {!isLoggedIn && success && step === 'code' && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800 font-light font-inter">Verification code sent to <strong>{email}</strong></p>
+            <p className="text-sm text-green-800 font-normal font-inter">Verification code sent to <strong>{email}</strong></p>
           </div>
         )}
 
         {!isLoggedIn && error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-800 font-light font-inter">{error}</p>
+            <p className="text-sm text-red-800 font-normal font-inter">{error}</p>
           </div>
         )}
 
         {!isLoggedIn && step === 'email' && (
           <form onSubmit={handleSendCode} className="space-y-6">
             <div>
-              <label className="block text-sm text-gray-700 mb-2 font-light font-inter">Email Address *</label>
+              <label className="block text-sm text-gray-700 mb-2 font-normal font-inter">Email Address *</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(''); }}
                 placeholder="your.email@example.com"
                 autoFocus
-                className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+                className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
                 required
               />
             </div>
-            <button type="submit" disabled={loading} className="w-full px-4 py-3 text-sm uppercase tracking-wider font-light font-inter bg-gray-900 text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={loading} className="btn-happy w-full px-4 py-3 text-sm font-inter disabled:opacity-50 disabled:cursor-not-allowed">
               {loading ? 'Sending Code...' : 'Send Verification Code'}
             </button>
-            <p className="text-xs text-gray-500 text-center font-light font-inter">By continuing, you agree to our Terms of Use and Privacy Policy.</p>
+            <p className="text-xs text-gray-500 text-center font-normal font-inter">By continuing, you agree to our Terms of Use and Privacy Policy.</p>
           </form>
         )}
 
         {!isLoggedIn && step === 'code' && (
           <form onSubmit={handleVerifyCode} className="space-y-6">
             <div>
-              <p className="text-sm text-gray-600 font-light font-inter mb-4 text-center">We've sent a 6-digit verification code to <strong>{email}</strong>. Please enter it below.</p>
-              <label className="block text-sm text-gray-700 mb-2 font-light font-inter">Verification Code *</label>
+              <p className="text-sm text-gray-600 font-normal font-inter mb-4 text-center">We've sent a 6-digit verification code to <strong>{email}</strong>. Please enter it below.</p>
+              <label className="block text-sm text-gray-700 mb-2 font-normal font-inter">Verification Code *</label>
               <input
                 type="text"
                 value={code}
@@ -277,16 +277,16 @@ const Login = () => {
                 placeholder="000000"
                 maxLength={6}
                 autoFocus
-                className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-2xl text-center tracking-widest"
+                className="w-full px-4 py-3 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-2xl text-center "
                 required
               />
             </div>
-            <button type="submit" disabled={loading || code.length !== 6} className="w-full px-4 py-3 text-sm uppercase tracking-wider font-light font-inter bg-gray-900 text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <button type="submit" disabled={loading || code.length !== 6} className="btn-happy w-full px-4 py-3 text-sm font-inter disabled:opacity-50 disabled:cursor-not-allowed">
               {loading ? 'Verifying...' : 'Verify Code'}
             </button>
             <div className="flex flex-col gap-3">
-              <button type="button" onClick={handleResendCode} disabled={loading} className="text-sm text-gray-600 hover:text-gray-900 font-light font-inter underline disabled:opacity-50">Resend Code</button>
-              <button type="button" onClick={handleBackToEmail} className="text-sm text-gray-600 hover:text-gray-900 font-light font-inter">← Back to email</button>
+              <button type="button" onClick={handleResendCode} disabled={loading} className="text-sm text-gray-600 hover:text-gray-900 font-normal font-inter underline disabled:opacity-50">Resend Code</button>
+              <button type="button" onClick={handleBackToEmail} className="text-sm text-gray-600 hover:text-gray-900 font-normal font-inter">← Back to email</button>
             </div>
           </form>
         )}
@@ -302,8 +302,8 @@ const Login = () => {
               </div>
             ) : ordersError ? (
               <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-                <p className="text-sm text-red-800 font-light font-inter">{ordersError}</p>
-                <button onClick={() => fetchUserOrders(email)} className="mt-4 px-6 py-2 text-sm bg-gray-900 hover:bg-gray-800 text-white rounded-md transition-colors font-inter">Try Again</button>
+                <p className="text-sm text-red-800 font-normal font-inter">{ordersError}</p>
+                <button onClick={() => fetchUserOrders(email)} className="btn-happy mt-4 px-6 py-2 text-sm font-inter">Try Again</button>
               </div>
             ) : orders.length === 0 ? (
               <div className="bg-gray-50 rounded-lg shadow-sm p-8 md:p-12 text-center">
@@ -314,7 +314,7 @@ const Login = () => {
                 </div>
                 <h2 className="text-xl font-semibold text-gray-900 mb-2 font-inter">No Orders Yet</h2>
                 <p className="text-gray-600 mb-6 font-inter">You haven't placed any orders yet. Start shopping to see your orders here!</p>
-                <button onClick={() => router.push('/')} className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-md transition-colors font-inter">Start Shopping</button>
+                <button onClick={() => router.push('/')} className="btn-happy px-6 py-3 font-inter">Start Shopping</button>
               </div>
             ) : (
               <div className="space-y-6">
@@ -344,7 +344,7 @@ const Login = () => {
                             href={getOrderTrackingHref(order)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-md transition-colors font-inter"
+                            className="btn-happy inline-flex items-center gap-2 px-4 py-2 text-sm font-inter"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

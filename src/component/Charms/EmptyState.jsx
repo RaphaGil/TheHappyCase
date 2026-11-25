@@ -1,22 +1,15 @@
 import React from 'react';
 
-const EmptyState = ({ message = "No items found", onClearFilters }) => {
-  return (
-    <div className="py-16 text-center">
-      <p className="text-gray-400 mb-4 font-inter">
-        {message}
-      </p>
-      {onClearFilters && (
-        <button
-          onClick={onClearFilters}
-          className="text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border-b border-transparent hover:border-gray-300 transition-all duration-200 font-inter"
-        >
-          Clear Filters
-        </button>
-      )}
-    </div>
-  );
-};
+const EmptyState = ({ message = "No items found", onClearFilters }) => (
+  <div className="mx-auto my-12 max-w-md rounded-3xl bg-[#eef0ff] px-6 py-14 text-center">
+    <p className="font-brand text-2xl text-[#30279f]">{message}</p>
+    <p className="mt-2 text-sm text-gray-600 font-inter">Try a different word or another category.</p>
+    {onClearFilters && (
+      <button type="button" onClick={onClearFilters} className="btn-happy btn-soft mt-6 px-6 py-2.5 text-sm font-inter">
+        Clear filters
+      </button>
+    )}
+  </div>
+);
 
 export default EmptyState;
-

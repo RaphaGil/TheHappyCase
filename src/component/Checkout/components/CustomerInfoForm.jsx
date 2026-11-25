@@ -59,20 +59,20 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
   
   return (
     <div className="space-y-4 ">
-        <h3 className="text-md uppercase tracking-wider text-gray-900 mb-4 font-bold font-inter">
+        <h3 className="text-md text-gray-900 mb-4 font-bold font-inter">
        Contact
       </h3>
       {!isAuthenticated ? (
         <div>
           <div className="flex items-center justify-between mb-1.5 relative">
-            <label className="block text-sm text-gray-500 font-light font-inter">
+            <label className="block text-sm text-gray-500 font-normal font-inter">
               Email Address *
             </label>
             <div ref={dropdownRef} className="relative">
               <button
                 type="button"
                 onClick={handleSignInClick}
-                className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter underline"
+                className="text-xs text-gray-600 hover:text-gray-900 font-normal font-inter underline"
               >
                 Sign In
               </button>
@@ -81,21 +81,21 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
               {showLoginDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-sm shadow-lg z-50">
                   <div className="p-3">
-                    <p className="text-sm text-gray-700 font-light font-inter mb-3">
+                    <p className="text-sm text-gray-700 font-normal font-inter mb-3">
                       Do you want to sign in?
                     </p>
                     <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={handleConfirmLogin}
-                        className="flex-1 px-3 py-1.5 text-xs uppercase tracking-wider font-light font-inter bg-black text-white hover:bg-gray-800 transition-colors"
+                        className="btn-happy btn-soft flex-1 px-3 py-1.5 text-xs font-inter"
                       >
                         Yes
                       </button>
                       <button
                         type="button"
                         onClick={handleCancelLogin}
-                        className="flex-1 px-3 py-1.5 text-xs uppercase tracking-wider font-light font-inter border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="flex-1 px-3 py-1.5 text-xs font-normal font-inter border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         No
                       </button>
@@ -112,37 +112,37 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             onChange={onInputChange}
             required
             placeholder="your.email@example.com"
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
             style={{ fontSize: '16px' }}
           />
-          <p className="mt-1 text-xs text-gray-500 font-light font-inter">
+          <p className="mt-1 text-xs text-gray-500 font-normal font-inter">
             We'll send your order confirmation to this email
           </p>
         </div>
       ) : (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-sm text-gray-500 font-light font-inter">
+            <label className="block text-sm text-gray-500 font-normal font-inter">
               Email Address *
             </label>
             <button
               type="button"
               onClick={onSignOut}
-              className="text-xs text-gray-600 hover:text-gray-900 font-light font-inter underline"
+              className="text-xs text-gray-600 hover:text-gray-900 font-normal font-inter underline"
             >
               Sign Out
             </button>
           </div>
-          <div className="w-full px-3 py-2 border border-gray-200 rounded-sm bg-gray-50 text-gray-900 font-light font-inter text-sm">
+          <div className="w-full px-3 py-2 border border-gray-200 rounded-sm bg-gray-50 text-gray-900 font-normal font-inter text-sm">
             {authenticatedEmail}
           </div>
-          <p className="mt-1 text-xs text-gray-500 font-light font-inter">
+          <p className="mt-1 text-xs text-gray-500 font-normal font-inter">
             Signed in as {authenticatedEmail}
           </p>
         </div>
       )}
       <div>
-        <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+        <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
           Phone Number *
         </label>
         <input
@@ -156,23 +156,23 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           placeholder="e.g. 07123 456789"
           aria-required="true"
           maxLength={20}
-          className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base ${
-            showNameErrors && String(customerInfo.phone || '').replace(/\D/g, '').length < 10 ? 'border-red-400' : 'border-gray-200'
-          }`}
+          className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base ${
+ showNameErrors && String(customerInfo.phone || '').replace(/\D/g, '').length < 10 ? 'border-red-400' : 'border-gray-200'
+ }`}
           style={{ fontSize: '16px' }}
         />
         {showNameErrors && String(customerInfo.phone || '').replace(/\D/g, '').length < 10 && (
-          <p className="mt-1 text-xs text-red-600 font-light font-inter">Phone number is required</p>
+          <p className="mt-1 text-xs text-red-600 font-normal font-inter">Phone number is required</p>
         )}
       </div>
-      <h3 className="text-md uppercase tracking-wider text-gray-900 mb-4 font-bold font-inter">
+      <h3 className="text-md text-gray-900 mb-4 font-bold font-inter">
         Delivery
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
    
           <div>
-          <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+          <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
             Name *
           </label>
           <input
@@ -185,17 +185,17 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             placeholder="First name"
             aria-required="true"
             maxLength={30}
-            className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base ${
-              showNameErrors && !String(customerInfo.name || '').trim() ? 'border-red-400' : 'border-gray-200'
-            }`}
+            className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base ${
+ showNameErrors && !String(customerInfo.name || '').trim() ? 'border-red-400' : 'border-gray-200'
+ }`}
             style={{ fontSize: '16px' }}
           />
           {showNameErrors && !String(customerInfo.name || '').trim() && (
-            <p className="mt-1 text-xs text-red-600 font-light font-inter">Name is required</p>
+            <p className="mt-1 text-xs text-red-600 font-normal font-inter">Name is required</p>
           )}
           </div>
           <div>
-           <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+           <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
            Surname *
           </label>
           <input
@@ -208,13 +208,13 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             placeholder="Surname"
             aria-required="true"
             maxLength={30}
-            className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base ${
-              showNameErrors && !String(customerInfo.surname || '').trim() ? 'border-red-400' : 'border-gray-200'
-            }`}
+            className={`w-full px-3 py-2 border rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base ${
+ showNameErrors && !String(customerInfo.surname || '').trim() ? 'border-red-400' : 'border-gray-200'
+ }`}
             style={{ fontSize: '16px' }}
           />
           {showNameErrors && !String(customerInfo.surname || '').trim() && (
-            <p className="mt-1 text-xs text-red-600 font-light font-inter">Surname is required</p>
+            <p className="mt-1 text-xs text-red-600 font-normal font-inter">Surname is required</p>
           )}
           </div>
     
@@ -223,7 +223,7 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
       </div>
 
       <div>
-        <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+        <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
           Address Line 1 *
         </label>
         <input
@@ -232,13 +232,13 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           value={customerInfo.address?.line1 ?? ''}
           onChange={(e) => handleSanitizedChange(e, sanitizeAddress)}
           required
-          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
           style={{ fontSize: '16px' }}
         />
       </div>
 
       <div>
-        <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+        <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
           Address Line 2
         </label>
         <input
@@ -246,14 +246,14 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
           name="address.line2"
           value={customerInfo.address?.line2 ?? ''}
           onChange={(e) => handleSanitizedChange(e, sanitizeAddress)}
-          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+          className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
           style={{ fontSize: '16px' }}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+          <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
             City *
           </label>
           <input
@@ -262,13 +262,13 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.address?.city ?? ''}
             onChange={(e) => handleSanitizedChange(e, sanitizeAddress)}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
             style={{ fontSize: '16px' }}
           />
         </div>
         
         <div>
-          <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+          <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
             Postcode *
           </label>
           <input
@@ -277,16 +277,16 @@ const CustomerInfoForm = ({ customerInfo, onInputChange, isAuthenticated, authen
             value={customerInfo.address?.postal_code ?? ''}
             onChange={(e) => handleSanitizedChange(e, sanitizeAddress)}
             required
-            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+            className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
             style={{ fontSize: '16px' }}
           />
         </div>
         
         <div>
-          <label className="block text-sm text-gray-500 mb-1.5 font-light font-inter">
+          <label className="block text-sm text-gray-500 mb-1.5 font-normal font-inter">
             Country *
           </label>
-          <div className="w-full px-3 py-2 border border-gray-200 rounded-sm bg-gray-50 text-gray-900 font-light font-inter text-base">
+          <div className="w-full px-3 py-2 border border-gray-200 rounded-sm bg-gray-50 text-gray-900 font-normal font-inter text-base">
             United Kingdom
           </div>
         </div>

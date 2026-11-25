@@ -1,0 +1,483 @@
+{
+  "source": "Etsy",
+  "shopUrl": "https://www.etsy.com/shop/TheHappyCaseShop",
+  "summary": {
+    "average": 5.0,
+    "count": 51,
+    "sales": 274,
+    "updated": "2026-11-25"
+  },
+  "reviews": [
+    {
+      "id": 1,
+      "name": "Etsy buyer",
+      "rating": 5,
+      "date": "2026-11-15",
+      "text": "Absolutely love love my passport holder! Way cuter in person :)",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 2,
+      "name": "Georgia",
+      "rating": 5,
+      "date": "2026-09-10",
+      "text": "Lovely personalised item, looks just like the picture - love it! 🥰",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 3,
+      "name": "Etsy buyer",
+      "rating": 5,
+      "date": "2026-09-04",
+      "text": "I absolutely love my custom passport holder. Its my favorite color and features some of my favorite things!!! 😍 Raphaela was great to work with and she has a cool site where you can make an exact mock up of what you want. Love it!!! 😍❤️",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 4,
+      "name": "Taylin",
+      "rating": 5,
+      "date": "2026-09-03",
+      "text": "love them, exactly as I wanted!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 5,
+      "name": "Angelica",
+      "rating": 5,
+      "date": "2026-08-31",
+      "text": "LOVE LOVE LOVE IT!! It was even cuter in person!!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 6,
+      "name": "Ashley",
+      "rating": 5,
+      "date": "2026-08-27",
+      "text": "Such a great gift for the traveler in your life",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 7,
+      "name": "Annabel",
+      "rating": 5,
+      "date": "2026-08-17",
+      "text": "Lovely item and Seller is very helpful!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 8,
+      "name": "Brittney",
+      "rating": 5,
+      "date": "2026-08-17",
+      "text": "I love this passport cover! It was just like I asked for.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 9,
+      "name": "Amelie",
+      "rating": 5,
+      "date": "2026-08-06",
+      "text": "Everything was great, would recommend! :)",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 10,
+      "name": "Priscilla",
+      "rating": 5,
+      "date": "2026-07-13",
+      "text": "Love this passport holder!! The material is quality and the flags really enhance the cover. The vendor was extremely accommodating and was quick to respond!! I’d definitely order again!!",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Wallet with Flags"
+    },
+    {
+      "id": 11,
+      "name": "Gavin",
+      "rating": 5,
+      "date": "2026-05-16",
+      "text": "Great product. Problem with shipment to France. Resolved efficiently",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 12,
+      "name": "Kelly",
+      "rating": 5,
+      "date": "2026-03-21",
+      "text": "Great gift idea. My best friend loved it",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 13,
+      "name": "Kelly",
+      "rating": 5,
+      "date": "2026-02-17",
+      "text": "The case is so cute 😍",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 14,
+      "name": "Kelly",
+      "rating": 5,
+      "date": "2026-02-17",
+      "text": "Love these for my grandkids. Was able to tailor to their personalities.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 15,
+      "name": "Kelly",
+      "rating": 5,
+      "date": "2026-02-16",
+      "text": "Item is exactly what I was looking for",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 16,
+      "name": "Sharmina",
+      "rating": 5,
+      "date": "2026-02-06",
+      "text": "Great product ,recommend buying. Great customer service",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 17,
+      "name": "Sharmina",
+      "rating": 5,
+      "date": "2026-02-06",
+      "text": "Great item for a personalised gift and for own use also. Raphela is very helpful , got some issues with courier delays , then Raphela supported and ensure the ontime delivery.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 18,
+      "name": "Satvinder",
+      "rating": 5,
+      "date": "2026-02-03",
+      "text": "The passport cover was really nice",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 19,
+      "name": "Allie",
+      "rating": 5,
+      "date": "2026-02-02",
+      "text": "Despite coming from a different country, this arrived so quickly, way ahead of when it was expected. The seller was so quick to get back to me regarding placement and I am beyond happy with the final product! High highly recommend!!",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Passport Wallet with Charms & Name"
+    },
+    {
+      "id": 20,
+      "name": "Tara",
+      "rating": 5,
+      "date": "2026-01-25",
+      "text": "Great idea for someone who travels a lot - she loved it",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 21,
+      "name": "Alex",
+      "rating": 5,
+      "date": "2026-01-21",
+      "text": "Exactly what I wanted for my sister-in-law. She is going to love it!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 22,
+      "name": "Alex",
+      "rating": 5,
+      "date": "2026-01-21",
+      "text": "An absolutely perfect gift for my sister. Customer service is TOP NOTCH",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 23,
+      "name": "Janine",
+      "rating": 5,
+      "date": "2026-01-20",
+      "text": "I love my case!! She messaged me with pictures to confirm I liked it before she put them on permanently. I would highly recommend!!!",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Passport Wallet with 8 Charms"
+    },
+    {
+      "id": 24,
+      "name": "Jane",
+      "rating": 5,
+      "date": "2026-01-16",
+      "text": "I really like this wallet. It is a great size. I was impressed by the care that Raphaela took with ensuring that I was happy with the placement of the flags before she attached them.",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Wallet with Flags"
+    },
+    {
+      "id": 25,
+      "name": "Etsy buyer",
+      "rating": 5,
+      "date": "2026-01-12",
+      "text": "Sent the wrong item initially but they sent a new one super quick, thank you",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 26,
+      "name": "Venerly",
+      "rating": 5,
+      "date": "2026-01-10",
+      "text": "Amazing experience from start to finish. The seller was so helpful in creating the design and made sure it looked exactly how I wanted. Delivery was also really quick. I’ll definitely be buying again.",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Wallet with Charms & Name"
+    },
+    {
+      "id": 27,
+      "name": "Kellar",
+      "rating": 5,
+      "date": "2026-01-04",
+      "text": "WOW this is the most beautiful and well done passport holders I’ve ever gotten! It looks so perfect and exactly as the photos have shown. The other thing I love about the passport holder is that it truly acts like a wallet as well making it easy to keep my change or other currencies there while not in use",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Wallet with Charms & Name"
+    },
+    {
+      "id": 28,
+      "name": "Sammy",
+      "rating": 5,
+      "date": "2025-12-24",
+      "text": "Seller responded quickly and went out of their way to get the specific flags I was looking for. Item is great and exactly what I was expecting!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 29,
+      "name": "Anna",
+      "rating": 4,
+      "date": "2025-12-22",
+      "text": "Item was exactly what I wanted",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 30,
+      "name": "Rachael",
+      "rating": 5,
+      "date": "2025-12-19",
+      "text": "Such a lovely gift that came out perfectly!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 31,
+      "name": "Etsy buyer",
+      "rating": 5,
+      "date": "2025-12-15",
+      "text": "Very good loved it ..",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 32,
+      "name": "Belinda",
+      "rating": 5,
+      "date": "2025-12-13",
+      "text": "Wow!!!! An amazing seller who has exceeded all my expectations to make this item arrive in time for me. Thank you so much for your kindness and support. 5 stars 🌟",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 33,
+      "name": "Aishwarya",
+      "rating": 5,
+      "date": "2025-12-12",
+      "text": "Amazing quality product, great customer service and quick delivery. I love it, highly recommend",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 34,
+      "name": "Julie",
+      "rating": 5,
+      "date": "2025-12-12",
+      "text": "Very creative and well made gift. Wonderful communication and fast shipping.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 35,
+      "name": "Paige",
+      "rating": 5,
+      "date": "2025-12-07",
+      "text": "Amazing product and service. Replied to me instantly and shipped super quick! Love it x",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 36,
+      "name": "Pip",
+      "rating": 5,
+      "date": "2025-12-02",
+      "text": "Bought this as a gift for my partner and am really impressed! The quality is great and it arrived super fast - thank you!",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Passport Wallet with Charms & Name"
+    },
+    {
+      "id": 37,
+      "name": "Marie",
+      "rating": 5,
+      "date": "2025-12-02",
+      "text": "Seller was helpful and engaging and in conversation. My item arrived very quickly and it’s gorgeous. Highly recommend this item.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 38,
+      "name": "Sabrina",
+      "rating": 5,
+      "date": "2025-11-21",
+      "text": "Responsive and very friendly seller! Fast delivery! Very well done! Don't hesitate",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 39,
+      "name": "Martina",
+      "rating": 5,
+      "date": "2025-11-20",
+      "text": "Very positive experience, product exactly as described, and above all, excellent communication with the seller. I had an issue with the order due to an oversight on my part, and the seller was very kind and willing to contact the courier herself. The item itself is also excellent quality.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 40,
+      "name": "Cledia",
+      "rating": 5,
+      "date": "2025-11-20",
+      "text": "Great! 👍 Very good quality!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 41,
+      "name": "Alisa",
+      "rating": 5,
+      "date": "2025-11-14",
+      "text": "Love it will order more in the future",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 42,
+      "name": "Sandra",
+      "rating": 5,
+      "date": "2025-11-13",
+      "text": "Great item.... very good quality 👌",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 43,
+      "name": "Kristi",
+      "rating": 5,
+      "date": "2025-10-31",
+      "text": "The item was as cute and unique as pictured. Very excited for my next travels with it.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 44,
+      "name": "Margherita",
+      "rating": 5,
+      "date": "2025-10-25",
+      "text": "I am so happy about this passport holder. Great quality and attention to details",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 45,
+      "name": "Imma",
+      "rating": 5,
+      "date": "2025-10-16",
+      "text": "This was a birthday gift for my friend and she loved it. Very good quality. I really recommend.",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 46,
+      "name": "Randi",
+      "rating": 5,
+      "date": "2025-08-27",
+      "text": "The case is perfect! So much nicer in person. The photos don’t do it justice. Raphaela gives 5 star service! Don’t second guess it. Just buy one!",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Passport Cover with Charms & Name"
+    },
+    {
+      "id": 47,
+      "name": "Viktorija",
+      "rating": 5,
+      "date": "2025-08-12",
+      "text": "The passport cover is absolutely beautiful, with all the little details that make it feel special. The quality is excellent as well. I’m especially impressed with the seller’s communication and helpfulness..she went above and beyond to ship it as quickly as possible so it would arrive in time. Highly recommended! 😄🫶🏽",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Passport Cover with Charms & Name"
+    },
+    {
+      "id": 48,
+      "name": "Nina",
+      "rating": 5,
+      "date": "2025-07-01",
+      "text": "Love love love this! Fantastic quality!",
+      "source": "Etsy",
+      "featured": false
+    },
+    {
+      "id": 49,
+      "name": "Daniela",
+      "rating": 5,
+      "date": "2025-06-05",
+      "text": "I’m so happy with this passport! better than I expected. The material feels really sturdy and well-made, and the little decorative pins are SO cute, they give it such a fun, personal touch. The delivery was fast and arrived exactly how I ordered. Definitely recommend",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Cover with 8 Charms"
+    },
+    {
+      "id": 50,
+      "name": "Luana",
+      "rating": 5,
+      "date": "2025-03-12",
+      "text": "I had been on the hunt for the perfect passport case for a while, and then I got one as a birthday gift. I instantly fell in love with it, so I decided to get another one. The quality is fantastic, and the ability to customise it is such a great idea. I’ve already started buying them for the people I love, so they can protect their passports with such a beautiful case too!",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Holder with Charms"
+    },
+    {
+      "id": 51,
+      "name": "Daniel",
+      "rating": 5,
+      "date": "2025-03-03",
+      "text": "I'm thrilled with my case! The seller was very easy to reach and quickly accommodated my request for a different design and badges. The quality is excellent, and it would make a fantastic gift. I highly recommend this product",
+      "source": "Etsy",
+      "featured": true,
+      "product": "Leather Passport Holder with Charms"
+    }
+  ]
+}

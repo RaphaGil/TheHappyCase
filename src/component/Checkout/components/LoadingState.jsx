@@ -10,7 +10,7 @@ const LoadingState = () => {
             <div className="mb-4 flex justify-center pt-6">
               <AirplaneLoading size="md" />
             </div>
-            <p className="text-gray-500 font-light font-inter">
+            <p className="text-gray-500 font-normal font-inter">
               Loading checkout...
             </p>
           </div>
