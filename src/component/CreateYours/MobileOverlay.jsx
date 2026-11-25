@@ -87,15 +87,15 @@ const MobileOverlay = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 xs:p-3 sm:p-4 md:p-6 overflow-y-auto overscroll-contain">
       <div className={`bg-white rounded-sm p-3 xs:p-4 sm:p-5 md:p-6 lg:p-8 xl:p-10 w-full overflow-y-auto border border-gray-200 ${
-        mobileCurrentStep === 'charms' 
-          ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg h-fit' 
-          : mobileCurrentStep === 'case'
-          ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
-          : 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
-      }`}>
+ mobileCurrentStep === 'charms' 
+ ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg h-fit' 
+ : mobileCurrentStep === 'case'
+ ? 'max-w-[calc(100vw-1rem)] xs:max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
+ : 'max-w-[calc(100vw-1rem)] xs:max-w-sm md:max-w-md lg:max-w-lg max-h-[85vh] xs:max-h-[80vh] md:max-h-[75vh]'
+ }`}>
         <div className="flex justify-between items-center mb-4 xs:mb-5 sm:mb-6 md:mb-8 border-b border-gray-100 pb-3 xs:pb-4 md:pb-5">
           <h2
-            className={`uppercase tracking-wider text-gray-900 font-medium ${
+            className={`text-gray-900 font-medium ${
               mobileCurrentStep === 'charms' ||
               mobileCurrentStep === 'case' ||
               mobileCurrentStep === 'color'
@@ -189,8 +189,8 @@ const MobileOverlay = ({
                       }}
                       disabled={soldOut}
                       className={`p-1.5 xs:p-2 text-center transition-all duration-200 flex flex-col items-center gap-1.5 xs:gap-2 rounded-lg ${
-                        isSelected ? OPTION_SELECTION_CARD_ACTIVE : OPTION_SELECTION_CARD_INACTIVE
-                      } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
+ isSelected ? OPTION_SELECTION_CARD_ACTIVE : OPTION_SELECTION_CARD_INACTIVE
+ } ${soldOut ? 'opacity-50 cursor-not-allowed' : ''}`}
                       style={{fontFamily: "'Poppins', sans-serif"}}
                     >
                       {caseImage && (
@@ -316,8 +316,8 @@ const MobileOverlay = ({
                             onClick={() => !isUnavailable && handlePinSelection(pin)}
                             disabled={isUnavailable}
                             className={`p-1.5 xs:p-2 transition-all duration-200 flex flex-col items-center justify-start ${
-                              isUnavailable ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
+ isUnavailable ? 'opacity-50 cursor-not-allowed' : ''
+ }`}
                           >
                             <div className={`relative w-16 h-16 xs:w-20 xs:h-20 flex items-center justify-center transition-all duration-200 overflow-visible rounded-lg p-0.5 bg-transparent ${isSelected && !isUnavailable ? 'border-2 border-gray-900' : 'border-2 border-transparent'}`}>
                               {!loadedCharmImages[pinImageKey] && (
@@ -329,10 +329,10 @@ const MobileOverlay = ({
                                 fill
                                 sizes="(max-width: 640px) 64px, 80px"
                                 className={`object-contain bg-transparent transition-opacity duration-200 ${
-                                  loadedCharmImages[pinImageKey]
-                                    ? (isUnavailable ? 'opacity-50' : 'opacity-100')
-                                    : 'opacity-0'
-                                }`}
+ loadedCharmImages[pinImageKey]
+ ? (isUnavailable ? 'opacity-50' : 'opacity-100')
+ : 'opacity-0'
+ }`}
                                 style={{ backgroundColor: 'transparent' }}
                                 loading="lazy"
                                 onLoadingComplete={() => {

@@ -27,28 +27,28 @@ const PrivacyPolicy = () => {
           <div className="space-y-8 font-inter">
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Information We Collect</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 When you place an order or create an account, we collect your name, email address, shipping address, and payment information. This information is used to process your order and communicate with you about your purchase.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">How We Use Your Information</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 We use your information to process orders, send order confirmations, provide customer support, and improve our services. We do not sell your personal information to third parties.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Data Security</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 We take the security of your personal information seriously. Payment processing is handled securely through Stripe. We use industry-standard measures to protect your data.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 If you have questions about our privacy policy, please contact us at{' '}
                 <a href="mailto:thehappycase.shop@gmail.com" className="text-gray-900 hover:underline">
                   thehappycase.shop@gmail.com

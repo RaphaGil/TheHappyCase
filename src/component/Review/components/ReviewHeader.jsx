@@ -1,18 +1,30 @@
 import React from 'react';
-import { useScrollAnimation } from '../../../hooks/useScrollAnimation';
+import SectionHeader from '../../WhatWeDo/components/SectionHeader';
 
-const ReviewHeader = () => {
-  const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
-
-  return (
-    <div ref={sectionRef} className="text-center mb-12 md:mb-16">
-      <h2 className="text-subtitle-lg md:text-title font-light text-gray-900 mb-3 font-inter tracking-title">
-        What Our Customers Say
-      </h2>
-      <div className="w-20 h-px bg-gray-300 mx-auto mt-4"></div>
-    </div>
-  );
-};
+const ReviewHeader = ({ summary, shopUrl }) => (
+  <div className="text-center">
+    <SectionHeader
+      eyebrow="★★★★★ Reviews"
+      title="Loved by travellers"
+      subtitle={
+        summary
+          ? `Rated ${summary.average.toFixed(1)} out of 5 from ${summary.count} reviews on Etsy.`
+          : undefined
+      }
+      align="center"
+    />
+    {shopUrl && (
+      <a
+        href={`${shopUrl}#reviews`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="-mt-4 mb-10 inline-flex items-center gap-1.5 text-sm font-semibold text-[#30279f] font-inter"
+      >
+        <span className="border-b-2 border-[#ffd93d] pb-0.5">Read all reviews on Etsy</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    )}
+  </div>
+);
 
 export default ReviewHeader;
-

@@ -92,8 +92,8 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
               type="button"
               disabled={soldOut}
               className={`${OPTION_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-lg transition-all duration-200 ${
-                isSelected ? OPTION_SELECTION_CARD_ACTIVE : OPTION_SELECTION_CARD_INACTIVE
-              } ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+ isSelected ? OPTION_SELECTION_CARD_ACTIVE : OPTION_SELECTION_CARD_INACTIVE
+ } ${soldOut ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               onClick={() => {
                 if (!soldOut) {
                   onSelect(opt.value);
@@ -107,8 +107,8 @@ const CaseSelector = ({ selectedCaseType, onSelect, Products, onDropdownToggle, 
                 <div className={OPTION_CATEGORY_IMAGE}>
                   <div
                     className={`flex h-full w-full items-center justify-center overflow-hidden rounded ${
-                      soldOut ? 'opacity-50' : ''
-                    }`}
+ soldOut ? 'opacity-50' : ''
+ }`}
                   >
                     <Image
                       src={normalizeImagePath(caseImage)}

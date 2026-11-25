@@ -20,26 +20,26 @@ const NoteSection = ({
       {/* Note Dropdown */}
       {isOpen && (
         <div className="mt-3 pt-3 ">
-          <div className="text-xs text-gray-500 mb-2 font-light font-inter">
+          <div className="text-xs text-gray-500 mb-2 font-normal font-inter">
             Add a note for this item:
           </div>
           <textarea
             value={noteTexts[index] !== undefined ? noteTexts[index] : (item.note || '')}
             onChange={(e) => onNoteChange(index, e.target.value)}
             placeholder="Add any special instructions or notes..."
-            className="w-full px-3 py-2 text-xs border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 font-light resize-none font-inter"
+            className="w-full px-3 py-2 text-xs border border-gray-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400 font-normal resize-none font-inter"
             rows="3"
           />
           <div className="flex justify-end gap-2 mt-2">
             <button
               onClick={onCancelNote}
-              className="px-3 py-1 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 font-light transition-colors font-inter"
+              className="px-3 py-1 text-xs text-gray-600 hover:text-gray-900 font-normal transition-colors font-inter"
             >
               Cancel
             </button>
             <button
               onClick={() => onSaveNote(index)}
-              className="px-3 py-1 text-xs uppercase tracking-wider font-light font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+              className="btn-happy px-3 py-1 text-xs font-inter"
             >
               Save
             </button>
@@ -50,10 +50,10 @@ const NoteSection = ({
       {/* Display saved note if exists and dropdown is closed */}
       {hasNote && (
         <div className="mt-3 pt-3 border-t border-gray-100">
-          <div className="text-xs text-gray-500 mb-1 font-light font-inter">
+          <div className="text-xs text-gray-500 mb-1 font-normal font-inter">
             Note:
           </div>
-          <div className="text-xs text-gray-700 font-light whitespace-pre-wrap font-inter">
+          <div className="text-xs text-gray-700 font-normal whitespace-pre-wrap font-inter">
             {item.note}
           </div>
         </div>
@@ -63,7 +63,7 @@ const NoteSection = ({
       <div className="mt-3 pt-3 border-t border-gray-100">
         <button 
           onClick={() => onToggleNote(index)} 
-          className="text-xs text-btn-primary-blue hover:text-btn-primary-blue-hover uppercase tracking-wider font-light transition-colors flex items-center gap-1 font-inter"
+          className="text-xs text-btn-primary-blue hover:text-btn-primary-blue-hover font-normal transition-colors flex items-center gap-1 font-inter"
         >
           {item.note ? 'Edit Note' : 'Add Note'}
           <FontAwesomeIcon 

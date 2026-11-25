@@ -65,9 +65,9 @@ const CharmLineItem = ({ item, formatPrice, errorMessage }) => {
           )}
         </div>
         <div className="flex flex-col flex-1 min-w-0">
-          <div className="text-xs font-light text-gray-900 mb-1 font-inter">
+          <div className="text-xs font-normal text-gray-900 mb-1 font-inter">
             <div className="break-words">{displayName || "Charm"}</div>
-            <div className="text-gray-500 font-light font-inter text-[10px]">
+            <div className="text-gray-500 font-normal font-inter text-[10px]">
               {item.category === "bronze"
                 ? "Bronze Charm"
                 : item.category === "flags"
@@ -145,7 +145,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
             )}
           </div>
           <div className="flex flex-col flex-1 min-w-0">
-            <div className="text-xs font-light text-gray-900 mb-1 font-inter">
+            <div className="text-xs font-normal text-gray-900 mb-1 font-inter">
               <div className="break-words">
                 {item.caseName || item.name}
                 {caseQty > 1 ? (
@@ -153,7 +153,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
                 ) : null}
               </div>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-gray-500 font-light font-inter">
+                <span className="text-gray-500 font-normal font-inter">
                   Color:
                 </span>
                 <div
@@ -215,7 +215,7 @@ const CustomCaseWithCharms = ({ item, formatPrice, errorMessage, charmErrors = {
                   </div>
                 )}
               </div>
-              <div className="text-xs font-light text-gray-900 mb-1 font-inter flex-1 min-w-0">
+              <div className="text-xs font-normal text-gray-900 mb-1 font-inter flex-1 min-w-0">
                 <div className="break-words">
                   {displayName || 'Charm'}
                   {pin.count * caseQty > 1 ? (
@@ -287,7 +287,7 @@ const StandaloneCase = ({ item, formatPrice, errorMessage }) => (
             )}
           </div>
           <div className="flex flex-col flex-1 min-w-0">
-            <div className="text-xs font-light text-gray-900 mb-1 font-inter">
+            <div className="text-xs font-normal text-gray-900 mb-1 font-inter">
               <div className="break-words">
                 {item.caseName || item.name || "Passport Case"}
                 {(item.quantity || 1) > 1 ? (
@@ -296,7 +296,7 @@ const StandaloneCase = ({ item, formatPrice, errorMessage }) => (
               </div>
               {item.color && (
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-gray-500 font-light font-inter">
+                  <span className="text-gray-500 font-normal font-inter">
                     Color:
                   </span>
                   <div
@@ -332,7 +332,7 @@ const QuantityControls = ({
   decrementItemQty,
 }) => (
   <div>
-    <div className="text-xs text-gray-500 mb-2 font-light font-inter">
+    <div className="text-xs text-gray-500 mb-2 font-normal font-inter">
       Quantity:
     </div>
     <div className="flex flex-col gap-2">
@@ -344,7 +344,7 @@ const QuantityControls = ({
         >
           −
         </button>
-        <div className="px-3 py-1 text-sm text-gray-900 font-light font-inter">
+        <div className="px-3 py-1 text-sm text-gray-900 font-normal font-inter">
           {item.quantity || 1}
         </div>
         <button
@@ -397,7 +397,7 @@ const CartItem = ({
           <div className="flex items-center justify-end">
             <button
               onClick={() => removeFromCart(index)}
-              className="flex items-center text-btn-primary-blue hover:text-btn-primary-blue-hover px-4 py-2 text-xs uppercase tracking-wider font-light transition-colors font-inter"
+              className="flex items-center text-btn-primary-blue hover:text-btn-primary-blue-hover px-4 py-2 text-xs font-normal transition-colors font-inter"
             >
               <FontAwesomeIcon icon={faTrash} className="mr-2 text-xs" />
               Remove
@@ -407,7 +407,7 @@ const CartItem = ({
 
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex justify-between items-center">
-            <span className="text-sm font-light text-gray-700 font-inter">
+            <span className="text-sm font-normal text-gray-700 font-inter">
               Item Total:
             </span>
             <span className="text-sm font-medium text-gray-900 font-inter">

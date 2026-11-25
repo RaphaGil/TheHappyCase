@@ -42,8 +42,8 @@ const QuoteSection = () => {
             <span
               key={i}
               className={`inline-block w-2 h-2 rounded-full transition-colors ${
-                i === index ? 'bg-btn-primary-blue' : 'bg-blue-200'
-              }`}
+ i === index ? 'bg-btn-primary-blue' : 'bg-blue-200'
+ }`}
             />
           ))}
         </div>

@@ -128,7 +128,7 @@ const CaseItem = ({
               )}
             </div>
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-light text-gray-900 font-inter">
+              <span className="text-sm font-normal text-gray-900 font-inter">
                 {item.caseName || item.name || 'Passport Case'}
                 {qty > 1 ? (
                   <span className="text-gray-500"> (×{qty} total)</span>
@@ -136,7 +136,7 @@ const CaseItem = ({
               </span>
               {item.color && (
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-xs text-gray-500 font-light font-inter">Color:</span>
+                  <span className="text-xs text-gray-500 font-normal font-inter">Color:</span>
                   <div className="w-3 h-3 rounded-full border border-gray-300" style={{backgroundColor: item.color}}></div>
                 </div>
               )}
@@ -191,7 +191,7 @@ const CaseItem = ({
                 )}
               </div>
               <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-sm font-light text-gray-900 font-inter">
+                <span className="text-sm font-normal text-gray-900 font-inter">
                   {getBaseCharmName(groupedPin.name) || 'Charm'}
                   {totalCharmQty > 1 ? (
                     <span className="text-gray-500"> (×{totalCharmQty} total)</span>

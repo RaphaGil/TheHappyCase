@@ -30,26 +30,26 @@ const About = () => {
             <div className="space-y-8 font-inter flex-1">
               <section>
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Our Story</h2>
-                <p className="text-gray-600 font-light">
+                <p className="text-gray-600 font-normal">
                   The Happy Case was born from a love of travel and a desire to create passport holders that are both practical and personal. We believe every journey deserves a case that reflects your unique style.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">What We Offer</h2>
-                <p className="text-gray-600 font-light">
+                <p className="text-gray-600 font-normal">
                   Choose from Economy, First Class, and Business Class passport cases. Personalize with 40+ travel-themed charms, bronze pins, colorful designs, and custom text. All our cases are RFID-protected and water-resistant.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Get Started</h2>
-                <p className="text-gray-600 font-light mb-4">
+                <p className="text-gray-600 font-normal mb-4">
                   Ready to create your custom passport case?
                 </p>
                 <Link
                   href="/custom-passport"
-                  className="inline-block px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors font-inter"
+                  className="btn-happy inline-block px-6 py-3 font-inter"
                 >
                   Create Yours
                 </Link>

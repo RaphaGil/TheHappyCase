@@ -628,11 +628,11 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         itemErrors={itemErrors}
       />
  
-      <div className="flex flex-col lg:flex-row  w-full ">
+      <div className="flex flex-col lg:flex-row w-full ">
         {/* Checkout form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-6  mt-6 lg:mt-0 lg:p-6 w-full lg:w-1/2 lg:flex-shrink-0"
+          className="space-y-6 mt-6 lg:mt-0 lg:p-6 w-full lg:w-1/2 lg:flex-shrink-0"
         > 
         {/* Customer Information */}
         <CustomerInfoForm 
@@ -665,7 +665,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
         <button
           type="submit"
           disabled={!stripe || !elements || loading || !paymentElementReady}
-          className="w-full py-3 text-sm uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary hover:bg-btn-primary-hover text-btn-primary-text border border-btn-primary-border hover:border-btn-primary-hover transition-all duration-200"
+          className="btn-happy w-full py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed font-inter"
         >
           {loading ? 'Processing...' : 'Complete Payment'}
 </button>
@@ -700,7 +700,7 @@ const CheckoutForm = ({ isNavigatingToSuccessRef: isNavigatingToSuccessRefProp }
       {/* Footer Links */}
       <div className="w-full border-t border-gray-200 mt-8 pt-6 pb-6">
         <div className="max-w-6xl mx-auto px-4 lg:px-6">
-          <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs text-gray-600 font-light font-inter">
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-xs text-gray-600 font-normal font-inter">
             <Link 
               href="/returns" 
               className="hover:text-gray-900 transition-colors underline"

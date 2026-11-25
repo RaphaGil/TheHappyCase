@@ -53,8 +53,8 @@ const RefundPolicy = () => {
                   </h2>
                   <svg
                     className={`w-5 h-5 text-gray-600 transform transition-transform ${
-                      openSections.customised ? 'rotate-180' : ''
-                    }`}
+ openSections.customised ? 'rotate-180' : ''
+ }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -99,8 +99,8 @@ const RefundPolicy = () => {
                   </h2>
                   <svg
                     className={`w-5 h-5 text-gray-600 transform transition-transform ${
-                      openSections.nonCustomised ? 'rotate-180' : ''
-                    }`}
+ openSections.nonCustomised ? 'rotate-180' : ''
+ }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -144,8 +144,8 @@ const RefundPolicy = () => {
                   </h2>
                   <svg
                     className={`w-5 h-5 text-gray-600 transform transition-transform ${
-                      openSections.howToReturn ? 'rotate-180' : ''
-                    }`}
+ openSections.howToReturn ? 'rotate-180' : ''
+ }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -201,8 +201,8 @@ const RefundPolicy = () => {
                   </h2>
                   <svg
                     className={`w-5 h-5 text-gray-600 transform transition-transform ${
-                      openSections.refunds ? 'rotate-180' : ''
-                    }`}
+ openSections.refunds ? 'rotate-180' : ''
+ }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -249,8 +249,8 @@ const RefundPolicy = () => {
                   </h2>
                   <svg
                     className={`w-5 h-5 text-gray-600 transform transition-transform ${
-                      openSections.notEligible ? 'rotate-180' : ''
-                    }`}
+ openSections.notEligible ? 'rotate-180' : ''
+ }`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

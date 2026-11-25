@@ -88,27 +88,27 @@ export default {
       },
       fontSize: {
         // Standard font sizes with line heights
-        'xs': ['0.65rem', { lineHeight: '1rem', letterSpacing: '0.05em' }],      // 12px
-        'sm': ['0.75rem', { lineHeight: '1.25rem', letterSpacing: '0.05em' }],   // 14px
-        'base': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0.05em' }],     // 16px
-        'lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '0.05em' }],  // 18px
-        'xl': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '0.05em' }],   // 20px
-        '2xl': ['1.5rem', { lineHeight: '2rem', letterSpacing: '0.05em' }],      // 24px
-        '3xl': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '0.05em' }], // 30px
+        'xs': ['0.75rem', { lineHeight: '1rem' }],          // 12px
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],      // 14px
+        'base': ['1rem', { lineHeight: '1.5rem' }],     // 16px
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],  // 18px
+        'xl': ['1.25rem', { lineHeight: '1.75rem' }],   // 20px
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],      // 24px
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }], // 30px
         // 128px
         
         // Semantic font sizes for typography
-        'title': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '0.05em' }],   // 30px - Main page titles (h1)
-        'title-lg': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '0.05em' }],      // 36px - Large hero titles
-        'title-xl': ['3rem', { lineHeight: '1.2', letterSpacing: '0.05em' }],   // 48px - Extra large hero titles
-        'subtitle': ['1.875rem', { lineHeight: '2.25rem', letterSpacing: '0.05em' }], // 30px - Subtitles (h2)
-        'subtitle-lg': ['2.25rem', { lineHeight: '2.5rem', letterSpacing: '0.05em' }], // 36px - Large subtitles
-        'heading': ['1.5rem', { lineHeight: '2rem', letterSpacing: '0.05em' }],    // 24px - Section headings (h3)
-        'heading-sm': ['1.25rem', { lineHeight: '1.75rem', letterSpacing: '0.05em' }], // 20px - Small headings (h4)
-        'body': ['1rem', { lineHeight: '1.5rem', letterSpacing: '0.3px' }],       // 16px - Body text (p)
-        'body-sm': ['0.875rem', { lineHeight: '1.25rem', letterSpacing: '0.3px' }], // 14px - Small body text
-        'body-lg': ['1.125rem', { lineHeight: '1.75rem', letterSpacing: '0.3px' }], // 18px - Large body text
-        'caption': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.05em' }],   // 12px - Captions and labels
+        'title': ['clamp(1.75rem, 1.45rem + 1.4vw, 2.25rem)', { lineHeight: '1.15' }],   // 30px - Main page titles (h1)
+        'title-lg': ['clamp(2rem, 1.6rem + 1.8vw, 2.75rem)', { lineHeight: '1.1' }],      // 36px - Large hero titles
+        'title-xl': ['clamp(2.25rem, 1.6rem + 3vw, 3.5rem)', { lineHeight: '1.1' }],   // 48px - Extra large hero titles
+        'subtitle': ['clamp(1.5rem, 1.3rem + 1vw, 1.875rem)', { lineHeight: '1.2' }], // 30px - Subtitles (h2)
+        'subtitle-lg': ['clamp(1.75rem, 1.45rem + 1.4vw, 2.25rem)', { lineHeight: '1.15' }], // 36px - Large subtitles
+        'heading': ['1.5rem', { lineHeight: '2rem' }],    // 24px - Section headings (h3)
+        'heading-sm': ['1.25rem', { lineHeight: '1.75rem' }], // 20px - Small headings (h4)
+        'body': ['1rem', { lineHeight: '1.5rem' }],       // 16px - Body text (p)
+        'body-sm': ['0.875rem', { lineHeight: '1.25rem' }], // 14px - Small body text
+        'body-lg': ['1.125rem', { lineHeight: '1.75rem' }], // 18px - Large body text
+        'caption': ['0.75rem', { lineHeight: '1rem' }],   // 12px - Captions and labels
       },
       letterSpacing: {
         // Custom letter spacing values
@@ -117,8 +117,8 @@ export default {
         'wide': '0.025em',
         'wider': '0.05em',
         'widest': '0.1em',
-        'title': '0.05em',      // Standard for titles
-        'body': '0.3px',       // Standard for body text
+        'title': '0em',         // Standard for titles
+        'body': '0em',         // Standard for body text
         'heading': '1px',      // For headings with Fredoka One
       },
       keyframes: {

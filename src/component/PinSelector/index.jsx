@@ -116,10 +116,10 @@ const CategorySelector = ({
           role="option"
           aria-selected={isActive}
           className={`${OPTION_CHARM_CATEGORY_CARD_MIN_H} w-full flex flex-col items-center justify-center px-1 py-1.5 rounded-lg transition-all duration-200 ${
-            isActive
-              ? "bg-gray-50 border border-gray-900 shadow-sm ring-1 ring-gray-900/10"
-              : "border border-gray-100 hover:border-gray-200 hover:bg-gray-50/60"
-          }`}
+ isActive
+ ? "bg-gray-50 border border-gray-900 shadow-sm ring-1 ring-gray-900/10"
+ : "border border-gray-100 hover:border-gray-200 hover:bg-gray-50/60"
+ }`}
           onClick={() => {
             setSelectedCategory(opt.value);
             if (onDropdownToggle) {
@@ -251,8 +251,8 @@ const PinCard = ({ pin, isSelected, isSoldOut, isUnavailable = false, onClick, i
     <div
       data-first-pin={isFirst ? true : undefined}
       className={`flex flex-col items-center justify-start text-center space-y-0.5 p-1 sm:p-1.5 h-full transition-colors group touch-manipulation ${
-        disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-      }`}
+ disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+ }`}
       onClick={onClick}
     >
       <div className={`relative rounded-md transition-all duration-200 p-0.5 ${isSelected && !disabled ? "bg-gray-50 border border-gray-900" : "border border-transparent hover:bg-gray-50"}`} style={{ overflow: "visible" }}>
@@ -261,8 +261,8 @@ const PinCard = ({ pin, isSelected, isSoldOut, isUnavailable = false, onClick, i
             src={normalizeImagePath(pin.src)}
             alt={pin.name}
             className={`w-full h-full object-contain transition-all duration-200 rounded bg-transparent ${
-              disabled ? "opacity-50" : ""
-            }`}
+ disabled ? "opacity-50" : ""
+ }`}
             loading="lazy"
             width={80}
             height={80}

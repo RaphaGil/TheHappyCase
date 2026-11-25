@@ -83,7 +83,7 @@ const CustomTextSection = ({
             }}
             onFocus={handleInputFocus}
             placeholder="Type your name here"
-            className="w-full px-3 py-2.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-light text-sm font-inter transition-colors"
+            className="w-full px-3 py-2.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400 bg-white text-gray-900 placeholder-gray-400 font-normal text-sm font-inter transition-colors"
             maxLength={MAX_TEXT_LENGTH}
           />
           <p className="mt-1 text-sm text-gray-500 font-inter">
@@ -105,14 +105,14 @@ const CustomTextSection = ({
           <button
             onClick={handleAddText}
             disabled={!customText.trim()}
-            className="flex-1 px-4 py-2 text-xs font-medium uppercase tracking-wider rounded-md disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border hover:border-btn-primary-blue-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+            className="btn-happy flex-1 px-4 py-2 text-xs disabled:cursor-not-allowed font-inter"
           >
            Add Text
           </button>
           <button
             onClick={handleClear}
             disabled={!customText.trim()}
-            className="px-4 py-2 text-xs font-medium uppercase tracking-wider rounded-md disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-100 disabled:cursor-not-allowed font-inter bg-btn-light-gray hover:bg-btn-light-gray-hover text-btn-light-gray-text border border-btn-light-gray-border hover:border-btn-light-gray-hover transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+            className="btn-happy btn-soft px-4 py-2 text-xs disabled:cursor-not-allowed font-inter"
           >
            Clear
           </button>

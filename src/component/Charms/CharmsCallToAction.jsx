@@ -15,7 +15,7 @@ const CharmsCallToAction = ({ links = [] }) => {
           <button
             key={path}
             onClick={() => router.push(path)}
-            className="px-6 py-2 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-inter"
+            className="px-6 py-2 text-xs text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-inter"
           >
             {label}
           </button>

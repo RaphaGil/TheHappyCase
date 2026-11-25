@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import PageHeader from '@/component/Shared/PageHeader';
 import Link from 'next/link';
 import { useCart } from '../../context/CartContext';
 import { useInventoryReady } from '../../hooks/useInventoryReady';
@@ -234,17 +235,12 @@ const Charms = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-title text-gray-900 tracking-title mb-1 md:mb-2">
-            CHARMS
-          </h1>
-          <div className="w-16 sm:w-20 md:w-24 h-px bg-gray-200 mx-auto mb-3 sm:mb-4"></div>
-          <p className="text-sm text-gray-500 max-w-2xl mx-auto font-light px-4 font-inter">
-            <Link href="/custom-passport" className="text-gray-900 hover:text-gray-700 underline transition-colors">Create</Link> your custom case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself.
-          </p>
-        </div>
+      <PageHeader
+        title="Charms"
+        crumbs={[{ href: '/', label: 'Home' }, { href: '/charms', label: 'Charms' }]}
+        subtitle="Design your case with charms pre-glued, or buy the case and charms separately and enjoy gluing them yourself."
+      />
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-10">
 
         {/* Filters Section */}
         <div className="pb-6">
@@ -262,7 +258,7 @@ const Charms = () => {
         </div>
 
         {/* Search and Results Section */}
-        <div className="mb-8 flex items-center justify-between gap-4">
+        <div className="mb-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <SearchBar
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
@@ -279,7 +275,7 @@ const Charms = () => {
         {/* Charms Grid */}
         {filteredCharms.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 mb-12 min-h-[400px] sm:min-h-[600px]">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-12 min-h-[400px] sm:min-h-[600px]">
               {displayedCharms.map((charm, index) => (
                 <CharmGridItemWithInventory
                   key={index}
@@ -298,12 +294,13 @@ const Charms = () => {
               onPageChange={setCurrentPage}
             />
 
-            <div className="flex justify-center mt-12">
-              <Link
-                href="/custom-passport"
-                className="inline-flex items-center justify-center px-8 py-3 text-sm uppercase tracking-wider shadow-lg font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out"
-              >
-                Create Yours
+            <div className="mt-12 flex flex-col items-center gap-5 rounded-3xl bg-[#30279f] px-6 py-10 text-center md:flex-row md:justify-between md:px-12 md:text-left">
+              <div>
+                <p className="font-brand text-2xl text-white md:text-3xl">Want your charms pre-glued?</p>
+                <p className="mt-1 text-sm text-white/80 font-inter">Design your case online and we&apos;ll put it together for you.</p>
+              </div>
+              <Link href="/custom-passport" className="btn-happy btn-sunny flex-shrink-0 font-inter">
+                Design yours
               </Link>
             </div>
           </>

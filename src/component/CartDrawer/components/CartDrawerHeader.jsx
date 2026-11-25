@@ -3,7 +3,7 @@ import React from 'react';
 const CartDrawerHeader = ({ onClose }) => {
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-100 flex-shrink-0">
-      <h3 className="text-sm font-light uppercase tracking-wider text-gray-900 font-inter">
+      <h3 className="text-sm font-normal text-gray-900 font-inter">
         Your Cart
       </h3>
       <button 

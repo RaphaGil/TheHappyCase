@@ -3,7 +3,7 @@ import React from 'react';
 // Inline SVG chevron - avoids FontAwesome flash (big black tick) on page load
 const ChevronIcon = ({ isOpen }) => (
   <svg
-    className={`w-3 h-3 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+    className={`w-4 h-4 text-[#30279f] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -21,72 +21,79 @@ const SpecificationsDropdown = ({
   if (!specifications) return null;
 
   return (
-    <div className="border-b border-gray-100 pb-8">
+    <div className="border-y border-[#30279f]/10">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between py-2 text-sm uppercase tracking-wider text-gray-600 font-normal hover:text-gray-900 transition-colors font-inter"
+        aria-expanded={isOpen}
+        className="w-full flex items-center justify-between py-4 text-sm font-semibold text-gray-900 hover:text-[#30279f] transition-colors font-inter"
       >
         <span>Specifications</span>
         <ChevronIcon isOpen={isOpen} />
       </button>
       {isOpen && (
-        <div className="flex flex-col gap-3 mt-4">
+        <div className="flex flex-col pb-4">
+          {specifications.passportCapacity && (
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
+              <span className="text-sm text-gray-500 font-inter">Capacity</span>
+              <span className="text-sm text-gray-900 font-inter">{specifications.passportCapacity}</span>
+            </div>
+          )}
           {specifications.dimensions && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Dimensions</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.dimensions}</span>
             </div>
           )}
           {specifications.weight && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Weight</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.weight}</span>
             </div>
           )}
           {specifications.material && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Material</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.material}</span>
             </div>
           )}
           {specifications.closure && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Closure</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.closure}</span>
             </div>
           )}
           {specifications.cardSlots && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Card Slots</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.cardSlots}</span>
             </div>
           )}
           {specifications.interior && (
-            <div className="flex justify-between items-start py-2 border-b border-gray-50">
+            <div className="flex justify-between items-start py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Interior</span>
               <span className="text-sm text-gray-900 text-right font-inter">{specifications.interior}</span>
             </div>
           )}
           {specifications.rfid && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">RFID Protection</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.rfid}</span>
             </div>
           )}
           {specifications.features && (
-            <div className="flex justify-between items-start py-2 border-b border-gray-50">
+            <div className="flex justify-between items-start py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Features</span>
               <span className="text-sm text-gray-900 text-right font-inter">{specifications.features}</span>
             </div>
           )}
           {specifications.passportCapacity && (
-            <div className="flex justify-between items-center py-2 border-b border-gray-50">
+            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Capacity</span>
               <span className="text-sm text-gray-900 font-inter">{specifications.passportCapacity}</span>
             </div>
           )}
           {specifications.care && (
-            <div className="flex justify-between items-start py-2 border-b border-gray-50">
+            <div className="flex justify-between items-start py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Care Instructions</span>
               <span className="text-sm text-gray-900 text-right font-inter">{specifications.care}</span>
             </div>

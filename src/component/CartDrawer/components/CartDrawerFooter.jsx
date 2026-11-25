@@ -32,7 +32,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
   return (
     <div className="p-4 border-t border-gray-100 bg-white flex-shrink-0">
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
-        <div className="text-sm font-light text-gray-700 uppercase tracking-wider font-inter">
+        <div className="text-sm font-normal text-gray-700 font-inter">
           Subtotal:
         </div>
         <div className="text-lg font-medium text-gray-900 font-inter">
@@ -40,7 +40,7 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
         </div>
       </div>
      
-      <p className="text-xs text-gray-500 text-center mb-4 font-light font-inter">
+      <p className="text-xs text-gray-500 text-center mb-4 font-normal font-inter">
         <Link
           href="/shipping"
           className="text-gray-500 hover:text-gray-900 underline transition-colors"
@@ -52,13 +52,13 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
       
       <div className="flex flex-col gap-3">
         <button
-          className="w-full py-2.5 text-xs uppercase tracking-wider text-btn-primary-blue hover:text-btn-primary-blue-hover border border-btn-primary-blue/50 hover:border-btn-primary-blue transition-all duration-200 font-light font-inter"
+          className="btn-happy btn-soft w-full py-3 text-sm font-inter"
           onClick={handleContinueShopping}
         >
           Continue Shopping
         </button>
         <button
-          className="w-full py-2.5 text-xs uppercase tracking-wider font-light disabled:opacity-50 disabled:cursor-not-allowed font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+          className="btn-happy w-full py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed font-inter"
           disabled={cartLength === 0}
           onClick={handleCheckout}
         >

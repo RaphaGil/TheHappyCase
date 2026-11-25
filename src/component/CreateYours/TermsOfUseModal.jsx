@@ -65,7 +65,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
         <div className="flex justify-end gap-3 p-6 border-t border-gray-200">
           <button
             onClick={onClose}
-            className="px-6 py-2 text-sm uppercase tracking-wider font-inter bg-btn-secondary hover:bg-btn-secondary-hover text-btn-secondary-text border border-btn-secondary-border hover:border-btn-secondary-hover transition-all duration-200"
+            className="btn-happy btn-soft px-6 py-2 text-sm font-inter"
           >
             Close
           </button>
@@ -77,7 +77,7 @@ const TermsOfUseModal = ({ show, onClose, onAgree }) => {
                 onClose();
               }
             }}
-            className="px-6 py-2 text-sm uppercase tracking-wider font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-all duration-200"
+            className="btn-happy px-6 py-2 text-sm font-inter"
           >
             I Agree
           </button>

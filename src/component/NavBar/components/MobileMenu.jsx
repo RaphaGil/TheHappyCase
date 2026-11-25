@@ -107,7 +107,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="flex flex-col fixed left-0 top-0 w-[70%] bg-white border-r border-gray-100 font-light z-50 shadow-xl font-inter"
+      className="flex flex-col fixed left-0 top-0 w-[70%] bg-white border-r border-gray-100 font-normal z-50 shadow-xl font-inter"
       style={{
         height: '100vh',
         maxHeight: '100vh',
@@ -144,15 +144,15 @@ const MobileMenu = ({ isOpen, onClose }) => {
             </button>
           </li>
           
-          {/* Login/User Area - Yellow background */}
-          <li>
+          {/* Account area */}
+          <li className="px-3 pb-2 mb-1 border-b border-[#30279f]/10">
             {isLoggedIn && userEmail ? (
-              // Logged in: Show email, My Orders, and Sign Out in yellow area
-              <div className="bg-yellow-100 border-b border-gray-100">
+              // Logged in: show email, My Orders and Sign Out
+              <div className="bg-white">
                 {/* User Email */}
-                <div className="px-4 py-3 flex items-center gap-3">
-                  <FontAwesomeIcon icon={faUser} className="text-sm" style={{color: '#6b7280'}} />
-                  <span className="font-inter text-sm" style={{color: '#6b7280'}}>
+                <div className="px-4 py-3 flex items-center gap-3 text-[#30279f]">
+                  <FontAwesomeIcon icon={faUser} className="text-sm" />
+                  <span className="font-inter text-sm font-semibold truncate">
                     {userEmail}
                   </span>
                 </div>
@@ -161,10 +161,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 <Link
                   href="/my-orders"
                   onClick={onClose}
-                  className="px-4 py-3 hover:underline font-light transition-colors text-sm tracking-wider flex items-center gap-3 border-t border-yellow-200"
-                  style={{color: '#6b7280'}}
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition-colors hover:bg-[#eef0ff] hover:text-[#30279f]"
                 >
-                  <FontAwesomeIcon icon={faShoppingBag} className="text-sm" />
+                  <FontAwesomeIcon icon={faShoppingBag} className="text-sm text-[#30279f]" />
                   <span className="font-inter">
                     My Orders
                   </span>
@@ -173,10 +172,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
                 {/* Sign Out Button */}
                 <button
                   onClick={handleSignOut}
-                  className="w-full px-4 py-3 hover:underline font-light transition-colors text-sm tracking-wider flex items-center gap-3 text-left"
-                  style={{color: '#6b7280'}}
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition-colors hover:bg-[#eef0ff] hover:text-[#30279f]"
                 >
-                  <FontAwesomeIcon icon={faRightFromBracket} className="text-sm" />
+                  <FontAwesomeIcon icon={faRightFromBracket} className="text-sm text-[#30279f]" />
                   <span className="font-inter">
                     Sign Out
                   </span>
@@ -187,10 +185,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
               <Link
                 href="/login"
                 onClick={onClose}
-                className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-yellow-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
-                style={{color: '#6b7280'}}
+                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition-colors hover:bg-[#eef0ff] hover:text-[#30279f]"
               >
-                <FontAwesomeIcon icon={faUser} className="text-sm" />
+                <FontAwesomeIcon icon={faUser} className="text-sm text-[#30279f]" />
                 <span className="font-inter">
                   Log in
                 </span>
@@ -200,14 +197,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
 
           {/* Dashboard Link - Only show if authorized */}
           {!checkingAuth && isAuthorized && (
-            <li>
+            <li className="px-3">
               <Link
                 href="/dashboard"
                 onClick={onClose}
-                className="px-4 py-3 hover:text-gray-900 hover:bg-gray-50 font-light transition-colors text-sm bg-blue-100 tracking-wider border-b border-gray-100 flex items-center gap-3"
-                style={{color: '#6b7280'}}
+                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition-colors hover:bg-[#eef0ff] hover:text-[#30279f]"
               >
-                <FontAwesomeIcon icon={faChartLine} className="text-sm" />
+                <FontAwesomeIcon icon={faChartLine} className="text-sm text-[#30279f]" />
                 <span className="font-inter">
                   Dashboard
                 </span>
@@ -215,7 +211,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
             </li>
           )}
             
-          <NavigationLinks isMobile={true} onLinkClick={onClose} />
+          <li className="px-3">
+            <NavigationLinks isMobile={true} onLinkClick={onClose} />
+          </li>
         </ul>
       </div>
       
@@ -231,7 +229,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
         {/* Social Media Icons - Mobile */}
         <div className="pt-4">
           <div className="px-4">
-            <p className="py-3 hover:text-gray-900 font-light text-sm uppercase">
+            <p className="py-3 hover:text-gray-900 font-normal text-sm ">
               Follow Us
             </p>
             <SocialMediaIcons isMobile={true} />

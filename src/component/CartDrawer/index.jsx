@@ -409,18 +409,18 @@ const CartDrawer = () => {
   };
 
   return (
-    <div className={`fixed inset-0 z-50  ${isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-50 ${isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black  transition-opacity ${isDrawerOpen ? 'opacity-40' : 'opacity-0'}`}
+        className={`absolute inset-0 bg-black transition-opacity ${isDrawerOpen ? 'opacity-40' : 'opacity-0'}`}
         onClick={closeCartDrawer}
       />
 
       {/* Drawer */}
       <div
         className={`absolute right-0 top-0 h-full w-full sm:w-2/3 lg:w-2/5 bg-white shadow-2xl transform transition-transform duration-300 flex flex-col ${
-          isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+ isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+ }`}
       >
         <CartDrawerHeader onClose={closeCartDrawer} />
 

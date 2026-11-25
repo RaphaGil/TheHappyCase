@@ -3,278 +3,202 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram as faInstagramBrand, faTiktok as faTiktokBrand, faFacebook as faFacebookBrand, faEtsy, faCcVisa, faCcMastercard, faCcAmex, faCcPaypal } from '@fortawesome/free-brands-svg-icons';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-
-import { useScrollAnimation } from '../../hooks/useScrollAnimation';
+import {
+  faInstagram,
+  faTiktok,
+  faFacebook,
+  faEtsy,
+  faWhatsapp,
+  faCcVisa,
+  faCcMastercard,
+  faCcAmex,
+  faCcPaypal,
+} from '@fortawesome/free-brands-svg-icons';
+import etsyReviews from '../../data/etsyReviews.json';
 
 const LogoImg = '/assets/logo.webp';
+const ETSY_SHOP_URL = 'https://www.etsy.com/shop/TheHappyCaseShop';
+const WHATSAPP_URL = 'https://wa.me/447450437243';
+
+const COLUMNS = [
+  {
+    title: 'Shop',
+    links: [
+      { href: '/custom-passport', label: 'Create yours' },
+      { href: '/passport-cases', label: 'Passport cases' },
+      { href: '/charms', label: 'Charms' },
+      { href: '/design-ideas', label: 'Design ideas' },
+    ],
+  },
+  {
+    title: 'Help',
+    links: [
+      { href: '/shipping', label: 'Shipping & processing times' },
+      { href: '/returns', label: 'Refund policy' },
+      { href: '/privacypolicy', label: 'Privacy policy' },
+      { href: '/faq', label: 'FAQ' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { href: '/about', label: 'About us' },
+      { href: '/my-orders', label: 'My orders' },
+      { href: ETSY_SHOP_URL, label: 'Our Etsy shop', external: true },
+      { href: WHATSAPP_URL, label: 'Chat on WhatsApp', external: true },
+    ],
+  },
+];
+
+const SOCIALS = [
+  { href: ETSY_SHOP_URL, icon: faEtsy, label: 'Visit our Etsy shop' },
+  { href: 'https://instagram.com/thehappycase.store', icon: faInstagram, label: 'Follow us on Instagram' },
+  { href: 'https://tiktok.com/@thehappycase.store', icon: faTiktok, label: 'Follow us on TikTok' },
+  { href: 'https://facebook.com/thehappycase', icon: faFacebook, label: 'Follow us on Facebook' },
+  { href: WHATSAPP_URL, icon: faWhatsapp, label: 'Chat with us on WhatsApp' },
+];
+
+const PAYMENTS = [
+  { icon: faCcVisa, label: 'Visa', color: '#1434CB' },
+  { icon: faCcMastercard, label: 'Mastercard', color: '#EB001B' },
+  { icon: faCcAmex, label: 'American Express', color: '#006FCF' },
+  { icon: faCcPaypal, label: 'PayPal', color: '#003087' },
+];
+
+const linkClass =
+  'inline-block py-1 text-[15px] text-white/80 transition-colors hover:text-[#ffd93d] focus:outline-none focus-visible:text-[#ffd93d] font-inter';
+
+const FooterLink = ({ link }) =>
+  link.external ? (
+    <a href={link.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
+      {link.label}
+    </a>
+  ) : (
+    <Link href={link.href} className={linkClass}>
+      {link.label}
+    </Link>
+  );
+
+/** Link column: collapsible on phones, always open from tablet up. */
+const FooterColumn = ({ column }) => {
+  const [open, setOpen] = useState(false);
+  const id = `footer-${column.title.toLowerCase()}`;
+  return (
+    <div className="border-b border-white/10 md:border-0">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls={id}
+        className="flex w-full items-center justify-between py-4 text-left md:pointer-events-none md:py-0"
+      >
+        <span className="text-sm font-semibold uppercase tracking-[0.12em] text-[#ffd93d] font-inter">{column.title}</span>
+        <svg
+          viewBox="0 0 24 24"
+          className={`h-5 w-5 text-white/70 transition-transform md:hidden ${open ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden="true"
+        >
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      <ul id={id} className={`${open ? 'block' : 'hidden'} space-y-1 pb-4 md:mt-4 md:block md:pb-0`}>
+        {column.links.map((link) => (
+          <li key={link.label}>
+            <FooterLink link={link} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const [quickLinksOpen, setQuickLinksOpen] = useState(false);
-  const [customerServiceOpen, setCustomerServiceOpen] = useState(false);
-  const [sectionRef, sectionVisible] = useScrollAnimation({ threshold: 0.1 });
+  const { average, count } = etsyReviews.summary;
 
   return (
-    <footer className="bg-white border-t border-gray-100">
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
-          
-          {/* Company Info */}
-          <div className="space-y-5 pb-6 md:pb-0  md:border-0">
-            <div className="flex items-center mb-2">
-              <Link href="/" className="hover:opacity-90 transition-opacity duration-300" aria-label="HappyCase home">
-                <div
-                  className="flex flex-col cursor-pointer transition-all duration-300 text-gray-900 font-fredoka"
-                >
-                  <img src={LogoImg} alt="The Happy Case Logo" className="h-14 w-auto " />
-                </div>
-               
-              </Link>
-            </div>
-            <p className="text-gray-900 text-body-sm leading-relaxed font-light pt-2 font-inter">
-              Creating personalized passport cases that bring joy to your travels. 
-      
+    <footer className="bg-[#231c7a] text-white">
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-14 md:px-8 md:pb-8 md:pt-16">
+        <div className="grid gap-10 md:grid-cols-3 md:gap-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-12">
+          {/* Brand */}
+          <div className="max-w-sm md:col-span-3 md:max-w-xl lg:col-span-1 lg:max-w-sm">
+            <Link href="/" className="inline-flex items-center gap-3" aria-label="The Happy Case home">
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1.5">
+                <img src={LogoImg} alt="" className="h-full w-full object-contain" loading="lazy" decoding="async" width="40" height="40" />
+              </span>
+              <span className="font-brand text-2xl text-white">The Happy Case</span>
+            </Link>
+            <p className="mt-4 text-[15px] leading-relaxed text-white/80 font-inter">
+              Personalised passport cases, designed by you and made with love, to bring joy to every journey.
             </p>
-            <div className="flex flex-col gap-3 pt-2">
-            <p className="text-body-sm text-gray-900 font-light font-inter">Follow us!</p>
-            <div className="flex gap-4">
+            <a
+              href={`${ETSY_SHOP_URL}#reviews`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm text-white transition-colors hover:bg-white/20 font-inter"
+            >
+              <span className="text-[#ffd93d]" aria-hidden="true">★★★★★</span>
+              {average.toFixed(1)} from {count} Etsy reviews
+            </a>
+            <ul className="mt-6 flex flex-wrap gap-2.5" aria-label="Social media">
+              {SOCIALS.map((s) => (
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-[#ffd93d] hover:text-[#30279f]"
+                  >
+                    <FontAwesomeIcon icon={s.icon} className="text-[17px]" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Link columns */}
+          <div className="md:contents">
+            {COLUMNS.map((column) => (
+              <FooterColumn key={column.title} column={column} />
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-12 flex flex-col items-center gap-5 border-t border-white/15 pt-6 md:flex-row md:justify-between">
+          <ul className="flex flex-wrap items-center justify-center gap-2" aria-label="Accepted payment methods">
+            {PAYMENTS.map((p) => (
+              <li key={p.label} className="flex h-8 w-12 items-center justify-center rounded-md bg-white" title={p.label}>
+                <FontAwesomeIcon icon={p.icon} className="text-[22px]" style={{ color: p.color }} aria-label={p.label} />
+              </li>
+            ))}
+            <li className="flex h-8 w-12 items-center justify-center rounded-md bg-[#FFB3C7]" title="Klarna">
+              <img
+                src="https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg"
+                alt="Klarna"
+                className="h-4 w-auto"
+                loading="lazy"
+                decoding="async"
+                width={40}
+                height={16}
+              />
+            </li>
+          </ul>
+
+          {/* Right padding keeps the floating WhatsApp button from covering this text */}
+          <div className="text-center text-sm text-white/70 font-inter md:pr-20 md:text-right">
+            <p>© {currentYear} The Happy Case. All rights reserved.</p>
+            <p className="mt-1">
+              Developed by{' '}
               <a
-                href="https://www.etsy.com/shop/TheHappyCaseShop"
+                href="https://www.linkedin.com/in/raphaelagil/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
-                aria-label="Visit our Etsy shop"
-              >
-                <FontAwesomeIcon icon={faEtsy} className="text-lg" style={{color: '#F16521'}} />
-              </a>
-              <a 
-                href="https://instagram.com/thehappycase.store" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
-                aria-label="Follow us on Instagram"
-              >
-                <FontAwesomeIcon icon={faInstagramBrand} className="text-lg" style={{color: '#E4405F'}} />
-              </a>
-              <a 
-                href="https://tiktok.com/@thehappycase.store" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
-                aria-label="Follow us on TikTok"
-              >
-                <FontAwesomeIcon icon={faTiktokBrand} className="text-lg" style={{color: '#000000'}} />
-              </a>
-              <a 
-                href="https://facebook.com/thehappycase" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-80"
-                aria-label="Follow us on Facebook"
-              >
-                <FontAwesomeIcon icon={faFacebookBrand} className="text-lg" style={{color: '#1877F2'}} />
-              </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div className="space-y-3  md:pb-0 ">
-            {/* Mobile: Dropdown button */}
-            <button
-              onClick={() => setQuickLinksOpen(!quickLinksOpen)}
-              className="md:hidden flex items-center justify-between w-full text-caption uppercase tracking-wider text-gray-900 hover:text-gray-800 transition-colors duration-200 mb-2 font-bold "
-            >
-              Quick Links
-              <FontAwesomeIcon 
-                icon={quickLinksOpen ? faChevronUp : faChevronDown} 
-                className="text-xs ml-2"
-              />
-            </button>
-            {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900  mb-2 font-bold ">
-              Quick Links
-            </h4>
-            {/* Mobile: Conditional content */}
-            {quickLinksOpen && (
-              <ul className="md:hidden space-y-3 ">
-                <li>
-                  <Link href="/about" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                   About 
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                   Home
-                  </Link>
-                </li>
-                {/* <li>
-                  <Link href="/design-ideas" className="text-caption text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
-                    Design Ideas
-                  </Link>
-                </li> */}
-                <li>
-                  <Link href="/custom-passport" className="text-caption text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                    Create Yours
-                  </Link>
-                </li>
-              </ul>
-            )}
-            {/* Desktop: Always visible content */}
-            <ul className="hidden md:block ">
-              <li>
-                <Link href="/about" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                 About 
-                </Link>
-              </li>
-              <li>
-                <Link href="/" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                 Home
-                </Link>
-              </li>
-              {/* <li>
-                <Link href="/design-ideas" className="text-xs text-gray-500 hover:text-gray-900 transition-colors duration-200 font-light font-inter">
-                  Design Ideas
-                </Link>
-              </li> */}
-              <li>
-                <Link href="/custom-passport" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                  Create Yours
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Customer Service */}
-          <div className="space-y-3">
-            {/* Mobile: Dropdown button */}
-            <button
-              onClick={() => setCustomerServiceOpen(!customerServiceOpen)}
-              className="md:hidden flex items-center justify-between w-full  uppercase tracking-wider text-gray-900 font-bold hover:text-gray-800 transition-colors duration-200 mb-2 text-caption  "
-            >
-              Customer Service
-              <FontAwesomeIcon 
-                icon={customerServiceOpen ? faChevronUp : faChevronDown} 
-                className="text-xs ml-2"
-              />
-            </button>
-            {/* Desktop: Static heading */}
-            <h4 className="hidden md:block text-caption uppercase tracking-wider text-gray-900 font-bold mb-2 font-inter">
-              Customer Service
-            </h4>
-            {/* Mobile: Conditional content */}
-            {customerServiceOpen && (
-              <ul className="md:hidden space-y-3 ">
-                <li>
-                  <Link href="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                    Shipping and Processing Times
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                    Refund Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/privacypolicy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/faq" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                    FAQ
-                  </Link>
-                </li>
-              </ul>
-            )}
-            {/* Desktop: Always visible content */}
-            <ul className="hidden md:block space-y-1 ">
-              <li>
-                <Link href="/shipping" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                  Shipping and Processing Times
-                </Link>
-              </li>
-              <li>
-                <Link href="/returns" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                  Refund Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacypolicy" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-sm text-gray-900 hover:text-gray-800 transition-colors duration-200 font-light font-inter">
-                  FAQ
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          {/* <div className="space-y-4">
-            <h4 className="text-heading-sm font-bold font-fredoka" style={{color: '#1e3a8a'}}>
-              Get In Touch
-            </h4>
-            <div className="space-y-3">
-              <a 
-                href="mailto:hello@thehappycase.com" 
-                className="flex items-center text-gray-600 hover:text-blue-900 transition-colors duration-300"
-              >
-                <FontAwesomeIcon icon={faEnvelope} className="mr-3" />
-                <span>hello@thehappycase.com</span>
-              </a>
-              <div className="flex items-center text-gray-600">
-                <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-3" />
-                <span>Worldwide Shipping</span>
-              </div>
-            </div>
-          </div> */}
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className=" bg-white ">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            
-            {/* Payment Methods */}
-            <div className="flex items-center space-x-4">
-              <div className="flex space-x-3 items-center flex-wrap gap-y-2">
-                <FontAwesomeIcon icon={faCcVisa} className="text-xl" style={{color: '#1434CB'}} />
-                <FontAwesomeIcon icon={faCcMastercard} className="text-xl" style={{color: '#EB001B'}} />
-                <FontAwesomeIcon icon={faCcAmex} className="text-xl" style={{color: '#006FCF'}} />
-                <FontAwesomeIcon icon={faCcPaypal} className="text-xl" style={{color: '#003087'}} />
-                <img
-                  src="https://x.klarnacdn.net/payment-method/assets/badges/generic/klarna.svg"
-                  alt="Klarna"
-                  className="h-5 w-auto"
-                  width={60}
-                  height={20}
-                />
-              </div>
-            </div>
-
-            {/* Copyright */}
-            <div className="text-center md:text-right">
-              <p className="text-caption text-gray-900 font-light font-inter">
-                © {currentYear} The Happy Case. Made with love for all the travelers out there. All rights reserved.
-              </p>
-            </div>
-          </div>
-          
-          {/* Developer Credit */}
-          <div className="text-center mt-4 pt-4 border-t border-gray-200">
-            <p className="text-caption text-gray-600 font-light font-inter">
-              Developed by{' '}
-              <a 
-                href="https://www.linkedin.com/in/raphaelagil/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-900 hover:text-blue-900 transition-colors duration-200 underline"
+                className="text-white underline decoration-white/40 underline-offset-2 hover:text-[#ffd93d] hover:decoration-[#ffd93d]"
               >
                 Raphaela Gil
               </a>

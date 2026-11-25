@@ -233,7 +233,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
         {/* Success Message */}
         {success && step === 'code' && (
           <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-800 font-light font-inter">
+            <p className="text-sm text-green-800 font-normal font-inter">
               Verification code sent to <strong>{email}</strong>
             </p>
           </div>
@@ -242,7 +242,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
         {/* Error Message */}
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-800 font-light font-inter">
+            <p className="text-sm text-red-800 font-normal font-inter">
               {error}
             </p>
           </div>
@@ -252,7 +252,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
         {step === 'email' && (
           <form onSubmit={handleSendCode} className="space-y-4">
             <div>
-              <label className="block text-base text-gray-500 mb-1.5 font-light font-inter">
+              <label className="block text-base text-gray-500 mb-1.5 font-normal font-inter">
                 Email Address *
               </label>
               <input
@@ -264,7 +264,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
                 }}
                 placeholder="your.email@example.com"
                 autoFocus
-                className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base"
+                className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-normal font-inter text-base"
                 required
               />
             </div>
@@ -273,14 +273,14 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2 text-sm uppercase tracking-wider font-light font-inter border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2 text-sm font-normal font-inter border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-4 py-2 text-sm uppercase tracking-wider font-light font-inter bg-black text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-happy flex-1 px-4 py-2 text-sm font-inter disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Sending...' : 'Send Code'}
               </button>
@@ -292,10 +292,10 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
         {step === 'code' && (
           <form onSubmit={handleVerifyCode} className="space-y-4">
             <div>
-              <p className="text-sm text-gray-600 font-light font-inter mb-4">
+              <p className="text-sm text-gray-600 font-normal font-inter mb-4">
                 We've sent an 8-digit verification code to <strong>{email}</strong>. Please enter it below.
               </p>
-              <label className="block text-base text-gray-500 mb-1.5 font-light font-inter">
+              <label className="block text-base text-gray-500 mb-1.5 font-normal font-inter">
                 Verification Code *
               </label>
               <input
@@ -310,7 +310,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
                 placeholder="00000000"
                 maxLength={8}
                 autoFocus
-                className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base text-center text-2xl tracking-widest"
+                className="w-full px-3 py-2 border border-gray-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-yellow-100 focus:border-yellow-100 bg-white text-gray-900 placeholder-gray-400 font-light font-inter text-base text-center text-2xl "
                 required
               />
             </div>
@@ -325,7 +325,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
               <button
                 type="submit"
                 disabled={loading || !code || code.length !== 8}
-                className="w-full px-4 py-2 text-sm uppercase tracking-wider font-light font-inter bg-black text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-happy w-full px-4 py-2 text-sm font-inter disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Verifying...' : 'Verify Code'}
               </button>
@@ -333,7 +333,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
                 type="button"
                 onClick={handleResendCode}
                 disabled={loading}
-                className="text-sm text-gray-600 hover:text-gray-900 font-light font-inter underline disabled:opacity-50"
+                className="text-sm text-gray-600 hover:text-gray-900 font-normal font-inter underline disabled:opacity-50"
               >
                 Resend Code
               </button>
@@ -344,7 +344,7 @@ const SignInModal = ({ show, onClose, onVerified, initialEmail = '' }) => {
                   setCode('');
                   setError('');
                 }}
-                className="text-sm text-gray-600 hover:text-gray-900 font-light font-inter"
+                className="text-sm text-gray-600 hover:text-gray-900 font-normal font-inter"
               >
                 ← Back to email
               </button>

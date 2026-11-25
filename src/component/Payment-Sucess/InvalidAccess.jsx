@@ -17,7 +17,7 @@ const InvalidAccess = () => {
         </p>
         <button
           onClick={() => router.push('/')}
-          className="px-6 py-3 rounded-md bg-gray-900 hover:bg-gray-800 text-white transition-all duration-200 font-inter"
+          className="btn-happy px-6 py-3 font-inter"
         >
           Go Home
         </button>

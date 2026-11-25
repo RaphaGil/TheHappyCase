@@ -23,7 +23,7 @@ const MobileOrderSummary = ({
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between px-4 py-3 text-xs uppercase tracking-wider text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-light font-inter"
+          className="w-full flex items-center justify-between px-4 py-3 text-xs text-gray-600 hover:text-gray-900 border border-gray-200 hover:border-gray-400 transition-all duration-200 font-normal font-inter"
           aria-expanded={isOpen}
           aria-controls="mobile-order-summary"
         >
@@ -45,7 +45,7 @@ const MobileOrderSummary = ({
       </div>
       
       {isOpen && (
-        <div id="mobile-order-summary" className="lg:hidden  pb-4">
+        <div id="mobile-order-summary" className="lg:hidden pb-4">
           <div className="mt-2 bg-yellow-50 p-4">
             <OrderSummary
               cart={cart}

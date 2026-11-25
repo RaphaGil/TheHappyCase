@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { normalizeImagePath } from '../../utils/imagePath';
 // Defer slick carousel CSS - load asynchronously if needed
 // import 'slick-carousel/slick/slick.css'; 
@@ -50,12 +51,12 @@ function Hero() {
     // Last title delay (300ms) + animation duration (1200ms) + small buffer (200ms) = 1700ms
     const timer = setTimeout(() => {
       setButtonVisible(true);
-    }, 1000);
+    }, 150);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <section className="w-full min-h-[50vh] h-[70vh] sm:h-[75vh] md:h-[80vh] max-h-[90vh] relative overflow-hidden">
+    <section className="relative w-full overflow-hidden h-[86vh] min-h-[560px] max-h-[820px] md:h-[78vh]">
       {/* Video / image background (temporarily hidden for speed testing) */}
       <div className="absolute inset-0 w-full h-full">
         {!HIDE_HOME_IMAGES_FOR_TEST && mounted && (
@@ -108,10 +109,8 @@ function Hero() {
             </div>
           </>
         )}
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50 z-10"></div>
-        {/* Warm festive glow: deep red at the bottom, fading up */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-t from-red-950/60 via-red-900/10 to-transparent"></div>
+        {/* Readability: soft neutral shade behind the text (left on desktop, bottom on mobile) */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/35 to-transparent md:bg-gradient-to-r md:from-black/60 md:via-black/20 md:to-transparent"></div>
         {/* Falling snow */}
         <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden" aria-hidden="true">
           {SNOWFLAKES.map((flake, i) => (
@@ -133,79 +132,82 @@ function Hero() {
         <div className="hero-garland absolute top-0 left-0 right-0 h-1.5 z-20" aria-hidden="true"></div>
       </div>
 
-      {/* Text and Shop Now Button - Overlay on Video */}
-      <div className="relative z-20 h-full flex items-end justify-center lg:justify-start">
-        <div className="flex flex-col items-center text-center lg:items-start lg:text-left px-4 mb-10 lg:px-10 lg:ml-10">
-          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-300/60 bg-red-700/80 px-4 py-1 text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-white font-inter shadow-lg">
+      {/* Hero content */}
+      <div className="relative z-20 mx-auto flex h-full max-w-7xl items-end px-4 pb-10 md:items-center md:px-8 md:pb-0">
+        <div
+          className={`max-w-xl text-white transition-all duration-700 ease-out ${
+            buttonVisible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
+          }`}
+        >
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur-sm font-inter sm:text-sm">
             <span aria-hidden="true">🎄</span>
             The perfect Christmas gift
-            <span aria-hidden="true">🎁</span>
           </p>
-          <h1
-            className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white font-inter tracking-title"
-            style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
-          >
-            Create Your Own Custom
+
+          <h1 className="text-display" style={{ textShadow: '0 2px 16px rgba(0,0,0,0.35)' }}>
+            Create your own{' '}
+            <span className="relative inline-block text-[#ffd93d]">
+              passport case
+              <svg className="absolute -bottom-2 left-0 h-3 w-full" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M2 9c40-6 120-8 196-3" fill="none" stroke="#ffd93d" strokeWidth="4" strokeLinecap="round" />
+              </svg>
+            </span>
           </h1>
-          <h1 
-            className="text-title sm:text-title-lg md:text-title-xl lg:text-title-xl font-light text-white mb-4 font-inter tracking-title"
-            style={{textShadow: '2px 2px 8px rgba(0, 0, 0, 0.7)'}}
-          >
-            Passport Case
-          </h1>
-          <div className="flex flex-col sm:flex-row items-center gap-3">
-            <button 
-              onClick={handleStartDesigning}
-              className={`px-8 py-3 text-sm uppercase tracking-wider shadow-lg w-fit font-inter bg-btn-primary-blue hover:bg-btn-primary-blue-hover text-btn-primary-blue-text border border-btn-primary-blue-border hover:border-btn-primary-blue-hover transition-opacity duration-700 ease-out ${
-                buttonVisible 
-                  ? 'opacity-100' 
-                  : 'opacity-0'
-              }`}
-            >
-              CREATE NOW
+
+          <p className="text-lead mt-5 max-w-md text-white/90 font-inter">
+            Pick your case, add charms and your name. A one-of-a-kind travel gift, made just for you.
+          </p>
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <button type="button" onClick={handleStartDesigning} className="btn-happy btn-sunny font-inter">
+              Design yours ✨
             </button>
-           
+            <Link
+              href="/passport-cases"
+              className="btn-happy btn-ghost font-inter"
+            >
+              Shop passport cases
+            </Link>
           </div>
-          <p className="mt-4 text-md text-white/90 font-light font-inter max-w-lg" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
-            We only sell to the UK. To purchase from other countries, visit our{' '}
+
+          <p className="mt-5 text-xs text-white/70 font-inter">
+            UK orders only. Ordering from abroad? Visit our{' '}
             <a
               href="https://www.etsy.com/shop/TheHappyCaseShop"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-white transition-colors"
+              className="font-semibold text-white underline decoration-[#ffd93d] underline-offset-2 hover:text-[#ffd93d]"
             >
               Etsy shop
             </a>
             .
           </p>
-          <button
-            type="button"
-            onClick={handleStartDesigning}
-            aria-label="New Christmas charms – start designing your case"
-            className={`relative mt-5 w-full max-w-md overflow-hidden rounded-xl border border-amber-300/50 bg-gradient-to-br from-red-900/70 via-black/40 to-green-900/70 px-3 pb-3 pt-4 backdrop-blur-sm transition-opacity duration-700 ease-out hover:border-amber-300 hover:from-red-800/80 hover:to-green-800/80 cursor-pointer ${buttonVisible ? 'opacity-100' : 'opacity-0'}`}
-          >
-            <span className="hero-garland absolute top-0 left-0 right-0 h-1" aria-hidden="true"></span>
-            <p className="text-center text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-white font-inter" style={{textShadow: '1px 1px 4px rgba(0, 0, 0, 0.7)'}}>
-              <span className="mr-2 rounded-full bg-red-600 px-2 py-0.5 text-[10px] sm:text-xs tracking-wider">New</span>
-              Christmas charms <span aria-hidden="true">❄️</span>
-            </p>
-            <div className="mt-3 flex items-end justify-center gap-3">
-              {CHRISTMAS_CHARMS.map((charm) => (
-                <div key={charm.name} className="flex flex-col items-center gap-1.5">
-                  <div className="flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-white/95 p-1 shadow-md">
-                    <img
-                      src={normalizeImagePath(charm.src)}
-                      alt={charm.name}
-                      className="h-full w-full object-contain"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </button>
         </div>
+
+        {/* New Christmas charms card: floats bottom-right on desktop */}
+        <button
+          type="button"
+          onClick={handleStartDesigning}
+          aria-label="New Christmas charms – start designing your case"
+          className={`absolute bottom-8 right-8 hidden items-center gap-4 rounded-2xl bg-white/95 p-3 pr-5 text-left shadow-2xl transition-all duration-700 ease-out hover:-translate-y-1 lg:flex ${
+            buttonVisible ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <span className="hero-garland absolute left-3 right-3 top-0 h-1 rounded-full" aria-hidden="true"></span>
+          <div className="flex gap-2">
+            {CHRISTMAS_CHARMS.map((charm) => (
+              <span key={charm.name} className="flex h-14 w-14 items-center justify-center rounded-xl bg-[#fff6b8] p-1.5">
+                <img src={normalizeImagePath(charm.src)} alt={charm.name} className="h-full w-full object-contain" width="56" height="56" decoding="async" />
+              </span>
+            ))}
+          </div>
+          <span>
+            <span className="rounded-full bg-[#c81e3a] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white font-inter">New</span>
+            <span className="mt-1 block text-sm font-semibold text-[#30279f] font-inter">Christmas charms ❄️</span>
+            <span className="block text-xs text-gray-500 font-inter">Add them to your design →</span>
+          </span>
+        </button>
       </div>
-    
     </section>
   );
 }

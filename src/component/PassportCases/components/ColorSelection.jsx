@@ -8,9 +8,14 @@ const ColorSelection = ({
   getColorName 
 }) => {
   return (
-    <div className="pb-2 sm:pb-3 mt-3">
-      <h3 className="text-sm uppercase tracking-wider text-gray-900 mt-6 mb-6 font-medium font-inter">Colours Available</h3>
-      <div className="grid grid-cols-6 sm:grid-cols-7 md:grid-cols-8 gap-2 sm:gap-1.5 md:gap-2">
+    <div>
+      <h3 className="mb-4 text-sm text-gray-600 font-inter">
+        Colour:{' '}
+        <span className="font-semibold text-gray-900">
+          {getColorName(colors.find((c) => c.color === selectedColor)?.image) || ''}
+        </span>
+      </h3>
+      <div className="grid grid-cols-6 sm:grid-cols-7 md:grid-cols-6 lg:grid-cols-8 gap-x-2 gap-y-3">
         {colors.map((colorOption, index) => {
           const colorSoldOut = isColorSoldOut(colorOption.color);
           const colorName = getColorName(colorOption.image);
@@ -23,19 +28,21 @@ const ColorSelection = ({
                   }
                 }}
                 disabled={colorSoldOut}
-                className={`w-9 h-9 sm:w-8 sm:h-8 rounded-full border-2 transition-all duration-200 relative ${
-                  selectedColor === colorOption.color
-                    ? 'border-gray-900 ring-2 ring-gray-300 scale-110'
-                    : 'border-gray-200 hover:border-gray-400'
-                } ${colorSoldOut ? 'cursor-not-allowed' : ''}`}
+                aria-label={colorSoldOut ? `${colorName || 'Colour'} (sold out)` : colorName || `Colour ${index + 1}`}
+                aria-pressed={selectedColor === colorOption.color}
+                className={`w-10 h-10 rounded-full border-2 border-white transition-all duration-200 relative shadow-sm ${
+ selectedColor === colorOption.color
+ ? 'ring-2 ring-[#30279f] ring-offset-1'
+ : 'ring-1 ring-gray-200 hover:ring-[#30279f]/50'
+ } ${colorSoldOut ? 'cursor-not-allowed opacity-40' : ''}`}
                 style={{ backgroundColor: colorOption.color }}
                 title={colorSoldOut ? 'Sold Out' : colorName || `Color ${index + 1}`}
               />
               {colorSoldOut ? (
-                <span className="text-[9px] mt-1 text-red-600 font-medium text-center">Sold Out</span>
+                <span className="text-xs mt-1 text-red-600 font-medium text-center font-inter">Sold out</span>
               ) : (
                 colorName && (
-                  <span className="text-[10px] sm:text-[9px] text-gray-700 font-medium text-center mt-1 font-inter leading-tight">
+                  <span className="text-xs text-gray-600 text-center mt-1 font-inter leading-tight">
                     {colorName}
                   </span>
                 )

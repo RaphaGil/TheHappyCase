@@ -37,21 +37,21 @@ const ShippingPolicy = () => {
           <div className="space-y-8 font-inter">
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Dispatch</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 We dispatch orders within 2–3 business days.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Delivery Times</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 We deliver to addresses across the United Kingdom. Orders typically arrive within 3–5 business days after dispatch.
               </p>
             </section>
 
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Cost</h2>
-              <p className="text-gray-600 font-light">
+              <p className="text-gray-600 font-normal">
                 Standard UK delivery is £3 per order. 
               </p>
 
