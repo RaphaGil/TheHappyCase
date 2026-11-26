@@ -2,35 +2,23 @@ import React from 'react';
 
 const QuantityControls = ({ quantity, onDecrement, onIncrement }) => {
   const qty = quantity || 1;
+  const btn =
+    'flex h-9 w-9 items-center justify-center rounded-full text-[#30279f] transition-colors hover:bg-[#eef0ff] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#30279f]/40';
 
   return (
     <div
-      className="inline-flex items-stretch overflow-hidden rounded-SM border border-gray-200 bg-white shadow-sm"
+      className="inline-flex items-center rounded-full border border-[#30279f]/20 bg-white p-0.5"
       role="group"
       aria-label="Change quantity"
     >
-      <button
-        type="button"
-        onClick={onDecrement}
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-btn-primary-blue/40"
-        aria-label="Decrease quantity"
-      >
-        <span className="text-lg font-normal leading-none" aria-hidden>
-          −
-        </span>
+      <button type="button" onClick={onDecrement} className={btn} aria-label="Decrease quantity">
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M5 12h14" /></svg>
       </button>
-      <div className="flex min-w-[2.75rem] items-center justify-center border-x border-gray-200 bg-white px-2">
-        <span className="text-sm font-semibold tabular-nums text-gray-900 font-inter">{qty}</span>
-      </div>
-      <button
-        type="button"
-        onClick={onIncrement}
-        className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 active:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-btn-primary-blue/40"
-        aria-label="Increase quantity"
-      >
-        <span className="text-lg font-normal leading-none" aria-hidden>
-          +
-        </span>
+      <span className="min-w-[1.75rem] text-center text-sm font-semibold tabular-nums text-gray-900 font-inter" aria-live="polite">
+        {qty}
+      </span>
+      <button type="button" onClick={onIncrement} className={btn} aria-label="Increase quantity">
+        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
       </button>
     </div>
   );

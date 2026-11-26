@@ -62,9 +62,22 @@ const CaseOptionsSection = () => {
                 className="relative flex w-full aspect-[16/10] sm:aspect-square overflow-hidden rounded-2xl cursor-pointer bg-white items-center justify-center p-3 sm:p-4 md:p-6 lg:p-8"
                 aria-label={`Go to ${displayName} passport case page`}
               >
-                {caseItem.specifications?.passportCapacity && (
-                  <span className="absolute left-3 top-3 z-10 rounded-full bg-[#30279f] px-2.5 py-1 text-[11px] font-semibold text-[#ffd93d] font-inter">
-                    {caseItem.specifications.passportCapacity}
+                {/* Feature badges: passport capacity and RFID protection */}
+                {(caseItem.specifications?.passportCapacity || caseItem.specifications?.rfid?.toLowerCase() === 'yes') && (
+                  <span className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
+                    {caseItem.specifications?.passportCapacity && (
+                      <span className="rounded-full bg-[#30279f] px-2.5 py-1 text-[11px] font-semibold text-[#ffd93d] font-inter">
+                        {caseItem.specifications.passportCapacity}
+                      </span>
+                    )}
+                    {caseItem.specifications?.rfid?.toLowerCase() === 'yes' && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#ffd93d] px-2.5 py-1 text-[11px] font-semibold text-[#30279f] font-inter">
+                        <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z" />
+                        </svg>
+                        RFID protection
+                      </span>
+                    )}
                   </span>
                 )}
                 {!HIDE_HOME_IMAGES_FOR_TEST && mounted && displayImage && (
