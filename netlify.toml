@@ -20,13 +20,13 @@ force = true
 # SEO-friendly URL redirects (301 = permanent) - standardize to kebab-case
 [[redirects]]
 from = "/CreateYours"
-to = "/custom-passport-holder"
+to = "/custom-passport"
 status = 301
 force = true
 
 [[redirects]]
 from = "/CreateYours/"
-to = "/custom-passport-holder"
+to = "/custom-passport"
 status = 301
 force = true
 

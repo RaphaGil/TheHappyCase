@@ -1,9 +1,11 @@
+import { buildMetadata } from '@/lib/seo';
 import PrivacyPolicy from '@/component/PrivacyPolicy';
 
-export const metadata = {
-  title: 'Privacy Policy',
-  description: 'The Happy Case privacy policy. How we collect, use, and protect your personal information when you shop for custom passport cases and charms.',
-};
+export const metadata = buildMetadata({
+  title: "Privacy Policy",
+  description: 'How The Happy Case collects, uses and protects your personal information when you shop for personalised passport cases and charms.',
+  path: '/privacypolicy',
+});
 
 export default function PrivacyPolicyPage() {
   return <PrivacyPolicy />;

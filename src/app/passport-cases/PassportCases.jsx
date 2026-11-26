@@ -48,6 +48,7 @@ const PassportCases = () => {
         title="Passport cases"
         crumbs={[{ href: '/', label: 'Home' }, { href: '/passport-cases', label: 'Passport cases' }]}
         subtitle="Three styles, lots of colours. Personalise yours with charms and your name."
+        headingAs="p"
       />
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-10">
 
@@ -74,9 +75,9 @@ const PassportCases = () => {
           {/* Right Side - Details and Selection (Color + Specs before price summary) */}
           <div className="flex flex-col gap-6">
             <div>
-              <h2 className="text-h2 text-[#30279f]">
-                {getCaseDisplayName(selectedCaseType)}
-              </h2>
+              <h1 className="text-h2 text-[#30279f]">
+                {getCaseDisplayName(selectedCaseType)} Passport Case
+              </h1>
               <p className="mt-2 text-2xl font-semibold text-gray-900 font-inter">
                 £{Number(selectedCase.basePrice).toFixed(2)}
               </p>

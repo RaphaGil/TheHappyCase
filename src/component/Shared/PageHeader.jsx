@@ -4,8 +4,9 @@ import Link from 'next/link';
 /**
  * Shop page header band: breadcrumb, brand title and an optional intro line.
  * `crumbs` is a list of { href, label }; the last crumb is the current page.
+ * Pass headingAs="p" when the page has its own, more specific <h1> (e.g. a product name).
  */
-const PageHeader = ({ title, subtitle, crumbs = [], children }) => (
+const PageHeader = ({ title, subtitle, crumbs = [], children, headingAs: Heading = 'h1' }) => (
   <div className="section-lemon border-b border-[#30279f]/10">
     <div className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">
       {crumbs.length > 0 && (
@@ -27,7 +28,7 @@ const PageHeader = ({ title, subtitle, crumbs = [], children }) => (
           </ol>
         </nav>
       )}
-      <h1 className="text-h1 text-[#30279f]">{title}</h1>
+      <Heading className="font-brand text-h1 text-[#30279f]">{title}</Heading>
       {subtitle && <p className="text-lead mt-2 max-w-2xl text-gray-600 font-inter">{subtitle}</p>}
       {children}
     </div>
