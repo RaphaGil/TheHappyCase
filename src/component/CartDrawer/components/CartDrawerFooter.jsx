@@ -4,6 +4,9 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 
+// Flat UK delivery charge; keep in sync with UK_FLAT_SHIPPING_GBP in Checkout/index.jsx
+const UK_DELIVERY_GBP = 3;
+
 const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,16 +37,25 @@ const CartDrawerFooter = ({ totalPrice, formatPrice, cartLength, onClose }) => {
 
   return (
     <div className="flex-shrink-0 border-t border-[#30279f]/10 bg-white px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 shadow-[0_-8px_24px_rgba(48,39,159,0.06)]">
-      <div className="flex items-baseline justify-between">
-        <span className="text-base font-semibold text-gray-900 font-inter">Subtotal</span>
-        <span className="text-xl font-semibold tabular-nums text-gray-900 font-inter">{formatPrice(totalPrice)}</span>
-      </div>
-      <p className="mt-1 text-xs text-gray-500 font-inter">
-        <Link href="/shipping" className="underline underline-offset-2 hover:text-[#30279f]" onClick={handleShippingClick}>
-          Shipping
-        </Link>{' '}
-        calculated at checkout. UK delivery in 2–4 days.
-      </p>
+      <dl className="space-y-1.5 text-sm font-inter">
+        <div className="flex items-baseline justify-between text-gray-700">
+          <dt>Subtotal</dt>
+          <dd className="tabular-nums">{formatPrice(totalPrice)}</dd>
+        </div>
+        <div className="flex items-baseline justify-between text-gray-700">
+          <dt>
+            <Link href="/shipping" className="underline decoration-gray-300 underline-offset-2 hover:text-[#30279f]" onClick={handleShippingClick}>
+              UK delivery
+            </Link>{' '}
+            <span className="text-gray-500">(2–4 days)</span>
+          </dt>
+          <dd className="tabular-nums">{formatPrice(UK_DELIVERY_GBP)}</dd>
+        </div>
+        <div className="flex items-baseline justify-between border-t border-[#30279f]/10 pt-2.5">
+          <dt className="text-base font-semibold text-gray-900">Total</dt>
+          <dd className="text-xl font-semibold tabular-nums text-gray-900">{formatPrice(totalPrice + UK_DELIVERY_GBP)}</dd>
+        </div>
+      </dl>
 
       <div className="mt-4 flex flex-col gap-2.5">
         <button

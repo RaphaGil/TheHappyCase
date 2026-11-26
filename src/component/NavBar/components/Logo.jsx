@@ -13,12 +13,12 @@ const Logo = () => {
       <img
         src="/assets/logo.webp"
         alt=""
-        className="h-10 w-10 lg:h-11 lg:w-11 object-contain"
+        className="h-10 w-10 object-contain lg:hidden"
         width="44"
         height="44"
       />
       <span
-        className="font-brand hidden lg:inline text-2xl leading-none text-[#30279f] whitespace-nowrap"
+        className="font-brand hidden lg:inline text-[1.75rem] leading-none text-[#30279f] whitespace-nowrap"
       >
         The Happy Case
       </span>
