@@ -275,7 +275,7 @@ const Charms = () => {
         {/* Charms Grid */}
         {filteredCharms.length > 0 ? (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-12 min-h-[400px] sm:min-h-[600px]">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 content-start gap-3 sm:gap-4 md:gap-6 mb-12 min-h-[400px] sm:min-h-[600px]">
               {displayedCharms.map((charm, index) => (
                 <CharmGridItemWithInventory
                   key={index}
