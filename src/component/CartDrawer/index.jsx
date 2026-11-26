@@ -17,6 +17,14 @@ const CartDrawer = () => {
   const [itemErrors, setItemErrors] = useState({}); // Track errors per item ID
   const errorTimeoutsRef = useRef({}); // Track timeouts for each error
 
+  // Close the basket with the Escape key
+  useEffect(() => {
+    if (!isDrawerOpen) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') closeCartDrawer(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isDrawerOpen, closeCartDrawer]);
+
   // Auto-clear error messages after 6 seconds
   useEffect(() => {
     const timeouts = errorTimeoutsRef.current;
@@ -408,43 +416,49 @@ const CartDrawer = () => {
     }
   };
 
+  const itemCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
   return (
-    <div className={`fixed inset-0 z-50 ${isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+    <div className={`fixed inset-0 z-50 ${isDrawerOpen ? 'pointer-events-auto' : 'pointer-events-none'}`} aria-hidden={!isDrawerOpen}>
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black transition-opacity ${isDrawerOpen ? 'opacity-40' : 'opacity-0'}`}
+        className={`absolute inset-0 bg-[#140f4a]/40 backdrop-blur-[2px] transition-opacity duration-300 ${isDrawerOpen ? 'opacity-100' : 'opacity-0'}`}
         onClick={closeCartDrawer}
       />
 
       {/* Drawer */}
       <div
-        className={`absolute right-0 top-0 h-full w-full sm:w-2/3 lg:w-2/5 bg-white shadow-2xl transform transition-transform duration-300 flex flex-col ${
- isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
- }`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-drawer-title"
+        className={`absolute right-0 top-0 flex h-full w-full flex-col bg-white shadow-2xl transition-transform duration-300 ease-out sm:w-[440px] sm:rounded-l-3xl ${
+          isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
       >
-        <CartDrawerHeader onClose={closeCartDrawer} />
+        <CartDrawerHeader onClose={closeCartDrawer} itemCount={itemCount} />
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5">
           {cart.length === 0 ? (
-            <EmptyCart />
+            <EmptyCart onClose={closeCartDrawer} />
           ) : (
-            cart.map((item, index) => (
-              <CartItem
-                key={item.id}
-                item={item}
-                index={index}
-                formatPrice={formatPrice}
-                onRemove={handleRemoveWithCheck}
-                onIncrement={handleIncrementWithCheck}
-                onDecrement={handleDecrementWithCheck}
-                errorMessage={typeof itemErrors[item.id] === 'string' ? itemErrors[item.id] : itemErrors[item.id]?.case}
-                charmErrors={itemErrors[item.id]?.charms || {}}
-              />
-            ))
+            <ul className="pt-3" aria-label="Items in your basket">
+              {cart.map((item, index) => (
+                <CartItem
+                  key={item.id}
+                  item={item}
+                  index={index}
+                  formatPrice={formatPrice}
+                  onRemove={handleRemoveWithCheck}
+                  onIncrement={handleIncrementWithCheck}
+                  onDecrement={handleDecrementWithCheck}
+                  errorMessage={typeof itemErrors[item.id] === 'string' ? itemErrors[item.id] : itemErrors[item.id]?.case}
+                  charmErrors={itemErrors[item.id]?.charms || {}}
+                />
+              ))}
+            </ul>
           )}
         </div>
 
-        {/* Footer */}
         <CartDrawerFooter
           totalPrice={getTotalPrice()}
           formatPrice={formatPrice}

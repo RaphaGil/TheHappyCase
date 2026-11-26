@@ -1,38 +1,30 @@
 import React from 'react';
 import CartLineActions from './CartLineActions';
+import RemoveButton from './RemoveButton';
+import ErrorNote from './ErrorNote';
 import { normalizeImagePath } from '../../../utils/imagePath';
 import { getCaseLinePins } from '../../../utils/cartHelpers';
+import { getColorName } from '../../../utils/createyours/helpers';
 
-// Helper function to extract base charm name (remove suffixes like " Flag", " - Flag", etc.)
+// Strip suffixes like " Flag" or " - Colorful Charm" from charm names
 const getBaseCharmName = (name) => {
   if (!name) return '';
-  let baseName = name;
-  // Remove common suffixes
-  baseName = baseName.replace(/\s*-\s*(Flag|Colorful Charm|Bronze Charm)$/i, '');
-  baseName = baseName.replace(/\s+Flag$/i, '');
-  return baseName.trim();
+  return name
+    .replace(/\s*-\s*(Flag|Colorful Charm|Bronze Charm)$/i, '')
+    .replace(/\s+Flag$/i, '')
+    .trim();
 };
 
-const CaseItem = ({ 
-  item, 
-  index, 
-  formatPrice, 
-  onIncrement, 
-  onDecrement,
-  onRemove,
-  errorMessage,
-  charmErrors = {}
-}) => {
+const CaseItem = ({ item, index, formatPrice, onIncrement, onDecrement, onRemove, errorMessage, charmErrors = {} }) => {
   const linePins = getCaseLinePins(item);
   const groupedPins = Object.values(
     linePins.reduce((acc, pin) => {
-      // Ensure pin has all required properties including category
       const pinWithName = {
         name: pin?.name || 'Charm',
         src: pin?.src || '',
         price: pin?.price || 0,
-        category: pin?.category || 'colorful', // Ensure category is preserved
-        ...pin // Spread to include any other properties (category will override if present)
+        category: pin?.category || 'colorful',
+        ...pin,
       };
       const key = pinWithName.src || pinWithName.name;
       acc[key] = acc[key] || { ...pinWithName, quantity: 0 };
@@ -40,190 +32,116 @@ const CaseItem = ({
       return acc;
     }, {})
   );
-  // Determine which image to show - prioritize design image (composite) if available, otherwise use case image
-  const hasValidDesignImage = item.designImage && 
-    typeof item.designImage === 'string' && 
-    item.designImage.trim().length > 0;
-  // Use designImage if available (could be data URL or file path), otherwise fall back to caseImage/image
-  const basePreview = hasValidDesignImage ? item.designImage : (item.caseImage || item.image);
-  
-  // Debug logging for image display
-  const isDevelopment = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
-  if (isDevelopment || item.customDesign) {
-    console.log('🖼️ CaseItem - Image display debug:', {
-      itemId: item.id,
-      itemName: item.caseName || item.name,
-      hasDesignImage: !!item.designImage,
-      designImageType: item.designImage ? (item.designImage.startsWith('data:') ? 'data URL' : 'file path') : 'none',
-      designImageLength: item.designImage ? item.designImage.length : 0,
-      hasCaseImage: !!item.caseImage,
-      caseImagePath: item.caseImage,
-      hasImage: !!item.image,
-      imagePath: item.image,
-      basePreview: basePreview ? (basePreview.startsWith('data:') ? 'data URL' : basePreview.substring(0, 50) + '...') : 'none',
-      customDesign: item.customDesign
-    });
-  }
+
+  // Prefer the composite design image when there is one, otherwise the plain case photo
+  const hasDesignImage = typeof item.designImage === 'string' && item.designImage.trim().length > 0;
+  const preview = hasDesignImage ? item.designImage : item.caseImage || item.image;
 
   const basePrice = typeof item.basePrice === 'number' ? item.basePrice : 8;
-  const charms = linePins.length
+  const charmsPrice = linePins.length
     ? linePins.reduce((s, p) => s + (p.price || 0), 0)
     : Math.max(0, (item.totalPrice || 0) - basePrice);
-  const unit = basePrice + charms;
+  const unit = basePrice + charmsPrice;
   const qty = item.quantity || 1;
 
+  const caseName = item.caseName || item.name || 'Passport Case';
+  const colorName = item.color ? getColorName(item.color, item.caseImage || item.case_image || item.image) : '';
+  const customText = String(item.customText || item.custom_text || '').trim();
+  const isCustom = item.customDesign || groupedPins.length > 0 || !!customText;
+
+  const charmErrorList = groupedPins
+    .map((p) => {
+      const name = p.name || p.src || '';
+      const cat = p.category && p.category.trim() !== '' ? p.category : 'colorful';
+      return charmErrors[`${name}-${cat}`];
+    })
+    .filter(Boolean);
+
   return (
-    <div className="mt-2">
-      <div className="flex flex-col gap-2">
-        <div className="flex items-start justify-between px-2 py-1">
-          <div className="flex items-start gap-3 flex-1">
-            <div className="relative flex-shrink-0">
-              {basePreview ? (
-                <img
-                  src={normalizeImagePath(basePreview)}
-                  alt="Case preview"
-                  className="w-20 h-22 object-contain rounded"
-                  loading="lazy"
-                  sizes="80px"
-                  onLoad={() => {
-                    if (item.customDesign) {
-                      console.log('✅ CaseItem - Image loaded successfully:', {
-                        itemId: item.id,
-                        srcType: basePreview.startsWith('data:') ? 'data URL' : 'file path'
-                      });
-                    }
-                  }}
-                  onError={(e) => {
-                    console.error('❌ CaseItem - Image failed to load:', {
-                      itemId: item.id,
-                      itemName: item.caseName || item.name,
-                      src: normalizeImagePath(basePreview),
-                      srcType: basePreview.startsWith('data:') ? 'data URL' : 'file path',
-                      srcLength: basePreview.length,
-                      hasDesignImage: !!item.designImage,
-                      hasCaseImage: !!item.caseImage,
-                      hasImage: !!item.image,
-                      customDesign: item.customDesign,
-                      error: e
-                    });
-                  }}
-                />
-              ) : item.color ? (
-                <div
-                  className="w-20 h-22 rounded border-2 border-gray-300 flex items-center justify-center"
-                  style={{ backgroundColor: item.color }}
-                />
-              ) : (
-                <div className="w-20 h-22 rounded bg-gray-50 border border-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400 text-xs">Image</span>
-                </div>
-              )}
-              {/* Error Alert Badge near image */}
-              {errorMessage && (
-                <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center z-10 shadow-lg">
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-normal text-gray-900 font-inter">
-                {item.caseName || item.name || 'Passport Case'}
-                {qty > 1 ? (
-                  <span className="text-gray-500"> (×{qty} total)</span>
-                ) : null}
-              </span>
-              {item.color && (
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-xs text-gray-500 font-normal font-inter">Color:</span>
-                  <div className="w-3 h-3 rounded-full border border-gray-300" style={{backgroundColor: item.color}}></div>
-                </div>
-              )}
-              {/* Error Message Alert Box next to case */}
-              {errorMessage && (
-                <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-sm animate-pulse">
-                  <p className="text-xs text-red-700 font-inter leading-tight font-medium">
-                    {errorMessage}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-      
-        </div>
-
-      {groupedPins.length > 0 && groupedPins.map((groupedPin, i) => {
-        // Match charm error by name-category (matching the key format used in increment handler)
-        // In increment handler: charmName = pin.name || pin.src || ''
-        // Normalize empty category to 'colorful' to match increment handler logic
-        const charmName = groupedPin.name || groupedPin.src || '';
-        const charmCategory = (groupedPin.category && groupedPin.category.trim() !== '') ? groupedPin.category : 'colorful';
-        const charmKey = `${charmName}-${charmCategory}`;
-        const charmError = charmErrors[charmKey];
-        const totalCharmQty = groupedPin.quantity * qty;
-
-        return (
-          <div
-            key={i}
-            className="flex items-center justify-between px-2 py-1"
-          >
-            <div className="flex items-center gap-2 flex-1">
-              <div className="relative flex-shrink-0">
-                {groupedPin.src ? (
-                  <img
-                    src={normalizeImagePath(groupedPin.src)}
-                    alt={groupedPin.name || 'Charm'}
-                    className="w-16 h-16 object-contain"
-                    loading="lazy"
-                    sizes="64px"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded bg-gray-200" />
-                )}
-                {/* Error Alert Badge near charm image */}
-                {charmError && (
-                  <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center z-10 shadow-lg">
-                    <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-sm font-normal text-gray-900 font-inter">
-                  {getBaseCharmName(groupedPin.name) || 'Charm'}
-                  {totalCharmQty > 1 ? (
-                    <span className="text-gray-500"> (×{totalCharmQty} total)</span>
-                  ) : null}
-                </span>
-                {/* Error Message Alert Box next to charm */}
-                {charmError && (
-                  <div className="mt-1 p-1.5 bg-red-50 border border-red-200 rounded-sm">
-                    <p className="text-xs text-red-700 font-inter leading-tight">
-                      {charmError}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-      })}
+    <div className="flex gap-4">
+      <div className="flex h-24 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#fffbd6] p-1.5">
+        {preview ? (
+          <img src={normalizeImagePath(preview)} alt="" className="h-full w-full object-contain" loading="lazy" />
+        ) : item.color ? (
+          <span className="h-full w-full rounded-xl" style={{ backgroundColor: item.color }} />
+        ) : (
+          <span className="text-xs text-gray-400">Image</span>
+        )}
       </div>
 
-      <CartLineActions
-        quantity={qty}
-        onDecrement={() => onDecrement(item.id !== undefined ? item.id : index)}
-        onIncrement={() => onIncrement(item.id !== undefined ? item.id : index)}
-        formatPrice={formatPrice}
-        unitPrice={unit}
-        lineTotal={unit * qty}
-        onRemove={() => onRemove(index)}
-      />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="text-[15px] font-semibold leading-snug text-gray-900 font-inter">{caseName}</p>
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-600 font-inter">
+              {item.color && (
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-3 w-3 rounded-full ring-1 ring-black/10" style={{ backgroundColor: item.color }} aria-hidden="true" />
+                  {colorName || 'Colour'}
+                </span>
+              )}
+              {isCustom && (
+                <span className="rounded-full bg-[#eef0ff] px-2 py-0.5 font-semibold text-[#30279f]">Custom design</span>
+              )}
+            </div>
+            {customText && (
+              <p className="mt-1 text-xs text-gray-600 font-inter">
+                Name: <span className="font-semibold text-gray-900">&ldquo;{customText}&rdquo;</span>
+              </p>
+            )}
+          </div>
+          <RemoveButton onClick={() => onRemove(index)} label={`Remove ${caseName} from basket`} />
+        </div>
+
+        {groupedPins.length > 0 && (
+          <div className="mt-2.5">
+            <p className="mb-1.5 text-xs text-gray-500 font-inter">
+              {linePins.length} {linePins.length === 1 ? 'charm' : 'charms'}
+            </p>
+            <ul className="flex flex-wrap gap-1.5">
+              {groupedPins.map((pin, i) => {
+                const name = getBaseCharmName(pin.name) || 'Charm';
+                const cat = pin.category && pin.category.trim() !== '' ? pin.category : 'colorful';
+                const hasError = !!charmErrors[`${pin.name || pin.src || ''}-${cat}`];
+                return (
+                  <li
+                    key={i}
+                    title={pin.quantity > 1 ? `${name} ×${pin.quantity}` : name}
+                    className={`relative flex h-10 w-10 items-center justify-center rounded-xl bg-white p-1 ring-1 ${hasError ? 'ring-red-400' : 'ring-[#30279f]/10'}`}
+                  >
+                    {pin.src ? (
+                      <img src={normalizeImagePath(pin.src)} alt={name} className="h-full w-full object-contain" loading="lazy" />
+                    ) : (
+                      <span className="text-[10px] text-gray-400">{name.slice(0, 2)}</span>
+                    )}
+                    {pin.quantity > 1 && (
+                      <span className="absolute -right-1.5 -top-1.5 rounded-full bg-[#30279f] px-1.5 text-[10px] font-semibold leading-4 text-white">
+                        ×{pin.quantity}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+
+        {errorMessage && <ErrorNote>{errorMessage}</ErrorNote>}
+        {charmErrorList.map((msg, i) => (
+          <ErrorNote key={i}>{msg}</ErrorNote>
+        ))}
+
+        <CartLineActions
+          quantity={qty}
+          onDecrement={() => onDecrement(item.id !== undefined ? item.id : index)}
+          onIncrement={() => onIncrement(item.id !== undefined ? item.id : index)}
+          formatPrice={formatPrice}
+          unitPrice={unit}
+          lineTotal={unit * qty}
+        />
+      </div>
     </div>
   );
 };
 
 export default CaseItem;
-
