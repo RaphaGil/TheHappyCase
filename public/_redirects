@@ -3,8 +3,10 @@
 /sitemap.xml  /sitemap.xml  200!
 
 # SEO-friendly URL redirects (301 = permanent, passes link equity)
-/CreateYours     /custom-passport-holder    301!
-/CreateYours/    /custom-passport-holder    301!
+/CreateYours     /custom-passport    301!
+/CreateYours/    /custom-passport    301!
+/custom-passport-holder    /custom-passport    301!
+/custom-passport-holder/   /custom-passport    301!
 
 # API routes → Netlify Functions
 /api/create-payment-intent    /.netlify/functions/create-payment-intent    200

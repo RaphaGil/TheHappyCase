@@ -11,7 +11,6 @@ import Footer from '@/component/Footer';
 import CartDrawer from '@/component/CartDrawer';
 import WhatsAppButton from '@/component/WhatsAppButton';
 import EnvDebug from '@/component/EnvDebug';
-import SEO from '@/component/SEO';
 
 export default function LayoutClient({ children }) {
   // Defer inventory load so it's not in the critical path (saves loading products.json + API call until after first paint)
@@ -34,7 +33,6 @@ export default function LayoutClient({ children }) {
 
   return (
     <HelmetProvider>
-      <SEO />
       <CurrencyProvider>
         <CartProvider>
           <div

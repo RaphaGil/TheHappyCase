@@ -1,9 +1,11 @@
+import { buildMetadata } from '@/lib/seo';
 import About from '@/component/About';
 
-export const metadata = {
-  title: 'About Us',
-  description: 'Learn about The Happy Case - custom passport cases with charms. Our story and passion for travel accessories.',
-};
+export const metadata = buildMetadata({
+  title: "About Us",
+  description: 'Meet The Happy Case: personalised passport cases with charms, designed by you and made with love for every journey.',
+  path: '/about',
+});
 
 export default function AboutPage() {
   return <About />;

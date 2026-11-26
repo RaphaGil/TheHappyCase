@@ -1,9 +1,0 @@
-# *
-User-agent: *
-Allow: /
-
-# Host
-Host: https://thehappycase.store
-
-# Sitemaps
-Sitemap: https://thehappycase.store/sitemap.xml

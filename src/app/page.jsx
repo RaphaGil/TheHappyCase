@@ -1,8 +1,10 @@
-export const metadata = {
-  title: 'The Happy Case - Custom Passport Cases with Charms',
-  description:
-    'Create custom passport cases with charms. Choose from 3 case styles, 40+ design ideas, and bronze, colorful or flag pins. Perfect travel gift, mothers day gift, valentines day gift, birthday gift, anniversary gift, graduation gift, wedding gift, etc.',
-};
+import { buildMetadata } from '@/lib/seo';
+export const metadata = buildMetadata({
+  title: "Personalised Passport Cases with Charms | The Happy Case",
+  description: 'Design a personalised passport case with charms and your name. Colourful, bronze and flag charms, RFID protection and UK delivery. The perfect travel gift.',
+  path: '/',
+  absoluteTitle: true,
+});
 
 import Hero from '@/component/Hero';
 import dynamic from 'next/dynamic';
