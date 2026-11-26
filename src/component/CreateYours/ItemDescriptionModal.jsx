@@ -121,12 +121,6 @@ const ItemDescriptionModal = ({ show, onClose, selectedCase }) => {
                     </div>
                   )}
                   
-                  {specifications.passportCapacity && (
-                    <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                      <span className="text-sm text-gray-500 font-inter">Capacity</span>
-                      <span className="text-sm text-gray-900 font-inter">{specifications.passportCapacity}</span>
-                    </div>
-                  )}
                   
                   {specifications.care && (
                     <div className="flex justify-between items-start py-2 border-b border-gray-50">

@@ -86,12 +86,6 @@ const SpecificationsDropdown = ({
               <span className="text-sm text-gray-900 text-right font-inter">{specifications.features}</span>
             </div>
           )}
-          {specifications.passportCapacity && (
-            <div className="flex justify-between items-center py-2 border-b border-[#30279f]/5">
-              <span className="text-sm text-gray-500 font-inter">Capacity</span>
-              <span className="text-sm text-gray-900 font-inter">{specifications.passportCapacity}</span>
-            </div>
-          )}
           {specifications.care && (
             <div className="flex justify-between items-start py-2 border-b border-[#30279f]/5">
               <span className="text-sm text-gray-500 font-inter">Care Instructions</span>
